@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        @font-face {
+            font-family: 'minecraft';
+            src: url('font.ttf');
+            
+        }
+
+
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'minecraft'; 
+        }
+
+        body{
+            
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+            
+        }
+
+        
+
+        img{
+            image-rendering: pixelated;
+            pointer-events: none;
+        }
+
+        #ui-container{
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            
+
+            transform: scale(1);
+
+            position: fixed;
+        }
+
+
+        #ui-window{
+            width: 176px;
+            height: 166px;
+            transform: scale(3);
+            position: relative;
+        }
+
+
+
+         
+        .slot-list{
+            display: flex;
+            position: absolute;
+            
+            left: 0;
+            top: 0;
+        }
+
+
+
+
+        .slot{
+            width: 16px;
+            height: 16px;
+            margin-right: 2px;
+            /* background-color: blue;  */
+            font-size: 8px;
+        }
+
+        .slot:hover{
+            background-color: #e0e0e0;
+        }
+
+
+        .item{
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-image: url('InvSprite.png');
+            background-size: 512px 1824px;
+            background-position: calc(-16px * 0) calc(-16px * 0);
+            image-rendering: pixelated;
+            text-shadow: 1px 0 #444, 0px 1px #444;
+        }
+
+        .slot .item-value,
+        #temp-slot .item-value{
+            position: absolute;
+            right: 0px;
+            bottom: -7px;
+        }
+
+
+
+
+
+
+        #temp-slot{
+
+            
+            width: 16px;
+            height: 16px;  
+            font-size: 8px;
+
+            transform: scale(3);
+            pointer-events: none;
+            z-index: 1;
+            
+
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+
+
+        #tooltip{
+            border: 2px solid #22005f;
+            background-color: #10020f;
+
+            pointer-events: none;
+            z-index: 1;
+            
+            width: fit-content;
+
+            padding: 8px;
+            padding-bottom: 0;
+
+            display: none;
+
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+
+
+
+        /* CRAFTING TABLE */
+        .slot-list-wrapper-craftingTable .slot-list:nth-child(1){
+            left: 30px;
+            top: 17px;
+        }
+
+        .slot-list-wrapper-craftingTable .slot-list:nth-child(2){
+            left: 30px;
+            top: 35px;
+        }
+
+        .slot-list-wrapper-craftingTable .slot-list:nth-child(3){
+            left: 30px;
+            top: 53px;
+        }
+
+        .slot-list-wrapper-craftingTable-out .slot-list:nth-child(1){
+            left: 124px;
+            top: 35px;
+        }
+         
+
+
+
+        /* INVENTORY */
+        .slot-list-wrapper-inventory .slot-list:nth-child(1){
+            left: 8px;
+            top: 84px;
+        }
+
+        .slot-list-wrapper-inventory .slot-list:nth-child(2){
+            left: 8px;
+            top: 102px;
+        }
+
+        .slot-list-wrapper-inventory .slot-list:nth-child(3){
+            left: 8px;
+            top: 120px;
+        }
+
+
+
+
+
+        /* HAND */
+        .slot-list-wrapper-hand .slot-list{
+            left: 8px;
+            top: 142px;
+        }
+
+
+
+       
+
+
+
+
+
+
+
+
+
+
+        /* ITEM ASSET MAPPING */
+
+
+        /*.minecraft_grass_block{
+            background-position: calc(-16px * 20) calc(-16px * 30);
+        }
+
+        .minecraft_oak_planks{
+            background-position: calc(-16px * 6) calc(-16px * 28);
+        }
+
+        .minecraft_oak_log{
+            background-position: calc(-16px * 5) calc(-16px * 107);
+        }*/
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+    <div id="ui-container">
+
+
+        
+        <div id="temp-slot">
+            <!-- <div class="item" item-name="grass">
+                <div class="item-value">64</div>
+            </div> -->
+        </div>
+
+
+        <div id="tooltip">
+
+            <div id="tooltip-title">Diamond Sword</div>
+
+            <div id="tooltip-extra"></div>
+
+        </div>
+
+
+        <div id="ui-window">
+
+
+            
+
+
+
+            <img src="crafting_table.png">
+
+            
+            <!-- CRAFTING TABLE -- INPUT -->
+            <div class="slot-list-wrapper slot-list-wrapper-craftingTable">
+
+                <div class="slot-list">
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div>
+
+                <div class="slot-list">
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div>
+
+                <div class="slot-list">
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div> 
+
+            </div>
+
+
+            <!-- CRAFTING TABLE -- OUPUT -->
+            <div class="slot-list-wrapper slot-list-wrapper-craftingTable-out">
+
+                <div class="slot-list">
+                    <div class="slot"></div> 
+                </div> 
+            </div>
+
+
+
+            <!-- INVENTORY -->
+            <div class="slot-list-wrapper slot-list-wrapper-inventory">
+
+                <div class="slot-list">
+
+                    <div class="slot">
+                        <div class="item" style="background-position: calc(-16px * 20) calc(-16px * 30);" item-name="minecraft_grass_block">
+                            <div class="item-value">64</div>
+                        </div>
+                    </div>
+
+                    <div class="slot">
+                        <div class="item" style="background-position: calc(-16px * 6) calc(-16px * 28);" item-name="minecraft_oak_planks">
+                            <div class="item-value">4</div>
+                        </div>
+                    </div>
+                    
+                    <div class="slot">
+                        <div class="item" style="background-position: calc(-16px * 5) calc(-16px * 107);" item-name="minecraft_oak_log">
+                            <div class="item-value">2</div>
+                        </div>
+                    </div>
+
+
+                    <div class="slot">
+                        <div class="item" style="background-position: calc(-16px * 28) calc(-16px * 109);" item-name="minecraft_iron_ingot">
+                            <div class="item-value">9</div>
+                        </div>
+                    </div>
+                    
+                    <div class="slot">
+                        <div class="item" style="background-position: calc(-16px * 23) calc(-16px * 109);" item-name="minecraft_flint">
+                            <div class="item-value">7</div>
+                        </div>
+                    </div>
+
+
+                    
+
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div>
+
+                <div class="slot-list">
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div>
+
+                <div class="slot-list">
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div>
+
+            </div>
+
+            
+
+            <!-- HAND -->
+            <div class="slot-list-wrapper slot-list-wrapper-hand">
+
+                <div class="slot-list">
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div> 
+
+            </div>
+
+
+
+        </div>
+
+        
+
+
+
+        
+        
+
+    </div>
+    
+     
+
+
+    <script>
+
+
+
+
+        var slot_all = document.querySelectorAll(".slot");
+
+        var temp_slot = document.getElementById('temp-slot');
+
+        var tooltip = document.getElementById("tooltip");
+
+
+        window.onmousemove = (evt)=>{
+
+
+            temp_slot.style.left = (evt.pageX - temp_slot.offsetWidth/2) + 'px';
+            temp_slot.style.top = (evt.pageY - temp_slot.offsetHeight/2) + 'px';
+            
+
+            tooltip.style.left = (evt.pageX + 16) + 'px';
+            tooltip.style.top = (evt.pageY - tooltip.offsetHeight) + 'px';
+
+
+        };
+
+
+        window.oncontextmenu = (evt)=>{
+            evt.preventDefault();
+        };
+
+
+
+
+
+
+
+
+
+
+
+
+        function findSlotFree( itemName = '' ){
+
+            let free = -1;
+            let sameItemFree = -1;
+            slotList = null;
+            
+            for ( let i = 10; i < slot_all.length; i++ ){
+                
+                if ( slotList == null ){
+                    if ( slot_all[i].parentNode.parentElement.classList.contains('slot-list-wrapper-inventory') ){
+                        slotList = 'inventory';
+                    }
+                    else if ( slot_all[i].parentNode.parentElement.classList.contains('slot-list-wrapper-hand') ){
+                        slotList = 'hand';
+                    }
+                }
+                
+                 
+
+
+                if ( slotList == 'inventory' || slotList == 'hand' ){
+                    
+                    if ( free < 0 && slot_all[i].firstElementChild == null ){
+                        free = i - 10;
+                    }
+
+
+                    if ( sameItemFree < 0 && slot_all[i].firstElementChild != null ){
+
+                        if ( itemName == slot_all[i].firstElementChild.getAttribute('item-name') ){
+                            sameItemFree = i - 10;
+                        }
+
+                    }
+
+
+
+
+                }
+
+            }
+            
+
+            return {
+                'free': free,
+                'sameItemFree': sameItemFree,
+                'slotList': slotList
+            };
+
+        }
+
+
+        
+        
+
+
+
+
+
+
+
+
+        slot_all.forEach((el, idx)=>{
+
+
+            
+
+            // LEFT CLICK
+            el.onclick = ()=>{
+
+
+                let slot_isEmpty = ( el.children.length <= 0 );
+                let temp_isEmpty = ( temp_slot.children.length <= 0 );
+                
+                let triggerFrom = '';
+
+
+                if ( el.parentNode.parentElement.classList.contains('slot-list-wrapper-craftingTable') ){
+                    triggerFrom = 'crafting_in';
+                }
+                else if ( el.parentNode.parentElement.classList.contains('slot-list-wrapper-craftingTable-out') ){
+                    triggerFrom = 'crafting_out';
+                }
+                else if ( el.parentNode.parentElement.classList.contains('slot-list-wrapper-inventory') ){
+                    triggerFrom = 'inventory';
+                }
+                else {
+                    triggerFrom = 'hand';
+                }
+                
+
+
+                
+
+
+                 
+
+                // TEMP USADO & SLOT USADO
+                if ( !temp_isEmpty && !slot_isEmpty ){
+
+                    if ( el.firstElementChild.getAttribute("item-name") == temp_slot.firstElementChild.getAttribute("item-name") ){
+                        console.log('ok');
+
+                        const objRef = getItemByName( temp_slot.firstElementChild.getAttribute("item-name") );
+                        let max_pack = objRef.max_pack;
+                        let temp_slot_qty = Math.trunc(temp_slot.querySelector(".item-value").innerHTML);
+                        let slot_qty      = Math.trunc(el.querySelector(".item-value").innerHTML);
+
+                        
+
+                        if ( triggerFrom == "crafting_out" ){
+
+                            if ( temp_slot_qty+slot_qty <= max_pack ){
+                                el.innerHTML = '';
+                                temp_slot.querySelector('.item-value').innerHTML = temp_slot_qty + slot_qty;
+                                
+
+                                let list_slot_crafting_table = document.querySelectorAll(".slot-list-wrapper-craftingTable .slot");
+                                for (let i = 0; i < list_slot_crafting_table.length; i++) {
+                                    if ( list_slot_crafting_table[i].querySelector('.item-value') != null ){
+                                        let qty = list_slot_crafting_table[i].querySelector('.item-value').innerHTML;
+                                        if ( qty > 1 ){
+                                            qty--;
+                                            list_slot_crafting_table[i].querySelector('.item-value').innerHTML = qty;
+                                        }else{
+                                            list_slot_crafting_table[i].innerHTML = '';
+                                        }
+                                    }
+                                }
+                                findCraftItemFromPattern();
+                            }
+
+                        }
+                        else{
+
+                            if ( temp_slot_qty+slot_qty <= max_pack ){
+                                temp_slot.innerHTML = '';
+                                el.querySelector('.item-value').innerHTML = temp_slot_qty + slot_qty;
+                            }
+
+                        }
+
+
+
+                    }
+                    else{
+                        
+
+                        if ( triggerFrom != "crafting_out" ){
+                            console.log("swap");
+
+                            let temp = temp_slot.innerHTML;
+                            temp_slot.innerHTML = el.innerHTML;
+                            el.innerHTML = temp;
+
+                            findCraftItemFromPattern();
+                        }
+
+                    }
+
+                     
+
+
+                }
+
+                // TEMP USADO & SLOT VAZIO -- COLOCAR NO VAZIO
+                else if ( !temp_isEmpty && slot_isEmpty && triggerFrom != 'crafting_out' ){
+                    el.innerHTML = '';
+                    el.appendChild( temp_slot.firstElementChild );
+                }
+
+                // TEMP VAZIO & SLOT USADO -- PEGAR ITEM
+                else if ( temp_isEmpty && !slot_isEmpty ){
+                    temp_slot.innerHTML = '';
+                    temp_slot.appendChild( el.firstElementChild );
+
+                    if ( triggerFrom == 'crafting_out' ){
+                        let list_slot_crafting_table = document.querySelectorAll(".slot-list-wrapper-craftingTable .slot");
+                        for (let i = 0; i < list_slot_crafting_table.length; i++) {
+                            if ( list_slot_crafting_table[i].querySelector('.item-value') != null ){
+                                let qty = list_slot_crafting_table[i].querySelector('.item-value').innerHTML;
+                                if ( qty > 1 ){
+                                    qty--;
+                                    list_slot_crafting_table[i].querySelector('.item-value').innerHTML = qty;
+                                }else{
+                                    list_slot_crafting_table[i].innerHTML = '';
+                                }
+                            }
+                        }
+                        findCraftItemFromPattern();
+                    }
+
+                }
+
+                // TEMP VAZIO & SLOT VAZIO
+                else{
+
+                }
+
+
+
+                if ( triggerFrom == "crafting_in" && !(temp_isEmpty==slot_isEmpty) ){
+                    
+                    findCraftItemFromPattern();
+                }
+
+                checkItemQty();
+                
+            };
+
+
+
+
+
+
+
+            // RIGHT CLICK
+            el.oncontextmenu = (evt)=>{
+
+
+                let slot_isEmpty = ( el.children.length <= 0 );
+                let temp_isEmpty = ( temp_slot.children.length <= 0 );
+                
+                let triggerFrom = '';
+
+
+                if ( el.parentNode.parentElement.classList.contains('slot-list-wrapper-craftingTable') ){
+                    triggerFrom = 'crafting_in';
+                }
+                else if ( el.parentNode.parentElement.classList.contains('slot-list-wrapper-craftingTable-out') ){
+                    triggerFrom = 'crafting_out'
+                }
+                else if ( el.parentNode.parentElement.classList.contains('slot-list-wrapper-inventory') ){
+                    triggerFrom = 'inventory';
+                }
+                else {
+                    triggerFrom = 'hand';
+                }
+
+
+
+
+
+                // TEMP USADO & SLOT USADO (Se for do mesmo tipo, add +1 ao slot)
+                if ( !temp_isEmpty && !slot_isEmpty ){
+
+                    if ( el.firstElementChild.getAttribute("item-name") == temp_slot.firstElementChild.getAttribute("item-name") && triggerFrom != "crafting_out" ){
+
+                         
+                        const objRef = getItemByName( temp_slot.firstElementChild.getAttribute("item-name") );
+                        let max_pack = objRef.max_pack;
+                        let temp_slot_qty = Math.trunc(temp_slot.querySelector(".item-value").innerHTML);
+                        let slot_qty      = Math.trunc(el.querySelector(".item-value").innerHTML);
+
+
+                        if ( slot_qty < max_pack ){
+
+                            temp_slot.querySelector(".item-value").innerHTML = temp_slot_qty - 1; 
+                            el.querySelector(".item-value").innerHTML = slot_qty + 1;
+                            
+                            if ( temp_slot_qty - 1 <= 0 ){
+                                temp_slot.innerHTML = '';
+                            }
+
+                        }
+
+
+                    }
+
+                }
+
+                // TEMP USADO & SLOT VAZIO -- COLOCAR NO VAZIO (1x)
+                else if ( !temp_isEmpty && slot_isEmpty && triggerFrom != 'crafting_out' ){
+                    let temp_qty = (temp_slot.querySelector('.item-value').innerHTML);
+
+                    if ( temp_qty > 0 ){
+                        temp_qty--;
+                        temp_slot.querySelector('.item-value').innerHTML = temp_qty;
+                        
+                        el.innerHTML = temp_slot.innerHTML;
+                        el.querySelector('.item-value').innerHTML = '1';
+
+                        if ( temp_qty <= 0 ){
+                            temp_slot.innerHTML = '';
+                        }
+
+                    } 
+
+                }
+
+                // TEMP VAZIO & SLOT USADO -- DIVIDOR ITEM
+                else if ( temp_isEmpty && !slot_isEmpty ){
+
+
+                    if ( triggerFrom == 'crafting_out' ){
+
+                        let list_slot_crafting_table = document.querySelectorAll(".slot-list-wrapper-craftingTable .slot");
+                        for (let i = 0; i < list_slot_crafting_table.length; i++) {
+                            if ( list_slot_crafting_table[i].querySelector('.item-value') != null ){
+                                let qty = list_slot_crafting_table[i].querySelector('.item-value').innerHTML;
+                                if ( qty > 1 ){
+                                    qty--;
+                                    list_slot_crafting_table[i].querySelector('.item-value').innerHTML = qty;
+                                }else{
+                                    list_slot_crafting_table[i].innerHTML = '';
+                                }
+                            }
+                        }
+
+                        temp_slot.appendChild( el.firstElementChild );
+
+                        findCraftItemFromPattern();
+
+                    }
+
+                    else{
+
+                        let slot_qty = Math.trunc(el.querySelector('.item-value').innerHTML / 2);
+                        if ( slot_qty >= 1 ){
+                            let temp_qty = Math.trunc(el.querySelector('.item-value').innerHTML) - slot_qty;
+                            temp_slot.innerHTML = el.innerHTML;
+                            el.querySelector('.item-value').innerHTML = slot_qty;
+                            temp_slot.querySelector('.item-value').innerHTML = temp_qty;
+                        }
+                        else{
+                            temp_slot.appendChild( el.firstElementChild );
+                        }
+
+                    }
+                    
+                }
+
+                // TEMP VAZIO & SLOT VAZIO
+                else{
+
+                }
+
+
+
+                if ( triggerFrom == "crafting_in" && !(temp_isEmpty==slot_isEmpty) ){
+                    
+                    findCraftItemFromPattern();
+
+                }
+
+                checkItemQty();
+
+            };
+
+
+
+            
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+        // remove number 1 of the items qty slot
+        function checkItemQty(){
+
+            for (let i = 0; i < slot_all.length; i++){
+                if ( slot_all[i].querySelector('.item-value') != null ){ 
+                    slot_all[i].querySelector('.item-value').style.display = (slot_all[i].querySelector('.item-value').innerHTML <= 1)? 'none' : 'block';
+                }
+            }
+
+
+            if ( temp_slot.firstElementChild != null ){
+                temp_slot.querySelector('.item-value').style.display = (temp_slot.querySelector('.item-value').innerHTML <= 1)? 'none' : 'block';
+            }
+
+
+        }
+
+
+
+
+        // GET ITEM BY NAME
+        function getItemByName( name = '' ){
+
+            let idx = MINECRAFT_ITENS.findIndex((a)=>{
+                return a.name == name;
+            });
+
+            return MINECRAFT_ITENS[idx];
+
+        }
+
+
+
+
+        const MINECRAFT_ITENS = [
+
+            {
+                'name': 'minecraft_grass_block',
+                'max_pack': 64,
+                'icon': [20, 30]
+            },
+
+            {
+                'name': 'minecraft_oak_planks',
+                'max_pack': 64,
+                'icon': [6, 28]
+            },
+
+            {
+                'name': 'minecraft_oak_log',
+                'max_pack': 64,
+                'icon': [5, 107]
+            },
+
+
+            {
+                'name': 'minecraft_oak_button',
+                'max_pack': 64,
+                'icon': [11, 104]
+            },
+
+            
+            {
+                'name': 'minecraft_iron_ingot',
+                'max_pack': 64,
+                'icon': [28, 109]
+            },
+
+
+            {
+                'name': 'minecraft_flint',
+                'max_pack': 64,
+                'icon': [23, 109]
+            },
+
+            {
+                'name': 'minecraft_flint_and_steel',
+                'max_pack': 1,
+                'icon': [15, 111]
+            },
+
+
+            {
+                'name': 'minecraft_stick',
+                'max_pack': 64,
+                'icon': [19, 35]
+            }
+
+
+        ];
+
+
+
+
+
+        const MINECRAFT_RECIPES = [
+
+            {
+                "type": "crafting_shapeless",
+                "ingredients": [
+                    {"item": "minecraft_oak_log"}
+                ],
+                "result": {
+                    "count": 4,
+                    "item": "minecraft_oak_planks"
+                }
+            },
+
+
+
+            {
+                "type": "crafting_shapeless",
+                "ingredients": [
+                    {"item": "minecraft_oak_planks"}
+                ],
+                "result": {
+                    "item": "minecraft_oak_button"
+                }
+            },
+
+
+
+            {
+                "type": "crafting_shapeless",
+                "ingredients": [
+                    {"item": "minecraft_flint"},
+                    {"item": "minecraft_iron_ingot"}
+                ],
+                "result": {
+                    "count": 1,
+                    "item": "minecraft_flint_and_steel"
+                }
+            },
+
+
+
+            {
+                "type": "crafting_shaped",
+
+
+                "key": [
+                    {
+                        "key_name": "#",
+                        "item": "minecraft_oak_planks"
+                    }
+                ],
+
+
+                "pattern": [
+                    "#",
+                    "#"
+                ],
+
+                "result": {
+                    "count": 4,
+                    "item": "minecraft_stick"
+                }
+            }
+
+
+        ];
+
+        
+
+
+
+
+        function findCraftItemFromPattern(){
+
+            let list_slot_crafting_table = document.querySelectorAll(".slot-list-wrapper-craftingTable .slot");
+
+            let slot_out = document.querySelector(".slot-list-wrapper-craftingTable-out .slot");
+
+            let tempArrItemNames = [];
+
+
+            for (let i = 0; i < MINECRAFT_RECIPES.length; i++){
+
+                tempArrItemNames = [];
+                let flag_canCraft = false;
+
+                // push to 'tempArrItemNames'
+                for (let j = 0; j < list_slot_crafting_table.length; j++){
+                    if ( list_slot_crafting_table[j].firstElementChild != null ){
+                        tempArrItemNames.push({
+                            'name': list_slot_crafting_table[j].firstElementChild.getAttribute('item-name'),
+                            'idx': j
+                        });
+                    }
+
+                }
+
+
+
+                // SHAPELESS 
+                if ( MINECRAFT_RECIPES[i].type == "crafting_shapeless" ){
+ 
+
+                    resultToReturn = tempArrItemNames.some((element, index) => {
+                        return tempArrItemNames.indexOf(element) !== index
+                    });
+
+                    // QAUNTIDADE DE ITENS NO CRAFTING é A MESMA QUE A QUANTIDADE INGREDIENTES
+                    if ( MINECRAFT_RECIPES[i].ingredients.length == tempArrItemNames.length ){
+                         
+                        // console.log( tempArrItemNames )
+
+                        for (let j = 0; j < MINECRAFT_RECIPES[i].ingredients.length; j++){
+                             
+                            // ITEM REPETIDO?
+                            const foundIdx = tempArrItemNames.map(e => e.name).indexOf( MINECRAFT_RECIPES[i].ingredients[j].item );
+
+                            flag_canCraft = !(foundIdx < 0);
+
+                            if ( foundIdx < 0 ){ 
+                                break;
+                            }
+
+                        } 
+
+
+                    }
+                    
+                }
+
+
+
+                // SHAPED
+                else{
+
+
+
+                    
+
+
+
+                }
+
+
+                
+
+                //console.log( flag_canCraft );
+
+                if ( flag_canCraft ){
+                    
+                    console.log('can craft: ' + MINECRAFT_RECIPES[i].result.item );
+
+                    let craft_item_idx = MINECRAFT_ITENS.findIndex((a)=>{ return a.name == MINECRAFT_RECIPES[i].result.item });
+
+                    let qty_result = 1;
+
+                    if ( MINECRAFT_RECIPES[i].result.count ){
+                        qty_result = MINECRAFT_RECIPES[i].result.count;
+                    }
+
+                    slot_out.innerHTML = `
+                    <div class="item" item-name="${MINECRAFT_RECIPES[i].result.item}" style="background-position: calc(-16px * ${MINECRAFT_ITENS[craft_item_idx].icon[0]}) calc(-16px * ${MINECRAFT_ITENS[craft_item_idx].icon[1]})">
+                        <div class="item-value">${qty_result}</div>
+                    </div>
+                    `;
+                    break;
+                    
+                }else{
+                    slot_out.innerHTML = '';
+                }
+
+                //console.log( tempArrItemNames )
+
+                
+                
+
+
+            }
+
+
+        }
+
+
+        
+        //findSlotFree( 'minecraft_oak_planks' );
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+
+    <div id="gameui_screen">
+
+
+
+        <div id="temp_slot"></div>
+
+        <div id="tooltip">asd</div>
+
+        
+
+
+
+        <div id="gameui_container">
+
+
+
+            <!-- TABs -->
+            <div id="tab_wrapper">
+
+                <div class="tab_row">
+                    <div class="tab tab_active" tab-title="Blocos de construção"> <div class="tab_icon" style="background-position: calc(-16px * 5) calc(-16px * 27)"></div> </div>
+                    <div class="tab" tab-title="Blocos decorativos"> <div class="tab_icon" style="background-position: calc(-16px * 9) calc(-16px * 107)"></div> </div>
+                    <div class="tab" tab-title="Redstone"> <div class="tab_icon" style="background-position: calc(-16px * 7) calc(-16px * 110)"></div> </div>
+                    <div class="tab" tab-title="Transportes"> <div class="tab_icon" style="background-position: calc(-16px * 14) calc(-16px * 104)"></div> </div>
+                    <div class="tab" tab-title="Barra rápidas salvas"> <div class="tab_icon" style="background-position: calc(-16px * 7) calc(-16px * 101)"></div> </div>
+                    <div class="tab" tab-title="Buscar"> <div class="tab_icon" style="background-position: calc(-16px * 31) calc(-16px * 15)"></div> </div>
+                </div>
+
+
+                <div class="tab_row">
+                    <div class="tab" tab-title="Diversos"> <div class="tab_icon" style="background-position: calc(-16px * 10) calc(-16px * 98)"></div> </div>
+                    <div class="tab" tab-title="Alimentos"> <div class="tab_icon" style="background-position: calc(-16px * 24) calc(-16px * 99)"></div> </div>
+                    <div class="tab" tab-title="Ferramentas"> <div class="tab_icon" style="background-position: calc(-16px * 21) calc(-16px * 111)"></div> </div>
+                    <div class="tab" tab-title="Combate"> <div class="tab_icon" style="background-position: calc(-16px * 19) calc(-16px * 113)"></div> </div>
+                    <div class="tab" tab-title="Poções"> <div class="tab_icon" style="background-position: calc(-16px * 3) calc(-16px * 9)"></div> </div>
+                    <div class="tab" tab-title="Inventário"> <div class="tab_icon" style="background-position: calc(-16px * 22) calc(-16px * 38)"></div> </div>
+                </div>
+
+
+            </div>
+
+
+
+
+
+            <!-- TAB LABEL & SEARCH INPUT -->
+            <div id="input_wrapper">
+                <div id="tab_label">Blocos de Construção</div>
+                <input type="text" id="input_element">
+            </div>
+
+
+            <!-- SCROLL -->
+            <div id="scroll_wrapper">
+
+                <div id="scroll_track">
+                    <div id="scroll_thumb" initY="0" pressed="false" percent="0"></div>
+                </div>
+
+            </div>
+
+
+
+
+            <!-- ARMOR SLOTS -->
+            <div id="armor_slot_list">
+                <div class="slot" style="left: -62px; top: -48px;"></div>
+                <div class="slot" style="left: -43px; top: -62px;"></div>
+                <div class="slot" style="left: -43px; top: -35px;"></div>
+                <div class="slot" style="left: 11px; top: -62px;"></div>
+                <div class="slot" style="left: 11px; top: -35px;"></div>
+            </div>
+
+
+
+
+            
+
+
+            <!-- INVENTORY SLOTS -->
+            <div id="inventory_slot_list">
+
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+
+            </div>
+
+
+
+
+
+            <!-- HAND SLOTS -->
+            <div id="hand_slot_list">
+
+                <div class="slot">
+                    <!-- <div class="item">
+                        <div class="item-value">64</div>
+                    </div> -->
+                </div>
+
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+            </div>
+
+
+
+            <!-- ITENS SLOTS -->
+            <div id="itens_slot_list">
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+            </div>
+
+
+
+
+            <!-- ITENS -->
+            <div class="gameui_wrapper gameui_active" style="background-image: url('creative_inventory/tab_items.png');"></div>
+    
+    
+
+            <!-- ITENS (SEARCH) -->
+            <div class="gameui_wrapper" style="background-image: url('creative_inventory/tab_item_search.png');"></div>
+    
+    
+            <!-- INVENTORY -->
+            <div class="gameui_wrapper" style="background-image: url('creative_inventory/tab_inventory.png');"></div>
+
+
+
+        </div>
+
+        
+
+        
+
+
+        
+    </div>
+
+
+
+
+
+    
+
+    <script src="items.js"></script>
+    <!-- <script src="jquery-3.6.3.slim.min.js"></script> -->
+    <script src="script.js"></script>
+ 
+
+    
+     
+
+
+</body>
+</html> 

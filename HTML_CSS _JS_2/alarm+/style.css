@@ -1,0 +1,588 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #fff;
+    user-select: none;
+}
+
+
+
+
+
+
+
+
+
+
+/* UI TOGGLE SWITCH */
+.UI-switch input{
+    display: none;
+}
+
+.UI-switch > div{
+    width: 32px;
+    height: 16px;
+    background-color: #9e9e9e;
+    border-radius: 25px;
+    margin: 2px;
+}
+
+.UI-switch > div > div{
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+    border-radius: 50%;
+    transform: scale(1.1);
+    box-shadow: 0 0 3px 0 #000;
+    transition: 200ms;
+    position: relative;
+    left: 0; 
+}
+
+.UI-switch input:checked ~ div{
+    
+}
+.UI-switch input:checked ~ div > div{
+    background-color: #007bff;
+    left: calc( 32px / 2 );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.screen{
+    overflow: hidden auto;
+    width: 100%;
+    height: 100%;
+    transition: 200ms left;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+
+.screen-wrapper{
+
+}
+
+
+
+
+
+
+
+/* HEADERs */
+#screen-main header,
+#screen-addEdit header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    height: 48px;
+    background-color: #fff;
+    margin-bottom: 4px;
+    box-shadow: 0 0 3px 0 #000;
+    z-index: 1;
+    position: sticky;
+    top: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* TELA - MAIN */
+#screen-main{
+    background-color: #fff;
+}
+
+
+.icons-list{
+    display: flex;
+    align-items: center;
+}
+
+.icons-list > div{
+    margin: 0 5px;
+    width: 32px;
+    height: 32px;
+    background-color: #fff;
+    transition: 500ms background-color;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow: 0 0 3px 0 #000;
+}
+
+.icons-list > div:active{
+    background-color: #d0d0d0;
+    transition: none;
+}
+
+
+
+
+
+
+
+
+/* LISTA DE ALARMES */
+#alarm-list{
+    padding: 2px 4px;
+}
+
+/* CONTAINER DO ITEM */
+.alarm-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    margin-bottom: 8px;
+    box-shadow: 0 0 3px 0 #000;
+    background-color: #f44336;
+    border-radius: 8px;
+}
+
+
+
+/* CONTAINER DOS PARAMETROS */
+.alarm-item-params{    
+    width: 100%;
+    color: #fff;
+    overflow: hidden;
+}
+
+.alarm-item-params > div{
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+
+
+/* LABEL DO ITEM */
+.alarm-item-param-label{
+    text-overflow: ellipsis;
+}
+
+/* HH:MM (AM/PM) DO ITEM */
+.alarm-item-param-time{
+    font-size: 1.5em;
+}
+
+/* DIAS QUE REPETE */
+.alarm-item-param-repeat{
+    color: #323232;
+    font-size: 0.8em;
+    text-overflow: ellipsis;
+}
+
+
+
+
+/*** STADO DO ALARME ***/
+.alarm-item-state{
+    padding: 0 4px;
+}
+
+
+
+
+
+
+/*** POPUP ***/
+#popup-wrapper{
+    width: 100%;
+    padding: 8px;
+    display: none;
+    position: fixed;
+    bottom: 0;
+}
+
+
+#popup-content{
+    background-color: #282828aa;
+    color: #fff;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px 0 #626262;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* TELA - ADD/EDIT */
+#screen-addEdit{
+    background-color: #fff;
+    left: -100%;
+}
+
+#screen-addEdit header .header-button{
+    padding: 4px;
+}
+
+
+/* FECHAR */
+#screen-addEdit header .header-button:first-child{
+    color: #dc3545;
+}
+
+
+/* SALVAR */
+#screen-addEdit header .header-button:last-child{
+    color: #007bff;
+}
+
+
+/* ON PRESS */
+#screen-addEdit header .header-button:active{
+    background-color: #f5f5f5;
+}
+ 
+
+
+#screen-addEdit .screen-wrapper > .content-wrapper{
+    border-bottom: 1px solid #d0d0d0;
+}
+
+
+
+
+
+
+
+
+
+/*** EDITAR ***/
+
+
+
+/* SELECIONAR HH:MM */
+#content-wrapper-time{
+    display: flex;
+    justify-content: space-between;
+    padding: 4px;
+}
+
+
+
+
+
+
+/* -- TIME MODE -- */
+.time-mode-button input{
+    display: none;
+}
+
+.time-mode-button > div{
+    background-color: #bdbdbd;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin: 2px 0;
+    transition: 200ms;
+}
+
+
+.time-mode-button input:checked ~ div{
+    background-color: #007bff;
+}
+
+
+
+
+
+
+
+
+
+/* -- CLICK > HH:MM -- */
+
+.time-edit-column{
+
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+
+
+.clock-value{
+    padding: 8px;
+    width: 32px;
+    border: 1px solid #9e9e9e;
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.time-edit-dots{
+    width: 0;
+    font-weight: bold;
+    font-size: 2em;
+}
+
+
+
+.clock-handler{
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 500ms background-color;
+}
+
+.clock-handler:active{
+    background-color: #e0e0e0;
+    transition: none;
+}
+
+
+.time-edit-column > .clock-handler:first-child{
+    border-radius: 5px 5px 0 0;
+}
+
+.time-edit-column > .clock-handler:last-child{
+    border-radius: 0 0 5px 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* SELECIONAR REPETIÇÃO */
+
+#content-wrapper-repeat{
+    padding: 8px;
+}
+
+#repeatList{
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.day-select input{
+    display: none;
+}
+
+.day-select > div{
+    width: 32px;
+    height: 32px;
+    background-color: transparent;
+    border: 3px solid #d0d0d0;
+    color: #d0d0d0;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 0;
+    margin-right: 5px;
+
+    transition: 200ms;
+}
+
+.day-select input:checked ~ div{
+    border-radius: 50%;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+
+
+
+
+
+
+/* EDITAR LABEL */
+#content-wrapper-label{
+    padding: 4px 8px;
+    padding-top: 16px;
+}
+
+#content-wrapper-label > div:first-child{
+    color: #9e9e9e;
+    display: flex;
+}
+
+#content-wrapper-label input{
+    border: 0;
+    outline: none;
+    margin-left: 10px;
+    width: 100%;
+    border-bottom: 2px solid #d0d0d0;
+    transition: 200ms;
+}
+
+#content-wrapper-label input:focus{
+    border-color: #007bff;
+}
+
+
+
+#label-max{
+    font-size: 0.8em;
+    color: #dc3545;
+    margin-left: 25px;
+    opacity: 0;
+}
+
+
+
+
+
+
+
+
+
+
+/* SELECIONAR COR */
+#content-wrapper-color{
+    padding: 8px
+}
+
+#colorList{
+    display: flex;
+    overflow: auto hidden;
+}
+
+
+.color-select input{
+    display: none;
+}
+
+.color-select > div{
+    width: 32px;
+    height: 32px;
+    border: 5px solid #fff;
+    background-color: aqua;
+    border-radius: 50%;
+    margin: 5px 8px;
+    
+}
+
+
+.color-select input:checked ~ div{
+    border-color: transparent;
+    transition: 300ms;
+}
+
+
+
+/* -- CORES DO RADIO BUTTON -- */
+.color-select:nth-child(1) > div{
+    background-color: #f44336;
+}
+.color-select:nth-child(2) > div{
+    background-color: #E91E63;
+}
+.color-select:nth-child(3) > div{
+    background-color: #03a9f4;
+}
+.color-select:nth-child(4) > div{
+    background-color: #4caf50;
+}
+.color-select:nth-child(5) > div{
+    background-color: #ffc107;
+}
+.color-select:nth-child(6) > div{
+    background-color: #607d8b;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* SELECIONAR MUSICA */
+#content-wrapper-song{
+    padding: 8px;
+    
+}
+
+#songList{
+    display: flex;
+}
+
+
+.song-select input{
+    display: none;
+}
+
+
+.song-select > div{
+    width: 48px;
+    height: 48px;
+    color: #fff;
+    background-color: #007bff;
+    border-radius: 8px;
+     
+    border: 3px solid #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.song-select input:checked ~ div{
+    border-color: transparent;
+}
+
+
+.song-select > span{
+    font-size: 0.8em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    width: 50px;
+    display: block;
+}

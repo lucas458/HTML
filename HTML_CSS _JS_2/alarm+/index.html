@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronometro</title>
+
+
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+
+
+
+
+<body>
+
+
+
+    <!-- TELA 1 - PRINCIPAL -->
+    <div class="screen" id="screen-main">
+        <div class="screen-wrapper">
+
+            <header>
+                <div class="header-item"> <strong>Alarmes</strong> </div>
+                <div class="header-item" id="clock-div">0:00 AM</div>
+                <div class="header-item icons-list">
+
+                    <!-- ADD -->
+                    <div onclick="addAlarm()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></svg>
+                    </div>
+
+                    <!-- SETTINGS -->
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M10.5 1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4H1.5a.5.5 0 0 1 0-1H10V1.5a.5.5 0 0 1 .5-.5ZM12 3.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm-6.5 2A.5.5 0 0 1 6 6v1.5h8.5a.5.5 0 0 1 0 1H6V10a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5ZM1 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 1 8Zm9.5 2a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V13H1.5a.5.5 0 0 1 0-1H10v-1.5a.5.5 0 0 1 .5-.5Zm1.5 2.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Z"/></svg>
+                    </div>
+                </div>
+            </header>
+
+
+
+            <!-- LISTA DE ALARMES -->
+            <div id="alarm-list">
+
+                <!-- ITEM -->
+                <!-- <div class="alarm-item">
+                    
+                    <div class="alarm-item-params">
+                        <div class="alarm-item-param-label">Label</div>
+                        <div class="alarm-item-param-time">09:00 AM</div>
+                        <div class="alarm-item-param-repeat">Dom, Seg, Ter, Qua, Qui, Sex</div>
+                    </div>
+                     
+                    <div class="alarm-item-state">
+                        <label class="UI-switch">
+                            <input type="checkbox">
+                            <div><div></div></div>
+                        </label>
+                    </div>
+                </div> -->
+
+
+
+
+            </div>
+            
+
+
+
+            <div id="popup-wrapper">
+                <div id="popup-content">Alarme definido para 0 dias, 00 horas e 00 minutos.</div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <!-- TELA 2 - ADD/EDIT -->
+    <div class="screen" id="screen-addEdit">
+        <div class="screen-wrapper">
+
+            <header>
+                <div class="header-item header-button" onclick="screenAddEdit(false, 0)">Cancelar</div>
+                <div class="header-item"> <strong id="screen2-title">Add Alarme</strong> </div>
+                <div class="header-item header-button" onclick="screenAddEditSave()">Salvar</div>
+            </header>
+
+
+            <!-- SELECIONAR HH:MM -->
+            <div class="content-wrapper" id="content-wrapper-time">
+                
+                
+                <!-- HOURS -->
+                <div class="time-edit-column" id="time-edit-hour">
+
+                    <!-- UP -->
+                    <div class="clock-up clock-handler">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                        </svg>
+                    </div>
+
+                    <!-- VALUE -->
+                    <div class="clock-value">00</div>
+
+                    <!-- DOWN -->
+                    <div class="clock-down clock-handler">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+
+                </div>
+
+                <!-- DOTS -->
+                <div class="time-edit-column time-edit-dots">:</div>
+
+
+
+                <!-- MINUTES -->
+                <div class="time-edit-column" id="time-edit-minutes">
+                    
+                    <!-- UP -->
+                    <div class="clock-up clock-handler">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                        </svg>
+                    </div>
+
+                    <!-- VALUE -->
+                    <div class="clock-value">00</div>
+
+                    <!-- DOWN -->
+                    <div class="clock-down clock-handler">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+
+                </div>
+
+
+
+                <!-- TIME MODE -->
+                <div class="time-edit-column" id="time-edit-mode">
+
+                    <label class="time-mode-button">
+                        <input type="radio" name="time-mode" checked>
+                        <div>AM</div>
+                    </label>
+
+                    <label class="time-mode-button">
+                        <input type="radio" name="time-mode">
+                        <div>PM</div>
+                    </label>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- SELECIONA REPETIÇÃO -->
+            <div class="content-wrapper" id="content-wrapper-repeat">
+                
+                <div id="repeatList">
+
+                    <!-- DIA ITEM 1 -->
+                    <label class="day-select">
+                        <input type="checkbox">
+                        <div>D</div>
+                    </label>
+
+                    <!-- DIA ITEM 2 -->
+                    <label class="day-select">
+                        <input type="checkbox">
+                        <div>S</div>
+                    </label>
+
+                    <!-- DIA ITEM 3 -->
+                    <label class="day-select">
+                        <input type="checkbox">
+                        <div>T</div>
+                    </label>
+
+                    <!-- DIA ITEM 4 -->
+                    <label class="day-select">
+                        <input type="checkbox">
+                        <div>Q</div>
+                    </label>
+
+                    <!-- DIA ITEM 5 -->
+                    <label class="day-select">
+                        <input type="checkbox">
+                        <div>Q</div>
+                    </label>
+
+                    <!-- DIA ITEM 6 -->
+                    <label class="day-select">
+                        <input type="checkbox">
+                        <div>S</div>
+                    </label>
+
+                    <!-- DIA ITEM 7 -->
+                    <label class="day-select">
+                        <input type="checkbox">
+                        <div>S</div>
+                    </label>
+
+                </div>
+                
+            </div>
+
+
+            <!-- LABEL -->
+            <div class="content-wrapper" id="content-wrapper-label">
+                
+                <div> 
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>
+                    </div>
+                    <input type="text" id="labelInput" maxlength="25" placeholder="Titlulo">
+
+                </div>
+
+                <div id="label-max">Máx. 25 caracteres</div>
+
+            </div>
+
+
+            <!-- SELECIONAR COR -->
+            <div class="content-wrapper" id="content-wrapper-color">
+
+                <div><strong>Selecionar cor</strong></div>
+                
+                <div id="colorList">
+
+                    <!-- COLOR ITEM 1 -->
+                    <label class="color-select">
+                        <input type="radio" name="color" checked>
+                        <div></div>
+                    </label>
+
+                    <!-- COLOR ITEM 2 -->
+                    <label class="color-select">
+                        <input type="radio" name="color">
+                        <div></div>
+                    </label>
+
+                    <!-- COLOR ITEM 3 -->
+                    <label class="color-select">
+                        <input type="radio" name="color">
+                        <div></div>
+                    </label>
+
+                    <!-- COLOR ITEM 4 -->
+                    <label class="color-select">
+                        <input type="radio" name="color">
+                        <div></div>
+                    </label>
+
+                    <!-- COLOR ITEM 5 -->
+                    <label class="color-select">
+                        <input type="radio" name="color">
+                        <div></div>
+                    </label>
+
+                    <!-- COLOR ITEM 6 -->
+                    <label class="color-select">
+                        <input type="radio" name="color">
+                        <div></div>
+                    </label>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- SELECIONAR MUSICA -->
+            <div class="content-wrapper" id="content-wrapper-song">
+                <div><strong>Selecionar música</strong></div>
+
+                <div id="songList">
+
+                    <!-- SONG ITEM 1 -->
+                    <label class="song-select">
+                        <input type="radio" name="song">
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M9 13c0 1.105-1.12 2-2.5 2S4 14.105 4 13s1.12-2 2.5-2 2.5.895 2.5 2z"/><path fill-rule="evenodd" d="M9 3v10H8V3h1z"/><path d="M8 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 13 2.22V4L8 5V2.82z"/></svg>
+                        </div>
+                        <span>title0</span>
+                    </label>
+
+                    <!-- SONG ITEM 1 -->
+                    <label class="song-select">
+                        <input type="radio" name="song">
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M9 13c0 1.105-1.12 2-2.5 2S4 14.105 4 13s1.12-2 2.5-2 2.5.895 2.5 2z"/><path fill-rule="evenodd" d="M9 3v10H8V3h1z"/><path d="M8 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 13 2.22V4L8 5V2.82z"/></svg>
+                        </div>
+                        <span>title1</span>
+                    </label>
+
+                </div>
+                
+
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+     
+
+    <!-- SCRIPTS -->
+    <script src="jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
