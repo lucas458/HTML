@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+        }
+
+
+
+        .sprite32{
+            background-image: url("Idle.png");
+            background-position: 0;
+            background-repeat: no-repeat;
+            width: 32px;
+            height: 32px;
+            image-rendering: pixelated; 
+            animation: player_idle 1s infinite steps(1, end);
+
+            position: absolute;
+
+        }
+
+
+        @keyframes player_idle {
+            0%{background-position: 0;}
+            9%{background-position: -32px;}
+            18%{background-position: -64px;}
+            27%{background-position: -96px;}
+            36%{background-position: -128px;}
+            45%{background-position: -160px;}
+            54%{background-position: -192px;}
+            63%{background-position: -224px;}
+            72%{background-position: -256px;}
+            81%{background-position: -288px;}
+            100%{background-position: -320px;}
+        }
+
+        @keyframes player_run {
+            0%{background-position: 0;}
+            8%{background-position: -32px;}
+            16%{background-position: -64px;}
+            24%{background-position: -96px;}
+            32%{background-position: -128px;}
+            40%{background-position: -160px;}
+            48%{background-position: -192px;}
+            56%{background-position: -224px;}
+            64%{background-position: -256px;}
+            72%{background-position: -288px;}
+            80%{background-position: -320px;}
+            100%{background-position: -352px;}
+        }
+
+
+
+    </style>
+
+</head>
+<body>
+
+
+
+
+
+
+
+
+    <div id="game">
+
+
+
+        <div class="sprite32" id="player"></div>
+
+
+    </div>
+
+
+
+    
+
+    <script>
+
+
+        var PLAYER = {
+            x: 0,
+            y: 0
+        }
+
+
+
+        var TIMER_KEYBOARD = null;
+
+
+        
+        window.addEventListener("keydown", (e)=>{
+             
+        
+            if  (TIMER_KEYBOARD == null){
+
+                TIMER_KEYBOARD = setInterval(()=>{
+
+
+                    if (e.key == "ArrowRight" || e.key == "ArrowLeft"){
+                        document.getElementById("player").style.backgroundImage = 'url("Run.png")';
+                        document.getElementById("player").style.animation = "player_run 1s infinite steps(1, end)";
+
+                        if ( e.key == "ArrowRight" ){
+                            document.getElementById("player").style.transform = "scaleX(1)";
+                            PLAYER.x += 5;
+                            
+                        }else{
+                            document.getElementById("player").style.transform = "scaleX(-1)";
+                            PLAYER.x -= 5;
+                        }
+
+                        
+
+                        document.getElementById("player").style.left = PLAYER.x + 'px';
+
+                        console.log("run");
+                    }
+
+
+
+
+                }, 50);
+
+            }
+            
+            
+            
+
+
+        });
+
+
+
+        window.addEventListener("keyup", (e)=>{
+             
+            clearInterval(TIMER_KEYBOARD);
+            TIMER_KEYBOARD = null;
+             
+            document.getElementById("player").style.backgroundImage = 'url("Idle.png")';
+            document.getElementById("player").style.animation = "player_idle 1s infinite steps(1, end)";
+            console.log("idle")
+            
+ 
+ 
+         });
+
+
+
+        
+
+
+    </script>
+
+
+    
+</body>
+</html>

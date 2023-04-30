@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Player</title>
+
+
+	<link rel="shortcut icon" href="icon.png" type="image/x-icon">
+	<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+
+
+
+
+
+
+
+
+
+	<!-- LOAD SCREEN -->
+	<div id="loading">
+		<div></div>
+	</div>
+
+
+
+
+
+
+	
+
+
+
+	<!-- ACTIONSHEET -- MAIN WIDGET & ALBUM & ARTIST OPTION -->
+	<div class="actionsheet-wrapper" id="actionsheet-itemOpt">
+		<div class="actionsheet-dummy"></div>
+		<div class="actionsheet-window">
+			<div class="actionsheet-content">
+				<div class="actionsheet-list">
+					<div class="actionsheet-button" onclick="actionsheetPlay()">Reproduzir</div>
+					<div class="actionsheet-button" onclick="actionsheetAddQueue(true)">Reproduzir a Seguir</div>
+					<div class="actionsheet-button" onclick="actionsheetAddQueue(false)">Adicionar à fila</div>
+					<div class="actionsheet-button actionsheet-favorite" onclick="actionsheetStateFavorite()">Adicionar aos Favoritos</div>
+				</div>
+				<div class="actionsheet-button actionsheet-close">Fechar</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<!-- ACTIONSHEET -- QUEUE WIDGET OPTION -->
+	<div class="actionsheet-wrapper" id="actionsheet-queueItemOpt" style="z-index: 2;">
+		<div class="actionsheet-dummy"></div>
+		<div class="actionsheet-window">
+			<div class="actionsheet-content">
+				<div class="actionsheet-list">
+					<div class="actionsheet-button" style="color: #dc3545;" onclick="actionsheet_deleteItemQueue()">Remover</div>
+					<div class="actionsheet-button" onclick="actionsheetQueuePlay(queue_item_option_clicked_index)">Reproduzir</div>
+					<div class="actionsheet-button queue-sort" onclick="queuemove_up(queue_item_option_clicked_index)">Subir</div>
+					<div class="actionsheet-button queue-sort" onclick="queuemove_down(queue_item_option_clicked_index)">Descer</div>
+				</div>
+				<div class="actionsheet-button actionsheet-close">Fechar</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- SCREEN SIDE: ALBUM CONTENT -->
+	<div class="screen screen-side" id="albumContent-screen">
+
+		<div class="screen-header" style="box-shadow: 0 0 5px 0 #000;">
+			
+			<div class="icon32" style="min-width: 48px; height: 48px;" onclick="toggleScreenAlbuns(false)">
+				<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+				</svg>
+			</div>
+			<div class="screen-side-title screen-title-album">Teste</div>
+		</div>
+
+
+		<div class="screen-section">
+			
+			<!-- ITEM -->
+			<!-- <div class="elementWidget-wrapper">
+				
+				<div class="elementWidget-image">
+					<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 16 16">
+						<path d="M8 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0z"/>
+					</svg>
+				</div>
+				
+				<div class="elementWidget-content">
+					<div class="elementWidget-title">title</div>
+					<div class="elementWidget-subTitle">artist</div>
+				</div>
+				
+				<div class="elementWidget-opt">
+					<div class="icon24">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+							<path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+						</svg>
+					</div>
+				</div>
+			</div> -->
+
+		</div>
+
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<!-- SCREEN SIDE: ARTIST CONTENT -->
+	<div class="screen screen-side" id="artistContent-screen">
+
+		<div class="screen-header" style="box-shadow: 0 0 5px 0 #000;">
+			
+			<div class="icon32" style="min-width: 48px; height: 48px;" onclick="toggleScreenArtists(false)">
+				<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+				</svg>
+			</div>
+			<div class="screen-side-title screen-title-artist">Teste</div>
+		</div>
+
+
+		<div class="screen-section">
+			
+
+			<!-- LIST ALBUM IN ARTISTS -->
+
+			<div class="artist-summary">Albuns</div>
+
+			<div id="album-list">
+
+				<!-- ITEM -->
+				<div class="grid-wrapper">
+					<div class="grid-img"><img src="dummy.jpeg"></div>
+					<div class="grid-content">
+						<div class="grid-params">
+							<div class="grid-title">Album Name</div>
+							<div class="grid-subTitle">Artist Name</div>
+						</div>
+					</div>
+				</div> 
+
+
+			</div>
+
+
+			<div class="artist-summary">Faixas</div>
+
+			<!-- LIST TRACKS -->
+			<div id="track-list">
+
+
+				<!-- ITEM -->
+				<div class="elementWidget-wrapper">
+					
+					<div class="elementWidget-image">
+						<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 16 16">
+							<path d="M8 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+							<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0z"/>
+						</svg>
+					</div>
+					
+					<div class="elementWidget-content">
+						<div class="elementWidget-title">title</div>
+						<div class="elementWidget-subTitle">artist</div>
+					</div>
+					
+					<div class="elementWidget-opt">
+						<div class="icon24">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+								<path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+							</svg>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			
+
+		</div>
+
+
+	</div>
+
+
+
+
+
+
+
+	<!-- SCREEN SIDE: FOLDER CONTENT -->
+	<div class="screen screen-side" id="folderContent-screen">
+
+		<div class="screen-header" style="box-shadow: 0 0 5px 0 #000;">
+			
+			<div class="icon32" style="min-width: 48px; height: 48px;" onclick="toggleScreenFolders(false)">
+				<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" viewBox="0 0 16 16">
+					<path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+				</svg>
+			</div>
+			<div class="screen-side-title">Voltar</div>
+		</div>
+
+
+		<div class="screen-section">
+			
+			<!-- ITEM -->
+			<div class="elementWidget-wrapper">
+				
+				<div class="elementWidget-image">
+					<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 16 16">
+						<path d="M8 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0z"/>
+					</svg>
+				</div>
+				
+				<div class="elementWidget-content">
+					<div class="elementWidget-title">title</div>
+					<div class="elementWidget-subTitle">artist</div>
+				</div>
+				
+				<div class="elementWidget-opt">
+					<div class="icon24">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+							<path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+						</svg>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- SCREEN: CONTROLS -->
+	<div class="screen" id="controls-screen">
+
+
+		<div class="screen-header">
+			<!-- NOME DO ALBUM NO HEADER -->
+			<div class="screen-header-title musicInfoAlbum"></div>
+			<!-- FECHAR CONTROLS -->
+			<div class="icon32" style="min-width: 48px; height: 48px;" onclick="toggleScreenControls(false)">
+				<svg xmlns="http://www.w3.org/2000/svg" height="40" width="40" fill="currentColor"><path d="M20 25.625 10 15.625 11.958 13.667 20 21.708 28.042 13.667 30 15.667Z"/></svg>
+			</div>
+		</div>
+
+
+		<div class="screen-section">	
+		</div>
+
+
+		<div class="screen-footer">
+
+			<!-- SEEKVALUE (PROGRESSBAR VALUE) -->
+			<div class="seekValue" style="justify-content: center;">0:00</div>
+
+			<!-- MUSIC INFO -->
+			<div class="musicInfo">
+				<div class="musicTitle"></div>
+				<div class="musicSubTitle"></div>
+			</div>
+
+			<!-- TIME STRING -->
+			<div class="timeString">
+				<div class="timeActual">0:00</div>
+				<div class="timeTotal">--:--</div>
+			</div>
+			
+
+			<!-- PROGRESSBAR -->
+			<div class="progressBar-wrapper">
+				<div class="progressBar">
+					<div class="progressFill"></div>
+				</div>
+			</div>
+
+			<!-- CONTROLS -->
+			<div class="controls">
+
+				<div class="icon32 controls-repeat" style="opacity: 0.5;">
+					<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M7 22 3 18 7 14 8.4 15.45 6.85 17H17V13H19V19H6.85L8.4 20.55ZM5 11V5H17.15L15.6 3.45L17 2L21 6L17 10L15.6 8.55L17.15 7H7V11Z"/></svg>
+				</div>
+
+				<div class="icon32 controls-back">
+					<!-- <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M10 22 0 12 10 2 11.775 3.775 3.55 12 11.775 20.225Z"/></svg> -->
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+				</div>
+
+				<div class="icon32 controls-playPause" style="min-width: 64px;height: 64px;background-color: #616161;border-radius: 50%;">
+					<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M8 19V5L19 12Z"/></svg>
+				</div>
+
+				<div class="icon32 controls-next">
+					<!-- <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M8.025 22 6.25 20.225 14.475 12 6.25 3.775 8.025 2 18.025 12Z"/></svg> -->
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+				</div>
+
+				<div class="icon32 controls-shuffle" style="opacity: 0.5;">
+					<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M9.175 10.575 4 5.4 5.4 4 10.575 9.175ZM14 20V18H16.6L13.425 14.825L14.85 13.4L18 16.55V14H20V20ZM5.4 20 4 18.6 16.6 6H14V4H20V10H18V7.4Z"/></svg>
+				</div>
+
+
+
+			</div>
+
+			<!-- COUTER -->
+			<div class="musicCounter" style="justify-content: center;">0/0</div>
+
+			<!-- OPEN QUEUE -->
+			<div class="openQueue" style="justify-content: center;" onclick="toggleScreenQueue(true)">
+
+				<div class="icon32">
+					<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="currentColor"><path d="M6.062 13 5 11.938 10 6.938 15 11.938 13.938 13 10 9.062Z"/></svg>
+				</div>
+				
+			</div>
+
+		</div>
+
+
+	</div>
+
+
+
+
+
+	<!-- SCREEN: QUEUE -->
+	<div class="screen" id="queue-screen">
+
+
+		<div class="screen-header">
+			<div class="screen-header-title">Lista de Reprodução</div>
+			<!-- FECHAR QUEUE -->
+			<div class="icon32" style="min-width: 48px; height: 48px;" onclick="toggleScreenQueue(false)">
+				<svg xmlns="http://www.w3.org/2000/svg" height="40" width="40" fill="currentColor"><path d="M20 25.625 10 15.625 11.958 13.667 20 21.708 28.042 13.667 30 15.667Z"/></svg>
+			</div>
+		</div>
+
+
+
+		<!-- LIST QUEUE -->
+		<div class="screen-section" id="queue-list">
+			
+
+			<!-- ITEM -->
+			<!-- <div class="elementWidget-wrapper">
+
+				<div class="elementWidget-image">
+					<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 16 16">
+						<path d="M8 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0z"/>
+					</svg>
+				</div>
+				
+				<div class="elementWidget-content">
+					<div class="elementWidget-title">Cell Out</div>
+					<div class="elementWidget-subTitle">NOFX</div>
+				</div>
+				
+				<div class="elementWidget-opt">
+					<div class="icon24">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+							<path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+						</svg>
+					</div>
+				</div>
+			</div> -->
+
+
+
+		</div>
+
+
+
+		<div class="screen-footer">
+
+			<div class="queue-clear" onclick="eraseQueue()"><span>Limpar</span></div>
+
+		</div>
+
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<!-- MAIN SCREEN -->
+	<div id="main-screen">
+
+
+		<div id="main-header">
+			<div id="main-nav">
+				<div class="nav-item nav-item-active">TODOS</div>
+				<div class="nav-item">ALBUNS</div>
+				<div class="nav-item">ARTISTAS</div>
+				<div class="nav-item">PASTAS</div>
+				<div class="nav-item favorite-icon" style="display: flex; justify-content: center;">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+						<path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+					</svg>
+				</div>
+			</div>
+		</div>
+
+
+		<div id="main-content">
+
+			<!-- TODOS -->
+			<div class="screen-content screen-content-active" id="screen-all">
+
+				TODOS
+				<!-- ITEM -->
+				<!-- <div class="elementWidget-wrapper">
+					
+					<div class="elementWidget-image">
+						<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 16 16">
+							<path d="M8 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+							<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0z"/>
+						</svg>
+					</div>
+					
+					<div class="elementWidget-content">
+						<div class="elementWidget-title">Cell Out</div>
+						<div class="elementWidget-subTitle">NOFX</div>
+					</div>
+					
+					<div class="elementWidget-opt">
+						<div class="icon24">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+								<path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+							</svg>
+						</div>
+					</div>
+				</div> -->
+
+			</div>
+
+
+
+
+			<!-- ALBUNS -->
+			<div class="screen-content" id="screen-album">
+				
+
+				<div class="grid-view">
+
+					<!-- ITEM -->
+					<!-- <div class="grid-wrapper">
+						<div class="grid-img"><img src="dummy.jpeg"></div>
+						<div class="grid-content">
+							<div class="grid-params">
+								<div class="grid-title">Album Name</div>
+								<div class="grid-subTitle">Artist Name</div>
+							</div>
+							<div class="grid-opt">
+								<div class="grid-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+										<path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+									</svg>
+								</div>
+							</div>
+						</div>
+					</div> -->
+
+ 
+					
+
+				</div>
+ 
+			</div>
+
+
+
+
+			<!-- ARTISTAS -->
+			<div class="screen-content" id="screen-artist">
+				<div class="grid-view"></div>
+			</div>
+
+
+
+
+
+			<!-- PASTAS -->
+			<div class="screen-content" id="screen-folder">
+				
+
+				 
+
+
+				<!-- LISTA DE PASTA -->
+				<div id="list-folder">
+
+					<!-- ITEM -->
+					<div class="elementWidget-wrapper">
+					
+						<div class="elementWidget-image">
+							<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 16 16">
+								<path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3zm-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139z"/>
+							</svg>
+						</div>
+						
+						<div class="elementWidget-content">
+							<div class="elementWidget-title">Folder</div>
+							<div class="elementWidget-subTitle">999 Faixas</div>
+						</div>
+					</div>
+
+				</div>
+
+
+
+			</div>
+
+
+
+
+
+			<!-- FAVORITOS -->
+			<div class="screen-content" id="screen-favorite">
+
+
+				<!--ITEM -->
+				<!-- <div class="elementWidget-wrapper">
+					
+					<div class="elementWidget-image">
+						<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" viewBox="0 0 16 16">
+							<path d="M8 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+							<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0z"/>
+						</svg>
+					</div>
+					
+					<div class="elementWidget-content">
+						<div class="elementWidget-title">Cell Out</div>
+						<div class="elementWidget-subTitle">NOFX</div>
+					</div>
+					
+					
+				</div> -->
+
+
+			</div>
+
+
+
+
+
+
+		</div>
+
+
+
+
+		<!-- FOOTER -->
+		<div id="main-footer">
+
+			<!-- ITEM -->
+			<div class="elementWidget-wrapper">
+				<!-- IMG -->
+				<div class="elementWidget-image" style="padding: 4px;">
+					<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+						<path d="M8 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+						<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0z"/>
+					</svg>
+				</div>
+				<!-- CONTENT -->
+				<div class="elementWidget-content">
+					<div class="elementWidget-title"></div>
+					<div class="elementWidget-subTitle"></div>
+				</div>
+				<!-- OPTIONS -->
+				<div class="elementWidget-opt">
+					<div class="icon32">
+						<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+							<path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+						</svg>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		
+
+
+
+	</div>
+
+
+
+
+
+
+
+
+	
+
+	<script src="jquery-3.6.0.min.js"></script>
+	<script src="script.js"></script>
+
+</body>
+</html>
