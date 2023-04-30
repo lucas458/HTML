@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{ 
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        .item{
+            padding: 8px;
+            background-color: #353535;
+            border-radius: 8px;
+            margin: 8px;
+            
+        }
+
+        .item summary{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .item_name{
+            color: #fafafa;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+        .item_member_qty{
+            color: #9e9e9e;
+        }
+
+
+
+
+
+        .contact{
+            margin: 8px;
+            padding: 4px;
+            border-radius: 4px;
+            background-color: #252525;
+        }
+        .contact:last-child{
+            margin-bottom: 0;
+        }
+
+
+
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+ 
+
+    <div id="main">
+
+
+        <details class="item">
+            <summary>
+                <div class="item_name">nome</div>
+                <div class="item_member_qty">(1)</div>
+            </summary>
+
+            <div class="item_content">
+
+                <div class="contact">
+                    <div class="contact_name">nome</div>
+                    <div class="contact_number">555</div>
+                    <div class="contact_group">asd,asd</div>
+                </div> 
+
+            </div>
+
+        </details>
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+
+         
+
+        var CONTATOS = [
+
+            {
+                "nome": "luiz",
+                "numero": "4539-4158",
+                "grupos": ["casa", "familia"]
+            },
+
+            {
+                "nome": "alex",
+                "numero": "5103-4139",
+                "grupos": ["trabalho"]
+            },
+
+            {
+                "nome": "marcos",
+                "numero": "5597-6445",
+                "grupos": ["familia"]
+            },
+
+            {
+                "nome": "gabriel",
+                "numero": "3399-4684",
+                "grupos": ["loja"]
+            },
+
+            {
+                "nome": "ana",
+                "numero": "1789-7517",
+                "grupos": []
+            },
+
+        ];
+
+
+
+
+        function getAllGroups(list = []){
+
+            let tempGroupList = [];
+
+            list.forEach(item => {
+                item.grupos.forEach(el => {
+                    if ( tempGroupList.indexOf(el) < 0 ){
+                        tempGroupList.push(el);
+                    }
+                });
+            });
+
+            return tempGroupList.sort((a, b) => a.localeCompare(b.toUpperCase()));
+        }
+
+
+
+
+
+        function getAllItemByGroup(list = [], groups = []){
+
+            let tempObject = [];
+
+            groups.forEach(e => {
+                tempObject.push({
+                    "grupo": e,
+                    "lista": list.filter(i => i.grupos.indexOf(e) >= 0).sort((a, b) => a.nome.localeCompare(b.nome.toUpperCase()))
+                });
+            });
+
+            return tempObject;
+        }
+
+
+
+
+ 
+        function generateScreenGroup(){
+
+            let list = getAllItemByGroup(CONTATOS, getAllGroups(CONTATOS));
+
+
+            document.getElementById("main").innerHTML = '';
+
+
+            list.forEach(e => {
+
+                let item = document.createElement("details");
+                item.classList.add("item");
+                item.innerHTML = `
+                <summary>
+                    <div class="item_name">${e.grupo}</div>
+                    <div class="item_member_qty">(${e.lista.length})</div>
+                </summary>
+
+                <div class="item_content"></div>`;
+
+
+                e.lista.forEach(el => {
+
+                    let contact = document.createElement("div");
+                    contact.classList.add("contact");
+                    contact.innerHTML = `
+                    <div class="contact_name">${el.nome}</div>
+                    <div class="contact_number">${el.numero}</div>
+                    <div class="contact_group">${el.grupos.toString()}</div>
+                    `
+
+                    item.querySelector(".item_content").appendChild(contact);
+
+                });
+                
+                document.getElementById("main").appendChild(item);
+            
+
+
+            });
+
+
+
+            let noGroupList = CONTATOS.filter(e => e.grupos.length==0);
+
+            if ( noGroupList.length > 0 ){
+                alert(`${noGroupList.length} contatos sem grupos não irão ser mostrados.`);
+            }
+
+
+
+        }
+
+        generateScreenGroup();
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

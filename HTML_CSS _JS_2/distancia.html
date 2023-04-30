@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        html, body{
+            width: 100%;
+            height: 100%;
+             
+        }
+        html{
+            overflow: auto;
+        }
+
+        body{
+            overflow: hidden;
+        }
+
+
+        #tela{
+            width: 100%;
+            height: 100%;
+            background-color: #181818;
+            position: relative;
+        }
+
+
+        .marker{
+
+            color: #fff;
+            width: 1px;
+            height: 1px;
+            font-size: 1.2em;
+            border: 4px solid transparent;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+
+        .marker::after{
+            content: attr(data-content);
+            text-align: center;
+            padding-top: 8px;
+        }
+
+
+        .player{
+            border-color: #00f;
+        }
+        .waypoint{
+            border-color: #0f0;
+        }
+
+
+        header{
+            background-color: #181818;
+            padding: 8px;
+        }
+
+        header button{
+            padding: 8px 16px;
+
+            border: 1px solid #007bff;
+            background-color: inherit;
+            color: #fff;
+            border-radius: 4px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+  
+
+
+
+
+    <header>
+        <button>▲</button>
+        <button>▼</button>
+        <button>◄</button>
+        <button>►</button>
+        
+        
+    </header>
+
+
+
+    <div id="tela">
+
+
+        <div class="marker player"></div>
+
+        <div class="marker waypoint"></div>
+        <div class="marker waypoint"></div>
+        <div class="marker waypoint"></div>
+        <div class="marker waypoint"></div>
+
+    </div>
+
+    
+
+
+
+    
+    <script>
+ 
+
+        
+    
+        function calcularDistancia(playerX, playerY, markerX, markerY){
+
+
+
+            let base   = Math.abs( playerX - markerX );
+            let altura = Math.abs( playerY - markerY );
+
+            
+            let distance = Math.sqrt( base**2 + altura**2 );
+
+            return distance;
+
+        }
+        
+
+
+        playerPosX = 0;
+        playerPosY = 0;
+
+        let max_width = document.getElementById("tela").offsetWidth;
+        let max_height = document.getElementById("tela").offsetHeight;
+
+
+
+        var lista = [
+            {'type': 'player', 'pos':[playerPosX, playerPosY]},
+
+            
+        ];
+
+
+
+
+        document.getElementById("tela").onclick = (e)=>{
+
+
+            lista.push({'type': 'waypoint', 'pos':[e.offsetX, e.offsetY]});
+
+            gerarMarkers()
+
+        };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        document.body.onkeydown = (e)=>{
+            
+
+            let max_width = document.getElementById("tela").offsetWidth;
+            let max_height = document.getElementById("tela").offsetHeight;
+
+
+            let step = 5;
+
+            if ( e.key == "ArrowUp" && playerPosY > 0 ){playerPosY-=step;}
+            else if ( e.key == "ArrowDown" && playerPosY < max_height ){playerPosY+=step;}
+            else if ( e.key == "ArrowLeft" && playerPosX > 0 ){playerPosX-=step;}
+            else if ( e.key == "ArrowRight" && playerPosX < max_width ){playerPosX+=step;}
+
+
+            gerarMarkers();
+
+             
+            
+        }
+
+
+
+
+        
+
+
+
+
+
+
+        function gerarMarkers(){
+
+            
+
+            
+
+
+            document.getElementById("tela").innerHTML = '';
+
+            lista.forEach((e,i)=>{
+
+
+                let marker = document.createElement("div");
+                marker.classList.add("marker");
+                marker.classList.add( e.type );
+
+                if ( i == 0 ){
+                    marker.style.left = playerPosX + 'px';
+                    marker.style.top  = playerPosY + 'px';
+                }
+                else{
+                    marker.style.left = e.pos[0] + 'px';
+                    marker.style.top  = e.pos[1] + 'px';
+                }
+
+                
+
+
+                document.getElementById("tela").appendChild(marker);
+
+
+            });
+
+
+
+            
+
+            for ( let i = 1; i < lista.length; i++){
+
+
+                let marker = lista[i];
+
+                document.querySelectorAll(".marker")[i].setAttribute("data-content", (calcularDistancia(playerPosX, playerPosY, marker.pos[0], marker.pos[1]).toFixed(1)+'m') );
+
+            }
+
+
+
+
+
+
+        }
+
+        
+        gerarMarkers();
+
+
+
+        document.body.onresize = gerarMarkers;
+
+
+
+
+
+
+        document.querySelectorAll("header > button").forEach((e,i)=>{
+
+
+            e.addEventListener('click', ()=>{
+
+                let step = 5;
+                let max_width = document.getElementById("tela").offsetWidth;
+                let max_height = document.getElementById("tela").offsetHeight;
+
+                
+                if ( i == 0 && playerPosY > 0 ){playerPosY-=step;}
+                else if ( i == 1 && playerPosY < max_height ){playerPosY+=step;}
+                else if ( i == 2 && playerPosX > 0 ){playerPosX-=step;}
+                else if ( i == 3 && playerPosX < max_width ){playerPosX+=step;}
+
+                gerarMarkers();
+
+            });
+            
+
+        });
+
+
+
+        
+        
+    </script>
+    
+</body>
+</html>

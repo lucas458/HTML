@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+         
+
+        #tela{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+        #gameArea{
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            position: relative;
+        }
+
+
+
+
+        #player{
+            width: 32px;
+            height: 64px;
+            background-color: red;
+            position: absolute;
+        }
+
+
+
+        .objective{
+            width: 32px;
+            height: 32px;
+            text-align: center;
+            position: absolute;
+            background-color: #212121;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }   
+
+ 
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+    <div id="tela">
+
+        <div id="gameArea">
+
+            <div id="player"></div>
+
+
+            <div id="objective-list">
+
+                <div class="objective" style="left: 50px; top: 50px;"></div>
+                <div class="objective" style="left: 64px; top: 96px;"></div>
+                <div class="objective" style="left: 256px; top: 128px;"></div> 
+                <div class="objective" style="left: 96px; top: 512px;"></div>
+                <div class="objective" style="left: 128px; top: 256px;"></div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+    
+    
+     
+
+
+    <script>
+
+
+
+ 
+
+
+
+         
+
+
+
+
+
+        var timestamp_old = 0;
+        var delta = 0;
+        var keyCodePress = null;
+
+        var player = document.getElementById('player');
+        var objective_list = document.getElementById('objective-list');
+
+        var gameArea = document.getElementById('gameArea');
+
+
+        function update(timestamp){
+
+            delta = (timestamp - timestamp_old) / 1000;
+            timestamp_old = timestamp;
+
+
+            let playerPosY = player.offsetTop;
+
+            
+
+
+
+
+            
+
+            if ( keyCodePress == 38 ){
+                console.log('up');
+                playerPosY -= 250 * delta;
+            }
+            else if (keyCodePress == 40){
+                console.log('down');
+                playerPosY += 250 * delta;
+            }
+
+
+            if ( playerPosY < 0 ){
+                playerPosY = 0;
+            }
+            else if ( playerPosY+player.offsetHeight > gameArea.offsetHeight ){
+                playerPosY = gameArea.offsetHeight - player.offsetHeight;
+            }
+
+            player.style.top = (playerPosY) + 'px';
+
+            if ( playerPosY != player.offsetTop ){
+                for (let i = 0; i < objective_list.children.length; i++){
+
+                    let distY = (player.offsetTop + player.offsetHeight/2) - (objective_list.children[i].offsetTop + objective_list.children[i].offsetHeight/2);
+
+                    if ( distY >= 30 ){
+                        objective_list.children[i].innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg>`;
+                        objective_list.children[i].style.color = 'darkcyan';
+                    }
+
+                    else if ( distY <= -30 ){
+                        objective_list.children[i].innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>`;
+                        objective_list.children[i].style.color = '#5d4037';
+                    }
+
+                    else{
+                        objective_list.children[i].innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8"/></svg>`;
+                        objective_list.children[i].style.color = '#28a745';
+                    }
+                }
+            }
+
+            
+
+
+            window.requestAnimationFrame(update);
+
+        }
+
+        
+        window.requestAnimationFrame(update);
+
+
+
+        let TIMER_KEYBOARD = null;
+        window.addEventListener('keydown', (evt)=>{
+
+            if (TIMER_KEYBOARD == null){
+
+                TIMER_KEYBOARD = setInterval(()=>{
+                    keyCodePress = evt.keyCode;
+                }, 20);
+
+            }
+
+        });
+
+
+        window.addEventListener('keyup', ()=>{
+            clearInterval(TIMER_KEYBOARD);
+            TIMER_KEYBOARD = null;
+            keyCodePress = null;
+        });
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

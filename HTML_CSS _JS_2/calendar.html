@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+
+
+        /* CONTROLS */
+        #calendar_controls{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2em;
+            padding: 8px 16px;
+        }
+
+
+        /* CONTENT */
+        #calendar_content_wrapper{
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            justify-items: center;
+            grid-gap: 10px 0;
+        }
+        
+
+        .slot_value{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px; 
+            border-radius: 8px;
+            border: 2px solid transparent;
+        }
+
+
+        .slot_calendar:not(.slot_weekday):not(.slot_oldDay):not(.slot_selected):not(.slot_currentDay):active .slot_value{
+            background-color: #353535;
+        }
+
+
+        .slot_currentDay .slot_value{
+            border-color: #007bff;
+        }
+
+        .slot_selected .slot_value{
+            background-color: #007bff;
+        }
+
+
+        .slot_oldDay .slot_value{
+            color: #9e9e9e;
+        }
+
+
+        .slot_calendar.slot_weekday{
+            border-bottom: 1px solid #fff;
+        }
+
+ 
+
+        
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="calendar">
+
+
+        <!-- CONTROLS -->
+        <div id="calendar_controls">
+
+            <div class="calendar_arrow_button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </div>
+
+            <div id="calendar_arrow_summary">Novembro 2020</div>
+
+            <div class="calendar_arrow_button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </div>
+
+        </div>
+
+
+
+        
+        <div id="calendar_content_wrapper">
+
+            <div class="slot_calendar slot_weekday"> <div class="slot_value">Seg</div> </div> 
+            <div class="slot_calendar slot_weekday"> <div class="slot_value">Ter</div> </div> 
+            <div class="slot_calendar slot_weekday"> <div class="slot_value">Qua</div> </div> 
+            <div class="slot_calendar slot_weekday"> <div class="slot_value">Qui</div> </div> 
+            <div class="slot_calendar slot_weekday"> <div class="slot_value">Sex</div> </div> 
+            <div class="slot_calendar slot_weekday"> <div class="slot_value">Sáb</div> </div> 
+            <div class="slot_calendar slot_weekday"> <div class="slot_value">Dom</div> </div> 
+            
+
+            <div class="slot_calendar slot_selected"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar slot_currentDay"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div>
+
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div> 
+            <div class="slot_calendar"> <div class="slot_value">00</div> </div>
+
+        </div>
+        
+
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        var calendar_content_wrapper = document.getElementById("calendar_content_wrapper");
+
+
+        var currentDate = new Date();
+
+
+
+
+        //days in months
+        const DAYS_IN_MONTH = [
+            31,
+            28,
+            31,
+            30,
+            31,
+            30,
+            31,
+            31,
+            30,
+            31,
+            30,
+            31
+        ];
+
+
+        const NAMES_IN_MONTH = [
+            "Janeniro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        ];
+
+
+
+        function setControlValue(month, year){
+            document.getElementById("calendar_arrow_summary").innerHTML = `${NAMES_IN_MONTH[month]} ${year}`;
+        }
+
+ 
+
+        function genCalendar( offsetStart = 0, maxDay = 30, selectedDay = 2, backwardMaxDay = 31 ){
+
+
+            calendar_content_wrapper.querySelectorAll(".slot_calendar:not(.slot_weekday)").forEach(e => {
+                e.remove();
+            });
+
+
+            setControlValue(0, 2020);
+
+
+
+
+            let genSlotQty = 0;
+
+
+            for (let i = 0; i < offsetStart; i++){
+                let slot = document.createElement("div");
+                slot.classList.add("slot_calendar", "slot_oldDay");
+                slot.innerHTML = `<div class="slot_value">${backwardMaxDay-offsetStart+i+1}</div>`;
+                genSlotQty++;
+
+                calendar_content_wrapper.appendChild(slot);
+            }
+
+
+
+            for (let i = 1; i <= maxDay; i++){
+                let slot = document.createElement("div");
+                slot.classList.add("slot_calendar");
+
+                if ( selectedDay == i ){
+                    slot.classList.add("slot_selected");
+                }
+
+                slot.innerHTML = `<div class="slot_value">${i}</div>`;
+                genSlotQty++;
+
+                calendar_content_wrapper.appendChild(slot);
+            }
+
+
+
+            for (let i = 1; i <= (7*5)-genSlotQty; i++){
+                let slot = document.createElement("div");
+                slot.classList.add("slot_calendar", "slot_oldDay");
+                slot.innerHTML = `<div class="slot_value">${i}</div>`; 
+
+                calendar_content_wrapper.appendChild(slot);
+            }
+
+
+
+            calendar_content_wrapper.querySelectorAll(".slot_calendar:not(.slot_weekday)").forEach((e, i) => {
+
+                e.onclick = () => {
+
+                    // clear selection
+                    calendar_content_wrapper.querySelectorAll(".slot_selected").forEach(el => {
+                        el.classList.remove("slot_selected");
+                    });
+
+                    // select
+                    e.classList.add("slot_selected");
+
+                };
+
+            });
+
+
+
+        }
+
+        
+
+
+
+
+
+
+        
+
+        // program to check leap year
+        function checkLeapYear(year) {
+            return (0 == year % 4) && (0 != year % 100) || (0 == year % 400)
+        }
+
+
+
+        
+
+
+
+
+
+        genCalendar(2, DAYS_IN_MONTH[currentDate.getMonth()]);
+
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

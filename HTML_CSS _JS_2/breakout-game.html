@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=0">
+    <title>Brick Break Game</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+
+
+        #main{
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+
+            position: fixed;
+
+            background-color: #273546;
+            color: #fff;
+            border: 2px solid #9e9ee9;
+        }
+
+
+
+        #main-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #9e9ee9;
+        }
+
+        #params{
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        #game-lifes{
+            display: flex;
+        }
+
+        .game-life{
+            display: flex;
+            color: #e34034;
+            margin-left: 4px;
+
+            filter: drop-shadow(0px 0px 2px #e34034);
+
+            animation: pulseLife 1s infinite linear;
+        }
+
+
+
+        @keyframes pulseLife {
+            25%{
+                filter: drop-shadow(0px 0px 2px #e34034);
+            }
+            50%{
+                filter: drop-shadow(0px 0px 0px #e34034);
+            }
+            75%{
+                filter: drop-shadow(0px 0px 2px #e34034);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        #screen{ 
+            flex: 1;
+            position: relative;
+        }
+
+
+
+
+        /* 1 -- #246f6a */
+        /* 2 -- #275b5f */
+        /* 3 -- #1ab090 */
+
+
+
+
+        #player{
+            min-width: 50px;
+            width: 20%;
+            height: 8px;
+            margin-top: 50px;
+            background-color: #2d8bd5;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+
+        #wall{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            
+        }
+
+        .brick{
+            border: 1px solid #fff;
+            background-color: #16ab86;
+            height: 18px;
+            width: calc(100%/6);
+            text-align: center;
+        }
+
+        .brick-level-3{background-color: #1ab090;}
+        .brick-level-2{background-color: #246f6a;}
+        .brick-level-1{background-color: #275b5f;}
+        .brick-level-0{visibility: hidden;}
+
+        
+
+
+
+        #ball{
+            width: 20px;
+            height: 20px;
+            background-color: #e34034;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+
+
+
+
+    </style>
+
+</head>
+
+
+
+
+
+
+
+
+    <div id="main">
+
+
+        <header id="main-header">
+            
+            <!-- PARAMS -->
+            <div class="header-col" id="params">
+                <div id="game-score">SCORE: 0</div>
+                <div id="game-level">LEVEL: 1</div>
+            </div>
+
+             
+
+            <!-- LIFES -->
+            <div class="header-col">
+
+                <div id="game-lifes">
+                    
+                    <div class="game-life"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg></div>
+                    <div class="game-life"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg></div>
+                    <div class="game-life"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg></div>
+                    <div class="game-life"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg></div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <section id="screen">
+
+            <div id="player"></div>
+
+            <div id="ball"></div>
+
+
+
+            <div id="wall">
+
+                <!-- <div class="brick brick-level-3"></div>
+                <div class="brick brick-level-2"></div>
+                <div class="brick brick-level-1"></div>
+                <div class="brick brick-level-0"></div> -->
+                
+                
+
+            </div>
+
+
+            
+        </section>
+
+
+    </div>
+
+
+
+
+<body>
+
+
+
+
+
+
+
+    <script>
+
+
+
+
+
+        let sizeX =  parseInt( document.body.offsetWidth * 0.3 );
+        if (sizeX > 150){sizeX=150;}
+        document.getElementById("player").style.width = sizeX + 'px';
+
+        let playerSizeX = document.getElementById("player").offsetWidth;
+        let playerSizeY = document.getElementById("player").offsetHeight;
+
+
+        let screenSizeX = document.getElementById("screen").offsetWidth;
+        let screenSizeY = document.getElementById("screen").offsetHeight;
+
+
+
+        
+
+
+        var GAME = {
+            'isRun': false,
+
+            'level': 1,
+            'score': 0,
+            'lifes': 4,
+            
+            'player_pos': 0,
+            'player_speed': 10,
+
+            'isEasy': true,
+
+            'ball': {
+                'speed':4,
+                'x': 0,
+                'y': 0,
+                'dir_x': true,
+                'dir_y': false,
+            }
+            
+        }
+
+
+        document.getElementById("game-lifes").addEventListener("click", toggleEasy);
+
+        function toggleEasy(){
+
+           
+            
+            if (GAME.isEasy){
+                document.querySelectorAll("#game-lifes>div").forEach(e=>{e.style.color="#cddc39"})
+            }
+            else{
+                document.querySelectorAll("#game-lifes>div").forEach(e=>{e.style.color="#e34034"})
+            } 
+            
+            GAME.isEasy = !GAME.isEasy;
+            gerarWall();
+             
+        }
+
+        
+
+
+
+
+        // ATUALIZAR INFORMAÇÕES
+        function updateParams(){
+            document.getElementById("game-score").innerText = "SCORE: " + GAME.score;
+            document.getElementById("game-level").innerText = "LEVEL: " + GAME.level;
+
+        }
+
+
+
+
+
+
+        // GERAR PAREDE
+        function gerarWall(){
+
+
+            document.getElementById("wall").innerHTML = '';
+
+            for (let i = 0; i < 4*15; i++){
+
+                let brick = document.createElement("div");
+                
+                /*if ( i >= 24 && i <= 47 || i%6 == 0 ){
+                    brick.classList.add("brick", "brick-level-0");
+                }else{*/
+                    brick.classList.add("brick", "brick-level-3");
+                /*}
+                brick.innerText = i;*/
+
+                document.getElementById("wall").appendChild(brick);
+
+            }
+
+        }
+
+
+        gerarWall();
+
+
+
+
+
+
+
+
+        // ADD LIFE
+        function addLife(){
+
+            if ( GAME.lifes < 4 ){
+                GAME.lifes++;
+                console.warn("+1 GAME LIFE");
+
+                document.getElementById("game-lifes").innerHTML += `
+                <div class="game-life"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"></path></svg></div>
+                `;
+
+            }
+            updateParams();
+
+        }
+
+        // ADD SCORE 
+        function addScore( value ){
+            if (value > 0){
+                GAME.score += parseInt(value);
+            }
+            updateParams();
+        }
+
+        // LEVEL UP
+        function levelUp(){
+
+            if ( GAME.level < 2 ){
+                GAME.level++;
+                //console.warn("LEVEL UP")
+            }
+            else{
+                //console.warn("MAX LEVEL");
+            }
+            updateParams();
+
+        }
+
+
+        // KILL PLAYER
+        function playerKill(){
+            
+            
+
+            GAME.isRun = false;
+            if ( GAME.lifes > 0 ){
+                GAME.lifes--;
+                document.querySelector("#game-lifes > .game-life").remove();
+                //console.warn("KILL");
+            }
+
+            if ( GAME.lifes <= 0 ){
+                //console.warn("GAME OVER");
+                GAME.level = 1;
+                GAME.score = 0;
+                
+                addLife();addLife();addLife();addLife();
+                gerarWall();
+
+                if (!GAME.isEasy){
+                    document.querySelectorAll("#game-lifes>div").forEach(e=>{e.style.color="#cddc39"})
+                }
+                else{
+                    document.querySelectorAll("#game-lifes>div").forEach(e=>{e.style.color="#e34034"})
+                } 
+
+            }
+            updateParams();
+        }
+
+
+
+
+
+
+
+        
+
+
+        // POSIÇÂO DO PLAYER
+        function playerPosition( x = 0 ){
+            x = parseInt(x);
+            if ( x+playerSizeX < screenSizeX ){
+                document.getElementById("player").style.left = x + 'px';
+            }
+            else{
+                document.getElementById("player").style.left = (screenSizeX-playerSizeX) + 'px';
+                GAME.player_pos = (screenSizeX-playerSizeX);
+            }
+        }
+
+
+
+
+
+        // CHECAR HITBOX
+        function checkBrickColision(){
+
+
+            for (let i = 0; i < document.querySelectorAll("#wall > .brick").length; i++){
+
+                // BRICK
+                let brickElement = document.querySelectorAll("#wall > .brick")[i];
+
+                // DIMENSIONS
+                let brickWidth  = brickElement.offsetWidth;
+                let brickHeight = brickElement.offsetHeight;
+                
+                // POSITION
+                let brickPosX = brickElement.offsetLeft;
+                let brickPosY = brickElement.offsetTop;
+
+
+                let brickCol = parseInt(i % 6);
+                let brickRow = parseInt(i / 6);
+
+
+                // IGNORAR FANTASMA DO BRICK
+                if ( brickElement.classList.contains("brick-level-0") ){
+                    //console.log("COLISION VOID")
+                    //checkBrickColision();
+                    continue;
+                }
+
+
+
+
+
+                 
+
+                    
+                // COLISAO
+                if ( GAME.ball.x <= brickPosX + brickWidth && 
+                    GAME.ball.x + 20 >= brickPosX &&
+                    GAME.ball.y <= brickPosY + brickHeight &&
+                    GAME.ball.y + 20 >= brickPosY ){
+
+                    
+
+                    
+                    
+                    
+                    // TAVA SUBINDO
+                    if ( GAME.ball.y < brickPosY + brickHeight && !GAME.ball.dir_y ){
+                        console.log("BOTTOM");
+                        GAME.ball.dir_y = true;
+                    }
+                    else if ( GAME.ball.x < brickPosX + brickWidth && !GAME.ball.dir_x ){
+                        console.log("RIGHT");
+                        GAME.ball.dir_x = true;
+                    }
+                    else if ( GAME.ball.x + 20 >= brickPosX && GAME.ball.dir_x ){
+                        console.log("LEFT");
+                        GAME.ball.dir_x = false;
+                    }
+                    else if ( GAME.ball.y + 20 > brickPosY && GAME.ball.dir_y ){
+                        console.log("TOP");
+                        GAME.ball.dir_y = false;
+                    }
+
+
+                    
+                    
+                            
+
+                    if ( GAME.isEasy == false ){
+                        if ( brickElement.classList.contains("brick-level-3") ){
+                            //console.warn("OK ", i);
+                            brickElement.classList.replace("brick-level-3", "brick-level-2");
+                            addScore(5);
+                            navigator.vibrate(100);
+                        }
+                        else if ( brickElement.classList.contains("brick-level-2") ){
+                            //console.warn("OK ", i);
+                            brickElement.classList.replace("brick-level-2", "brick-level-1");
+                            addScore(10);
+                            navigator.vibrate(100);
+                        }
+                        else if ( brickElement.classList.contains("brick-level-1") ){
+                            //console.warn("OK ", i);
+                            brickElement.classList.replace("brick-level-1", "brick-level-0");
+                            addScore(20);
+                            navigator.vibrate(100);
+                        }
+                    }
+
+                    else{
+                        if ( brickElement.classList.contains("brick-level-3") ){
+                            //console.warn("OK ", i);
+                            brickElement.classList.replace("brick-level-3", "brick-level-0");
+                            addScore(5);
+                            navigator.vibrate(100);
+                        }
+                    }
+
+                    break;
+                    
+                }
+
+ 
+
+
+                
+                
+                // A BOLA TA DESCENDO
+                else{ 
+
+                     
+
+
+                }
+
+
+
+
+
+                if ( document.querySelectorAll("#wall>.brick-level-0").length == document.querySelectorAll("#wall>div").length ){
+                    console.log("YOU WIN")
+                    levelUp();
+                    gerarWall();
+                    GAME.isRun = false;
+                    break;
+                }
+
+
+
+
+
+                //console.log(`VERIFICANDO [${brickRow}][${brickCol}] ${brickPosX},${brickPosY}`);
+
+            }
+
+        }
+
+
+
+
+        
+        // POSIÇÂO DA BOLA
+
+        function ballPosition( x, y ){
+
+            let tempX = x;
+            let tempY = y;
+
+
+
+
+
+
+
+            // BRICK COLISION
+            
+            if ( GAME.isRun ){
+                checkBrickColision();
+                //GAME.isRun = false;
+            }
+
+
+
+
+
+
+
+
+
+            // PLAYER COLISION
+            if ( GAME.isRun && tempY >= screenSizeY-playerSizeY-20 && tempX >= GAME.player_pos && tempX <= GAME.player_pos+playerSizeX ){
+                //console.warn("PLAYER COLISION");
+                tempY = screenSizeY-playerSizeY-20;
+
+
+                GAME.ball.dir_y = false;
+            }
+
+
+
+
+            
+            // LEFT
+            else if ( tempX <= 0 ){
+                //console.warn("LEFT MAIN WALL");
+                tempX = 0;
+                GAME.ball.dir_x = true;
+            }
+
+            // TOP
+            else if ( tempY <= 0 ){
+                //console.warn("TOP MAIN WALL");
+                tempY = 0;
+                GAME.ball.dir_y = true;
+            }
+
+            // BOTTOM
+            else if ( tempY >= screenSizeY - playerSizeY - 20/2 ){
+                //console.warn("BOTTOM MAIN WALL");
+                tempY = screenSizeY - 20;
+                GAME.ball.dir_y = false;
+                playerKill();
+            }
+
+            // RIGHT
+            else if ( tempX >= screenSizeX - 20 ){
+                //console.warn("RIGHT MAIN WALL");
+                tempX = screenSizeX - 20;
+                
+                
+                
+                GAME.ball.dir_x = false;
+ 
+                
+
+            }
+
+
+            GAME.ball.x = tempX;
+            GAME.ball.y = tempY;
+
+            document.getElementById("ball").style.left = tempX + 'px';
+            document.getElementById("ball").style.top = tempY + 'px';
+
+        }
+
+
+
+
+
+        ballPosition( GAME.player_pos+playerSizeX/2|0, screenSizeY-playerSizeY-20 );
+
+
+
+
+
+
+
+        // TIMER DE MOVER A BOLA
+        var TIMER_BALL = null;
+
+
+
+
+
+        function ballMove(){
+
+            if ( GAME.isRun ){
+
+                //console.log("UPDATE BALL");
+
+                // RIGHT
+                if ( GAME.ball.dir_x ){
+
+                    GAME.ball.x += GAME.ball.speed;
+
+                    // UP
+                    if ( !GAME.ball.dir_y ){
+                        //console.log("RIGHT, TOP");
+                        GAME.ball.y -= GAME.ball.speed;
+                    }
+
+                    // DOWN
+                    else{
+                        //console.log("RIGHT, BOTTOM");
+                        GAME.ball.y += GAME.ball.speed;
+                    }
+
+                }
+
+
+                // LEFT
+                else{
+
+                    GAME.ball.x -= GAME.ball.speed;
+
+                    // UP
+                    if ( !GAME.ball.dir_y ){
+                        //console.log("LEFT, TOP");
+                        GAME.ball.y -= GAME.ball.speed;
+                    }
+
+                    // DOWN
+                    else{
+                        //console.log("LEFT, BOTTOM");
+                        GAME.ball.y += GAME.ball.speed;
+                    }
+                }
+
+                ballPosition(GAME.ball.x, GAME.ball.y);
+
+
+            }
+
+            else{
+                ballPosition( GAME.player_pos+playerSizeX/2|0, screenSizeY-playerSizeY-20 );
+            }
+            
+
+        }
+
+
+        TIMER_BALL = setInterval(ballMove, 10);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+        // MOVIMENTO
+        var TIMER_KEYBOARD = null;
+
+        function playerMove( dir ){
+
+
+            
+
+            if ( dir == 'left' ){
+                if ( !(GAME.player_pos-1 <= 0) ){
+                    GAME.player_pos -= GAME.player_speed;
+                }else{
+                    GAME.player_pos = 0;
+                }
+                playerPosition( GAME.player_pos );
+            }
+
+
+            else if ( dir == 'right' ){
+                if ( GAME.player_pos+GAME.player_speed < document.getElementById("screen").offsetWidth ){
+                    GAME.player_pos += GAME.player_speed;
+                }
+                
+                playerPosition( GAME.player_pos );
+            }
+            
+            if ( GAME.isRun == false ){
+                ballPosition( GAME.player_pos+playerSizeX/2|0, screenSizeY-playerSizeY-20 );
+            }
+
+        }
+
+
+
+
+
+
+
+        window.addEventListener("keydown", (e)=>{
+            if ( TIMER_KEYBOARD == null ){
+                TIMER_KEYBOARD = setInterval(()=>{
+                    
+
+                    // LEFT
+                    if ( e.key == "ArrowLeft" || e.key == 'a' ){
+                        console.log( e.key );
+                        playerMove('left');
+                    }
+
+                    // RIGHT
+                    if ( e.key == "ArrowRight" || e.key == 'd'  ){
+                        console.log( e.key );
+                        playerMove('right');
+                    }
+
+
+
+                    // SPACE
+                    if( e.keyCode == 32 ){
+                        GAME.isRun = true;
+                    }
+
+
+                },10);
+            }
+
+            else{
+                clearInterval(TIMER_KEYBOARD);
+                TIMER_KEYBOARD = null;
+            }
+
+        });
+
+        window.addEventListener("keyup", (e)=>{
+            clearInterval(TIMER_KEYBOARD);
+            TIMER_KEYBOARD = null;
+        });
+
+
+
+
+
+
+
+        window.addEventListener("dblclick", ()=>{
+            GAME.isRun = true;
+        })
+
+        var PRESS = false;
+        var TIMER_TOUCH = null;
+
+        window.addEventListener("touchstart", (e)=>{
+
+            clientX = e.touches[0].clientX;
+
+            if ( TIMER_TOUCH == null ){
+                TIMER_TOUCH = setInterval(()=>{
+                    
+                    if ( PRESS ){return;}
+                    // LEFT
+                    if ( clientX <= 0.25*screenSizeX ){
+                        playerMove('left');
+                    }
+
+                    // RIGHT
+                    else if ( clientX >= 0.75*screenSizeX ){
+                        
+                        playerMove('right');
+                    }
+
+
+
+
+
+                },10);
+            }
+            else{
+                clearInterval(TIMER_TOUCH);
+                TIMER_TOUCH = null;
+            }
+        });
+
+
+        window.addEventListener("touchend", ()=>{
+            clearInterval(TIMER_TOUCH);
+            TIMER_TOUCH = null;
+            PRESS = false;
+        });
+
+ 
+
+    </script>
+
+    
+</body>
+</html>

@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portas Lógicas</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+
+
+        #modal-help{
+            width: 100%;
+            height: 100%;
+            background-color: #00000080;
+            position: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            display: none;
+        }
+
+
+        #modal-window{
+            background-color: #212121;
+            width: 75%;
+            height: 75%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-radius: 8px; 
+        }
+
+        #modal-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            padding-left: 16px;
+            font-size: 0.8em;
+        }
+
+        #modal-content{
+            border-top: 1px solid #353535;
+            border-bottom: 1px solid #353535;
+            height: 100%;
+            padding: 16px;
+            overflow: auto;
+        }
+
+
+        #modal-footer{
+            padding: 8px; 
+        }
+
+
+        #modal-index-list{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 50%; 
+            margin: 10px auto 16px auto;
+        }
+        
+        .modal-index{
+            min-width: 8px;
+            min-height: 8px;
+            border-radius: 50%;
+            background-color: #353535;
+            cursor: pointer;
+        }
+
+        .modal-index-active{
+            background-color: #9e9e9e;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+
+        #modal-controls{
+            display: flex; 
+            justify-content: space-around;
+        }
+
+        .modal-button{
+            padding: 8px;
+            background-color: #353535;
+            flex: 1;
+            text-align: center;
+            margin: 0 8px;
+            border-radius: 8px;
+        }
+
+
+        .modal-button-active{
+            background-color: #007bff;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .content-wrapper{
+            display: none;
+        }
+
+        .content-active{
+            display: block;
+        }
+
+
+
+        /* CONTEUDO DE TEXT  */
+        .contet-text{
+            margin-bottom: 8px;
+            line-height: 1.5em;
+        }
+
+
+        .contet-text > h1{
+            margin-bottom: 8px;
+        }
+
+
+        /* TABELA */
+        .truth-table{
+            text-align: center;
+            border-collapse: collapse;
+            background-color: #353535;
+
+            width: 50%;
+            margin: auto;
+            border: 1px solid #fff;
+        }
+
+        .truth-table thead{
+            border-bottom: 1px solid #fff;
+        }
+
+        .truth-table th,
+        .truth-table td{ 
+            border-right: 1px solid #fff;
+        }
+
+        .truth-table th{
+            padding: 8px;
+        }
+        .truth-table td{
+            padding: 4px;
+        }
+
+        .truth-table tbody tr:nth-child(odd){
+            background-color: #212121;
+        }   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .icon-close{
+            color: #dc3545;
+        }
+        .icon-close:hover{
+            color: #db192c;
+        }
+
+
+        .icon-help:hover{
+            color: #007bff;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* HEADER */
+
+        #main-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+        }
+
+        #main-header > div:first-child{
+            color: #9e9e9e;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* LOGIC GATE */
+        .logicGates{
+            display: flex;
+            flex-wrap: wrap;
+            padding: 8px;
+            border-bottom: 1px solid #353535;
+        }
+
+
+        .logic input{
+            display: none;
+        }
+        .logic div{
+            background-color: #353535;
+            margin: 4px;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        .logic input:checked ~ div{
+            background-color: #007bff;
+        }
+
+
+
+
+
+
+
+
+
+
+        /* REGISTER */
+        .register{
+            padding: 8px;
+        }
+
+        
+        .bitOrder, .bitList{
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+        .bitOrder{
+            padding: 8px 16px;
+            background-color: #353535;
+            color: #9e9e9e;
+        }
+
+        .bitOrder > div:nth-child(2){
+            user-select: text   ;
+        }
+
+        .bitList{
+            background-color: #212121;
+            padding: 8px;
+        }
+
+
+
+
+        .bit{
+            flex: 1;
+        }
+
+        .bit input{
+            display: none;
+        }
+
+
+        .bit div{
+            background-color: #353535;
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 4px;
+            
+        }
+
+        .bit input:checked ~div{
+            background-color: #28a745;
+        }
+
+         
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+
+    <div id="modal-help">
+
+        <div id="modal-window">
+
+            <!-- HEADER -->
+            <div id="modal-header">
+                <div>AJUDA</div>
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon-close" onclick="closeHelp()" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </div>
+            </div>
+
+
+
+
+
+
+            <!-- CONTENT -->
+            <div id="modal-content">
+
+
+
+                <!-- CONTEUDO -->
+                <div class="content-wrapper content-active">
+                    <div class="contet-text">
+                        <h1>Porta AND</h1>
+                        Porta lógica <strong>AND (E)</strong> (também é chamada de conjunção lógica)  é uma operação lógica em dois operandos que resulta em um valor lógico verdadeiro somente se todos os operados tem um valor verdadeiro.
+                    </div>
+                    <table class="truth-table">
+                        <thead>
+                            <tr><th>A</th><th>B</th><th>SAÍDA</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0</td><td>0</td><td>0</td></tr>
+                            <tr><td>0</td><td>1</td><td>0</td></tr>
+                            <tr><td>1</td><td>0</td><td>0</td></tr>
+                            <tr><td>1</td><td>1</td><td>1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <!-- CONTEUDO -->
+                <div class="content-wrapper">
+                    <div class="contet-text">
+                        <h1>Porta OR</h1>
+                        A porta lógica <strong>OR (OU)</strong>, também é chamada de disjunção lógica, é uma operação lógica entre dois ou mais operandos que resulta em um valor lógico falso se, e somente se, todos os operandos tiverem um valor falso.
+                    </div>
+                    <table class="truth-table">
+                        <thead>
+                            <tr><th>A</th><th>B</th><th>SAÍDA</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0</td><td>0</td><td>0</td></tr>
+                            <tr><td>0</td><td>1</td><td>1</td></tr>
+                            <tr><td>1</td><td>0</td><td>1</td></tr>
+                            <tr><td>1</td><td>1</td><td>1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+                <!-- CONTEUDO -->
+                <div class="content-wrapper">
+                    <div class="contet-text">
+                        <h1>Porta NAND</h1>
+                        A porta lógica <strong>NAND</strong> é uma operação lógica entre dois ou mais operandos que resulta em um valor lógico falso se, e somente se, todos os operandos tiverem um valor verdadeiro.
+                    </div>
+                    <table class="truth-table">
+                        <thead>
+                            <tr><th>A</th><th>B</th><th>SAÍDA</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0</td><td>0</td><td>1</td></tr>
+                            <tr><td>0</td><td>1</td><td>1</td></tr>
+                            <tr><td>1</td><td>0</td><td>1</td></tr>
+                            <tr><td>1</td><td>1</td><td>0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+                <!-- CONTEUDO -->
+                <div class="content-wrapper">
+                    <div class="contet-text">
+                        <h1>Porta NOR</h1>
+                        Para entender a porta <strong>NOR</strong> é necessário lembrar que, quando quaisquer das entradas da porta <strong>OR</strong> for 1, a saída será 1 e, na porta <strong>NOT</strong>, a saída será sempre o inverso da entrada (0 torna-se 1 e 1 torna-se 0).
+                    </div>
+                    <table class="truth-table">
+                        <thead>
+                            <tr><th>A</th><th>B</th><th>SAÍDA</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0</td><td>0</td><td>1</td></tr>
+                            <tr><td>0</td><td>1</td><td>0</td></tr>
+                            <tr><td>1</td><td>0</td><td>0</td></tr>
+                            <tr><td>1</td><td>1</td><td>0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+                <!-- CONTEUDO -->
+                <div class="content-wrapper">
+                    <div class="contet-text">
+                        <h1>Porta XOR</h1>
+                        <strong>Ou exclusivo</strong> ou <strong>disjunção exclusiva</strong> é uma operação lógica entre dois operandos que resulta em um valor lógico verdadeiro se e somente se os dois operandos forem diferentes, ou seja, se um for verdadeiro e o outro for falso. É conhecido também pelas abreviações <strong>XOR</strong> ou <strong>EXOR</strong> (do inglês exclusive or) e ainda por <strong>XOU</strong> ou <strong>EOU</strong>.
+                    </div>
+                    <table class="truth-table">
+                        <thead>
+                            <tr><th>A</th><th>B</th><th>SAÍDA</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0</td><td>0</td><td>0</td></tr>
+                            <tr><td>0</td><td>1</td><td>1</td></tr>
+                            <tr><td>1</td><td>0</td><td>1</td></tr>
+                            <tr><td>1</td><td>1</td><td>0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+
+                <!-- CONTEUDO -->
+                <div class="content-wrapper">
+                    <div class="contet-text">
+                        <h1>Porta XNOR</h1>
+                        A porta lógica <strong>XNOR</strong>, também conhecida pelo termo função coincidência, é a operação inversa da porta <strong>XOR</strong> (ou - exclusivo). Como o próprio nome expressa, essa função retornará valores iguais a um (retornará sinais elétricos) quando os valores de entrada forem iguais, ou seja, quando coincidirem.
+                    </div>
+                    <table class="truth-table">
+                        <thead>
+                            <tr><th>A</th><th>B</th><th>SAÍDA</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>0</td><td>0</td><td>1</td></tr>
+                            <tr><td>0</td><td>1</td><td>0</td></tr>
+                            <tr><td>1</td><td>0</td><td>0</td></tr>
+                            <tr><td>1</td><td>1</td><td>1</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                
+
+
+
+
+            </div>
+
+
+
+
+
+            <!-- FOOTER -->
+            <div id="modal-footer">
+
+                <div id="modal-index-list">
+                    <div class="modal-index modal-index-active"></div>
+                    <div class="modal-index"></div>
+                    <div class="modal-index"></div>
+                    <div class="modal-index"></div>
+                    <div class="modal-index"></div>
+                    <div class="modal-index"></div>
+                </div>
+
+                <div id="modal-controls">
+                    <div class="modal-button" onclick="backPage()">VOLTAR</div>
+                    <div class="modal-button modal-button-active" onclick="nextPage()">PRÓXIMO</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <header id="main-header">
+        
+        <div>PORTAS LÓGICAS</div>
+        <div>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-help" onclick="openHelp()" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+            </svg>
+
+        </div>
+
+
+    </header>
+
+
+    <!-- COMAPRE LOGIC GATE -->
+    <div class="logicGates">
+
+        
+        <label class="logic">
+            <input type="radio" name="logic-type" checked>
+            <div>AND</div>
+        </label>
+
+        <label class="logic">
+            <input type="radio" name="logic-type">
+            <div>OR</div>
+        </label>
+        
+        <label class="logic">
+            <input type="radio" name="logic-type">
+            <div>NAND</div>
+        </label>
+
+        <label class="logic">
+            <input type="radio" name="logic-type">
+            <div>NOR</div>
+        </label>
+
+        <label class="logic">
+            <input type="radio" name="logic-type">
+            <div>XOR</div>
+        </label>
+
+        <label class="logic">
+            <input type="radio" name="logic-type">
+            <div>XNOR</div>
+        </label>
+
+        
+
+
+    </div>
+
+
+
+
+
+    <!-- REGISTER -->
+    <div class="register" id="register_input">
+        <div class="bitOrder">
+            <div>Bit 7</div>
+            <div>ENTRADA (0x00)</div>
+            <div>Bit 0</div>
+        </div>
+
+        <div class="bitList">
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+        </div>
+    </div>
+
+
+
+    <!-- REGISTER -->
+    <div class="register" id="register_compare">
+        <div class="bitOrder">
+            <div>Bit 7</div>
+            <div>COMPARAÇÃO (0x00)</div>
+            <div>Bit 0</div>
+        </div>
+
+        <div class="bitList">
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+            <label class="bit"><input type="checkbox" name="bit-state"><div>0</div></label>
+        </div>
+    </div>
+
+
+    <!-- REGISTER -->
+    <div class="register" id="register_output">
+        <div class="bitOrder">
+            <div>Bit 7</div>
+            <div>SAÍDA (0x00)</div>
+            <div>Bit 0</div>
+        </div>
+
+        <div class="bitList">
+            <label class="bit"><input type="checkbox" disabled><div>0</div></label>
+            <label class="bit"><input type="checkbox" disabled><div>0</div></label>
+            <label class="bit"><input type="checkbox" disabled><div>0</div></label>
+            <label class="bit"><input type="checkbox" disabled><div>0</div></label>
+            <label class="bit"><input type="checkbox" disabled><div>0</div></label>
+            <label class="bit"><input type="checkbox" disabled><div>0</div></label>
+            <label class="bit"><input type="checkbox" disabled><div>0</div></label>
+            <label class="bit"><input type="checkbox" disabled><div>0</div></label>
+        </div>
+    </div>
+
+
+ 
+
+
+
+
+
+    <script>
+
+
+        var logic_gates = document.getElementsByName("logic-type");
+        var bit_state = document.getElementsByName("bit-state");
+
+        var logic_gate_index = 0;
+        
+        logic_gates.forEach((e, i)=>{
+            e.addEventListener("change", ()=>{
+                logic_gate_index = i;
+                console.log("CHANGE LOGIC GATE", logic_gate_index);
+                calcular();
+            });
+        });
+
+
+        bit_state.forEach((e, i)=>{
+            e.addEventListener("change", ()=>{
+                console.log("CHANGE BIT");
+                bit_state[i].nextElementSibling.innerText = (e.checked)? '1' : '0';
+                calcular();
+            });
+        });
+
+
+
+
+
+
+
+
+
+
+        function getValueRegister(id){
+
+            let temp = '';
+
+            for (let i = 0; i < 8; i++){
+                let state = document.getElementById(id).querySelectorAll(".bit input")[i].checked;
+                if (state){
+                    temp += '1';
+                }else{
+                    temp += '0';
+                }
+
+            }
+
+            return temp;
+
+        }
+
+
+
+
+
+        function setValueOutput(value){
+            for (let i = 0; i < 8; i++){
+                document.getElementById("register_output").querySelectorAll(".bit input")[i].checked = (value & 1 << (7-i))? true : false;
+                document.getElementById("register_output").querySelectorAll(".bit input")[i].nextElementSibling.innerText = (value & 1 << (7-i))? '1' : '0';
+            }
+        }
+        
+
+
+
+        function calcular(){
+
+
+            let valueA = '0b' + getValueRegister("register_input") | 0;
+            let valueB = '0b' + getValueRegister("register_compare") | 0;
+
+            let valueC = 0x00;
+
+            if ( logic_gates[logic_gate_index].parentElement.innerText == "AND" ){
+                valueC = valueA & valueB;
+            }
+            else if ( logic_gates[logic_gate_index].parentElement.innerText == "OR" ){
+                valueC = valueA | valueB;
+            }
+            else if ( logic_gates[logic_gate_index].parentElement.innerText == "NAND" ){
+                valueC = ~(valueA & valueB);
+            }
+            else if ( logic_gates[logic_gate_index].parentElement.innerText == "NOR" ){
+                valueC = ~(valueA | valueB);
+            }
+            else if ( logic_gates[logic_gate_index].parentElement.innerText == "XOR" ){
+                valueC = valueA ^ valueB;
+            }
+            else if ( logic_gates[logic_gate_index].parentElement.innerText == "XNOR" ){
+                valueC = ~(valueA ^ valueB);
+            }
+
+
+            if ( valueC < 0 ){
+                setValueOutput( 256 - Math.abs(valueC) )
+                document.getElementById("register_output").querySelectorAll('.bitOrder div')[1].innerText = `SAÍDA (${toHex8(256 - Math.abs(valueC))})`;
+            }else{
+                setValueOutput( valueC );
+                document.getElementById("register_output").querySelectorAll('.bitOrder div')[1].innerText = `SAÍDA (${toHex8(valueC)})`;
+            }
+
+
+            document.getElementById("register_input").querySelectorAll('.bitOrder div')[1].innerText = `ENTRADA (${(toHex8(valueA))})`;
+            document.getElementById("register_compare").querySelectorAll('.bitOrder div')[1].innerText = `COMPARAÇÃO (${toHex8(valueB)})`;
+            
+
+            console.log(valueA, valueB, valueC);
+
+
+
+        }
+
+
+
+
+
+
+        function toHex8(value){
+
+            value = Math.abs(value);
+
+            let msb = (value >> 4);
+            let lsb = (value & 0xFF) % 16;
+
+
+            if ( msb >= 10 ){
+                msb = String.fromCharCode(65 + (msb-10))
+            }
+
+            
+            if ( lsb >= 10 ){
+                lsb = String.fromCharCode(65 + (lsb-10))
+            }
+
+            return (`0x${msb}${lsb}`);
+
+        }
+
+
+
+
+
+
+
+
+
+
+        function openHelp(){
+            console.log("OPEN");
+            showContent(0);
+            document.getElementById("modal-help").style.display = "flex";
+        }
+
+
+        function closeHelp(){
+            document.getElementById("modal-help").style.display = "none";
+        }
+
+
+        function nextPage(){
+            console.log("NEXT")
+            let size = document.querySelectorAll("#modal-index-list > div").length;
+
+            let index = getActualPage();
+
+            if ( index < size ){
+                showContent(index+1);
+            }
+
+
+
+
+        }
+
+        function backPage(){
+
+            console.log("NEXT")
+            let size = document.querySelectorAll("#modal-index-list > div").length;
+
+            let index = getActualPage();
+
+            if ( index > 0 ){
+                showContent(index-1);
+            }
+
+        }
+
+
+
+
+
+
+
+        function getActualPage(){
+
+            document.querySelectorAll("#modal-index-list > div")[0].classList.contains("modal-index-active");
+
+            let index = -1;
+
+            document.querySelectorAll("#modal-index-list > div").forEach((e, i)=>{
+                if ( e.classList.contains("modal-index-active") ){
+                    index = i;
+                    return;
+                }
+            });
+
+            return index;
+
+        }
+
+
+        document.querySelectorAll("#modal-index-list > div").forEach((e, i)=>{
+            e.addEventListener("click", ()=>{
+                showContent(i);
+            });
+        });
+
+
+
+
+
+        function showContent( index ){
+
+            let size = document.querySelectorAll("#modal-index-list > div").length;
+
+            if ( index < 0 || index >= size ){return;}
+
+
+            for (let i = 0; i < size; i++){
+                document.querySelectorAll("#modal-index-list > div")[i].classList.remove("modal-index-active"); // REMOVE DOT
+                document.querySelectorAll("#modal-content > div")[i].classList.remove("content-active"); // REMOVE CONTENT
+            }
+
+
+            document.querySelectorAll("#modal-index-list > div")[index].classList.add("modal-index-active"); // ADD DOT
+            document.querySelectorAll("#modal-content > div")[index].classList.add("content-active"); // ADD CONTENT
+
+
+            if ( index == 0 ){
+                document.querySelectorAll("#modal-controls > div")[0].classList.remove("modal-button-active")
+                document.querySelectorAll("#modal-controls > div")[1].classList.add("modal-button-active")
+            }
+            else if ( index < size-1 ){
+                document.querySelectorAll("#modal-controls > div")[0].classList.add("modal-button-active");
+                document.querySelectorAll("#modal-controls > div")[1].classList.add("modal-button-active");
+            }
+            else if ( index >= size-1 ){
+                document.querySelectorAll("#modal-controls > div")[1].classList.remove("modal-button-active");
+            }
+
+        }
+
+
+
+
+
+    </script>
+
+
+
+</body>
+</html>

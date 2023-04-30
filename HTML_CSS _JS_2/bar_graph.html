@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bar</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        .bar_wrapper{
+            width: fit-content;
+            display: flex;
+            padding: 8px;
+            background-color: #616161;
+        }
+
+        .led{
+            width: 8px;
+            height: 32px;
+            margin-right: 4px;
+            opacity: 0.3;
+            transform: skewX(-20deg);
+            transition: 250ms;
+        }
+        .led:last-child{
+            margin: 0;
+        }
+
+        .led_on{ 
+            transform: skewX(-10deg) scale(1.1);
+            animation: pulse 1s infinite; 
+        }
+
+
+        @keyframes pulse {
+            0%{
+                opacity: 0.3;
+            }
+            25%{
+                opacity: 1;
+            }
+            75%{
+                opacity: 0.3;
+            }
+        }
+
+        
+        .led_green{
+            background-color: lime;
+        }
+        .led_yellow{
+            background-color: yellow;
+        }
+        .led_red{
+            background-color: red;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+    
+    <div class="bar_wrapper" id="main_graph">
+
+        <div class="led led_green"></div>
+        <div class="led led_green"></div>
+        <div class="led led_green"></div>
+        <div class="led led_green"></div>
+
+        
+        <div class="led led_yellow"></div>
+        <div class="led led_yellow"></div>
+
+        <div class="led led_red"></div>
+        <div class="led led_red"></div>
+
+    </div>
+
+
+    <input type="range" id="main_range" min="0" max="1023" value="0">
+    
+
+
+
+    <script>
+
+
+        var main_range = document.getElementById("main_range");
+        var main_graph = document.getElementById("main_graph");
+
+
+        main_range.oninput = () => {
+
+            let size = main_graph.children.length * main_range.value / main_range.max; 
+
+            for (let i = 0; i < main_graph.children.length; i++){
+                main_graph.children[i].classList.remove("led_on");
+            }
+
+            setTimeout(()=>{
+                for (let i = 0; i < main_graph.children.length; i++){ 
+                    main_graph.children[i].classList.toggle("led_on", i < size);
+                }
+            }, 1); 
+
+        };
+
+
+    </script>
+
+
+</body>
+</html>

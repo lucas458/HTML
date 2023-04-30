@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronômetro</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818; 
+            user-select: none;
+        }
+
+
+
+
+
+
+
+        @media screen and (min-width: 720px) {
+            
+            body{
+                font-size: 2vw;
+            }
+            #dialog-wrapper{
+                font-size: 32px;
+            }
+            
+            #dialog-content{
+                width: 480px !important;
+                padding: 16px !important;
+            }
+
+        }
+
+
+         
+
+
+        #dialog-wrapper{
+            width: 100%;
+            height: 100%; 
+            z-index: 2; 
+            position: fixed; 
+            display: none;
+        }
+
+
+        #dialog-window{
+            width: 100%;
+            height: 100%;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: relative;
+        }
+
+        #dialog-screen{
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #dialog-content{
+            z-index: 4;
+            width: 280px; 
+            background-color: #1f1f1f;
+            color: #fff;
+            padding: 24px 8px 8px 24px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 5px;
+            color: #9e9e9e;
+        }
+        
+        #dialog-control{
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+        #dialog-close{
+            padding: 8px 16px;
+            color: #bb86fc;
+            border-radius: 5px;
+        }   
+        #dialog-close:active{
+            background-color: #353535;
+            
+        }
+
+
+
+
+
+
+
+
+
+
+         
+
+
+        #screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+
+
+
+        #main-content{
+            text-align: center; 
+            margin-top: 16px;
+        }
+
+
+        #main-value{
+            font-size: 10vw;
+            color: #007bff80;
+        }
+        #main-lap-value{
+            font-size: 5vw;
+            color: #9e9e9e;
+        }
+
+        .active{
+            color: #007bff;
+        }
+
+
+
+
+
+
+        #scroll-content{
+            height: 100%;
+            overflow: hidden auto;
+            padding: 8px;
+            margin: 0 14px;
+            margin-top: 32px;
+            margin-bottom: 8px;
+            border-top: 1px solid #353535;
+        }
+
+
+        .lap-item{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+         
+
+
+        .lap-index{
+            color: #757575;
+        }
+        .lap-value1{
+            color: #9e9e9e;
+            margin: 0 8px;
+        }
+        .lap-value2{
+            color: #007bff;
+        }
+
+
+
+
+
+
+        #controls{
+            border-top: 1px solid #353535;
+            position: relative;
+        }
+
+
+
+        #toast-wrapper{
+            width: 100%; 
+            margin-bottom: 16px;
+            padding: 0 10px;
+
+            display: flex;
+            justify-content: center;
+
+            position: absolute;
+            bottom: 100%;
+            opacity: 0;
+            
+            transition: 250ms;
+
+        }
+        #toast-content{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #323232;
+            box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+            padding: 8px 32px;
+            height: 48px;
+            border-radius: 48px; 
+            color: #e3e3e3;
+            width: fit-content;
+        }
+ 
+
+
+
+
+        .btn-group{
+            display: none;
+        }
+
+        .btn-group:last-child > *:first-child{
+            color: #dc3545;
+        }
+
+        .active-group{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        
+ 
+        .control-button{
+            color: #007bff;
+            flex: 1;
+            text-align: center;
+            padding: 16px;
+        }
+
+       
+
+
+        .control-button:active{
+            background-color: #212121;
+        }
+        
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+    <!-- MODAL -->
+    <div id="dialog-wrapper">
+
+        
+        <div id="dialog-window">
+            
+            <div id="dialog-screen" onclick="toggleDialog(false)"></div>
+
+            <div id="dialog-content">
+                
+                <div id="dialog-label">Tempo máximo atingido</div>
+                <div id="dialog-control">
+                    <div id="dialog-close" onclick="dialogAcept()">OK</div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <!-- MAIN -->
+    <div id="screen">
+
+
+        <div id="main-content">
+            <div id="main-value"><span>0</span><span>0</span><span>:</span><span>0</span><span>0</span><span>:</span><span>0</span><span>0</span><span>.00</span></div>
+            <div id="main-lap-value">00:00:00.00</div>
+        </div>
+ 
+        <div id="scroll-content"></div>
+
+  
+        <div id="controls">
+
+            <div id="toast-wrapper">
+                <div id="toast-content">Limite antingido</div>
+            </div>
+
+            <div class="btn-group active-group">
+                <div class="control-button" onclick="control_start()">INICIAR</div>
+            </div>
+
+            <div class="btn-group">
+                <div class="control-button" onclick="control_stopContinue()">PARAR</div>
+                <div class="control-button" onclick="control_lapReset()">MARCAR</div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    
+     
+
+
+    <script>
+
+
+
+
+        var main_value_span = document.querySelectorAll("#main-value > span");
+        var list_lap = document.getElementById('scroll-content');
+        var controls = document.getElementById('controls');
+        var dialog = document.getElementById('dialog-wrapper');
+
+
+        var value_main = 0;
+        var value_lap = 0;
+
+        var time_lap_flag = false;
+        var time_main_run = false;
+
+        var MAIN_TIMER = null;
+
+
+        // SET MAIN VALUE COLOR HIGHLIGH
+        function setMainValueColor( value_ms = 0 ){
+
+            let value_sec = Math.trunc(value_ms / 100 % 60);
+            let value_min = Math.trunc(value_ms / 6000 % 60 );
+            let value_hour= Math.trunc(value_ms / 360000 );
+            let temp_ms = Math.trunc(value_ms % 100);
+
+
+
+            // hour1
+            main_value_span[0].style.color = (value_hour>=10)? "#007bff" : "inherit";
+            main_value_span[0].innerHTML = value_hour / 10 % 10 | 0;
+            // hour2
+            main_value_span[1].style.color = (value_hour>0)? "#007bff" : "inherit";
+            main_value_span[1].innerHTML = value_hour % 10 | 0;
+            // grove
+            main_value_span[2].style.color = (value_hour>0)? "#007bff" : "inherit";
+
+
+            // min1
+            main_value_span[3].style.color = (value_min>=10 || value_hour>0)? "#007bff" : "inherit";
+            main_value_span[3].innerHTML = value_min / 10 % 10 | 0;
+            // min2
+            main_value_span[4].style.color = (value_min>0 || value_hour>0)? "#007bff" : "inherit";
+            main_value_span[4].innerHTML = value_min % 10 | 0;
+            // groove
+            main_value_span[5].style.color = (value_min>0 || value_hour>0)? "#007bff" : "inherit";
+
+
+            // sec1
+            main_value_span[6].style.color = (value_sec>=10 || value_ms >= 6000)? "#007bff" : "inherit";
+            main_value_span[6].innerHTML = value_sec / 10 % 10 | 0;
+            // sec2
+            main_value_span[7].style.color = (value_sec>0 || value_ms >= 6000)? "#007bff" : "inherit";
+            main_value_span[7].innerHTML = value_sec % 10 | 0;
+
+
+            // dot, ms1, ms2
+            main_value_span[8].style.color = (value_ms > 0)? "#007bff" : "inherit";
+            main_value_span[8].innerHTML = '.' + ((temp_ms<10)?('0'+temp_ms): temp_ms);
+
+        }
+
+
+
+
+
+
+        // FORMAT MS to 00:00:00.00
+        function timeFormat( value_ms = 0 ){
+
+
+            let value_sec = Math.trunc(value_ms / 100 % 60);
+            let value_min = Math.trunc(value_ms / 6000 % 60 );
+            let value_hour= Math.trunc(value_ms / 3600000 );
+
+            let temp_ms = value_ms % 100;
+            let str = ``;
+
+            str += ((value_hour<10)? ('0'+value_hour) : value_hour) + ':';
+            str += ((value_min<10)? ('0'+value_min) : value_min) + ':';
+            str += ((value_sec<10)? ('0'+value_sec) : value_sec) + '.';
+            str += ((temp_ms<10)? ('0'+temp_ms) : temp_ms);
+ 
+            return str; 
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+        // ADD LAP
+        function addLap( stamp_a = 0, stamp_b = 0 ){
+
+            let index = list_lap.children.length + 1;
+
+            if ( index > 999 ){
+                showToast();
+                return;
+            }
+
+            index = (index<10)? ('0'+index) : index;
+            let item = document.createElement('div');
+            item.classList.add('lap-item');
+            item.innerHTML = `<div class="lap-index">${index}</div><div class="lap-value1">${timeFormat(stamp_a)}</div><div class="lap-value2">${timeFormat(stamp_b)}</div>`;
+            list_lap.prepend(item);
+            value_lap = 0;
+
+        }
+
+
+
+
+        // UPDATE TIME
+        function update(){
+
+            if ( time_main_run ){
+
+
+                if ( value_main < 36000000 ){
+                    value_main++;
+                    setMainValueColor(value_main);
+                }
+                else{
+                    time_main_run = false;
+                    setMainValueColor(value_main-1);
+                    toggleDialog(true);
+                }
+
+                if ( time_lap_flag ){
+                    value_lap++;
+                    document.getElementById('main-lap-value').innerText = timeFormat(value_lap);
+                }
+            }
+            
+        }
+
+
+        
+
+
+
+
+
+
+        
+        function control_start(){
+            time_main_run = true;
+            MAIN_TIMER = setInterval(update, 10);
+            controls.children[1].classList.remove('active-group');
+            controls.children[2].classList.add('active-group');
+        }
+
+
+
+        function control_stopContinue(){
+
+            time_main_run = !time_main_run;
+
+            // CONTINUE
+            if ( time_main_run ){
+                MAIN_TIMER = setInterval(update, 10);
+            }
+
+            // STOP
+            else{ 
+                clearInterval(MAIN_TIMER);
+            }
+            
+
+            controls.children[2].children[0].style.color = (time_main_run)? "#dc3545" : "#28a745";
+            controls.children[2].children[0].innerText = (time_main_run)? 'PARAR' : 'CONTINUAR';
+            controls.children[2].children[1].innerText = (time_main_run)? 'MARCAR' : 'REINICIAR';
+
+        }
+
+
+
+
+        function control_lapReset(){
+
+            // LAP ADD
+            if ( time_main_run ){
+
+                if ( !time_lap_flag ){
+                    time_lap_flag = true;
+                    addLap(value_main, value_main);
+                }
+                else{
+                    addLap(value_main, value_lap);
+                }
+            }
+
+            // RESET
+            else{
+                reset(true);
+            }
+
+        }
+
+
+
+
+        // RESET
+        function reset( trigger = true ){
+            clearInterval(MAIN_TIMER);
+            time_lap_flag = time_main_run = false;
+            list_lap.innerHTML = '';
+            value_main = value_lap = 0;
+            controls.children[1].classList.add('active-group');
+            controls.children[2].classList.remove('active-group');
+            controls.children[2].children[0].innerText = 'PARAR';
+            controls.children[2].children[1].innerText = 'MARCAR';
+            controls.children[2].children[0].style.color = "#dc3545";
+
+            if ( trigger ){
+                setMainValueColor(0);
+                document.getElementById('main-lap-value').innerText = timeFormat(value_lap);
+            }
+            
+
+
+        }
+
+
+        
+
+
+
+        // SHOW TOAST
+        function showToast(){
+
+
+            document.getElementById('toast-wrapper').style.opacity = 1;
+
+            setTimeout(()=>{
+                document.getElementById('toast-wrapper').style.opacity = 0;
+            }, 2000);
+
+
+
+        }
+
+
+
+
+        // TOGGLE DIALOG BOX
+        function toggleDialog( state ){
+            dialog.style.display = (state)? 'block' : 'none';
+        }
+
+        // 
+        function dialogAcept(){
+            reset(true);
+            dialog.style.display = 'none';
+        }
+
+
+
+    </script>
+
+
+</body>
+</html>

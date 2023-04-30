@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #000;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        #game_screen{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+        #brick_list{
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            column-gap: 4px;
+            row-gap: 6px;
+            padding: 8px;
+        }
+
+        .brick{
+            width: 100%;
+            height: 16px;
+            background-color: red;
+        }
+        .brick_destroyed{
+            visibility: hidden;
+        }
+
+
+        #ball{
+            width: 16px;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            background-color: #fff;
+            position: absolute;
+            z-index: 1;
+        }
+
+        #player{
+            width: 80px;
+            height: 16px;
+            background-color: #607D8B;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+    <div id="game_screen"> 
+
+        <div id="brick_list"></div> 
+
+        <div id="reward_list"></div>
+
+        <div id="ball"></div>
+
+        <div id="player"></div> 
+
+    </div>
+
+
+
+
+
+
+    <script>
+
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value || 0;
+        };
+
+        
+
+        var game_screen = document.getElementById("game_screen");
+        var brick_list  = document.getElementById("brick_list");
+        var reward_list = document.getElementById("reward_list");
+        var ball        = document.getElementById("ball");
+        var player      = document.getElementById("player");
+        
+        
+        var playerMovement = 0;
+        var game_running = false;
+
+        var ballMovement = {
+            isUp: -1,
+            isLeft: (Math.trunc(Math.random() * 2)==0)? -1 : 1
+        };
+
+        var COLORS = [
+            "darkred", "darkgreen", "darkblue", "darkcyan", "darkorange", "purple"
+        ];
+
+
+        function update(){
+
+            player.style.left = Math.clamp(player.offsetLeft + 5 * playerMovement, 0, game_screen.offsetWidth - player.offsetWidth) + "px";
+            let tempList = brick_list.querySelectorAll(".brick:not(.brick_destroyed)");
+
+            if (game_running){
+                
+                // ball movement
+                ball.style.left = Math.clamp(ball.offsetLeft + 5 * ballMovement.isLeft, 0, game_screen.offsetWidth - ball.offsetWidth) + "px";
+                ball.style.top = Math.clamp(ball.offsetTop + 5 * ballMovement.isUp, 0, game_screen.offsetHeight - ball.offsetHeight) + "px";
+                
+
+                // screen border collider
+                if ( ball.offsetLeft + ball.offsetWidth >= game_screen.offsetWidth || ball.offsetLeft <= 0 ){
+                    ballMovement.isLeft = (ballMovement.isLeft==1)? -1 : 1; 
+                }
+                if ( ball.offsetTop + ball.offsetHeight >= game_screen.offsetHeight || ball.offsetTop <= 0 ){
+                    ballMovement.isUp = (ballMovement.isUp==1)? -1 : 1;
+                    if (ball.offsetTop + ball.offsetHeight >= game_screen.offsetHeight){
+                        game_running = false;
+                        centerPlayer();
+                        centerBallToPlayer();
+                    }
+                }
+
+                // brick collider
+                if (tempList){
+
+                    let ballCenter = {
+                        x: ball.offsetLeft + ball.offsetWidth/2,
+                        y: ball.offsetTop + ball.offsetHeight/2
+                    };
+
+                    for (let i = 0; i < tempList.length; i++){
+
+                        let isCollider = circleRect(ballCenter.x, ballCenter.y, ball.offsetWidth/2, tempList[i].offsetLeft, tempList[i].offsetTop, tempList[i].offsetWidth, tempList[i].offsetHeight);
+
+                        if ( isCollider ){
+                            
+                            if ( ballMovement.isUp == -1 ){
+                                ball.style.top = (tempList[i].offsetTop + tempList[i].offsetHeight) + "px";    
+                            }else{
+                                ball.style.top = (tempList[i].offsetTop - ball.offsetHeight) + "px";
+                            }
+                            
+                            ballMovement.isUp = (ballMovement.isUp==1)? -1 : 1; 
+                            tempList[i].classList.add("brick_destroyed");
+
+                            break;
+                        }
+
+                    } 
+                }
+
+                // player collider
+                if ( circleRect(ballCenter.x, ballCenter.y, ball.offsetWidth/2, player.offsetLeft, player.offsetTop, player.offsetWidth, player.offsetHeight) ){
+                        ball.style.top = (player.offsetTop - ball.offsetHeight) + "px";
+                        ballMovement.isUp = -1;
+                }
+                
+            }else{
+                centerBallToPlayer();
+            } 
+
+            requestAnimationFrame(update);
+        }
+
+
+
+        update();
+
+
+
+
+        function circleRect(cx, cy, radius, rx, ry, rw, rh) {
+
+            testX = cx;
+            testY = cy;
+
+            if (cx < rx)         testX = rx;
+            else if (cx > rx+rw) testX = rx+rw;
+            if (cy < ry)         testY = ry;
+            else if (cy > ry+rh) testY = ry+rh;
+
+            distX = cx-testX;
+            distY = cy-testY;
+            distance = Math.sqrt( (distX*distX) + (distY*distY) );
+
+            return distance <= radius;
+
+        }
+
+
+
+        function centerPlayer(){
+            player.style.left = (game_screen.offsetWidth/2 - player.offsetWidth/2) + "px";
+        }
+
+        function centerBallToPlayer(){
+            ball.style.top = (player.offsetTop - ball.offsetHeight) + "px";
+            ball.style.left = (player.offsetLeft + player.offsetWidth/2 - ball.offsetWidth/2) + "px";
+        }
+ 
+
+        function generateBrick(){
+
+            brick_list.innerHTML = '';
+
+            for (let i = 0; i < 48; i++){
+                let brickItem = document.createElement("div");
+                brickItem.classList.add("brick");
+                brickItem.style.backgroundColor = COLORS[ getRandomInt(0, COLORS.length+1) ];
+                brick_list.appendChild(brickItem);
+            }
+
+        }
+
+
+
+        centerPlayer();
+        centerBallToPlayer();
+        generateBrick();
+
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+
+        window.onkeydown = (evt) => {
+
+            if ( evt.keyCode == 32 ){
+                console.log("space click");
+                game_running = true;
+            }
+            playerMovement = (evt.keyCode == 39) - (evt.keyCode == 37);
+
+        };
+
+
+
+        window.onkeyup = (evt) => {
+            playerMovement = 0;
+        }
+
+
+
+    </script>
+
+
+</body>
+</html>

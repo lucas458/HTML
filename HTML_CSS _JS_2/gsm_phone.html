@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            
+            user-select: none;
+        }
+
+
+
+        /* ANTENNAS */
+        #list-antenna{
+
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+
+        .antenna{
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: absolute;
+            margin: auto;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+
+
+
+            border-radius: 50%;
+            width: 50%;
+            aspect-ratio: 1/1;
+            background-color: #353535;
+        }
+
+         
+
+
+
+
+
+        /* PLAYERS */
+        #list-player{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+        .player{
+
+
+            border: 1px solid #fff;
+            padding: 4px;
+            width: fit-content;
+            aspect-ratio: 1/1;
+            
+            flex-direction: column;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .player-reception{
+            color: red;
+        }
+
+
+        .player-caller{
+            visibility: hidden;
+        }
+
+        .player-caller-visible{
+            visibility: visible !important;
+        }
+
+
+        
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+    <div id="list-antenna">
+
+
+        <div class="antenna"> 
+            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="currentColor"><path d="M1 11q0-1.875.708-3.51.709-1.636 1.927-2.855Q4.854 3.417 6.49 2.708 8.125 2 10 2q1.875 0 3.51.708 1.636.709 2.855 1.927 1.218 1.219 1.927 2.855Q19 9.125 19 11h-1.5q0-1.562-.594-2.927t-1.604-2.375q-1.01-1.01-2.375-1.604Q11.562 3.5 10 3.5t-2.927.594q-1.365.594-2.375 1.604-1.01 1.01-1.604 2.375Q2.5 9.438 2.5 11Zm3 0q0-2.5 1.75-4.25T10 5q2.5 0 4.25 1.75T16 11h-1.5q0-1.875-1.312-3.188Q11.875 6.5 10 6.5q-1.875 0-3.188 1.312Q5.5 9.125 5.5 11Zm3.521 8-1.042-1.062 2.771-2.771v-2.313q-.542-.229-.896-.729T8 11q0-.833.583-1.417Q9.167 9 10 9q.833 0 1.417.583Q12 10.167 12 11q0 .625-.354 1.125t-.896.729v2.313l2.771 2.771L12.479 19 10 16.521Z"/></svg>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="list-player">
+
+        
+        <!-- PLAYER -->
+        <div class="player">
+
+            <div class="player-reception-and-caller">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="player-caller" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                </svg>
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="player-reception"  viewBox="0 0 16 16">
+                    <path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-8zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-11z"/>
+                </svg>
+            </div>
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="phone" viewBox="0 0 16 16">
+                <path d="M3 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V2zm6 11a1 1 0 1 0-2 0 1 1 0 0 0 2 0z"/>
+            </svg>
+
+            <div class="player-name">Lucas</div>
+
+        </div>
+
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+
+        const REPECTION_LEVEL_SVG = [
+
+            '<path d="M0 13.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>',
+            '<path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>',
+            '<path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4 5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm4 0a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>',
+            '<path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-8zm4 8a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>',
+            '<path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-8zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-11z"/>'
+
+        ];
+
+
+
+        var list_player_div = document.getElementById("list-player");
+
+
+        var player_press = false;
+        var player_press_index = -1;
+
+
+
+        var LIST_PLAYER = [];
+
+
+        
+
+        function hasNumber( number = '' ){
+
+            for (let i = 0; i < LIST_PLAYER.length; i++){
+                if ( number == LIST_PLAYER[i].number ){
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+
+
+
+         
+
+
+       
+
+
+
+        function clamp(x, min, max){
+            if ( x < min ) return min;
+            if ( x > max ) return max;
+            return x;
+        }
+
+
+
+
+
+        class Player{
+
+            constructor( playerName, number ){
+
+
+                this.playerName = playerName;
+                this.number = number;
+
+                this.signal = 0;
+                this.isCalling = false;
+
+
+                this.position = {
+                    x: 0,
+                    y: 0
+                };
+
+
+            }
+
+
+
+
+            callTo( number ){
+
+
+                let idx = hasNumber(number);
+
+                if ( idx < 0 ){
+                    return -1;
+                }
+                else if ( idx >= 0 && LIST_PLAYER[idx].signal == 0 ){
+                    return -2;
+                }
+
+
+
+                return idx;
+
+
+                
+
+
+            }
+
+
+        }
+
+
+
+
+
+         
+
+
+
+        function addPlayer(name, number){
+
+
+            if ( hasNumber(number) >= 0 ){
+                return false;
+            }
+
+            LIST_PLAYER.push( new Player(name, number) );
+
+        }
+        
+        addPlayer('lucas', '555');
+        addPlayer('dom', '256');
+
+
+
+        function updateAll(){
+
+
+            list_player_div.innerHTML = '';
+
+
+            for (let i = 0; i < LIST_PLAYER.length; i++){
+
+                let player = document.createElement('div');
+                player.classList.add('player');
+ 
+                
+
+                player.innerHTML = `
+            
+                <div class="player-reception-and-caller">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="player-caller ${(LIST_PLAYER[i].isCalling)?'player-caller-visible':''}" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                    </svg>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="player-reception  viewBox="0 0 16 16">
+                        ${REPECTION_LEVEL_SVG[LIST_PLAYER[i].signal]}
+                    </svg>
+                </div>
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="phone" viewBox="0 0 16 16">
+                    <path d="M3 2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V2zm6 11a1 1 0 1 0-2 0 1 1 0 0 0 2 0z"/>
+                </svg>
+
+                <div class="player-name">${LIST_PLAYER[i].playerName}</div>
+                `;
+
+
+
+
+                list_player_div.appendChild(player);
+                player.style.left = LIST_PLAYER[i].position.x + 'px';
+                player.style.top = LIST_PLAYER[i].position.y + 'px';
+
+                player.onmousedown = ()=>{
+                    player_press = true;
+                    player_press_index = i;
+                }
+
+                 
+
+
+
+            }
+
+
+        }
+
+
+        updateAll();
+
+
+
+
+
+
+
+        window.onmouseup = ()=>{
+            player_press = false;
+            player_press_index = -1;
+        }
+
+
+
+
+        window.onmousemove = (evt)=>{
+
+
+            if ( player_press && player_press_index >= 0 ){
+
+                let antenna = document.querySelector(".antenna");
+
+                LIST_PLAYER[player_press_index].position.x = evt.clientX - list_player_div.children[player_press_index].offsetWidth/2;
+                LIST_PLAYER[player_press_index].position.y = evt.clientY - list_player_div.children[player_press_index].offsetHeight/2;
+
+                list_player_div.children[player_press_index].style.left = (LIST_PLAYER[player_press_index].position.x) + 'px';
+                list_player_div.children[player_press_index].style.top = (LIST_PLAYER[player_press_index].position.y) + 'px';
+
+
+                let diffX = Math.abs( LIST_PLAYER[player_press_index].position.x+list_player_div.children[player_press_index].offsetWidth/2 - (antenna.offsetLeft + antenna.offsetWidth/2 ) );
+                let diffY = Math.abs( LIST_PLAYER[player_press_index].position.y + list_player_div.children[player_press_index].offsetHeight/2 - (antenna.offsetTop + antenna.offsetHeight/2 ) );
+
+                let dist = Math.hypot(diffX, diffY);
+
+
+                let colision = dist < antenna.offsetWidth/2;
+                let signal = 0;
+                
+
+                if ( colision ){
+                    
+
+
+                    //signal = Math.trunc((antenna.offsetWidth/2) / (dist));
+
+                    signal = 5 - Math.trunc(dist * 5 / (antenna.offsetWidth/2));
+
+
+                    if (signal >= REPECTION_LEVEL_SVG.length){
+                        signal = REPECTION_LEVEL_SVG.length - 1;
+                    }
+
+                console.log( signal );
+                }
+
+                LIST_PLAYER[player_press_index].signal = signal;
+                
+                
+                list_player_div.children[player_press_index].querySelector('.player-reception').innerHTML = REPECTION_LEVEL_SVG[signal];
+
+                list_player_div.children[player_press_index].querySelector('.player-reception').style.color = (colision)? 'lime' : 'red';
+                
+
+
+
+            }
+
+        }
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            width: 100%;
+            height: 100%;
+        }
+
+
+
+        #game{
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+
+
+        .box{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background-color: royalblue;
+        }
+
+
+
+        
+
+
+        
+    </style>
+
+</head>
+<body>
+
+
+
+    <div id="game">
+
+
+
+        <div class="box gravity"></div>
+
+    </div>
+    
+
+
+
+
+
+
+    <script>
+
+        var TIMER_PHYSICS = null;
+
+
+
+        var gravity = 0.05;
+        var gravitySpeed  = 0;
+        
+
+        TIMER_PHYSICS = setInterval(()=>{
+
+            document.querySelectorAll(".gravity").forEach((e, i)=>{
+                
+                
+                
+                gravitySpeed += gravity;
+
+                if (e.offsetTop >= document.getElementById("game").offsetHeight-16){
+                    gravitySpeed = 0;
+                    e.style.top = (document.getElementById("game").offsetHeight-16) + 'px';
+                }
+                else{
+                    e.style.top = (gravitySpeed + e.offsetTop) + 'px';
+                }    
+
+            });
+
+        }, 10);
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+
+</body>
+</html>

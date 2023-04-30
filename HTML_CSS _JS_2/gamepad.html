@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+         
+
+        #gamepad{
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+
+
+        #joystick{
+            width: 128px;
+            height: 128px;
+            background-color: #353535;
+            margin: 48px;
+            margin-bottom: 32px;
+            margin-left: 48px;
+            border-radius: 50%;
+            position: relative;
+            opacity: 0.5;
+        }
+        #joystick-thumb{
+            width: 64px;
+            height: 64px;
+            background-color: #666;
+            border-radius: 50%;
+            margin: auto auto;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+
+
+
+
+
+        #gamepad-right{
+            display: flex;
+            width: 100%;
+            align-items: flex-end;
+            justify-content: flex-end;
+            flex-direction: column;
+            margin: 32px;
+        }
+
+
+        .button-slot{
+            width: 48px;
+            height: 48px;
+            background-color: #353535;
+            margin-top: 16px;
+            margin-left: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            opacity: 0.5;
+        }
+
+        .button-slot:active{
+            background-color: #555;
+            opacity: 0.8;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #fps{
+            position: absolute;
+            right: 0;
+            margin: 8px;
+        }
+
+
+        #game-screen{
+            width: 100%;
+            height: 100%; 
+            position: fixed;
+        }
+
+        #box{
+            width: 64px;
+            height: 64px;
+            background-color: rebeccapurple;
+            position: relative;
+            left: 0;
+            top: 0;
+            
+        }
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+
+
+
+
+    <div id="game-screen">
+
+        <div id="box"></div>
+
+    </div>
+
+
+
+
+
+
+
+
+    <!-- FPS -->
+    <div id="fps">0 FPS</div>
+    
+    <!-- GAMEPAD -->
+    <div id="gamepad">
+
+
+        <div id="gamepad-left">
+            <div id="joystick">
+                <div id="joystick-thumb"></div>
+            </div>
+        </div>
+
+
+        <div id="gamepad-right">
+            <table>
+                <tr>
+                    <td> <div class="button-slot">A</div> </td>
+                    <td> <div class="button-slot">B</div> </td>
+                </tr>
+                <tr>
+                    <td> <div class="button-slot">C</div> </td>
+                    <td> <div class="button-slot">D</div> </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+
+        function clamp(x, min, max){
+            if (x < min) return min;
+            if (x > max) return max;
+            return x;
+        }
+
+
+        var joystick_thumb = document.getElementById("joystick-thumb");
+        var joystick_canMove = false;
+        var joystick_start = {x: 0, y: 0};
+        var joystick_touch = {x: 0, y: 0};
+        var joystick_value = {x: 0, y: 0};
+
+        joystick_thumb.ontouchstart = (evt)=>{
+            
+            joystick_thumb.style.transition = '';
+            joystick_thumb.parentElement.style.opacity = '0.8';
+
+            for (let i = 0; i < evt.touches.length; i++){
+                if ( evt.touches[i].target == joystick_thumb ){
+                    joystick_canMove = true;
+                    joystick_start.x = evt.touches[i].clientX;
+                    joystick_start.y = evt.touches[i].clientY;
+                    break;
+                }
+            }
+            
+        }
+
+        window.ontouchend = ()=>{
+            joystick_canMove = false;
+            joystick_thumb.style.transition = '300ms';
+            joystick_thumb.style.transform = '';
+            joystick_thumb.parentElement.style.opacity = '0.5';
+            joystick_value = {x: 0, y: 0};
+        }
+
+
+        window.ontouchmove = (evt)=>{
+
+
+            if ( joystick_canMove ){
+
+                for (let i = 0; i < evt.touches.length; i++){
+                    if ( evt.touches[i].target == joystick_thumb ){
+                        joystick_touch.x = evt.touches[i].clientX;
+                        joystick_touch.y = evt.touches[i].clientY;
+                        break;
+                    }
+                }
+
+                let diffX = joystick_touch.x - joystick_start.x;
+                let diffY = joystick_touch.y  -joystick_start.y;
+
+
+                let angle = Math.atan2(diffX, diffY);
+
+                let dist = Math.min(joystick_thumb.parentElement.offsetWidth/2, Math.hypot(diffX, diffY));
+
+                let posX = dist * Math.sin(angle);
+                let posY = dist * Math.cos(angle);
+
+                joystick_thumb.style.transform = `translate(${posX}px, ${posY}px)`;
+
+                joystick_value.x = posX / joystick_thumb.offsetWidth;
+                joystick_value.y = posY / joystick_thumb.offsetHeight;  
+            }  
+        }
+
+
+
+
+
+
+        
+        var box = document.getElementById("box");
+
+        var timestamp_init = 0;
+        var delta = 0;
+
+        var boxAccelX = 0;
+        var boxAccelY = 0;
+
+        function update( timestamp = 0 ){
+
+            boxAccelX = joystick_value.x * 5;
+            boxAccelX = clamp(boxAccelX, -2, 2);
+
+            boxAccelY = joystick_value.y * 5;
+            boxAccelY = clamp(boxAccelY, -2, 2);
+
+            box.style.left = (box.offsetLeft + boxAccelX) + 'px';
+            box.style.top = (box.offsetTop + boxAccelY) + 'px';
+
+             
+
+
+            delta = (timestamp - timestamp_init) / 1000;
+            timestamp_init = timestamp;
+
+
+
+            document.getElementById("fps").innerHTML = Math.trunc(1/delta) + ' FPS';
+
+
+            window.requestAnimationFrame(update);
+        }
+
+
+        update();
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

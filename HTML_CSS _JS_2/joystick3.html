@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+        html, body{
+            width: 100%;
+            height: 100%;
+        }
+
+
+
+        #joystrick-wrapper{
+            background-color: #353535;
+            width: 128px;
+            height: 128px;
+            position: absolute;
+            bottom: 0;
+            margin: 40px;
+        }
+
+
+
+        #joystick-container{
+            background-color: #9e9e9e;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+        }
+
+
+
+        #joystick-thumb{
+            background-color: #212121;
+            width: 50%;
+            height: 50%;
+            border-radius: 50%;
+            position: absolute;
+
+            left: calc( 100% / 2 - 50%/2 );
+            top: calc( 100% / 2 - 50%/2 );
+
+            opacity: 0.5;
+
+        }
+
+
+    </style>
+
+
+</head>
+
+
+<body>
+
+    
+    
+
+    <div id="joystrick-wrapper">
+
+        <div id="joystick-container">
+            <div id="joystick-thumb"></div>
+        </div>
+
+    </div>
+
+
+
+
+    <script>
+
+
+
+
+        var joystrick_wrapper = document.getElementById("joystrick-wrapper");
+        var joystick_thumb    = document.getElementById("joystick-thumb");
+
+
+
+
+        var JOYSTICK = {
+
+            isPress: false,
+
+            position_initial: {
+                x: 0,
+                y: 0
+            },
+
+            position: {
+                x: 0,
+                y: 0
+            }
+        
+
+        };
+
+
+
+
+
+
+
+        joystick_thumb.addEventListener("mousedown", ()=>{
+            JOYSTICK.isPress = true;
+        });
+
+
+
+
+
+        window.addEventListener("mousemove", (e)=>{
+
+            if ( JOYSTICK.isPress ){
+
+
+                let posX = e.clientX - joystrick_wrapper.offsetLeft;
+                let posY = e.clientY - joystrick_wrapper.offsetTop;
+
+
+                posX = clamp(posX, 0, 128);
+                posY = clamp(posY, 0, 128);
+
+
+
+
+                posX_wrapper = joystrick_wrapper.offsetLeft + joystrick_wrapper.offsetWidth/2;
+                posY_wrapper = joystrick_wrapper.offsetTop  + joystrick_wrapper.offsetHeight/2;
+
+                posX_thumb   = joystick_thumb.offsetLeft + joystick_thumb.offsetWidth/2 + joystrick_wrapper.offsetLeft;
+                posY_thumb   = joystick_thumb.offsetTop  + joystick_thumb.offsetHeight/2 + joystrick_wrapper.offsetTop;
+
+
+
+                let diffX = Math.abs( posX_wrapper - posX_thumb );
+                let diffY = Math.abs( posY_wrapper - posY_thumb );
+
+                let distance = Math.hypot(diffX, diffY);
+
+
+                let angle = Math.asin(diffX/distance) * 180 / Math.PI;
+
+
+                
+
+
+
+                if ( posX >= joystrick_wrapper.offsetWidth/2 ){
+                    
+                    if ( posY <= joystrick_wrapper.offsetHeight/2 ){
+                        console.log("A");
+
+                    }
+                    else{
+                        console.log("B");
+                        angle = (90 - angle) + 90;
+                    }
+
+                }
+                else{
+                    if ( posY <= joystrick_wrapper.offsetHeight/2 ){
+                        console.log("D");
+                        angle = (270 - angle) + 90;
+                    }
+                    else{
+                        console.log("C");
+                        angle = 180 + angle;
+                    }
+                }
+
+
+                
+                joystick_thumb.style.left = (posX-32) + 'px';
+                joystick_thumb.style.top  = (posY-32) + 'px';
+
+
+                //console.log( posX, posY );
+
+                //console.log( posX_thumb, posY_thumb );
+
+                console.log( `${distance}, ${angle}°` );
+
+
+            }
+
+        });
+
+
+        window.addEventListener("mouseup", ()=>{
+            JOYSTICK.isPress = false;
+        });
+
+
+
+
+
+        function clamp(value, min, max){
+            if (value >= max)return max;
+            if (value <= min)return min;
+            return value;
+        }
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

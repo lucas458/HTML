@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+         
+
+        #tela{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+        .dot{
+            width: 5px;
+            height: 5px;
+            background-color: red;
+            position: absolute;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    <div id="tela">
+
+        <div class="dot"></div>
+        <div class="dot"></div>
+
+    </div>
+
+
+
+
+     
+
+
+    <script>
+
+
+
+
+        class Vector2{
+
+
+            constructor(x = 0, y = 0){
+                this._x = x;
+                this._y = y;
+            }
+
+
+            get positionX(){
+                return this._x;
+            }
+            set positionX( value ){
+                this._x = value;
+            }
+
+            get positionY(){
+                return this._y;
+            }
+            set positionY( value ){
+                this._y = value;
+            }
+
+
+
+            getDistanceFrom( vector_element ){
+
+                let diffX = Math.abs( this._x - vector_element._x );
+                let diffY = Math.abs( this._y - vector_element._y );
+                let dist = Math.hypot(diffX, diffY);
+
+                return dist;
+
+            }
+
+
+            getAngleFrom( vector_element ){
+
+
+
+                let diffX = Math.abs( this._x - vector_element._x );
+                let diffY = Math.abs( this._y - vector_element._y );
+                let dist = Math.hypot(diffX, diffY);
+
+                if ( dist <= 0 ) {
+                    return 0;
+                }
+                let angle = Math.asin(diffY/dist) * 180 / Math.PI;
+
+                 
+
+                if ( this._x - vector_element._x >= 0 && this._y - vector_element._y >= 0 ){
+                    // return 2;
+                    angle = 90 - (90-angle) + 270;
+                }
+                else if ( this._x - vector_element._x >= 0 && this._y - vector_element._y < 0 ){
+                    // return 1;
+                    angle = (90-angle) + 180;
+                }
+                else if ( this._x - vector_element._x < 0 && this._y - vector_element._y < 0 ){
+                    // return 4;
+                    angle = 90 - (90-angle) + 90;
+                }
+                else{
+                    // return 3;
+                    angle = (90-angle);
+                }
+
+
+
+                return angle%360;
+
+            }
+
+
+
+        }
+
+
+
+
+
+        var player = new Vector2(50, 50);
+        var enemie = new Vector2(50, 25);
+
+
+
+        document.querySelectorAll('.dot')[0].style.left = ( player.positionX ) + 'px';
+        document.querySelectorAll('.dot')[0].style.top  = ( player.positionY ) + 'px';
+
+
+        document.querySelectorAll('.dot')[1].style.left = ( enemie.positionX ) + 'px';
+        document.querySelectorAll('.dot')[1].style.top  = ( enemie.positionY ) + 'px';
+
+
+
+
+        window.addEventListener('keydown', (evt)=>{
+
+
+
+
+
+            switch (evt.keyCode) {
+                case 37:
+                    player.positionX -= 1;
+                    break;
+                case 38:
+                    player.positionY -= 1;
+                    break;
+                case 39:
+                    player.positionX += 1;
+                    break;
+                case 40:
+                    player.positionY += 1;
+                    break;
+            
+            }
+
+
+            document.querySelectorAll('.dot')[0].style.left = ( player.positionX ) + 'px';
+            document.querySelectorAll('.dot')[0].style.top  = ( player.positionY ) + 'px';
+
+
+
+            console.log( player.getAngleFrom(enemie).toFixed(1) + "° | "+ player.getDistanceFrom(enemie).toFixed(1) + 'm');
+
+
+        });
+
+
+
+        window.addEventListener('mousemove', (evt)=>{
+
+            player.positionX = evt.clientX;
+            player.positionY = evt.clientY;
+
+
+            document.querySelectorAll('.dot')[0].style.left = ( player.positionX ) + 'px';
+            document.querySelectorAll('.dot')[0].style.top  = ( player.positionY ) + 'px';
+
+
+
+            console.log( player.getAngleFrom(enemie).toFixed(1) + "° | "+ player.getDistanceFrom(enemie).toFixed(1) + 'm');
+
+        });
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

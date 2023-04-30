@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+
+
+
+
+        #tooltip{
+            border-radius: 4px;
+            border: 1px solid #353535;
+            background-color: #212121;
+            padding: 4px 8px;
+            z-index: 5;
+            display: none;
+            position: absolute;
+        }
+        .tooltip-content{
+            color: #9e9e9e;
+            white-space: nowrap;
+        }
+
+        .tooltip-content span{
+            color: #fff;
+        }
+
+
+
+
+
+        #grafico{
+            display: flex;
+            border: 1px solid #fff;
+            margin: 8px;
+        }
+
+
+
+
+        .container{
+            margin: 0 8px;
+        }
+
+        .barra-container{
+            height: 500px;
+            width: 100%; 
+            position: relative;
+            background-color: #353535;
+        }
+
+
+        .barra{
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+
+        .barra:first-child{
+            background-color: #ffc107;
+            height: 50%;
+        }
+
+        .barra:last-child{
+            background-color: #3f51b5;
+            height: 75%;
+        }
+
+
+        .label{
+            padding: 4px;
+        }
+
+
+
+
+
+
+
+
+
+        #legenda{
+            padding: 8px;
+        }
+
+        #legenda > div:first-child{
+            color: #9e9e9e;
+        }
+        #legenda > div:last-child{
+            color: #3f51b5;
+        }
+        
+        
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+
+    <div id="tooltip">
+        <div class="tooltip-content"> EMENDAS CRIADAS • <span>0</span> </div>
+        <div class="tooltip-content"> TOTAL EMPENHADO • <span>0</span> </div>
+        <div class="tooltip-content"> TOTAL PAGO • <span>0</span> </div>
+    </div>
+
+
+
+
+
+    <div id="grafico">
+
+
+        <!-- GRAFICO -->
+        <div class="container">
+            <div class="barra-container">
+                <div class="barra"></div>
+                <div class="barra"></div>
+            </div>
+            <div class="label">2015</div>
+        </div>
+
+        
+
+    </div>
+
+
+
+
+
+    <div id="legenda">
+
+        <div> • TOTAL EMPENHADO </div>
+        <div> • TOTAL PAGO </div>
+
+    </div>
+
+
+    
+
+
+
+    
+     
+
+
+    <script>
+
+
+        var tooltip = document.getElementById('tooltip');
+        var grafico = document.getElementById('grafico');
+
+
+
+
+        window.addEventListener('mousemove', (evt)=>{
+
+
+            tooltip.style.top  = (evt.clientY - tooltip.offsetHeight) + 'px';
+
+            if ( evt.clientX + tooltip.offsetWidth >= document.body.offsetWidth ){
+                tooltip.style.left = (document.body.offsetWidth- tooltip.offsetWidth) + 'px';
+            }
+            else{
+                tooltip.style.left = (evt.clientX) + 'px';
+            }
+
+        });
+
+
+
+
+
+
+
+
+
+
+        function setTooltip( value1, value2, value3 ){
+
+            let format = new Intl.NumberFormat();
+
+            value1 = format.format(value1);
+            value2 = format.format(value2);
+            value3 = format.format(value3);
+
+
+            document.querySelectorAll('#tooltip > div')[0].firstElementChild.innerText = value1;
+            document.querySelectorAll('#tooltip > div')[1].firstElementChild.innerText = value2;
+            document.querySelectorAll('#tooltip > div')[2].firstElementChild.innerText = value3;
+
+        }
+
+
+
+
+
+
+
+
+        var DADOS = [
+
+
+
+            {
+                'ano': 2015,
+                'emendas': 3724,
+                'empenhado': 3381787645.94,
+                'pago': 24122908.08
+            },
+
+            {
+                'ano': 2016,
+                'emendas': 6148,
+                'empenhado': 7223283967.83,
+                'pago': 1964365191.13
+            },
+
+            {
+                'ano': 2017,
+                'emendas': 5569,
+                'empenhado': 10704235747,
+                'pago': 2243560992.67
+            },
+
+            {
+                'ano': 2018,
+                'emendas': 7188,
+                'empenhado': 11307101377.77,
+                'pago': 5120743367.62
+            },
+
+            {
+                'ano': 2019,
+                'emendas': 8150,
+                'empenhado': 12973770235.32,
+                'pago': 5741813192.45
+            },
+
+            {
+                'ano': 2020,
+                'emendas': 8386,
+                'empenhado': 35181570344.59,
+                'pago': 16109079492.94
+            },
+
+            {
+                'ano': 2021,
+                'emendas': 6627,
+                'empenhado': 33398191247.24,
+                'pago': 15898814552.81
+            },
+
+            {
+                'ano': 2022,
+                'emendas': 5168,
+                'empenhado': 22890161605.74,
+                'pago': 16126771075.88
+            }
+
+
+        ];
+
+
+
+
+        
+
+ 
+
+
+
+
+        function gerarGrafico(){
+
+
+
+            grafico.innerHTML = '';
+
+
+
+             
+
+
+            DADOS.forEach((e, i)=>{
+
+
+                let container = document.createElement('div');
+                container.classList.add('container');
+
+
+                let index = 1;
+
+
+                let percentPago = e.pago / e.empenhado * 100; 
+ 
+ 
+                 
+
+                container.innerHTML = `
+                <div class="barra-container">
+                    <div class="barra" style="height: ${percentPago}%"></div>
+                </div>
+                <div class="label">${e.ano}</div>
+                `;
+
+
+                container.addEventListener('mouseenter', ()=>{
+                    setTooltip(e.emendas, e.empenhado, e.pago);
+                    tooltip.style.display = 'block';
+                });
+
+                container.addEventListener('mouseleave', ()=>{
+                    tooltip.style.display = 'none';
+                });
+                
+
+
+                grafico.appendChild(container);
+
+
+            });
+
+ 
+
+        }
+
+
+        gerarGrafico();
+
+
+ 
+
+
+    </script>
+
+
+</body>
+</html>

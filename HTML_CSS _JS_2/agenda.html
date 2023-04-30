@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* CALENDARIO */
+
+        #calendar-wrapper{
+            padding: 12px;
+        }
+
+
+        #calendar-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 8px;
+            color: #616161;
+            font-weight: bold;
+        }
+
+        #calendar-controls{
+            display: flex;
+            align-items: center;
+        }
+
+
+
+        .calendar-button{
+            margin: 0 8px;
+            width: 24px;
+            min-width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            color: #9e9e9e;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .calendar-content{
+            display: flex; 
+            text-align: center;
+        }
+        .calendar-content > div{   
+            padding: 8px;
+        }
+
+
+
+        .calendar-item{ 
+            width: calc( 100% / 7 );
+            aspect-ratio: 1 / 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+        #calendar-weekdays{
+            color: #757575;
+            font-weight: bold;
+        }
+
+
+
+        #calendar-days{ 
+            flex-wrap: wrap;
+        }
+
+
+        #calendar-days > .calendar-item > span{
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+        /* DIA PADRAO */
+        .day{
+            color: #616161;
+            font-weight: bold;
+        }
+
+
+
+        /* DIA ATUAL */
+        .day-current{
+            color: #323232;
+            background-color: #60cdff;
+        }
+
+        /* DIA DO MES PASSADO/FUTUTO */
+        .day-pseudo{
+            color: #9e9e9e;
+        }
+
+        
+
+        /* DIA DE EVENTO */
+        .day-event{
+            position: relative;
+        }
+
+        .day-event::after{
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #f71b61;
+            position: absolute;
+            top: 75%;
+        }
+        
+
+ 
+
+
+
+    </style>
+
+
+</head>
+
+
+<body>
+
+    
+
+
+    <div class="screen-main">
+
+
+
+        <div id="calendar-wrapper">
+
+
+            <!-- MES, ANO e CONTROLS -->
+            <div id="calendar-header">
+
+                <div id="calendar-title">Dezembro 2016</div>
+
+                <div id="calendar-controls">
+                    
+                    <div class="calendar-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                    </div>
+
+
+                    <div class="calendar-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- DIAS DA SEMANA & DATAS -->
+            <div id="calendar-content">
+
+
+                <!-- DIA DA SEMANA -->
+                <div id="calendar-weekdays" class="calendar-content">
+                    <div class="calendar-item">D</div>
+                    <div class="calendar-item">S</div>
+                    <div class="calendar-item">T</div>
+                    <div class="calendar-item">Q</div>
+                    <div class="calendar-item">Q</div>
+                    <div class="calendar-item">S</div>
+                    <div class="calendar-item">S</div>
+                </div>
+
+
+
+                <!-- DIA DO MES -->
+                <div id="calendar-days" class="calendar-content">
+
+                    <div class="calendar-item"> <span class="day-pseudo">27</span> </div>
+                    <div class="calendar-item"> <span class="day-pseudo">28</span> </div>
+                    <div class="calendar-item"> <span class="day-pseudo">29</span> </div>
+                    <div class="calendar-item"> <span class="day-pseudo">30</span> </div>
+
+                    <div class="calendar-item"> <span class="day">1</span> </div>
+                    <div class="calendar-item"> <span class="day">2</span> </div>
+
+                    <div class="calendar-item"> <span class="day day-event">3</span> </div>
+
+                    <div class="calendar-item"> <span class="day">4</span> </div>
+                    <div class="calendar-item"> <span class="day">5</span> </div>
+
+                    <div class="calendar-item"> <span class="day-current">6</span> </div>
+
+                    <div class="calendar-item"> <span class="day">7</span> </div>
+                    <div class="calendar-item"> <span class="day">8</span> </div>
+                    <div class="calendar-item"> <span class="day">9</span> </div>
+                    <div class="calendar-item"> <span class="day">10</span> </div>
+                    <div class="calendar-item"> <span class="day">11</span> </div>
+                    <div class="calendar-item"> <span class="day">12</span> </div>
+                    <div class="calendar-item"> <span class="day">13</span> </div>
+                    <div class="calendar-item"> <span class="day">14</span> </div>
+                    <div class="calendar-item"> <span class="day">15</span> </div>
+                    <div class="calendar-item"> <span class="day">16</span> </div>
+                    <div class="calendar-item"> <span class="day">17</span> </div>
+                    <div class="calendar-item"> <span class="day">18</span> </div>
+                    <div class="calendar-item"> <span class="day">19</span> </div>
+                    <div class="calendar-item"> <span class="day">20</span> </div>
+                    <div class="calendar-item"> <span class="day">21</span> </div>
+                    <div class="calendar-item"> <span class="day">22</span> </div>
+                    <div class="calendar-item"> <span class="day">23</span> </div>
+                    <div class="calendar-item"> <span class="day">24</span> </div>
+                    <div class="calendar-item"> <span class="day">25</span> </div>
+                    <div class="calendar-item"> <span class="day">26</span> </div>
+                    <div class="calendar-item"> <span class="day">27</span> </div>
+                    <div class="calendar-item"> <span class="day">28</span> </div>
+                    <div class="calendar-item"> <span class="day">29</span> </div>
+                    <div class="calendar-item"> <span class="day">30</span> </div>
+                    <div class="calendar-item"> <span class="day">31</span> </div>
+                </div>
+
+
+
+
+
+            </div>
+
+
+
+
+            <!-- EVENTOS -->
+            <div id="calendar-events">
+
+
+
+                <div id="events-add">
+
+                </div>
+
+
+                <div id="events-list">
+
+                </div>
+
+
+
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+    <script>
+
+
+
+        function isLeapYear( year ){
+            if ( year % 400 === 0 ) return true;
+            if ( year % 100 === 0 ) return false;
+            return year % 400 === 0;
+        }
+
+
+
+
+        function gerarCalendario(){
+
+            // CLEAR ALL
+            document.getElementById("calendar-days").innerHTML = '';
+
+
+            // DIAS
+            let dias = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            if ( isLeapYear(ano) ){
+                dias[1] = 29;
+            }
+
+
+
+
+
+
+            for ( let i = 0; i < 35; i++ ){
+
+                let item = document.createElement("div");
+                item.classList.add("calendar-item");
+
+
+                
+
+
+                // PSEUDO DIA
+                if ( 1 ){
+                    item.innerHTML = `<span class="day-pseudo">00</span>`;
+                }
+
+                // EVENTO
+                else if ( 1 ){
+                    item.innerHTML = `<span class="day day-event">00</span>`;
+                }
+
+                // DIA ATUAL
+                else if ( 1 ){
+                    item.innerHTML = `<span class="day-current">00</span>`;
+                }
+
+                // DIA NORMAL DO CALENDARIO
+                else{
+                    item.innerHTML = `<span class="day">00</span>`;
+                }
+
+
+                // ADD
+                document.getElementById("calendar-days").appendChild(item);
+
+            }
+
+
+        }
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

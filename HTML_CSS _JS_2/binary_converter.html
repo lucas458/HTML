@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+        
+
+
+        #binary-register{
+            display: flex;
+        }
+
+        .bit{
+            text-align: center;
+            margin: 0 4px;
+            border: 1px solid #fff;
+             
+            width: 50px;
+        }
+
+        .bit > div{
+            padding: 8px;
+        }
+
+        .bit-toggle input{
+            display: none;
+        }
+
+        .bit-toggle > div{
+            padding: 4px;
+            background-color: #353535;
+            border-top: 1px solid #fff;
+            
+        }
+
+        .bit-toggle > div::after{
+            content: '0';
+        }
+
+
+        .bit-toggle input:checked ~ div{
+            background-color: #28a745;
+        }
+
+        .bit-toggle input:checked ~div::after{
+            content: '1';
+        }
+        
+
+
+
+ 
+        .saida{
+            padding: 4px;
+        }
+
+        #saida-soma{
+            white-space: pre;
+        }
+
+        #saida-hex, #saida-decimal{
+            width: fit-content;
+            border-radius: 4px;
+            background-color: #353535;
+            padding: 4px 8px;
+            margin: 2px 0;
+        }
+
+
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+     
+
+
+
+    <div id="binary-register">
+
+        <!-- BIT -->
+        <div class="bit">
+            <div class="bit-header">128</div>
+            <label class="bit-toggle">
+                <input type="checkbox">
+                <div></div>
+            </label>
+        </div>
+
+        <!-- BIT -->
+        <div class="bit">
+            <div class="bit-header">64</div>
+            <label class="bit-toggle">
+                <input type="checkbox">
+                <div></div>
+            </label>
+        </div>
+
+        <!-- BIT -->
+        <div class="bit">
+            <div class="bit-header">32</div>
+            <label class="bit-toggle">
+                <input type="checkbox">
+                <div></div>
+            </label>
+        </div>
+
+        <!-- BIT -->
+        <div class="bit">
+            <div class="bit-header">16</div>
+            <label class="bit-toggle">
+                <input type="checkbox">
+                <div></div>
+            </label>
+        </div>
+
+        <!-- BIT -->
+        <div class="bit">
+            <div class="bit-header">8</div>
+            <label class="bit-toggle">
+                <input type="checkbox">
+                <div></div>
+            </label>
+        </div>
+
+        <!-- BIT -->
+        <div class="bit">
+            <div class="bit-header">4</div>
+            <label class="bit-toggle">
+                <input type="checkbox">
+                <div></div>
+            </label>
+        </div>
+
+        <!-- BIT -->
+        <div class="bit">
+            <div class="bit-header">2</div>
+            <label class="bit-toggle">
+                <input type="checkbox">
+                <div></div>
+            </label>
+        </div>
+
+        <!-- BIT -->
+        <div class="bit">
+            <div class="bit-header">1</div>
+            <label class="bit-toggle">
+                <input type="checkbox">
+                <div></div>
+            </label>
+        </div>
+      
+
+
+    </div>
+
+
+
+    <div class="saida" id="saida-soma"> </div>
+    <div class="saida" id="saida-hex">hexadecimal 0x00</div>
+    <div class="saida" id="saida-decimal">decimal 0</div>
+    
+
+
+
+    <script>
+
+
+        function calcular(){ 
+
+            let temp = '0b';
+
+            let list = [];
+
+            let size = document.querySelectorAll('#binary-register input').length;
+
+            document.querySelectorAll('#binary-register input').forEach((e, i)=>{
+                temp += (e.checked)? '1' : '0';
+                if ( e.checked ){
+                    list.push( (1 << (size-1-i)) );
+                }
+            });
+
+
+            if ( list.length > 0 ){
+                document.getElementById("saida-soma").innerText = list.join(" + ") + ' = ';
+            }
+            else{
+                document.getElementById("saida-soma").innerText = ' ';
+            }
+
+            document.getElementById("saida-hex").innerText = 'hexadecimal ' + toHex(temp|0);
+
+            document.getElementById("saida-decimal").innerText =  'decimal ' + (temp|0);
+            
+
+
+            console.log(temp|0, list);
+
+        }
+
+
+
+
+        document.querySelectorAll('#binary-register input').forEach((e)=>{
+
+            e.addEventListener("change", ()=>{
+                calcular();
+            });
+
+        });
+
+
+
+
+        function toHex( value ){
+
+            let msb = value >> 4;
+            let lsb = value & 0xF;
+
+            if ( msb >= 10 ){
+                msb = String.fromCharCode(msb+65-10);
+            }
+            if ( lsb >= 10 ){
+                lsb = String.fromCharCode(lsb+65-10);
+            }
+
+            return '0x' + msb + lsb;
+
+        }
+
+
+
+
+    </script>
+
+
+</body>
+</html>

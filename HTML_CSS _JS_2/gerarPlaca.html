@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+        #taxa{
+            padding: 8px;
+            background-color: #212121;
+            margin: 4px;
+        }
+
+
+
+        #container{
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+        .coluna{ 
+            flex: 1;
+            text-align: center;
+            margin: 4px;
+            background-color: #212121;
+        }
+
+
+        .coluna-header{
+            padding: 8px 0;
+            border-bottom: 1px solid #353535;
+        }
+
+
+        .placa{
+            background-color: #353535;
+            padding: 4px;
+            margin: 8px;
+            border-radius: 8px;
+        }
+
+
+        #placas-repetidas .placa{
+            background-color: #dc3545;
+        }
+
+          
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+    <div id="taxa">Taxa de Repetição • <span id="taxa-valor">0.0</span>%</div>
+
+    <div id="container">
+
+
+        <div class="coluna" id="placas-novas">
+
+            <div class="coluna-header">Placas (0)</div>
+            
+            <div class="coluna-content">
+            </div>
+
+        </div>
+
+
+
+        <div class="coluna" id="placas-repetidas">
+            <div class="coluna-header">Repetidas (0)</div>
+
+            <div class="coluna-content">
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+    
+
+    
+    
+
+    <script>
+
+
+
+
+
+
+
+
+        var placas_novas = document.getElementById('placas-novas');
+        var placas_repetidas = document.getElementById('placas-repetidas');
+
+
+        function addPlaca( value ){
+
+            if ( value != null ){
+
+
+                let idx = existePlaca( value );
+
+
+                let placa = document.createElement('div');
+                placa.classList.add('placa');
+                placa.innerText = value;
+
+                if ( idx >= 0 ){
+                    placas_repetidas.querySelector('.coluna-content').appendChild(placa);
+                }
+                else{
+                    placas_novas.querySelector('.coluna-content').appendChild(placa);
+                }
+
+
+
+                let total_novas = placas_novas.querySelector('.coluna-content').children.length
+                let total_repetidas = placas_repetidas.querySelector('.coluna-content').children.length;
+                let percent = total_repetidas / (total_novas+total_repetidas) * 100;
+
+
+
+
+
+                document.getElementById('taxa-valor').innerText = percent.toFixed(1);
+
+                placas_novas.querySelector('.coluna-header').innerText = `Placas (${total_novas})`;
+                placas_repetidas.querySelector('.coluna-header').innerText = `Repetidas (${total_repetidas})`;
+
+
+
+
+            }
+
+        }
+
+
+
+
+        function existePlaca( value ){
+
+            
+
+            for (let i = 0; i < placas_novas.querySelector('.coluna-content').children.length; i++){
+
+                if ( placas_novas.querySelector('.coluna-content').children[i].innerHTML == value ){
+                    return i;
+                }
+
+            }
+
+            return -1;
+
+        }
+
+
+
+
+
+
+        function getRand( value ){
+            return Math.trunc( Math.random() * value );
+        }
+
+
+        function gerarPlaca(){
+
+            let list = [];
+
+            for (let i = 0; i < 3+4; i++){
+
+                let stp = (i<=2)? 26 : 10;
+                let rand = getRand(stp);
+
+                if ( i <= 2 ){
+                    list.push( String.fromCharCode(65 + rand) );
+                }
+                else{
+                    list.push(rand.toString());
+                }
+            }
+
+            let str = list.join('');
+            str = str.slice(0, 3) + '-' + str.slice(3, 7);
+
+            return str;
+        }
+
+
+
+
+
+
+
+
+        var qty = 0;
+
+        let time_act, time_new;
+        let diff;        
+
+        do{
+            qty = prompt('Quantida de placas');
+        }
+        while ( qty <= 0 || isNaN(qty) || Math.trunc(qty) != qty );
+
+        
+        time_act = new Date();
+        for (let i = 0; i < qty; i++){
+            addPlaca( gerarPlaca() );
+        }
+        time_new = new Date();
+
+
+        diff = (time_new- time_act) / 1000;
+        console.log(diff + ' Segundos')
+
+
+
+        
+
+
+
+    </script>
+
+
+</body>
+</html>

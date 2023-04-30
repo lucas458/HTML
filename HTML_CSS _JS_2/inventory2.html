@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+
+
+
+        #tela{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            position: absolute;
+        }
+
+
+
+
+
+
+        #tooltip{
+            background-color: blue;
+            padding: 4px 8px;
+            z-index: 2;
+            position: absolute;
+            display: none;
+        }
+
+
+        #tempItem{
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            /* background-color: aqua; */
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+
+
+
+        #inventario, #inventario-hand{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            flex-wrap: wrap;
+            height: 100%;
+            width: calc( (32px + 4px) * 9 );
+        }   
+        
+        .slot{
+            width: 32px;
+            height: 32px;
+            background-color: red;
+            margin: 2px;
+        }
+
+
+
+
+
+        .item{
+            width: 100%;
+            height: 100%;
+            background-color: rebeccapurple;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            font-size: 0.8em;
+        }
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+    
+    <div id="tela">
+
+
+        <div id="tooltip">asd</div>
+
+
+        <div id="tempItem"></div>
+
+
+
+        <div id="inventario">
+            <div class="slot"> <div class="item name-grass stack-64">32</div> </div>
+            <div class="slot"> <div class="item name-grass stack-64">35</div> </div>
+            <div class="slot"> <div class="item name-bedrock stack-64">9</div> </div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+        </div>
+
+
+        <div id="inventario-hand">
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+        </div>
+
+
+    </div>
+    
+    
+     
+
+
+    <script>
+
+
+        
+        var tela    = document.getElementById('tela');
+        var tooltip = document.getElementById('tooltip');
+        var tempItem = document.getElementById('tempItem');
+
+
+        var inventario      = document.getElementById('inventario');
+        var inventario_hand = document.getElementById('inventario-hand');
+        var slot            = document.querySelectorAll('.slot');
+
+
+        window.addEventListener('mousemove', (e)=>{
+
+            let posX = e.clientX;
+            let posY = e.clientY;
+
+
+            posX += 5
+            posY = posY - tooltip.offsetHeight - 5;
+
+            tooltip.style.left = (posX) + 'px';
+            tooltip.style.top  = (posY) + 'px';
+
+
+            tempItem.style.left = (e.clientX - tempItem.offsetWidth/2) + 'px';
+            tempItem.style.top  = (e.clientY - tempItem.offsetHeight/2) + 'px';
+
+        });
+
+
+
+
+
+
+
+
+
+
+        slot.forEach((e, i)=>{
+
+            // MOUSE: IN
+            e.addEventListener('mouseenter', ()=>{
+
+                // HOVER: OCUPADO
+                if ( e.childElementCount && tempItem.childElementCount <= 0 ){
+                    console.log('hover: ocupado');
+                    let name = e.firstElementChild.classList[1].split('-')[1].replaceAll('_', ' ');
+                    tooltip.innerText = name;
+                    tooltip.style.display = 'block';
+                }
+                
+                // HOVER: LIVRE
+                else{
+                    console.log('hover: livre/segurando item');
+                    tooltip.style.display = 'none';
+                }
+
+                 
+            });
+
+            // MOUSE: OUT
+            e.addEventListener('mouseout', ()=>{
+                tooltip.style.display = 'none';
+            });
+
+
+
+
+
+
+            // CONTEXT CLICK
+            e.addEventListener('contextmenu', (evt)=>{
+                evt.preventDefault();
+                console.log('left click', i);
+
+
+                if ( tempItem.childElementCount ){
+
+                    if ( e.childElementCount ){
+                        
+                        // É O MESMO ITEM?
+                        if ( tempItem.firstElementChild.classList.toString() == e.firstElementChild.classList.toString() ){
+                            console.log('a: ocupado, mesmo');
+                        }
+                        else{
+                            console.log('a: ocupado, diferente');
+                        }
+
+                    }
+                    else{
+                        console.log('a: livre');
+                    }
+
+                }
+
+                else{
+                    
+                    if ( e.childElementCount ){
+                        console.log('b: ocupado');
+
+
+                        let qtyTemp = e.firstElementChild.innerText;
+                         
+                        if ( qtyTemp > 1 ){
+                            tempItem.innerHTML = '';
+                            tempItem.innerHTML = e.innerHTML;
+                            tempItem.firstElementChild.innerText = qtyTemp - Math.trunc(qtyTemp/2);
+                            e.firstElementChild.innerText = Math.trunc(qtyTemp/2);
+                        }
+                        else{
+                            tempItem.innerHTML = '';
+                            tempItem.appendChild(e.firstElementChild);
+                        }
+                        tempItem.style.left = (evt.clientX - tempItem.offsetWidth/2) + 'px';
+                        tempItem.style.top  = (evt.clientY - tempItem.offsetHeight/2) + 'px';
+                        tempItem.style.visibility = 'visible';
+                    }
+                    else{
+                        console.log('b: livre');
+                    }
+
+                }
+
+
+            });
+
+
+
+
+            // CLICK
+            e.addEventListener('click', (evt)=>{
+
+                // CLICK: OCUPADO
+                if ( e.childElementCount ){
+                    console.log('click: ocupado', i, [evt.clientX, evt.clientY]);
+
+
+
+                    // CLICK NO ITEM ENQUANTO SEGURA OUTRO ITEM
+                    if ( tempItem.childElementCount && e.childElementCount ){
+                        
+                        // É O MESMO ITEM?
+                        if ( tempItem.firstElementChild.classList.toString() == e.firstElementChild.classList.toString() ){
+                            console.log('mesmo');
+
+
+                            let max_stack = 1;
+
+                            if ( e.firstElementChild.classList.contains('stack-64') ) max_stack = 64;
+                            else if ( e.firstElementChild.classList.contains('stack-16') ) max_stack = 16;
+
+
+                            if ( e.firstElementChild.classList.contains('stack-64') || e.firstElementChild.classList.contains('stack-16') ){
+                                let qty = parseInt(tempItem.firstElementChild.innerText) + parseInt(e.firstElementChild.innerText);
+
+                                if ( qty <= max_stack ){
+                                    e.firstElementChild.innerText = qty;
+                                    tempItem.innerHTML = '';
+                                }
+                                else{
+                                    e.firstElementChild.innerText = max_stack;
+                                    tempItem.firstElementChild.innerText = qty % max_stack;
+                                }
+                            }
+
+                            // ITEM UNICO: Ex. espada
+                            else{
+
+                            }
+                            
+                        }
+
+                        else{
+                            console.log('nao mesmo');
+                        }
+                        
+                    }
+
+                    else{
+                        tempItem.innerHTML = '';
+                        tempItem.appendChild(e.firstElementChild);
+                        tempItem.style.left = (evt.clientX - tempItem.offsetWidth/2) + 'px';
+                        tempItem.style.top  = (evt.clientY - tempItem.offsetHeight/2) + 'px';
+                        tempItem.style.visibility = 'visible';
+                    }
+
+
+                    
+                }
+                
+                // CLICK: LIVRE
+                else{
+                    console.log('click: livre', i);
+                    if ( tempItem.childElementCount ){
+                        e.innerHTML = '';
+                        e.appendChild(tempItem.firstElementChild);
+                    }
+                }
+                
+            });
+
+
+        });
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

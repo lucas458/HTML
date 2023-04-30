@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+         
+        #actionsheet-alt{
+            width: 100%;
+            height: 100%;
+            background-color: #00000060;
+            
+            padding: 8px;
+            
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+
+            display: none;
+            
+            z-index: 5;
+        }
+
+
+        .actionsheet-window{
+            border-radius: 16px;
+            background-color: #263238;
+            transform: translateY( calc(100% + 8px) );
+            transition: 250ms;
+        }
+ 
+
+
+        .actionsheet-title{
+            padding: 8px;
+            font-size: 1.5em;
+            width: 100%;
+            font-weight: bold;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .actionsheet-content{
+            font-size: 1em;
+            padding: 8px 16px;
+            max-height: calc( 1em * 6 );
+            overflow-y: auto;
+
+        }
+
+
+
+        .actionsheet-controls{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .actionsheet-button{
+            background-color: #455a64;
+            border-radius: 25px;
+            padding: 8px 10px;
+            width: 75%;
+            text-align: center;
+            margin: 16px 0;
+            box-shadow: 0 0 5px 0 #455a64; 
+        }
+
+        .actionsheet-button:active{
+            background-color: #37474f; 
+        }
+
+
+
+
+
+
+        #list-image{
+            padding: 8px;
+        }
+
+        .image-wrapper{
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-bottom: 1px solid #fff;
+        }   
+
+        .image-widow{
+            height: 100%;
+            color: #fff;
+            position: relative;
+        }
+
+
+        .image-item{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+
+        .image-alt{
+            width: fit-content;
+            background-color: #607d8b8f;
+            padding: 2px 5px;
+            border-radius: 4px;
+            margin: 8px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+
+
+    <!-- ACTIONSHEET -- ALT IMAGE -->
+    <div id="actionsheet-alt">
+        <div class="actionsheet-window">
+            <div class="actionsheet-title">Descrição da imagem</div>
+
+            <div class="actionsheet-content"></div>
+    
+            <div class="actionsheet-controls">
+                <div class="actionsheet-button">Fechar</div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    <div id="list-image">
+
+
+
+
+        <!-- ITEM -->
+        <div class="image-wrapper">
+            <div class="image-widow">
+                <img src="https://dummyimage.com/1024x512/000/fff.jpg" aria-label="batata" class="image-item">
+                <!-- <div class="image-alt">ALT</div> -->
+            </div>
+        </div>
+
+        <!-- ITEM -->
+        <div class="image-wrapper">
+            <div class="image-widow">
+                <img src="https://dummyimage.com/1024x512/222/fff.jpg" aria-label="  doce  " class="image-item">
+                
+            </div>
+        </div>
+
+        <!-- ITEM -->
+        <div class="image-wrapper">
+            <div class="image-widow">
+                <img src="https://dummyimage.com/1024x512/123/f0f.jpg" aria-label="" class="image-item">
+                
+            </div>
+        </div>
+
+
+        <!-- ITEM -->
+        <div class="image-wrapper">
+            <div class="image-widow">
+                <img src="https://dummyimage.com/1024x512/596/0ff.jpg" class="image-item">
+                
+            </div>
+        </div>
+
+
+    </div>
+    
+     
+
+
+    <script>
+
+
+        
+
+        function toggleActionSheet(id, state, alt_text = ''){
+
+
+            let container = document.getElementById(id);
+
+            if ( container == null ){ return };
+
+            // close out focus
+            container.onclick = function(){
+                toggleActionSheet(container.id, false);
+            }
+
+
+            container.querySelector('.actionsheet-window').onclick = function(e){
+                e.stopImmediatePropagation();
+            }
+
+            // close button
+            container.querySelector('.actionsheet-button').onclick = function(e){
+                toggleActionSheet(container.id, false);
+            }
+
+
+
+            // open
+            if ( state ){
+                container.querySelector('.actionsheet-content').innerText = alt_text;
+                container.style.display = 'flex';
+                setTimeout(()=>{
+                    container.querySelector('.actionsheet-window').style.transform = "translateY(0)";
+                }, 1);
+            }
+
+            // close
+            else{
+                container.querySelector('.actionsheet-window').style.transform = "translateY( calc(100% + 8px) )";
+                setTimeout(()=>{
+                    container.style.display = 'none';
+                    container.querySelector('.actionsheet-content').innerText = '';
+                }, 250);
+            }
+
+        }
+        
+
+
+
+
+
+
+
+
+
+        function createEvent(){
+
+            let lista = document.querySelectorAll('#list-image .image-wrapper');
+
+
+            lista.forEach((el, idx)=>{
+
+                let alt_text = el.querySelector('.image-item').getAttribute('aria-label');
+
+                
+                if ( alt_text != null ){
+                    alt_text = alt_text.trim();
+                    if (alt_text.length > 0){
+
+                        let alt_container = document.createElement('div');
+                        alt_container.classList.add('image-alt');
+                        alt_container.innerText = 'ALT';
+
+                        alt_container.onclick = function(){
+                            toggleActionSheet('actionsheet-alt', true, alt_text);
+                        }
+
+                        if (el.querySelector('.image-widow .image-alt') == null ){
+                            el.querySelector('.image-widow').appendChild(alt_container);
+                        }
+
+                    }
+
+                }
+
+
+            });
+
+        }
+
+
+        createEvent();
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

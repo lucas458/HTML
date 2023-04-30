@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Joystick</title>
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            color: #fff;
+            user-select: none;
+        }
+
+
+
+        .screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: #212221;
+            position: fixed;
+        }
+
+
+
+        .screen > header{
+            padding: 8px;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+
+        .screen > section{
+            height: 100%;
+            background-color: blue;
+        }
+
+
+
+        #game-area{
+            background-color: #212121;
+            width: 100%;
+            height: 100%;
+            margin: auto;
+            position: relative;
+        }
+
+        #joystick-wrapper{
+            /* background-color: red; */
+           
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            bottom: 0;
+            margin: 32px;
+            padding: 8px;
+        }
+
+        #joystick-wrapper > *{
+            pointer-events: none;
+        }
+
+
+        #joystick-track{
+            background-color: #353535;
+            box-shadow: inset 0 0 5px 0 #000;
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            margin: auto;
+        }
+
+        #joystick-thumb{
+            background-color: #fff;
+            width: 50%;
+            height: 50%;
+            border-radius: 50%;
+            position: absolute;
+            left: 20px;
+            top: 20px;
+
+             
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+    
+
+    <div class="screen" id="game-screen">
+
+
+
+        
+
+
+        <section id="game-area">
+
+
+            <div id="joystick-wrapper">
+                <div id="joystick-track">
+                    <div id="joystick-thumb"></div>
+                </div>
+            </div>
+
+        </section>
+
+
+    </div>
+
+
+
+
+
+    <script>
+
+
+ 
+
+
+
+
+
+ 
+
+
+        var JOYSTICK_PRESS = false;
+
+        var JOYSTICK_INIT_X = 0;
+        var JOYSTICK_INIT_Y = 0;
+
+        var JOYSTICK_POS_X = 0;
+        var JOYSTICK_POS_Y = 0;
+
+        
+
+        function moveJoystick(posX, posY){
+ 
+            posX = Math.abs(posX);
+            posY = Math.abs(posY);
+
+
+            let wrapper = document.getElementById("joystick-wrapper");
+
+            let thumb = document.getElementById("joystick-thumb");
+
+            let size = thumb.offsetWidth;
+
+
+            let topOffset   = wrapper.offsetTop;
+            let leftOffset  = wrapper.offsetLeft;
+            let sizeWrapper = wrapper.offsetWidth;
+
+
+            if ( posX >= leftOffset+(size/2) && posX <= sizeWrapper+leftOffset-size+(size/2) ){
+                thumb.style.left = (posX-leftOffset-(size/2)) + 'px'; 
+            }
+            else if ( posX <= leftOffset ){
+                thumb.style.left = '0px';
+            }
+            else if ( posX >= leftOffset + sizeWrapper ){
+                thumb.style.left = (sizeWrapper-size) + 'px';
+            }
+
+
+
+            if ( posY >= topOffset+(size/2) && posY <= sizeWrapper+topOffset-size+(size/2) ){
+                thumb.style.top = (posY-topOffset-(size/2)) + 'px'; 
+            }
+            else if ( posY <= topOffset ){
+                thumb.style.top = '0px';
+            }
+            else if ( posX >= topOffset + sizeWrapper ){
+                thumb.style.top = (sizeWrapper-size) + 'px';
+            }
+
+
+
+        }
+
+
+
+
+
+
+
+
+        // MOVE TO CENTER 
+        function resetJoystick(){
+            let thumb = document.getElementById("joystick-thumb");
+            thumb.style.transition = '200ms';
+            thumb.style.left = (thumb.offsetWidth/2) + 'px';
+            thumb.style.top = (thumb.offsetHeight/2) + 'px';
+            JOYSTICK_PRESS = false;
+        }
+
+
+        // PRESS
+        function pressJoystick(){
+            document.getElementById("joystick-thumb").style.transition = '0ms';
+            JOYSTICK_PRESS = true;
+        }
+
+
+
+
+        
+
+
+
+        document.getElementById("game-area").addEventListener("mousemove", (e)=>{
+            if ( JOYSTICK_PRESS ){
+                moveJoystick(e.clientX, e.clientY);
+            }
+        });
+
+
+        document.getElementById("game-area").addEventListener("touchmove", (e)=>{
+            if ( JOYSTICK_PRESS ){ 
+                moveJoystick(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        });
+
+
+
+
+
+
+ 
+        
+
+
+
+
+        // PRESS
+        document.getElementById("joystick-wrapper").addEventListener("mousedown", (e)=>{
+            pressJoystick(); 
+        });
+        document.getElementById("joystick-wrapper").addEventListener("touchstart", ()=>{
+            pressJoystick();
+        });
+
+
+
+
+        // RELEASE
+        window.addEventListener("mouseup", ()=>{
+            resetJoystick();
+            
+        });
+        window.addEventListener("touchend", ()=>{
+            resetJoystick();
+        });
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

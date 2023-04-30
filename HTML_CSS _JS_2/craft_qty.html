@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+
+        html, body{
+            width: 100%;
+            height: 100%;
+        }
+
+
+
+
+        #tooltip-wrapper{
+            position: absolute;
+            white-space: nowrap;
+            left: 0;
+            top: 0;
+            background-color: #353535;
+            border: 1px solid #fff;
+            pointer-events: none;
+            display: none;
+        }
+
+
+        #tooltip-header{
+            background-color: #353535;
+            color: #4aa2ff;
+            font-weight: bold;
+            padding: 4px;
+            border-bottom: 1px solid #666;
+        }
+
+
+        .tooltip-item{
+            display: flex;
+            align-items: center;
+        }
+
+        .tooltip-item > div{
+            padding: 4px 8px;
+        }
+
+
+        .tooltip-item-qty{
+            background-color: #212121;
+            color: #9e9e9e;
+            width: 64px;
+            text-align: center;
+            border-right: 1px solid #666;
+        }
+
+
+
+
+
+
+
+        .lista-header{
+            padding: 0 8px;
+            padding-top: 8px;
+            color: #666;
+        }
+
+
+        .lista{
+            margin: 8px;
+            margin-bottom: 32px;
+            border: 1px solid #fff;
+        }
+        
+
+        .item{
+            background-color: #323232;
+            display: flex;
+            border-bottom: 1px solid #666;
+        }
+
+        .item:hover{
+            background-color: #212121;
+        }
+        
+
+        .item:last-child{
+            border-bottom: none;
+        }
+
+        .item > div{
+            padding: 8px 4px;
+        }
+
+
+
+
+
+        .item-qty{
+            background-color: #212121;
+            width: 48px;
+            text-align: center;
+        }
+
+        .item-nome{
+            margin-left: 4px;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+    <!-- TOOLTIP -->
+    <div id="tooltip-wrapper">
+        
+
+        <div id="tooltip-header">Teste de tooltip</div>
+
+
+        <div id="tooltip-list">
+
+
+            <div class="tooltip-item">
+                <div class="tooltip-item-qty">000</div>
+                <div class="tooltip-item-name">teste de batata</div>
+            </div>
+
+            <div class="tooltip-item">
+                <div class="tooltip-item-qty">000</div>
+                <div class="tooltip-item-name">teste de batata</div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="lista-header">ITENS DE CRAFT</div>
+    <div class="lista">
+
+        <!-- <div class="item">
+            <div class="item-qty">000</div>
+            <div class="item-nome">batata</div>
+        </div> -->
+
+    </div>
+
+
+
+    <div class="lista-header">OBJETOS</div>
+    <div class="lista">
+
+        <!-- <div class="item">
+            <div class="item-qty">000</div>
+            <div class="item-nome">batata</div>
+        </div> -->
+
+    </div>
+
+
+
+
+    
+
+
+
+
+
+    <script>
+        
+
+
+
+        var element_lista = document.getElementsByClassName("lista");
+        var tooltip = document.getElementById("tooltip-wrapper");
+
+
+
+        
+        var LISTA_ITENS = [
+
+
+            {
+                'nome': 'peças de metal',
+                'qty': 285
+            },
+
+
+            {
+                'nome': 'fitas de vedação',
+                'qty': 84
+            },
+
+
+            {
+                'nome': 'álcool',
+                'qty': 242
+            },
+
+            {
+                'nome': 'gaze',
+                'qty': 157
+            },
+
+            {
+                'nome': 'componente plástico',
+                'qty': 51
+            },
+
+
+            {
+                'nome': 'suprimentos caseiros',
+                'qty': 0
+            },
+
+
+            {
+                'nome': 'cogumelos florescente',
+                'qty': 34
+            }
+
+            
+        ];
+
+
+
+        var LISTA_OBJETOS_CRAFT = [
+
+
+            {
+                'nome': 'escudo',
+                'materiais': [
+                    {'nome': 'peças de metal','qty': 3},
+                    {'nome': 'fitas de vedação','qty': 1}
+                ]
+            },
+
+
+            {
+                'nome': 'medkit',
+                'materiais': [
+                    {'nome': 'álcool','qty': 1},
+                    {'nome': 'gaze','qty': 1}
+                ]
+            },
+
+
+            {
+                'nome': 'gazua',
+                'materiais': [
+                    {'nome': 'peças de metal','qty': 1}
+                ]
+            },
+
+
+            {
+                'nome': 'bombinhas',
+                'materiais': [
+                    {'nome': 'componente plástico','qty': 1},
+                    {'nome': 'suprimentos caseiros','qty': 1}
+                ]
+            },
+
+
+            {
+                'nome': 'porção de cogumelos',
+                'materiais': [
+                    {'nome': 'álcool','qty': 2},
+                    {'nome': 'gaze','qty': 1},
+                    {'nome': 'cogumelos florescente','qty': 1}
+                ]
+            }
+
+
+        ];
+
+
+
+
+
+
+
+
+        function findItemIndexTitle( nome ){
+            for ( let i = 0; i < LISTA_ITENS.length; i++ ){
+                if ( LISTA_ITENS[i].nome == nome ){
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+
+ 
+
+        function findObjetoIndexTitle( nome ){
+            for ( let i = 0; i < LISTA_OBJETOS_CRAFT.length; i++ ){         
+                if ( LISTA_OBJETOS_CRAFT[i].nome == nome ){
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+
+        
+
+
+
+        function getQtyCraft( index_objeto ){
+ 
+
+            if ( index_objeto < 0 || index_objeto >= LISTA_OBJETOS_CRAFT.length ){
+                return;
+            }
+
+
+            let qty = 0;
+
+
+            console.log("--- CRAFT ---\n\n");
+            for ( let i = 0; i < LISTA_OBJETOS_CRAFT[index_objeto].materiais.length; i++ ){
+
+                let objeto_nome = LISTA_OBJETOS_CRAFT[index_objeto].materiais[i].nome;
+                
+                let objeto_qty = LISTA_OBJETOS_CRAFT[index_objeto].materiais[i].qty;
+
+                
+
+                console.log( objeto_nome, findItemIndexTitle(objeto_nome) );
+
+                
+
+                qty = LISTA_ITENS[ findItemIndexTitle(objeto_nome) ].qty / objeto_qty;
+
+            }
+
+
+            return parseInt(qty);
+
+        }
+
+
+
+
+
+
+
+        function gerarItens(){
+
+
+            element_lista[0].innerHTML = '';
+
+            LISTA_ITENS.forEach((e, i)=>{
+
+                let item = document.createElement('div');
+                item.classList.add('item');
+
+                item.innerHTML = `
+                <div class="item-qty">${e.qty}</div>
+                <div class="item-nome">${e.nome}</div>
+                `;
+
+
+                item.title = `${e.qty} - ${e.nome}`;
+
+                element_lista[0].appendChild(item);
+                
+
+            });
+
+
+        }
+
+
+
+
+        
+
+
+
+
+
+
+
+        function gerarObjetos(){
+
+            element_lista[1].innerHTML = '';
+
+
+            LISTA_OBJETOS_CRAFT.forEach((e, i)=>{
+
+                let item = document.createElement('div');
+                item.classList.add('item');
+
+                item.innerHTML = `
+                <div class="item-qty">${ getQtyCraft(i) }</div>
+                <div class="item-nome">${e.nome}</div>
+                `;
+
+                // MOUSE ENTER
+                item.addEventListener("mouseenter", ()=>{
+                    
+                    let hover_nome = element_lista[1].children[i].querySelector('.item-nome').innerText.trim();
+                    let index = findObjetoIndexTitle( hover_nome );
+                    let craft_qty = getQtyCraft(i);
+                    document.getElementById("tooltip-list").innerHTML = '';
+
+                    for ( let x = 0; x < LISTA_OBJETOS_CRAFT[index].materiais.length; x++ ){
+
+                        let nome = LISTA_OBJETOS_CRAFT[index].materiais[x].nome;
+                        let tooltip_item = document.createElement('div');
+                        tooltip_item.classList.add("tooltip-item");
+
+
+                        let qty_itens       = LISTA_ITENS[findItemIndexTitle(nome)].qty;
+                        let qty_itens_craft = LISTA_OBJETOS_CRAFT[index].materiais[x].qty;
+
+
+                        if ( qty_itens < qty_itens_craft ){
+                            tooltip_item.innerHTML = `
+                            <div class="tooltip-item-qty"><span style="color: #dc3545;">${qty_itens}</span>/${qty_itens_craft}</div>
+                            <div class="tooltip-item-name">${LISTA_OBJETOS_CRAFT[index].materiais[x].nome}</div>
+                            `;
+                        }
+                        else{
+                            tooltip_item.innerHTML = `
+                            <div class="tooltip-item-qty"><span style="color: #28a745;">${qty_itens}</span>/${qty_itens_craft}</div>
+                            <div class="tooltip-item-name">${LISTA_OBJETOS_CRAFT[index].materiais[x].nome}</div>
+                            `;
+                        }
+
+                        
+
+
+                        document.getElementById("tooltip-list").appendChild( tooltip_item );
+
+                    }
+                    
+
+                    
+
+                    document.getElementById("tooltip-header").innerText = `${e.nome} [${craft_qty}]`;
+                    
+                    tooltip.style.display = 'block';
+                });
+
+
+
+                // MOUSE LEAVE
+                item.addEventListener("mouseleave", ()=>{
+                    tooltip.style.display = 'none';
+                    document.getElementById("tooltip-list").innerHTML = '';
+                });
+
+                
+                element_lista[1].appendChild(item);
+
+            });
+            
+
+        }
+
+
+
+
+
+
+
+
+
+        gerarItens();
+        gerarObjetos();
+
+
+
+
+
+        // MOUSE MOVE
+        window.addEventListener("mousemove", (e)=>{
+
+            let posX = e.clientX;
+            let posY = e.clientY;
+
+            if ( posX + tooltip.offsetWidth > document.body.offsetWidth ){
+                tooltip.style.left = ( posX - tooltip.offsetWidth ) + 'px';
+            }
+            else{
+                tooltip.style.left = ( posX ) + 'px';
+            }
+
+            tooltip.style.top = ( posY - tooltip.offsetHeight ) + 'px';
+
+        });
+
+
+
+
+        
+        
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            touch-action: manipulation;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+        #lcd{
+            width: 100%;
+            height: 100%;
+            background-color: cadetblue;
+            position: fixed;
+        }
+
+
+
+        #score{
+            width: 100%;
+            text-align: center;
+            z-index: 5;
+            margin: 16px; 
+            font-size: 2em;
+            display: flex;
+            justify-content: center;
+            position: fixed;
+        }
+        #score > div{ 
+            width: fit-content;
+            text-align: center;
+            padding: 8px 32px;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            
+        }
+
+
+        #player{
+            width: 32px;
+            height: 32px;
+            /* background-color: red; */
+            z-index: 2;
+            
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAiwAAAG9CAYAAAA2pS2SAAAPaElEQVR42u3Wsa3CQBBFUScOXSDt0Qo1OHIJJASQbLJUYGmDFcyMz5Nu/rXyZ86ymJmZmZmZnaxL+nlmZgYsErCYmQGLJGAxMwMWCVjMzAxYJGAxMwMWScBiZgYsErCYmQGLJGAxMwMWCVjMzAxYJGAxMwMWScBiZgYsErCYmRmwSMBiZgYskoDFzAxYJGAxMwMWScBiZgYsErCYmRmwSMBiZgYskoDFzAxYJGAxMzNgkYDFzAxYJAGLmRmwSMBiZgYskoDFzAxYJGAxMzNgkYDFzAxYJAGLmRmwSMBiZmbAIgGLmRmwSAIWMzNgkYDFzAxYJAGLmRmwSMBiZmbAIgGLmRmwSAIWMzNgkYDFzMyARQIWM3OIM9R3ZS3i9/R5vzQQRJkZsAALsAALsACLGbAAi4AFWIDFzIAFWAQswAIsZsAiYAEWYAEWYDEDFmARsAhYzAxYgEXAAizAYgYswCJgARZgMTNgARYBC7AAi5kBC7AAC7AAC7CYAQuwCFiABVjMDFiARcACLMBiBiwCFmABFmABFjNgARYBi4DFzIAFWAQswAIsZsACLAIWYAEWMwMWYBGwAAuwmBmwAAuwAAuwAIsZsACLgAVYgMXMgAVYBCzAAixmwCJgARZgARZgMQMWYBGwCFjMDFiARcACLMBiBizAImABFmAxM2ABFgELsACLmQELsAALsAALsJgBC7AIWIAFWMwMWIBFwAIswGIGLAIWYAEWYAEWM2ABFgGLgMXMgAVYBCzAAixmwAIsAhZgARYzAxZgEbAAC7CYGbAAC7AAC7AAixmwAIuABViAxcyABVgELMACLGbAImABFmABFmAxOHCIBQdwIIiCKAMWYBGwOLICFjNgkYBFwAIsBizAImABFgELsBiwOLICFglYzIBFwAIsAhZgMWABFgELsAhYzIBFAhYJWAxYgEXAAiwCFmAxYAEWAYsELGbAIgGLgAVYDFiARcACLAIWYDFgkYBFAhYzYBGwAIuABVgMWIBFwAIsAhYzYJGARQIWAxZgEbAAi4AFWAxYgEXAIgGLGbBIwCJgARYDFmARsACLgAVYDFgkYJGAxQxYBCzAImABFgMWYBGwAIuAxQxYJGCRgMWABVgELMAiYAEWAxZgEbBIwGIGLBKwCFiAxYAFWAQswCJgARYDFglYJGAxAxYBC7AIWIDFgAVYBCzAImAxAxYJWCRgMWABFgELsAhYgMWABVgELBKwmAGLBCwCFmAxYAEWAQuwCFiAxYBFAhYJWBxiCaKABVgEBxe6wcAiYBGwAAuwOMTAAiwCFgGLgAVYgEUCFmABFgELsHgsAYuABViABVi8E7AIWAQsAhY3GFgELA4/sACLgAVYgEXAImARsAALsEjAAizAImABFo8lYBGwAAuwOMTAAiwCFgGLgAVYgEUCFmABFgELsHgsAYuABViABVi8E7AIWAQsAhY3GFgELAIWYBGwAAuwCFgELAIWYAEWCViABVgELMDisQQsAhZgARaHGFiARcAiYBGwAAuwSMACLMAiYAEWjyVgEbAAC7AAi3cCFgGLgEXA4gYDi4BFwAIswOIQAwuwCFgELAIWYAEWCViABVgELMDisQQsAhZgARaHGFiARcAiYBGwAAuwSMACLMAiYAEWjyVgEbAAC7AAi3cCFgGLgEXA4gYDi4BFwAIswOIQAwuwCFgELAIWYAEWCViABVgELMDisQQsAhZgARaHGFiARcAiYBGwAAuwSMACLMAiYAEWjyVgEbAAC7AAy1/fKdwf1lqTpgVRwAIsigoW7wQsErAAC7AIWIAFWAQswAIsAhZgARYJWOTACFi8E7AIWIAFWIAFWHxPwAIsAhZgARY5xMACLBKwAIsDI2ABFmARsAALsAALsAALsACLgEXAImDxTsAiAQuwAIuABViARcACLMAiYAEWYJGABVgcGAGLdwIWAQuwAAuwAIvvCViARcACLMAihxhYgEUCFmBxYAQswAIsAhZgARZgARZgARZgEbAIWAQs3glYJGABFmARsAALsAhYgAVYBCzAAiwSsACLAyNg8U7AImABFmABFmDxPQELsAhYgAVY5BADC7BIwAIsDoyABViARcACLMACLMACLMACLAIWAYuAxTsBiwQswAIsAhZgARYBC7AAi4AFWIBFAhZgcWAELMACLAIWYAEWYAEW3xOwAIuABViARQ4xsACLBCzA4sAIWIAFWAQswAIswAIswAIswCJgEbAIWLwTsEjAAizAImABFmARsAALsAhYgAVYJGABFgdGwAIswCJgARZgARZg8T0BC7BIEAVRECWwAxYJWIAFWBxZAQuwSMAiYBGwAAuwCFiABViARcACLBKwAAuwSMACLBKwAAuwCFiARQIWYAEWYBGwAIsELMACLBKwAIsELMACLAIWYJGABViARQIWYJGARcAiYAEWYBGwAAuwAIuABVgkYAEWYJGABVgkYAEWYBGwAIsELMACLMAiYAEWCVhABFgkYAEWCViABVgELMAiAQuwAIsELMAiAYuARcACLMAiYAEWYAEWAQuwSMACLMAiAQuwSMACLMAiYAEWCViABViARcACLBKwwAiwSMACLBKwAAuwCFiARQIWYAEWCViARQIWAYuABViARcACLMACLAIWYJGABViARQIWYJGABViARcACLBKwAAuwAIuABVgkYBGwSMACLBKwAAuwCFiARQIWYAEWCViARQIWAYuABViARcACLMACLAIWYJGABViARQKWmT3va7gc2bxF/J6ARdURJQELsAhYgEXAImABFmABFmARsEjAAiwCFmARsEjAAiwCFmABFglYgEXAAiwCFglYgEXAAiwCFglYgAVYgAVYgEUCFmARsACLgEUCFmARsACLgEXAAizAAizAImCRgAVYBCzAImCRgAVYBCzAAiwSsACLgAVYBCwSsACLgAVYBCwSsAALsAALsACLBCzAImABFgGLBCzAImABFgGLgAVYgAVYgEXAIgELsAhYgEXAIgELsAhYgAVYJGABFgELsAhYJGABFgELsAhYJGABFmABFmABFglYgEXAAiwCFglYgEXAAiwCFgELsAALsACLgEUCFmARsACLgEUCFmARsAALsEjAAiwCFmARsEjAAiwCFmARsEjAAizAAizAAiwSsACLgAVYBCwSsACLgAVYBCwCFmABFmABFgGLBCzAImABFgGLBCzAImABFmCRKoEl4iBKcCA4GP19uq1S6YAFWIAFWAQsErAAi4AFWIAFWCRgARYBi4DFQROwAAuwAAuwCFgkYAEWAYuABVgkYAEWAYuARQIWYBGwAAuwAIsELMAiYBGwAIuABViABViARcAiAQuwCFiABViARQIWYBGwCFgcNAELsAALsACLgEUCFmARsAhYgEUCFmARsAhYJGABFgELsAALsEjAAiwCFgELsAhYgAVYgAVYBCwSsACLgAVYgAVYJGABFgGLgEUCFmABFmABFgGLBCzAImARsACLBCzAAizAImCRgAVYBCzAAizAIgELsAhYBCzAImABFmABFmARsEjAAiwCFmABFmCRgAVYBCwCFglYgAVYgAVYBCwSsACLgEXAAiwSsAALsACLgEUCFmARsAALsACLBCzAImARsACLgAVYgAVYgEXAIgELsAhYgAVYgEUCFmARsAhYJGABFmABFmARsEjAkmNdOTsem5IGB8M/5lL1DFiARcACLBKwAIuARcACLBKwAIuABViAxf+5gMWABVgELMAiAQuwCFgELMAiAQuwAIvDDyzAIgELsAhYBCzAIgELsAhYgAVYgEXAYsACLAIWYJGABVgELAIWYJGABVgELMACLBKwGLAAi4AFWCRgARYBi4AFWCRgARZgEbAAiwQswCJgEbAAiwQswCJgARZgARYBiwELsAhYgEUCFmARsAhYgEUCFmARsAALsEjAYsACLAIWYJGABVgELAIWYJGABViARcACLBKwAIuARcACLBKwAIuABViABVgELAYswCJgARYJWIBFwCJgARYJWIBFwAIswCIBiwELsAhYgEUCFmARsAhYgEUCFmABFgELsEjAAiwCFgELsEjAAiwCFmABFmARsBiwAIuABVgkYAEWAYuABVgkYAEWAQuwAIsELOZjARYBC7BIwAIsDrEEUXUQpbwBC7AAiwQswCJgARZgkQQsErAYsEgCFgELsAALsEjAAiwCFmABFknAIgELsACLBCzAImABFmABFglYgEXAYsAiCVgELMACLMAiAQuwCFiABVgkAYsELMACLBKwAIuABViABVgkYAEWAQuwAIskYJGABViARQIWYBGwAAuwAIsELMAiYDFgkQQsAhZgARZgkYAFWAQswAIskoBFAhZgARYJWIBFwAIswAIsErAAi4AFWIBFErBIwAIswCIBC7AIWIAFWIBFAhZgEbAYsEgCFgELsAALsEjAAiwCFmABFknAIgELsACLBCzAImABFmABFglYgEXAAizAIglYJGABFmCRgAVYBCzAAizAIgELsAhYDFgkAYuABViABVgkYAEWAQuwAIskYJGABViARQIWYBGwAAuwAIsELMAiYAEWiLpYjqwgSoIDAxZgkYBFwGIGLMAiAYuAxYAFWCRgkYDFgAVYJGARsBiwCFgELBKwGLAAiwQsAhYzYAEWCVgELAYswOKgCVgkYDFgARYJWAQsZsACLBKwCFgMWIBFAhYJWAxYgEUCFgGLAYuARcAiAYsBC7BIwCJgMQMWYJGARcBiwAIsErBIwGLAAiwSsAhYzIAFWCRgEbAYsACLBCwSsBiwAIsELAIWAxYBi4BFAhYDFmCRgEXAYgYswCIBi4DFgAVYJGCRgMWABVgkYBGwmAELsEjAImAxYAEWCVgkYDFgARYJWAQsBiwCFgGLBCwGLMAiAYuAxQxYgEUCFgGLAQuwSMAiAYsBC7BIwCJgMQMWYJGARcBiwAIsErBIwGLAAiwSsAhYzAzs5MCYmRmwSMBiZmbAIgGLmRmwSMBiZmbAIgGLmZkBiwQsZmbAIgGLmZkBiwQsZmYGLAIWMzMDFglYzMwMWCRgMTMDFglYzMwMWCRgMTMzYJGAxcwMWCRgMTMzYJGAxczMgEXAYmZmwCIBi5mZAYsELGZmwCIBi5mZAYsELGZmBiwSsJiZAYsELGZmBiwSsJiZGbAIWMzMDFgkYDEzM2CRgMXMDFgkYDEzM2CRgMXMzIBFAhYzM2CRgMXMzIBFAhYzMwMWAYuZmQGLBCxmZgYsErCYmQGLBCxmZgYsErCYTdwXntsd1Nb0qOwAAAAASUVORK5CYII=);
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+
+
+            transition: 250ms transform;
+            transform: rotate(0deg);
+
+            position: absolute;
+            left: 50%;
+            top: 25%;
+
+            
+
+        }
+
+
+        #list-pipe{
+            display: flex;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        
+
+        .pipe-wrapper{
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-width: 64px;
+
+            visibility: hidden;
+
+            position: absolute; 
+ 
+        }
+
+ 
+ 
+        .pipe-solid{ 
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOsAAAEsCAYAAAAikERtAAAGlElEQVR4nO3YP49jVwHG4ffaM7M7ySZEUSSEEAiJBtHmC1BFNIgG2lS0FNQ0NHwCagrS0PABqGhIESgQJYImWiQkxCoR0u4kysz4Uiwonln/ufasPXnR80gr7b0+955jj39X1hnyw5zlfP6LZPhBkjcDfJF8lIy/ySfXP57n7ZOfZRh+kuT8vlcFvOA8Gd7OyWyYZcg7970aYIsh78ySvHLf6wC2emV23ysApjmZNOp0lnzz4WFW8OZ/nxfDrfMXY/Lp+Pnxg1ny6rB67O3jfcdsO7/r/afOu++YdYZbF0x971PPfXmevHHX5/wOb2jT0ItF8s/r7eO+cTp9vmV/v9q8jl2+V1Ov/fAy+f2zF16aFuuY5GrrqP08XBPgp2NyuTxuTM7XhH3oWDdeu2b9u8x7l1jXXnvAWB8OydkuT48DejAkj9Z8L5bP7dlqXlt6KL3sz3HduS+tfhD6GQwlxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolTiaPHF7yuCk3mo1Lhy/txtzVIsnl0vF9/mkWE8ddH3QVRzEt1qtF8reLw6zgr4e5Lfy/8TMYSsySXN33IoCtrmYZxg/uexXAFsP4wTzfHv+Q+ew7Sb56z8sBVvtjLq9/9Pk+3rv5eobTtw423WL8bob8fOOYr5wlr0/foN7o9g7lwyQPVmxbfjwmS5vOeWO4ue12+5JNO58rxw5bXp9wr23XrbzPMG3syZB8bb5hIWts2wHed4f4X9c3d5pX3ev1WfJo1fvbMunTMXm2Yft402c1JPnd0+TJrW3lMT/NbPjt5onvYLx8kvfyOFn+Wr6Xx8nl44NN+u78W1s/zEUOt8V+Ok9eW/EH/vjqZqyPZsnZDoFtjWrivfZ9bdu828aeDslbe8R6KIshuRxvnrv9WTyaJa/u8TQ4G5PzO/xtT1fMOYwf5ldXf9p9MbuzGwwlxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolxAolTu57ATfMc3NFww7Xbhu7GJNPVow9G5LF0vFnSa7H9ffddvzCaxPvte9ra+cdpl07JPnLYvXrW9/bhnN7rTnJ1YRxz8ZkPq6477B53sXw/Huw65r+9/9/L9aNPIovVqz/+Oz5P+AFfgZDiWPG+vSIc8FxLHJxrKmOF+vp9fvJ8d4YHMFFrq/fP9Zkx4v1l/koQ76X5M+5uaUDbRZ5/j3+fn6dJ8ea9D/7qYTIdU/SvQAAAABJRU5ErkJggg==);
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+        }
+
+        .pipe-solid:first-child{
+            transform: rotate(180deg);
+        }
+
+         
+ 
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    
+     
+
+    <div id="lcd">
+        <div id="score"> <div>0</div> </div>
+        <div id="player"></div>
+        <div id="list-pipe"></div>
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+        var lcd = document.getElementById('lcd');
+        var player = document.getElementById('player');
+        
+        var flag_entered = false;
+
+        function spawnPipe(){
+
+
+
+
+            let pipeWrapper = document.createElement('div');
+            pipeWrapper.classList.add('pipe-wrapper');
+
+            pipeWrapper.innerHTML = `
+            <div class="pipe-solid solid"></div>
+            <div class="pipe-hole"></div>
+            <div class="pipe-solid solid"></div>
+            `;
+
+
+            let heightHole  = 128;
+            let minPipe     = 96;
+
+
+            let screenHeight = lcd.offsetHeight;
+            let diffA = screenHeight - heightHole;
+            let value = getRandomInt(minPipe, diffA-64);
+
+            //console.log(screenHeight, diffA, value);
+
+            document.getElementById('list-pipe').appendChild(pipeWrapper);
+
+
+
+            let remain = screenHeight - (heightHole + value);
+
+
+            pipeWrapper.querySelectorAll('.pipe-solid')[0].style.height = (value) + 'px';
+            pipeWrapper.querySelector('.pipe-hole').style.height = (heightHole) + 'px';
+            pipeWrapper.querySelectorAll('.pipe-solid')[1].style.height = (remain) + 'px';
+
+
+
+        }
+
+
+        
+
+
+        for (let i = 0; i <  8; i++){
+            spawnPipe(); 
+        }
+
+
+
+
+
+
+
+
+        var timestamp_old = 0;
+        var delta = 0;
+
+
+
+
+        var gravity = 8;
+        var accel = 0;
+
+
+
+        var killed = false;
+        var canTouchDown = false;
+
+        var posX = 0;
+
+        var offsetIndex = 0;
+
+        var angle = 0;
+        
+        var score = 0;
+
+        function update(timestamp){
+
+
+            window.requestAnimationFrame(update);
+            delta = (timestamp - timestamp_old) / 1000;
+            timestamp_old = timestamp;
+
+            let posY = player.offsetTop;
+
+            if ( posY < lcd.offsetHeight ){
+                accel += gravity * delta;
+                posY += accel;
+            }
+
+            
+
+
+            if ( accel > 0 ){
+
+                angle += accel *2;
+                if ( angle > 25 ){
+                    angle = 25;
+                }
+
+            }
+
+            player.style.transform = `rotate(${angle}deg)`
+
+
+
+            if (!canTouchDown){
+                player.style.top = (posY) + 'px';
+            }
+
+            
+            if ( !killed ){
+                
+
+                if ( posY + player.offsetHeight > lcd.offsetHeight ){
+                    console.log('game over falled');
+                    killed = true;
+                    canTouchDown = true;
+                }
+
+                
+
+
+                
+
+                // mover cenario
+                posX += delta * 200;
+
+
+                let list = document.querySelectorAll('.pipe-wrapper');
+
+        
+                let rect1 = {
+                    x: player.offsetLeft,
+                    y: player.offsetTop,
+                    w: player.offsetWidth,
+                    h: player.offsetHeight
+                };
+
+                let rect2 = {
+                    x: 0,
+                    y: 0,
+                    w: 0,
+                    h: 0
+                };
+
+                let rect3 = {
+                    x: 0,
+                    y: 0,
+                    w: 0,
+                    h: 0
+                };
+
+
+                let rect4 = {
+                    x: 0,
+                    y: 0,
+                    w: 0,
+                    h: 0
+                };
+                
+                
+                for (let i = 0; i < list.length; i++){
+                    list[i].style.left = (-posX + (256 * i) + 500) + 'px';
+                    list[i].style.visibility = "visible";
+                }
+
+
+
+
+                rect2.x = list[offsetIndex].offsetLeft;
+                rect2.y = list[offsetIndex].querySelectorAll('.solid')[0].offsetTop;
+                rect2.w = list[offsetIndex].querySelectorAll('.solid')[0].offsetWidth;
+                rect2.h = list[offsetIndex].querySelectorAll('.solid')[0].offsetHeight;
+
+                rect3.x = list[offsetIndex].offsetLeft;
+                rect3.y = list[offsetIndex].querySelectorAll('.solid')[1].offsetTop;
+                rect3.w = list[offsetIndex].querySelectorAll('.solid')[1].offsetWidth;
+                rect3.h = list[offsetIndex].querySelectorAll('.solid')[1].offsetHeight;
+
+                rect4.x = list[offsetIndex].offsetLeft;
+                rect4.y = list[offsetIndex].querySelector('.pipe-hole').offsetTop;
+                rect4.w = list[offsetIndex].querySelector('.pipe-hole').offsetWidth;
+                rect4.h = list[offsetIndex].querySelector('.pipe-hole').offsetHeight;
+
+
+                    if ( isColliding(rect1, rect2) || isColliding(rect1, rect3) ){
+                        killed = true;
+                        accel = -4;
+                        console.log('x');
+                    }
+                    if ( isColliding(rect1, rect4) ){
+                        if ( !flag_entered ){
+                            flag_entered = true;
+                            console.log("in");
+                        }
+                    }
+                    else{
+                        if ( flag_entered ){
+                            flag_entered = false;
+                            console.log('out');
+                            offsetIndex++;
+                            score++;
+
+                             
+
+                            document.querySelector("#score > div").innerText = score;
+                             
+                            spawnPipe();
+
+                        }
+                    }
+
+
+
+            }
+
+            
+
+
+
+
+        }
+
+
+
+        window.requestAnimationFrame(update);
+
+
+
+
+
+
+
+
+        let flag_jump = false;
+
+        window.addEventListener('keydown', (evt)=>{
+
+            if ( evt.keyCode == 32 ){
+                if ( !flag_jump ){ 
+
+                    if (!killed){
+                        flag_jump = true;
+                        accel = -3;
+                        console.log('jump');
+                        angle = -15;
+                    }
+                    else{
+                        location.reload();
+                    }
+
+                }
+            }
+
+        });
+
+
+        window.addEventListener('click', ()=>{
+
+            if (!killed){
+                
+                accel = -3;
+                console.log('jump');
+                angle = -15;
+            }
+            else{
+                location.reload();
+            }
+        });
+
+
+
+        window.addEventListener('keyup', ()=>{
+            flag_jump = false;
+        });
+
+
+
+
+
+
+
+
+
+        function isColliding(rect1, rect2){
+
+
+            return (
+            rect1.x < rect2.x + rect2.w &&
+            rect1.x + rect1.w > rect2.x &&
+            rect1.y < rect2.y + rect2.h &&
+            rect1.h + rect1.y > rect2.y);
+
+        }
+
+
+
+ 
+
+    </script>
+
+
+</body>
+</html>

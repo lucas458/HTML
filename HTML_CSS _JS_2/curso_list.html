@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+        
+
+
+
+        #player-wrapper{
+            width: 100%;
+            height: 100%;
+            background-color: #000000bb;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+
+            display: none;
+        }
+
+        #frameVideo{
+            width: 75%;
+            max-height: 75%;
+            aspect-ratio: 4/3;
+            box-shadow: 0 0 10px 0 #fafafa;
+            border: 1px solid #9e9e9e;
+            background-color: #000;
+        }
+
+
+
+
+
+        #container{
+            padding: 16px;
+        }
+
+
+        .details-wrapper{
+            /* background-color: red; */
+            border: 1px solid #9e9e9e;
+            border-bottom: none;
+            font-size: 0.8em;
+        }
+        .details-wrapper:last-child{
+            border: 1px solid #9e9e9e;
+        }
+
+
+        .details-summary-total,
+        .details-content-total{
+            color: #9e9e9e;
+        }
+
+        /* TITLE */
+         
+        .details-summary{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #212121;
+            padding: 16px;
+            border-bottom: 0px solid #9e9e9e;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .details-summary-icon{
+            display: flex;
+            transition: 250ms;
+            transform: rotate(0deg);
+        }
+
+        .details-summary-title{
+            flex: 1;
+            margin-left: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .details-summary-total{
+            white-space: nowrap;
+        }
+
+
+
+        /* CONTENT LIST */
+
+        .details-content-wrapper{
+            background-color: #353535; 
+            height: auto;
+            overflow: hidden; 
+            max-height: 0;
+        }
+
+
+
+        .details-content-item{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+        }
+
+        .details-content-column{
+            display: flex;
+        }
+
+        .details-content-column:first-child{
+            overflow: hidden;
+        }
+
+
+
+        .details-content-icon{
+            display: flex;
+            margin-right: 16px;
+            color: #fff;
+        }
+
+
+        .details-content-title{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+
+        .details-content-total{
+            margin-left: 16px;
+        }
+
+
+
+
+
+        .details-view{
+            cursor: pointer;
+        }
+        .details-view .details-content-title{
+            text-decoration: underline;
+            color: #8bccff;
+            user-select: none;
+        }
+
+
+
+        /* ABERTO */
+        .details-open .details-content-wrapper{ 
+            max-height: 100%;
+        }
+
+        .details-open .details-summary{
+            border-bottom: 1px solid #9e9e9e;
+        }
+
+        .details-open .details-summary-icon{
+            transform: rotate(180deg);
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+    <div id="player-wrapper">
+
+        <iframe id="frameVideo" src="" allow="autoplay"></iframe>
+    
+        
+    </div>
+
+
+
+
+
+    <div id="container">
+
+        <!-- MODULE WRAPPER -->
+        <!-- <div class="details-wrapper xdetails-open">
+
+            <div class="details-summary">
+                <div class="details-summary-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                </div>
+                <div class="details-summary-title">Introdução</div>
+                <div class="details-summary-total">4 aulas • 21m</div>
+            </div>
+
+            <div class="details-content-wrapper">
+
+                
+                <div class="details-content-item">
+                    <div class="details-content-column">
+                        <div class="details-content-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z"/></svg>
+                        </div>
+                        <div class="details-content-title">Apresentação do curso</div>
+                    </div>
+                    <div class="details-content-column">
+                        <div class="details-content-view">Visualizar</div>
+                        <div class="details-content-total">01:35</div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        
+        var container = document.getElementById('container');
+
+
+        var LISTA = [
+
+            // modulo
+            {
+                'name': 'Introdução',
+                'ep': [
+                    {'title': 'Apresentação do curso','time': 60*1+35, 'url': 'https://drive.google.com/file/d/17ZOxeuQp2KJ42iHULQ1z7wfWgg6I53U2/preview'},
+                    {'title': 'Instalação','time': 60*5+4, 'url': 'https://drive.google.com/file/d/1VQ9-miRlKxDeGP42IvS6g9FHf4CxXebm/preview'},
+                    {'title': 'Interface','time': 60*7+41, 'url': 'https://drive.google.com/file/d/1O3W71SLnjdV1Xs0yTNsxCbLUeDXh-LBG/preview'},
+                    {'title': 'Asset Store','time': 60*6+57}
+                ]
+            },
+
+
+
+            // modulo
+            {
+                'name': 'Sistema de particulas',
+                'ep': [
+                    {'title': 'Introdução ao sistema de partículas','time': 60*16, 'url': ''},
+                    {'title': 'Partículas de tiro Parte 1','time': 7*60+23},
+                    {'title': 'Partículas de tiro Parte 2','time': 60*4+58},
+                    {'title': 'Explosão desencadeada pelo tiro','time': 60*6+58}
+                ]
+            },
+
+
+        ];
+
+
+
+        
+
+        
+
+        function timeTotal( value = 0 ){
+
+            value = Math.round(value);
+
+            let str = '';
+            let hour = Math.trunc( value / 3600 );
+            let min  = Math.trunc( value / 60 % 60 );
+            let sec  = Math.trunc( value % 60 );
+
+            // hour | min
+            if ( value >= 60 ){
+                if ( hour >= 1 ){
+                    str += hour + 'h ';
+                }
+                str += min + 'm';
+            }
+
+            // sec
+            else{
+                str += sec + 's';
+            }
+
+            return str;
+
+        }
+
+
+
+        
+        function timetrack( value = 0 ){
+
+
+            let hour = Math.trunc( value / 3600 );
+            let min  = Math.trunc( value / 60 % 60 );
+            let sec  = Math.trunc( value % 60 );
+            
+            let str = '';
+
+            let tempMin = (min < 10)? ('0'+min) : min;
+            let tempSec = (sec < 10)? ('0'+sec) : sec;
+
+            
+            if ( hour >= 1 ){
+                str += hour + ':';
+            }
+
+            str += `${tempMin}:${tempSec}`;
+
+
+            return str;
+        }
+
+
+
+
+
+
+        function gerarLista(){
+
+            container.innerHTML = '';
+
+
+
+
+            for (let i = 0; i < LISTA.length; i++){
+
+
+                let module_wrapper = document.createElement('div');
+                module_wrapper.classList.add('details-wrapper');
+
+                 
+
+
+                let str_ep = (LISTA[i].ep.length == 1)? 'aula' : 'aulas';
+
+                module_wrapper.innerHTML = `
+                <div class="details-summary">
+                    <div class="details-summary-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>
+                    </div>
+                    <div class="details-summary-title">${LISTA[i].name}</div>
+                    <div class="details-summary-total"></div>
+                </div> 
+                <div class="details-content-wrapper"></div>
+                `;
+
+
+                // open/close
+                module_wrapper.querySelector('.details-summary').addEventListener('click', ()=>{
+                    module_wrapper.classList.toggle('details-open');
+                });
+
+
+                let time_sum = 0;
+
+                for (let j = 0; j < LISTA[i].ep.length; j++){
+
+                    time_sum += LISTA[i].ep[j].time;
+
+                    let item = document.createElement('div');
+                    item.classList.add('details-content-item');
+
+
+                    if ( LISTA[i].ep[j].url != null ){
+                        if ( LISTA[i].ep[j].url.length > 0 ){
+                            item.classList.add('details-view');
+
+                            item.addEventListener('click', ()=>{
+                                document.getElementById('frameVideo').src = LISTA[i].ep[j].url;
+                                document.getElementById('player-wrapper').style.display = 'flex';
+
+                            });
+
+                        }
+                    }
+
+                    item.innerHTML = `
+                        <div class="details-content-column">
+                            <div class="details-content-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z"/></svg>
+                            </div>
+                            <div class="details-content-title">${LISTA[i].ep[j].title}</div>
+                        </div>
+                        <div class="details-content-column">
+                            <div class="details-content-total">${timetrack(LISTA[i].ep[j].time)}</div>
+                        </div>
+                    `;
+
+                    
+
+
+                    module_wrapper.querySelector('.details-content-wrapper').appendChild(item); 
+
+                }
+
+                module_wrapper.querySelector('.details-summary-total').innerHTML = `${LISTA[i].ep.length} ${str_ep} • ${timeTotal(time_sum)}`;
+
+                container.appendChild(module_wrapper);
+
+
+
+            }
+
+
+        }
+
+
+        gerarLista();
+
+
+
+
+
+
+
+
+        document.getElementById('player-wrapper').addEventListener('click', (evt)=>{
+            evt.stopImmediatePropagation();
+            document.getElementById('player-wrapper').style.display = 'none';
+            document.getElementById('frameVideo').src = '';
+        });
+
+
+        document.getElementById('frameVideo').addEventListener('click', (evt)=>{
+            evt.stopImmediatePropagation();
+        });
+
+
+    </script>
+
+
+</body>
+</html>
