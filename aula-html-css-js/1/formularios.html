@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html>
+	<head lang="pt-br">
+		<title> Menu </title>
+		
+		<!-- formataçao -->
+		<meta charset="UTF-8"/>
+		<script type="text/javascript">
+			
+		</script>
+		
+		<style type="text/css">
+		
+		</style>
+	</head>
+	<body height="2000px">
+		<form action="login.php" method="POST">
+			login:<input type="text" name="login" placeholder="email" required><br>
+			senha:<input type="password" name="senha" placeholder="senha"><br>
+			<input type="submit" name="botao" value="entrar">
+			<br>
+			<input type="radio" name="carros" value="celta"> celta <br>
+			<input type="radio" name="carros" value="onix"> onix <br>
+			
+			<input type="checkbox" name="cores" value="azul"> azul <br>
+			<input type="checkbox" name="cores" value="cinza"> cinza <br>
+			
+			quantidade:<br>
+			<input type="number" name="quantidade" min="1" max="5" required><br>
+			
+			slide:<br>
+			<input type="range" name="barra"><br>
+			cor:<br>
+			<input type="color" name="cor"><br>
+			imagem:<br>
+			<input type="file" name="arquivo"><br>
+			
+			<input type="url" name="url"><br>
+			<input type="search" name="pesquisa"><br>
+			<input type="tel" name="telefone"><br>
+			
+			<input type="date" name="datas"><br>
+			<input type="time" name="hora"><br>
+			<input type="month" name="mes e ano"><br>
+			<input type="week" name="semana"><br>
+			<input type="datetime-local" name="data_hora"><br>
+			
+			<textarea name="texto" rows="5" cols="30"></textarea><br>
+			
+			<button type="button">click me</button><br>
+			
+			<select name="veiculo">
+				<optgroup label="carro">
+					<option value="camaro"> camaro </option>
+					<option value="holux"> hilux </option>
+				</optgroup>
+				
+				<optgroup label="moto">
+					<option value="pop100"> pop100 </option>
+				</optgroup>
+			<select>
+			
+			<br>
+			<input name="cursos" list="cursos_lista">
+				<datalist id="cursos_lista">
+					<option value="HTML5">
+					<option value="CSS3">
+					<option value="JS">
+				</datalist>
+		</form>
+		
+		
+	</body>
+</html>
+
+
+
