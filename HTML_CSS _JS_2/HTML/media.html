@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #212121;
+            color: #fff;
+        }
+
+
+
+
+        header{
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            user-select: none;
+
+            position: sticky;
+            top: 0;
+
+            box-shadow: 0 0 5px 0 #000;
+			
+			background-color: #181818;
+        }
+		
+		 
+
+        header > input{
+			width: 80px;
+            height: 24px;
+            border: 0;
+            padding: 2px 10px;
+            outline: none;
+            border-radius: 15px 0 0 15px;
+        }
+        header > button{
+            height: 24px;
+            border: 0;
+            padding: 2px 5px;
+            outline: none;
+            border-radius: 0 15px 15px 0;
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        header > span{
+            margin-left: 10px;
+            user-select: text;
+        }
+
+
+
+
+        #container{
+            background-color: #181818;
+            padding: 0 5px;
+        }
+
+        .wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wrapper > div{
+            width: 100%;
+            text-align: center;
+        }
+
+
+        .delete{
+            max-width: 24px;
+            min-width: 24px;
+            
+            height: 24px;
+
+            background-color: #dc3545;
+            user-select: none;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+        .progressTrack{
+            
+            background-color: #2e2e2e;
+            margin: 5px;
+
+            
+        }
+        .progressFill{
+            width: 0%;
+            height: 24px;
+            background-color: #4caf50;
+
+            text-align: center;
+            display: flex;
+            
+            align-items: center;
+			
+			transition: 200ms;
+        }
+
+
+        .percent{
+			
+            max-width: calc( 16px * 3 );
+            
+
+        }
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+
+
+    <header>
+        <input type="number" id="inputNumber">
+        <button onclick="addItem()">Adicionar</button>
+        <span id="all">Total: 0 | Média: 0</span>
+    </header>
+
+
+    <div id="container">
+
+        <!-- PROGRESS -->
+        <!-- <div class="wrapper">
+            <div class="delete">X</div>
+            <div class="progressTrack"><div class="progressFill">0</div></div>
+            <div class="percent">0%</div>
+        </div> -->
+
+
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+
+
+        function addItem(){
+
+            let value = $("#inputNumber").val();
+
+            if ( value.length > 0 ){
+
+                $("#container").append(`
+                <div class="wrapper">
+                    <div class="delete">X</div>
+                    <div class="progressTrack"><div class="progressFill">${value}</div></div>
+                    <div class="percent">0%</div>
+                </div>
+                `);
+
+
+                var soma = 0;
+                var somaMedia = 0;
+                var itensTotal = $("#container .wrapper").length;
+
+
+
+                for ( let x = 0; x < itensTotal; x++ ){
+                    soma += $("#container .wrapper .progressFill").eq(x).text() - 0;
+                    somaMedia +=  $("#container .wrapper .progressFill").eq(x).text() - 0;
+                }
+
+                for ( let x = 0; x < itensTotal; x++ ){
+                    let width = $("#container .wrapper .progressTrack").eq(x).width();
+                    let percent = parseInt(( $("#container .wrapper .progressFill").eq(x).text()-0 )/ soma * 100 );
+                    $("#container .wrapper .progressFill").eq(x).width( parseInt( percent * width/100 ) );
+                    $("#container .wrapper .percent").eq(x).text( percent + '%' );
+                }
+               
+                $("#all").text( "Total: " + itensTotal + " | Média: " + (somaMedia/itensTotal).toFixed(1) );
+                $("#inputNumber").val('');
+
+                
+
+
+            }
+
+        }
+
+
+
+        $("#inputNumber").keydown(function(event){
+
+            if (event.keyCode == 13){
+                addItem();
+            }
+        });
+
+
+
+
+
+        $("#container").on("click", ".delete", function(){
+
+            $(this).parent().remove();
+
+            var soma = 0;
+            var somaMedia = 0;
+            var itensTotal = $("#container .wrapper").length;
+
+            
+
+            for ( let x = 0; x < itensTotal; x++ ){
+                soma += $("#container .wrapper .progressFill").eq(x).text() - 0;
+                somaMedia +=  $("#container .wrapper .progressFill").eq(x).text() - 0;
+            }
+
+            for ( let x = 0; x < itensTotal; x++ ){
+                let width = $("#container .wrapper .progressTrack").eq(x).width();
+                let percent = parseInt(( $("#container .wrapper .progressFill").eq(x).text()-0 )/ soma * 100 );
+                $("#container .wrapper .progressFill").eq(x).width( parseInt( percent * width/100 ) );
+                $("#container .wrapper .percent").eq(x).text( percent + '%' );
+            }
+            
+            $("#all").text( "Total: " + itensTotal + " | Média: " + (somaMedia/itensTotal).toFixed(1) );
+            $("#inputNumber").val('');
+            
+
+        });
+
+
+    </script>
+
+    
+
+</body>
+</html>

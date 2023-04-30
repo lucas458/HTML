@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Ludo Game</title>
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+
+
+    <div class="screen" id="tela-game">
+ 
+
+
+        <!-- PLAYER -->
+        <div class="screen-header player-wrapper">
+             
+            <div class="player-column">
+                <div class="player">
+                    <div class="player-diceWrapper"> <div class="player-diceImg"></div> </div>
+                    <div class="player-name">jogador 1</div>
+                </div>
+            </div>
+
+            <div class="player-column">
+                <div class="player" style="justify-content: flex-end;">
+                    <div class="player-name" style="direction: rtl;">jogador 2</div>
+                    <div class="player-diceWrapper"> <div class="player-diceImg"></div> </div>
+                </div>
+            </div>
+
+        </div>
+ 
+
+
+        <!-- TABLE -->
+        <div class="screen-content" id="table-screen">
+
+            <div id="table-wrapper">
+
+                <!-- Table Image -->
+                <div id="table-img"></div>
+
+
+                <!-- List Pieces: RED -->
+                <div class="player-piece-list" id="player-1">
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                </div>
+
+
+                <!-- List Pieces: GREEN -->
+                <div class="player-piece-list" id="player-2">
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                </div>
+
+
+                <!-- List Pieces: YELLOW -->
+                <div class="player-piece-list" id="player-3">
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                </div>
+
+
+                <!-- List Pieces: BLUE -->
+                <div class="player-piece-list" id="player-4">
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                    <div class="piece" playerPos="-1,-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+
+        </div>
+ 
+
+
+
+        <!-- PLAYER -->
+        <div class="screen-footer player-wrapper">
+            
+            <div class="player-column">
+                <div class="player">
+                    <div class="player-diceWrapper"> <div class="player-diceImg"></div> </div>
+                    <div class="player-name">jogador 3</div>
+                </div>
+            </div>
+
+            <div class="player-column">
+                <div class="player" style="justify-content: flex-end;">
+                    <div class="player-name" style="direction: rtl;">jogador 4</div>
+                    <div class="player-diceWrapper"> <div class="player-diceImg"></div> </div>
+                </div>
+            </div>
+
+        </div>
+  
+    </div>
+
+
+
+
+     
+    
+    <script src="jquery-3.6.1.slim.min.js"></script>
+    <script src="script.js"></script>
+
+
+</body>
+</html>

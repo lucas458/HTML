@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    
+
+
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+
+
+        /* CONTAIER DO RESUMO DE USER*/
+        header{
+            box-sizing: border-box;
+            padding: 15px;
+            font-size: 1.1em;
+            font-family: Arial, Helvetica, sans-serif;
+            display: none;
+        }
+
+
+        /* TABELA DE RESUMO */
+        #table_container{
+            
+            border-collapse: collapse;
+            
+        }
+        #table_body td, th{
+            border: 1px solid rebeccapurple;
+            padding: 8px;
+            text-align: left;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1.2em;
+        }
+
+
+
+        /* BARRA DE PESQUISA */
+        #barra_pesquisa_container{
+            width: 100%;
+            height: 50px;
+            background-color: royalblue;
+            box-sizing: border-box;
+            padding: 9px;
+        }
+
+        #barra_pesquisa{
+            outline: none;
+            width: 100;
+            padding: 5px;
+            border: 0;
+            font-size: 1.2em;
+        }
+
+        #send_button{
+            padding: 5px;
+        }
+
+
+        /* LISTA DE REPOS. */
+
+        #repo_list{
+            width: 600px;
+            padding: 0;
+            border-radius: 20px 20px 0 0;
+            list-style-type: none;
+            background-color: royalblue;
+            float: left;
+            position: relative;
+            top: 0px;
+            
+        }
+
+        .repo_item{
+            font-family: Arial, Helvetica, sans-serif;
+            border-bottom: 2px solid red;
+            padding: 5px;
+        }
+
+        .repo_item a{
+            text-decoration: none;
+            display: block;
+            color: #fff;
+        }
+
+
+        .repo_item_name{
+            font-size: 2em;
+            color: aqua;   
+        }
+
+        .repo_item_license{
+            color: #fff;
+        }
+		
+		
+		
+		/* FOTO AVATAR */
+		
+		#userAvatar{
+			overflow: hidden;
+		}
+		
+		#userAvatar:hover{
+			transform: scale(1.2);
+		}
+
+
+    </style>
+</head>
+<body>
+
+    <div id="barra_pesquisa_container">
+        <input type="text" placeholder="Pesquisar" id="barra_pesquisa">
+        <input type="button" id="send_button" value="🔍" onclick="pesquisarUser()">
+    </div>
+    
+
+    <header>
+        <img width="150" height="150" style="border-radius: 20%;" id="userAvatar">
+        <table>
+            <tr>
+                <td>User</td>
+                <td id="userName">NOME!</td>
+            </tr>
+
+            <tr>
+                <td>Repos.</td>
+                <td id="reposCount">NUMERO!</td>
+            </tr>
+
+            <tr>
+                <td>URL</td>
+                <td><a href="" id="userLink" style="text-decoration: none;"></a></td>
+            </tr>
+        </table>
+
+
+        <ul id="repo_list">
+            
+        </ul>
+
+    </header>
+    
+    
+    
+
+    <script>
+
+        // HEADER 
+        var userAvatar  = document.getElementById("userAvatar");    // FOTO
+        var userName    = document.getElementById("userName");      // NOME
+        var reposCount  = document.getElementById("reposCount");    // Nº REPSOTORIOS
+        var userLink    = document.getElementById("userLink");      // LINK PARA O GITHUB
+
+        // LISTE DE REPOSITORIOS
+        var empty_repo = document.getElementById("repo_list").innerHTML;
+        var repo_list  = document.getElementById("repo_list");
+
+        var repo_item               = document.getElementsByClassName("repo_item");             // CONTAINER
+        var repo_item_name          = document.getElementsByClassName("repo_item_name");        // REP. NOME
+        var repo_item_description   = document.getElementsByClassName("repo_item_description"); // REP. DESCRIP.
+        var repo_item_lang          = document.getElementsByClassName("repo_item_lang");        // REP. LANG.
+        var repo_item_star          = document.getElementsByClassName("repo_item_star");        // REP. STARS
+        var repo_item_fork          = document.getElementsByClassName("repo_item_fork");        // REP. FORKS
+        var repo_item_issue         = document.getElementsByClassName("repo_item_issue");       // REP. ISSUES
+        var repo_item_license       = document.getElementsByClassName("repo_item_license");     // REP. LICENSE
+
+
+
+        var xhttp = new XMLHttpRequest();
+
+        var user_json;
+
+        function pesquisarUser(){
+            if (document.getElementById("barra_pesquisa").value.length > 0){
+                xhttp.onreadystatechange = function(){
+                    if (this.readyState == 4 && this.status == 200){
+                        console.log("SUCESSS!");
+                        
+                        // DISPLAY <header>
+                        document.getElementsByTagName("header")[0].style.display = "block"
+                        
+                        // GET JSON
+                        user_json = JSON.parse(this.response);
+
+                        // HEADER
+                        userAvatar.src = user_json[0].owner.avatar_url; // FOTO
+                        userName.innerText = user_json[0].owner.login;  // NOME
+                        reposCount.innerText = user_json.length;        // REPOS.
+                        userLink.innerText = user_json[0].owner.html_url; // link
+
+                        // LISTA DE REPOSITORIOS
+                        
+                        repo_list.innerHTML = "";
+
+                        for (let item = 0; item != user_json.length; item++){
+
+
+                            
+                            // ULTIMO ITEM DA LISTA
+                            if (item == 0 || item == (user_json.length-1)){
+                                
+                                console.log("FIM! = ", item);
+                                //repo_item[repo_item.length-1].style.borderBottom = "2px solid #00000000";
+
+                            }
+
+                            // SE TIVER LICENSE.
+                            if (!(user_json[item].license == null)){
+                                repo_list.innerHTML += `<li class="repo_item">`+
+                                `<a href="" class="repo_item_name" target="_new">Nome</a>`+
+                                `<div class="repo_item_description" target="_new">descrip.</div>`+
+                                `<a href="" class="repo_item_lang" target="_new">Lang: </a>`+
+
+                                `<a href="" class="repo_item_star" target="_new">stars:</a>`+
+                                `<a href="" class="repo_item_fork" target="_new">forks:</a>`+
+                                `<a href="" class="repo_item_issue" target="_new">issues:</a>`+
+                                `<div class="repo_item_license">license: ${user_json[item].license.spdx_id}</div>`+
+                                `</li>`;
+                                
+                                
+                            }
+                            else{
+                                repo_list.innerHTML += `<li class="repo_item">`+
+                                `<a href="" class="repo_item_name" target="_new">Nome</a>`+
+                                `<div class="repo_item_description" target="_new">descrip.</div>`+
+                                `<a href="" class="repo_item_lang" target="_new">Lang: </a>`+
+
+                                `<a href="" class="repo_item_star" target="_new">stars:</a>`+
+                                `<a href="" class="repo_item_fork" target="_new">forks:</a>`+
+                                `<a href="" class="repo_item_issue" target="_new">issues:</a>`+
+                                `</li>`;
+                            }
+
+                            
+
+
+                            
+
+                            // LISTAGEM NORMAL
+                            repo_item_name[item].innerText = user_json[item].name;
+                            repo_item_description[item].innerText = user_json[item].description;
+                            repo_item_lang[item].innerText = "Lang: " + ((user_json[item].language == null)?"":user_json[item].language);
+                            repo_item_star[item].innerText = "Star: " + user_json[item].stargazers_count;
+                            repo_item_fork[item].innerText = "Fork: " + user_json[item].forks_count;
+                            repo_item_issue[item].innerText = "Issues: " + user_json[item].open_issues_count;
+
+                            // LINKS ASSOCIADOS
+
+                            userLink.href = user_json[0].owner.html_url;
+
+                            repo_item_name[item].href = user_json[item].html_url;
+                            repo_item_star[item].href = user_json[item].html_url + "/stargazers";
+                            repo_item_fork[item].href = user_json[item].forks_url
+                            repo_item_issue[item].href = user_json[item].html_url + "/issues";
+
+                            
+
+                        }
+
+                    }
+                    else if (this.status == 404){
+                        console.log("user not found");
+                    }
+                };
+                
+                xhttp.open("GET", `https://api.github.com/users/${document.getElementById("barra_pesquisa").value}/repos`, true);
+                //xhttp.open("GET", "https://api.github.com/users/lucas458/repos", true);
+                //xhttp.open("GET", "https://api.github.com/users/youtube/repos", true);
+                xhttp.send();
+
+            }
+        }
+
+    </script>
+    
+</body>
+</html>

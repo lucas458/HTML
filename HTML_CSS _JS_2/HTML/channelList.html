@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canais</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            user-select: none;
+        }
+
+
+
+
+
+
+
+        #sort-type{
+            margin: 10px 8px;
+            padding: 2px;
+            border: 0;
+            background-color: #181818;
+            color: #fff;
+            outline: none;
+        }
+
+        
+
+
+
+
+
+
+
+
+        #container{
+            border-top: 2px solid #424242;
+        }
+
+
+        /* ITEM WRAPPER */
+        .item-wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            color: #fff;
+            transition: 500ms background-color;
+        }
+        .item-wrapper:active{
+            transition: none;
+            background-color: #424242;
+        }
+
+
+
+        /* LEFT CONTENT & BADGE */
+        .item-wrapper > div{
+            display: flex;
+            align-items: center;
+        }
+
+
+        /* LEFT CONTENT */
+        .item-wrapper .item-left{
+            word-break: break-all;
+        }
+        
+
+        /* IMAGE */
+        .item-wrapper .item-left img{
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+
+
+        /* BADGE */
+        .item-wrapper .item-badge{
+            white-space: nowrap;
+            margin: 0 5px;
+        }
+
+        /* NEW VIDEO */
+        .item-badge-new{
+            min-width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #007bff;
+        }
+
+        /* LIVE */
+        .item-badge-live{
+            color: #cd3545;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+    <select id="sort-type" onchange="selectSorted(this)">
+        <option value="A-Z" selected>A-Z</option>
+        <option value="NEWS">Nova atividade</option>
+
+
+    </select>
+
+    <div id="container">
+
+        <!-- ITEM -->
+        <!-- <div class="item-wrapper">
+            <div class="item-left">
+                <img src="https://dummyimage.com/256/256">
+                <div>title</div>
+            </div>
+            <div class="item-badge"></div>
+        </div> -->
+
+         
+
+
+    </div>
+
+
+    
+
+    <script>
+
+
+
+        var canais = [
+            {"title": "T3ddy", "new": false, "live": false, "img": "https://yt3.ggpht.com/wt4Vej4o0NpDH6OXwSk-L7TwzxPcB_2ml8Ycy1ongYVnHumD4eKgRj5SdB1zvvgyhtFT10Xwsw=s68-c-k-c0x00ffffff-no-rj"},
+            {"title": "ESPN Brasil", "new": false, "live": true, "img": "https://yt3.ggpht.com/ytc/AKedOLQ-uDjWFLVnZiGxQfWRsLH6aMDrZNbnnxTYtDJ9EpE=s68-c-k-c0x00ffffff-no-rj"},
+            {"title": "Mundo Desconhecido", "new": true, "live": false, "img": "https://yt3.ggpht.com/ytc/AKedOLTMkC6Mw2DDBKr9XLKasrc3eGv2qPXfwi6-VZrh-Q=s68-c-k-c0x00ffffff-no-rj"},
+            {"title": "BBC News Brasil", "new": false, "live": false,  "img": "https://yt3.ggpht.com/ytc/AKedOLSHZ4cwvhJrfPl2m7nOPujalJP811Q1lghY7qauYT0=s68-c-k-c0x00ffffff-no-rj"},
+            {"title": "Marvel Brasil", "new": true, "live": false,  "img": "https://yt3.ggpht.com/ytc/AKedOLRJFxojUGx7u06lBjilcCYrHQyLt9k678A5Uef2=s68-c-k-c0x00ffffff-no-rj"},
+            {"title": "Aviões e Músicas", "new": true, "live": false,  "img": "https://yt3.ggpht.com/9iQyyGoyciDF03vjXJ1eCaAMCn2X1__r1-ucPat7uzZFDRJChBUWwipWq2NbHQjWtGZ0iVq0=s68-c-k-c0x00ffffff-no-rj"}
+        ];
+
+
+
+
+
+
+
+        function showByName(){
+
+
+
+            let names = [];
+            for ( let x = 0; x < canais.length; x++ ){
+                names[x] = canais[x].title;
+            }
+            names.sort();
+
+
+
+            document.getElementById("container").innerHTML = '';
+            
+
+            for ( let x = 0; x < canais.length; x++ ){
+                for ( let y = 0; y < canais.length; y++ ){
+                    if ( canais[y].title == names[x] ){
+                        console.log( canais[y].title );
+                        let item = document.createElement("div");
+                        item.classList.add("item-wrapper");
+                        // LIVE
+                        if ( canais[y].live ){
+                            item.innerHTML = `<div class="item-left"><img src="${canais[y].img}"><div>${canais[y].title}</div></div><div class="item-badge item-badge-live">AO VIVO</div>`;
+                        }
+                        // NOVO VIDEO
+                        else if ( canais[y].new ){
+                            item.innerHTML = `<div class="item-left"><img src="${canais[y].img}"><div>${canais[y].title}</div></div><div class="item-badge item-badge-new"></div>`;
+                        }
+                        // VAZIO
+                        else{
+                            item.innerHTML = `<div class="item-left"><img src="${canais[y].img}"><div>${canais[y].title}</div></div><div class="item-badge"></div>`;
+                        }
+                        document.getElementById("container").appendChild(item);
+
+                    }
+                }
+            }
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function showByActivity(){
+
+            let names = [];
+            let namesActivity = [];
+            for ( let x = 0; x < canais.length; x++ ){
+                // NOVO ou LIVE
+                if ( canais[x].new || canais[x].live ){
+                    namesActivity[x] = canais[x].title;
+                }
+                else{
+                    names[x] = canais[x].title;
+                }
+
+            }
+            names.sort();
+            namesActivity.sort();
+
+
+
+
+
+            document.getElementById("container").innerHTML = '';
+
+
+
+            // NOVO ou LIVE
+            for ( let x = 0; x < canais.length; x++ ){
+                for ( let y = 0; y < canais.length; y++ ){
+                    if ( canais[y].title == namesActivity[x] ){
+                        console.log( canais[y].title );
+                        let item = document.createElement("div");
+                        item.classList.add("item-wrapper");
+                        // LIVE
+                        if ( canais[y].live ){
+                            item.innerHTML = `<div class="item-left"><img src="${canais[y].img}"><div>${canais[y].title}</div></div><div class="item-badge item-badge-live">AO VIVO</div>`;
+                        }
+                        // NOVO VIDEO
+                        else if ( canais[y].new ){
+                            item.innerHTML = `<div class="item-left"><img src="${canais[y].img}"><div>${canais[y].title}</div></div><div class="item-badge item-badge-new"></div>`;
+                        }
+                        document.getElementById("container").appendChild(item);
+
+                    }
+                }
+            }
+            
+
+
+            // NORMAL
+            for ( let x = 0; x < canais.length; x++ ){
+                for ( let y = 0; y < canais.length; y++ ){
+                    if ( canais[y].title == names[x] ){
+                        console.log( canais[y].title );
+                        let item = document.createElement("div");
+                        item.classList.add("item-wrapper");
+                        item.innerHTML = `<div class="item-left"><img src="${canais[y].img}"><div>${canais[y].title}</div></div><div class="item-badge"></div>`;
+                        document.getElementById("container").appendChild(item);
+
+                    }
+                }
+            }
+
+ 
+
+
+        }
+
+
+
+
+
+
+
+
+        showByName();
+        //showByActivity();
+
+
+
+
+
+        function selectSorted( el ){
+
+            switch (el.selectedIndex) {
+                case 0:
+                    showByName();
+                    break;
+            
+                case 1:
+                    showByActivity();
+                    break;
+            }
+
+        }
+
+
+
+
+
+    </script>
+
+</body>
+</html>

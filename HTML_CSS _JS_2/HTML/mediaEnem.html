@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcularora de Média</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+ 
+        header{
+            position: sticky;
+            top: 0;
+            display: flex;
+            align-items: center;
+            padding: 15px 10px;
+            background-color: #212121;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+
+        .input-container{
+            display: flex;
+            height: 30px;
+            margin: 14px 8px;
+        }
+
+
+        .input-container input{
+            border: 0;
+            width: 100%;
+            outline: none;
+            padding: 0 5px 0 10px;
+            border-radius: 25px 0 0 25px;
+        }
+
+
+        .input-container div{
+            border-radius: 0 25px 25px 0;
+            background-color: #fff;
+            min-width: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+
+ 
+        .controls{
+            justify-content: space-between;
+        }
+        .controls > div{
+            width: 100%;
+            height: 32px;
+            margin: 0 5px;
+            border-radius: 25px;
+        }
+        #screen-main .controls > div:first-child{
+            background-color: #dc3545;
+        }
+        #screen-main .controls > div:last-child{
+            background-color: #28a745;
+        }
+        
+
+
+ 
+        #tela2{
+            width: 100%;
+            height: 100%;
+            transition: 200ms;
+            z-index: 1;
+            position: fixed;
+            top: 0;
+            left: -101%;
+            background-color: #212121db;
+            overflow: auto;
+            backdrop-filter: blur(2px);
+        }
+ 
+
+        #closeResult{
+            text-align: end;
+            min-width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 500ms;
+        }
+        #closeResult:active{
+            background-color: #424242;
+            transition: 200ms;
+        }
+
+
+        .statistic{
+            padding: 10px 10px 10px 20px;
+            display: flex;
+            align-items: center;
+        }
+        .statistic::after{
+            content: '';
+            display: none;
+            background-color: #000;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 16px;
+            position: absolute;
+            left: 0;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+
+        /* HOVER TOOLTIPs */
+        #tela2 .statistic:nth-child(2):active::after{
+            content: 'Linguagens, Códigos e suas Tecnologias';
+            display: block;
+        }
+        #tela2 .statistic:nth-child(3):active::after{
+            content: 'Ciências Humanas e suas Tecnologias';
+            display: block;
+        }
+        #tela2 .statistic:nth-child(4):active::after{
+            content: 'Ciências da Natureza e suas Tecnologias';
+            display: block;
+        }
+        #tela2 .statistic:nth-child(5):active::after{
+            content: 'Matemática e suas Tecnologias';
+            display: block;
+        }
+        #tela2 .statistic:nth-child(6):active::after{
+            content: 'Redação';
+            display: block;
+        }
+ 
+
+        .progress{
+            width: 100%;
+            background-color: #616161;
+        }
+
+
+        .fill{
+            width: 0%;
+            height: 24px;
+            background-color: #28a745;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            transition: 200ms;
+        }
+
+ 
+        .percent{
+            background-color: #616161;
+            color: #fafafa;
+            padding: 4px;
+            border-radius: 5px;
+            margin-left: 5px;
+            width: 60px;
+            text-align: end;
+        }
+
+ 
+        #media-container{
+            padding: 10px 15px;
+        }
+        #media-value{
+            padding: 5px;
+            background-color: #616161;
+            border-radius: 5px;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+ 
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+
+    <div id="app">
+
+
+        <!-- MAIN -->
+        <div class="screen" id="screen-main">
+
+            <header>
+                <div>Calcuar Média ENEM</div>
+            </header>
+
+
+
+            <div class="content-input" id="tela1">
+
+
+                <div class="input-container input-number">
+                    <input type="number" class="input-element" placeholder="Linguagens, Códigos e suas Tecnologias">
+                    <div>X</div>
+                </div>
+
+                <div class="input-container input-number">
+                    <input type="number" class="input-element" placeholder="Ciências Humanas e suas Tecnologias">
+                    <div>X</div>
+                </div>
+
+                <div class="input-container input-number">
+                    <input type="number" class="input-element" placeholder="Ciências da Natureza e suas Tecnologias">
+                    <div>X</div>
+                </div>
+
+                <div class="input-container input-number">
+                    <input type="number" class="input-element" placeholder="Matemática e suas Tecnologias">
+                    <div>X</div>
+                </div>
+
+                <div class="input-container input-number">
+                    <input type="number" class="input-element" placeholder="Redação">
+                    <div>X</div>
+                </div>
+
+
+                <!-- CONTROLS -->
+                <div class="input-container controls">
+                    <div onclick="clearInputs()">LIMPAR</div>
+                    <div onclick="calc()">CALCULAR</div>
+                </div>
+
+
+            </div>
+
+
+
+
+
+            <div class="content-result" id="tela2">
+
+                <header>
+                    <div style="width: 100%;">RESULTADO</div>
+                    <div id="closeResult" onclick="tela2(false)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+                            <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+                        </svg>
+                    </div>
+                </header>
+
+
+
+                <!-- PROGRESS -->
+                <div class="statistic">
+                    <div class="progress">
+                        <div class="fill">0</div>
+                    </div>
+                    <div class="percent">0%</div>
+                </div>
+
+                <!-- PROGRESS -->
+                <div class="statistic">
+                    <div class="progress">
+                        <div class="fill">0</div>
+                    </div>
+                    <div class="percent">0%</div>
+                </div>
+
+                <!-- PROGRESS -->
+                <div class="statistic">
+                    <div class="progress">
+                        <div class="fill">0</div>
+                    </div>
+                    <div class="percent">0%</div>
+                </div>
+
+                <!-- PROGRESS -->
+                <div class="statistic">
+                    <div class="progress">
+                        <div class="fill">0</div>
+                    </div>
+                    <div class="percent">0%</div>
+                </div>
+
+                <!-- PROGRESS -->
+                <div class="statistic">
+                    <div class="progress">
+                        <div class="fill">0</div>
+                    </div>
+                    <div class="percent">0%</div>
+                </div>
+
+                <div id="media-container">MÉDIA <span id="media-value">0</span> </div>
+
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+          
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+    
+    <script>
+
+
+
+        var inputs = document.getElementsByClassName("input-element");
+		var input_number = document.getElementsByClassName("input-number");
+
+
+        for ( let x = 0; x < inputs.length; x++ ){
+
+            inputs[x].addEventListener("input", function(){
+
+                if ( this.value > 1000 ){
+                    this.value = 1000;
+                }
+
+                if ( this.value < 0 ){
+                    this.value = Math.abs( this.value );
+                }
+	
+	
+				
+				
+                input_number[x].children[1].style.backgroundColor = (this.value.length > 0)? "#f00" : "#fff"; 
+                input_number[x].children[1].addEventListener("click", function(){
+                    inputs[x].value = '';
+                    input_number[x].children[1].style.backgroundColor = "#fff";
+                });
+
+
+            });
+
+        }
+
+
+
+
+
+
+
+
+        function clearInputs(){
+            for ( let x = 0; x < inputs.length; x++ ){
+                inputs[x].value = '';
+                input_number[x].children[1].style.backgroundColor = "#fff";
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+        function calc(){
+
+            for ( let x = 0; x < inputs.length; x++ ){
+                if ( inputs[x].value.length <= 0 ){
+                    console.log( "campo [" + (x+1) + "] está vazio" );
+                    inputs[x].value = '';
+                    return;
+                }
+            }
+
+
+
+            let media = 0;
+
+            for ( let x = 0; x < inputs.length; x++ ){
+                media += inputs[x].value - 0;
+            }
+            media /= 5;
+            media = media.toFixed(1) - 0;
+
+            document.getElementById("media-value").innerText = media;
+            let statistic = document.getElementsByClassName("statistic");
+
+            for ( let i = 0; i < 5; i++ ){
+                statistic[i].children[0].children[0].innerText = '0';
+                statistic[i].children[0].children[0].style.width = `0%`;
+                statistic[i].children[1].innerText = `0%`;
+
+                setTimeout(function(){
+                    statistic[i].children[0].children[0].innerText = inputs[i].value;
+                    statistic[i].children[0].children[0].style.width = `${parseInt(inputs[i].value/10)}%`;
+                    statistic[i].children[1].innerText = `${parseInt(inputs[i].value/10)}%`;
+                }, 100*(i+1));
+                
+            }
+
+            console.log(media);
+
+            tela2(true);
+
+        }
+
+ 
+        function tela2( state ){
+            let tela2 = document.getElementById("tela2");
+			tela2.style.left = (state)? 0 : '-101%';
+        }
+
+
+
+
+    </script>
+
+</body>
+</html>
