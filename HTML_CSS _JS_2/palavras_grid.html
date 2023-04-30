@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+
+
+        #game-area, #list-letter{
+            width: 240px;
+            height: 240px;
+            background-color: red;
+            position: fixed;
+            margin: auto;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+
+            
+        }
+
+
+
+        .box{
+              
+            padding: 4px;
+
+            width: 24px;
+            height: 24px;
+            
+            background-color: #212121;
+            border: 1px solid #fff;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .box:hover{
+            background-color: #007bff;
+        }
+
+
+
+ 
+
+
+    </style>
+
+
+
+
+</head>
+
+
+ 
+
+
+    <div id="game-area">
+
+
+        <div id="list-letter">
+            <!-- <div class="box">A</div> -->
+        </div>
+
+
+        <div id="list-marker">
+            <div class="marker"></div>
+        </div>
+        
+       
+
+    </div>
+
+ 
+
+    <script>
+
+        var GAME_AREA = document.getElementById("game-area");
+
+
+
+
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+ 
+        
+        function gen_grid(){
+
+            GAME_AREA.querySelector("#list-letter").innerHTML = '';
+
+            let index = 0;
+
+            for (let i = 0; i < 10*10; i++){
+                let box = document.createElement("div");
+                box.classList.add("box");
+
+                let letter = getRandomInt(65, 91);
+                letter = String.fromCharCode(letter);
+
+                box.innerText = letter;
+
+                GAME_AREA.querySelector("#list-letter").appendChild(box);
+            }
+
+
+
+
+
+
+        }
+
+        gen_grid();
+
+
+    </script>
+
+
+
+
+
+
+<body>
+    
+</body>
+</html>

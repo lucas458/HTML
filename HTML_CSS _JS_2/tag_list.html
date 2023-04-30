@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAGs</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+
+        .ui-chip input{
+            display: none;
+        }
+
+        .ui-chip div{
+            background-color: inherit;
+            width: fit-content;
+            padding: 5px 10px;
+            border-radius: 25px;
+            border: 1px solid #007bff;
+            color: #007bff;
+        }
+
+        .ui-chip input:checked ~ div{
+            background-color: #007bff;
+            color: #fff; 
+        }
+
+
+
+
+
+        #tag-list,
+        #content{
+            padding: 8px;
+        }
+
+        #tag-list{
+            display: flex;
+            border-bottom: 1px solid #9e9e9e;
+            flex-wrap: wrap;
+        }
+
+        #tag-list > *{
+            margin: 4px;
+        }
+
+
+
+        .item{
+            background-color: #212121;
+            color: #9e9e9e;
+            padding: 5px 10px;
+            /* border-bottom: 1px solid #fff; */
+            transition: 200ms;
+        }
+
+        .item:hover{
+            background-color: #353535;
+            color: #fafafa;
+        }
+
+
+        .item::after{
+            content: '';
+            width: 100%;
+            height: 1px;
+            background-color: #fff;
+            display: block;
+        }
+
+
+        .item:first-child{
+            border-radius: 10px 10px 0 0;
+        }
+
+        .item:last-child{
+            border-bottom: none;
+            border-radius: 0 0 10px 10px;
+        }
+
+
+
+
+
+
+        .itemBlur{
+            filter: blur(1px);
+        }
+
+
+        .tagFocus > div{
+            background-color: #28a745 !important;
+            border-color: #28a745 !important;
+            color: #fff !important;
+        }
+
+ 
+
+    </style>
+    
+</head>
+
+
+
+<body>
+    
+
+
+
+    <div id="tag-list">
+
+
+        <!-- <label class="ui-chip">
+            <input type="checkbox">
+            <div>comida</div>
+        </label> -->
+
+    </div>
+
+
+
+    <div id="content">
+        <!-- <div class="item" tags="comida">uva</div>
+        <div class="item" tags="comida">uva</div> -->
+    </div>
+
+
+
+
+
+
+    <script>
+
+
+        // LISTA DE ITEMS 
+        var LIST_ITEMS = [
+
+            {
+                'title': 'uva',                 // TITULO DO ITEM
+                'tags': ['comida', 'fruta']     // LISTA DE TAGS DESSE ITEM
+            },
+
+            {
+                'title': 'banana',
+                'tags': ['comida', 'fruta']
+            },
+
+            {
+                'title': 'celular',
+                'tags': ['objeto']
+            },
+
+            {
+                'title': 'carro',
+                'tags': ['objeto', 'veiculo']
+            },
+
+
+        ];
+
+
+        
+
+        
+
+        function gerarTags(){
+
+            
+
+            let tempTags = [];
+
+            document.getElementById("tag-list").innerHTML = '';
+
+            
+
+            for (let index = 0; index < LIST_ITEMS.length; index++){
+                
+                
+
+                for (let tagIndex = 0; tagIndex < LIST_ITEMS[index].tags.length; tagIndex++){
+
+                    if ( tempTags.indexOf(LIST_ITEMS[index].tags[tagIndex]) < 0 ){
+                        tempTags.push( LIST_ITEMS[index].tags[tagIndex] );
+                        console.log("ADD TAG", tempTags[ tempTags.length - 1 ] );
+
+                        let tagButton = document.createElement("label");
+                        tagButton.classList.add("ui-chip");
+
+                        tagButton.innerHTML = `
+                        <input type="checkbox">
+                        <div>${LIST_ITEMS[index].tags[tagIndex]}</div>
+                        `;
+
+                        document.getElementById("tag-list").appendChild(tagButton);
+
+
+                            
+
+                        tagButton.querySelector("input").addEventListener("change", ()=>{
+
+                            console.log("changed");
+
+                            gerarLista();
+
+
+
+
+                        });
+
+
+
+                    }
+                }
+
+
+            }
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function onMouseOverItem( index ){
+            console.log("ENTER: ", index);
+
+
+
+
+            let tags = [];
+
+            // QUANTIDADE DE ITEMS
+            let sizeItems = document.querySelectorAll('#content > .item').length;
+
+            // QUANTIDADE DE BOTOES (TAG)
+            let sizeTags = document.querySelectorAll('#tag-list > *').length;
+
+            
+            for (let i = 0; i < sizeItems; i++){
+
+                // CAPTURAR TAGs DO ITEM >> SELECIONADO (1)
+                if ( i == index ){
+                    tags = document.querySelectorAll('#content > .item')[index].title.split("TAGs:")[1].split(',');
+                }
+                
+                // COLOCAR BLUR NOS ITEM >> NÂO SELECIONADOS
+                else{
+                    document.querySelectorAll('#content > .item')[i].classList.add("itemBlur");
+                }
+            }
+
+
+
+            
+
+            // LAÇO NO ARRAY 'tags' (1)
+            for (let i = 0; i < tags.length; i++){
+
+                // LAÇO NOS BOTOES (TAG)
+                for (let j = 0; j < sizeTags; j++){
+
+                    // VERIFICA SE O ITEM TEM A TAG NA LISTA DE BOTOES e COLOCA NA COR VERDE À CADA ITEM ENCONTRADO
+                    if ( tags[i].trim() == document.querySelectorAll('#tag-list > *')[j].children[1].innerText ){
+                        document.querySelectorAll('#tag-list > *')[j].classList.add("tagFocus");
+                        console.log( tags[i].trim() );
+                    }
+
+                }
+
+            }
+        }
+
+
+
+        // TIROU MOUSE DO ITEM
+        function onMouseOutItem(){
+            console.log("EXIT");
+
+            // REMOVER 'VERDE' DA TAG
+            document.querySelectorAll(".tagFocus").forEach(e=>{e.classList.remove("tagFocus");});
+
+            // REMOVER BLUER
+            document.querySelectorAll(".itemBlur").forEach(e=>{e.classList.remove("itemBlur");});
+
+
+
+        }
+
+
+
+
+        // ADICIONAR ITEM
+        function addItem( title, tags ){
+
+
+            let item = document.createElement("div");   // CRIAR DIV
+            item.classList.add("item");                 // ADD CLASSE
+
+            item.title = 'TAGs: ' + tags.join(', ');    // TITULO -- EFEITO DE TEXTO QUANDO PASSAR O MOUSE EM CIMA
+            item.innerText = title;                     // CONTEUDO DO ITEM
+
+            document.getElementById("content").appendChild(item);   // ADCIONAR ITEM PARA À LISTA
+
+
+            let idx = document.getElementById("content").children.length - 1;   // ISSO É PARA SABER QUAL O INDEX QUE O MOUSE ESTA EM CIMA
+
+
+            // MOUSE ENTROU?
+            item.addEventListener("mouseover", ()=>{
+                onMouseOverItem(idx);       // EVENTO + INDEX DO ITEM QUE O MOUSE ENTROU
+            });
+
+            // MOUSE SAIU?
+            item.addEventListener("mouseout", ()=>{
+                onMouseOutItem();
+            });
+
+        }
+
+
+
+
+
+
+        function gerarLista(){
+
+
+
+
+
+            // JOGA UMA CÓPIA DA VARIABEL 'LIST_ITEMS'
+            let tempLista = Object.assign({}, LIST_ITEMS);
+
+            // ORGANIZAR EM A-Z
+            tempLista = LIST_ITEMS.sort((a, b)=>{
+                if (a.title > b.title) return 1;
+                if (a.title < b.title) return -1;
+                return 0;
+            });
+
+            // LIMPA A LISTA DE ITEMS ANTES DE COLOCAR NOVOS
+            document.getElementById("content").innerHTML = '';
+
+
+            // TAGS ARRAY
+            let filterTag = [];
+
+            // VERIFICA QUAL BOTAO (TAG) ESTA SELECIONADO e ADICIONA AO ARRAY 'filterTag'
+            document.querySelectorAll(".ui-chip > input").forEach((e, i)=>{
+                if ( e.checked ){
+                    filterTag.push( e.parentNode.children[1].innerText );
+                }
+            });
+
+
+
+            // CASO O ARRAY 'filterTag' ESTIVER VÁZIO >> MOSTRAR TODOS OS ITENS
+            if ( filterTag.length <= 0 ){
+
+                tempLista.forEach((e, i)=>{
+                    addItem(e.title, e.tags);
+                });
+
+
+            }
+
+
+            // CASO O ARRAY 'filterTag' NÃO ESTIVER VÁZIO >> MOSTRAR DE ACORDO COM AS TAGs
+            else{
+
+                console.log("SHOW BY TAG");
+
+                // LAÇO EM TODOS OS ITEMS (x)
+                for (let index = 0; index < tempLista.length; index++){
+
+                    // LAÇO EM TODAS AS TAGS
+                    for (let tagIndex = 0; tagIndex < tempLista[index].tags.length; tagIndex++){
+
+                        // SE A TAG DO ITEM FOR IGUAL A TAG do BOTAO (TAG) >> ADCIONAR O ITEM DA UM "BREAK" PARA FORÇAR ATE (x)
+                        if ( filterTag.indexOf(tempLista[index].tags[tagIndex]) >= 0 ){
+                            console.log("FOUND --", tempLista[index].title);
+                            addItem(tempLista[index].title, tempLista[index].tags);
+                            break;
+                        }
+
+                    }
+
+                }
+
+            }
+
+
+        }
+
+
+
+        // GERAR LISTA DE BOTOES (TAG)
+        gerarTags();
+
+        // GERAR LISTA DE ITENS
+        gerarLista();
+
+
+
+
+
+    </script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Quiz</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*** MODAL ***/
+        .modal{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            display: none;
+        }
+
+        .modal-window{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .modal-screenOut{
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+
+        .modal-container{
+            width: 75%;
+            max-width: 320px;
+            height: 30%;
+            max-height: 150px;
+            transform: scale(0);
+            transition: 250ms;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            
+        }
+
+        
+
+        .modal-header{
+            font-weight: bold;
+            border-radius: 8px 8px 0 0;
+            padding: 8px;
+        }
+
+        .modal-content{
+            font-size: 0.8em; 
+            height: 100%;
+            border-radius: 0 0 8px 8px;
+            padding: 8px; 
+        }
+
+        .modal-header,
+        .modal-content{
+            background-color: #6c757d;
+        }
+
+
+        .modal-footer{
+            padding: 0 !important;
+        }
+
+
+        .modal-controls{
+            margin-top: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal-action{
+            padding: 5px;
+            border-radius: 25px;
+            color: #fff;
+            border: none;
+            flex: 1;
+            margin-right: 4px;
+            min-width: fit-content;
+            display: flex;
+            justify-content: center;
+            
+        }
+        .modal-action:last-child{
+            margin-right: 0;
+        }
+
+         
+        .modal-action-icon{
+            display: flex;
+        }
+
+        .modal-action-false{
+            background-color: #dc3545;
+        }
+        .modal-action-true{
+            background-color: #28a745;
+        }
+
+
+
+
+
+
+
+
+
+        .resultado-wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 1.2em;
+        }
+
+        .resultado-wrapper:first-child{
+            margin-top: 8px;
+        }
+ 
+
+         
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*** ACTIONSHEET ***/
+        .actionsheet{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+        }
+
+        .actionsheet-window{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .actionsheet-screenOut{
+            height: 100%;
+           
+        }
+
+
+        .actionsheet-container{
+            padding: 8px;
+            transition: 250ms;
+            transform: translateY(100%);
+        }
+
+        .actionsheet-action-list{
+            margin-top: 8px;
+            background-color: #263238;
+            border-radius: 8px;
+            box-shadow: 0 0 5px 0 #000;
+            overflow: hidden;
+        }
+
+        .actionsheet-action{
+            padding: 8px;
+            text-align: center;
+            border-bottom: 1px solid #455a64;
+        }
+        .actionsheet-action:last-child{
+            border: none;
+        }
+
+        .actionsheet-action:active{
+            background-color: #37474f;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .head-button{
+            width: 32px;
+            height: 32px;
+            border: 2px solid #fff;
+            background-color: #455a64;
+            color: #fff;
+            border-radius: 8px;
+            padding: 0;
+        }
+        .head-button:active{
+            background-color: #263238;
+        }
+
+
+
+
+        .screen{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            background-color: #334a57;
+        }
+
+        .screen-header{
+            padding: 8px;
+            font-size: 1.2em;
+        }
+
+        .screen-content{
+            height: 100%;
+            padding: 8px;
+        }
+        .content-scroll{
+            overflow: auto;
+        }
+
+
+
+
+
+        #tela-menu{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        #tela-menu > button{
+            padding: 8px 10px;
+            width: 50%;
+            min-width: fit-content;
+            max-width: 320px;
+            border: none;
+            border-radius: 8px;
+            background-color: #f6af38;
+            color: #5c380e;
+            font-weight: bold;
+            font-size: 1.2em;
+            transition: 250ms;
+            box-shadow: 0 0 5px 0 #000;
+        }
+        #tela-menu > button:active{
+            transform: scale(.9);
+        }
+
+
+
+
+
+
+
+
+
+
+        /* TEMAS */
+        #tela-temas{
+            display: flex;
+            flex-direction: column;
+
+            display: flex;
+            transform-origin: left top;
+            transition: 1s;
+            transition-timing-function: cubic-bezier(0.98, -0.79, 0.19, 1.63);
+            transform: rotate(0deg);
+            transform: rotate(91deg);
+        }
+
+        #tela-temas > .screen-header{
+            display: flex;
+            align-items: center;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+        #tela-temas .head-button{
+            margin-right: 8px;
+        }
+        
+
+
+
+
+
+
+
+        /* ITEM TEMA */
+        .item-tema{
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 8px;
+            background-color: #455a64;
+            border-radius: 8px;
+            font-size: 1em;
+            border: 2px solid #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-tema-column{
+            overflow: hidden;
+        }
+        .item-tema-column:first-child{
+            flex: 1;
+            text-align: left;
+        }
+
+        .item-tema-label{
+            white-space: nowrap;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .item-tema-infos{
+            font-size: 0.8em;
+        }
+
+
+        .item-tema-infos{
+            display: flex;
+        }
+
+        .item-tema-infos > div{
+            padding: 4px;
+            background-color: #37474f;
+            color: #dddddd;
+            width: fit-content;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+
+
+
+
+        .item-tema-option{
+            min-width: 24px;
+            height: 24px; 
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            margin-left: 8px;
+        }
+        .item-tema-option:active{
+            background-color: #37474f;
+        }
+
+
+
+
+
+        #tela-temas .screen-footer button{
+            width: 100%;
+            border: none;
+            padding: 16px 0;
+            background-color: #388e3c;
+            color: #111111;
+            font-weight: bold;
+            box-shadow: 0 0 5px 0 #000;
+        }
+        #tela-temas .screen-footer button:active{
+            background-color: #28a745;
+        }
+
+
+
+
+
+
+
+
+
+        /*** TELA JOGO ***/
+        #tela-jogo{
+            transform: translateY(100%);
+            transition: 250ms;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #modal-pause .modal-header{
+            text-align: center;
+            display: flex;
+            align-items: center;
+        }
+
+        #modal-pause .modal-header::before,
+        #modal-pause .modal-header::after{
+            content: '';
+            display: block;
+            width: 100%;
+            height: 2px;
+            margin: 0 3px;
+            background-color: #263238;
+        }
+
+        #game-time{
+            text-align: center;
+            padding-top: 8px;
+        }
+
+        .modal-menu-action{
+            padding: 8px;
+            background-color: #37474f;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            text-align: center;
+            width: 100%;
+            border: none;
+            color: #fff;
+        }
+        .modal-menu-action:active{
+            background-color: #263238;
+        }
+
+        .modal-action-true:active{
+            background-color: #1b5e20;
+        }
+        .modal-action-false:active{
+            background-color: #9b2530;
+        }
+
+
+
+
+
+
+
+
+
+
+        #quiz-wrapper{
+            display: flex;
+            flex-direction: column; 
+            border-radius: 8px; 
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+        #quiz-wrapper > div{
+            padding: 8px;
+        }
+
+ 
+        .quiz-content{
+            height: 100%;
+            padding-top: 0 !important;
+        }
+
+        .quiz-footer{
+            background-color: #263238;
+        }   
+
+
+
+        .quiz-option{
+            width: 100%;
+            display: block;
+            padding: 8px;
+            text-align: left;
+            border: 2px solid #78909c;
+            background-color: #37474f;
+            color: #fff;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            transition: 150ms;
+        }
+
+        .quiz-option:active{
+            transform: scale(1.05);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+
+    
+
+
+
+
+
+    
+
+
+    
+
+
+    
+
+
+
+    <!-- TELA -- MENU -->
+    <div class="screen" id="tela-menu" style="display: flex;">
+        <button onclick="toggleScreenTemas(true)">JOGAR</button>
+    </div>
+
+
+
+
+    <!-- TELA -- LISTA TEMAS -->
+    <div class="screen" id="tela-temas" style="display: flex;">
+
+        <!-- HEADER -->
+        <div class="screen-header">
+            
+            <button class="head-button" onclick="toggleScreenTemas(false)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                    <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z"/>
+                </svg>
+            </button>
+
+            <div>TEMAS</div>
+
+        </div>
+
+        <!-- CONTENT -->
+        <div class="screen-content content-scroll">
+
+            <!-- LISTA -->
+            <div id="list-temas">
+
+                <!-- ITEM -->
+                <!-- <button class="item-tema">
+                    <div class="item-tema-column">
+                        <div class="item-tema-label">Nome do tema</div>
+                        <div class="item-tema-infos">
+                            <div class="item-tema-time">00:00</div>
+                            <div class="item-tema-win_total">0/2</div>
+                        </div>
+                    </div>
+
+                    <div class="item-tema-column">
+                        <div class="item-tema-option">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </button> -->
+
+
+            </div>
+
+        </div>
+        
+
+        <!-- FOOTER -->
+        <div class="screen-footer">
+            <button>TEMA ALEATÓRIO</button>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- TELA -- JOGO -->
+    <div class="screen" id="tela-jogo">
+        
+        <!-- HEADER -->
+        <div class="screen-header">
+            <button class="head-button" onclick="onClickPause()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+                </svg>
+            </button>
+
+            <div id="game-time">0:00</div>
+            
+        </div>
+
+
+        <!-- CONTENT -->
+        <div class="screen-content">
+
+            <!-- LISTA -->
+            <div id="quiz-wrapper">
+
+                
+                <div class="quiz-header"></div>
+
+                <div class="quiz-content" id="quiz-item-list">
+                    <!-- <button class="quiz-option">opção fica aqui</button> -->
+                </div>
+                
+                <div class="quiz-footer"> <span>1</span>/<span style="font-size: small;">1</span> </div>
+
+            </div>
+
+        </div>
+
+
+    </div> 
+    
+
+
+
+
+
+
+
+    <!-- MODAL -- PAUSE -->
+    <div class="modal" id="modal-pause">
+
+        <div class="modal-window">
+            <div class="modal-screenOut"></div>
+
+            <div class="modal-container">
+                <div class="modal-header">MENU</div>
+
+                <div class="modal-content">
+                    <button class="modal-menu-action" onclick="onClickMenuContinue()">CONTINUAR</button>
+                    <button class="modal-menu-action" onclick="setModalConfirm('REINICIAR', 'Reiniciar a partida?', onClickMenuRestart)">REINICIAR</button>
+                    <button class="modal-menu-action" onclick="setModalConfirm('SAIR', 'Sair da partida?', onClickMenuExit)">SAIR</button>
+                </div>
+                 
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+    <!-- ACTIONSHEET -->
+    <div class="actionsheet" id="actionsheet-main">
+
+
+        <div class="actionsheet-window">
+
+            <div class="actionsheet-screenOut" onclick="toggleActionsheet('actionsheet-main', false)"></div>
+            <div class="actionsheet-container">
+
+                <div class="actionsheet-action-list">
+                    <div class="actionsheet-action" onclick="setModalConfirm('Resetar', 'Resetar tema?', onClickItemReset)">Resetar Tema</div>
+                    <div class="actionsheet-action">Estatísticas</div>
+                </div>
+
+                <div class="actionsheet-action-list">
+                    <div class="actionsheet-action" style="color: #ff6666;" onclick="toggleActionsheet('actionsheet-main', false)">Fechar</div> 
+                </div>
+
+            </div> 
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+    
+    <!-- MODAL -- CONFIRM -->
+    <div class="modal" id="modal-confirm">
+
+        <div class="modal-window">
+            <div class="modal-screenOut"></div>
+
+            <div class="modal-container">
+                <div class="modal-header">Resetar</div>
+                <div class="modal-content">Gostaria de resetar o tema?</div>
+                <div class="modal-footer">
+
+                    <div class="modal-controls">
+
+                        <button class="modal-action modal-action-false" onclick="toggleModal('modal-confirm', false)">
+                            <div class="modal-action-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                                </svg>
+                            </div>
+                        </button>
+ 
+                        <button class="modal-action modal-action-true">
+                            <div class="modal-action-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                                </svg>
+                            </div>
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+    <!-- MODAL -- END GAME -->
+    <div class="modal" id="modal-end">
+
+        <div class="modal-window">
+            <div class="modal-screenOut"></div>
+
+            <div class="modal-container">
+                <div class="modal-header">Resultado</div>
+
+                <div class="modal-content">
+
+                    <!-- RESULT -->
+                    <div class="resultado-wrapper">
+                        <div class="resultado-label">ACERTOS</div> 
+                        <div class="resultado-value">99</div>
+                    </div>
+
+                    <!-- RESULT -->
+                    <div class="resultado-wrapper">
+                        <div class="resultado-label">ERROS</div> 
+                        <div class="resultado-value">99</div>
+                    </div>
+
+                    <!-- RESULT -->
+                    <div class="resultado-wrapper">
+                        <div class="resultado-label">TEMPO</div> 
+                        <div class="resultado-value">59:59</div>
+                    </div> 
+
+                </div>
+                
+
+                <div class="modal-footer">
+
+                    <div class="modal-controls">
+                        <button class="modal-action modal-action-true" onclick="onClickBack()">VOLTAR</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    
+
+
+    
+
+
+
+    
+     
+
+
+
+
+
+
+    <script>
+
+
+
+
+        var LISTA_TEMAS = [
+
+
+            // TEMA
+            {
+                'name': 'tema1',
+                'bestTime': 0,
+                'won': 0,
+                'quiz_list': [
+
+
+                    {
+                        'ask': 'pergunta1',
+                        'won_id': 0,
+                        'options': [
+                            {'id': 0, 'label': 'item 1'},
+                            {'id': 1, 'label': 'item 2'},
+                            {'id': 2, 'label': 'item 3'},
+                            {'id': 3, 'label': 'item 4'}
+                        ]
+                    },
+
+                    {
+                        'ask': 'pergunta2',
+                        'won_id': 2,
+                        'options': [
+                            {'id': 0, 'label': 'item 1'},
+                            {'id': 1, 'label': 'item 2'},
+                            {'id': 2, 'label': 'item 3'},
+                            {'id': 3, 'label': 'item 4'}
+                        ]
+                    }
+
+                ]
+            },
+
+
+        ];
+
+
+        
+
+        let tempWon = 0;
+        let tempIndexTema = -1;
+
+        var game_tema_index = -1;
+        var game_ask_index  = 0;
+
+
+        
+        var time_counter = 0;
+        var time_active  = false;
+
+        var last_timestamp = 0;
+        var deltaTime = 0;
+
+        function time_update( timestamp = 0 ){
+
+            requestAnimationFrame(time_update);
+            deltaTime = (timestamp - last_timestamp) / 1000;
+            last_timestamp = timestamp;
+
+            if ( time_active ){
+                time_counter += deltaTime;
+                setGameTime(time_counter);
+            }
+
+        }
+
+
+        time_update();
+
+
+
+
+
+
+
+        // DEBUG
+        //toggleScreenJogo(true);
+
+        // toggleModal('modal-pause', true);
+
+
+
+        // RESET COMFIRM
+        function onClickItemReset(){
+            console.log('reset');
+            toggleActionsheet('actionsheet-main', false);
+            toggleModal('modal-confirm', false);
+        }
+
+
+
+
+
+        // OPEN/CLOSE TELA TEMAS
+        function toggleScreenTemas(state){
+
+            let el = document.getElementById('tela-temas');
+            
+            if ( state ){
+                el.style.transform = 'rotate(0deg)';
+            }
+            else{
+                el.style.transform = 'rotate(91deg)'; 
+            }
+
+        }
+
+
+
+
+
+        
+
+        // OPEN/CLOSE TELA JOGO
+        function toggleScreenJogo(state){
+            let el = document.getElementById('tela-jogo');
+            el.style.transform = `translateY(${ (state)?0:100 }%)`;
+        }
+
+
+
+
+
+        // OPEN/CLOSE ACTIONSHEET
+        function toggleActionsheet(id, state){
+
+            let el = document.getElementById(id);
+
+            if (el){
+
+                if (state){
+
+                    el.style.display = 'block';
+
+                    setTimeout(()=>{
+                        el.querySelector('.actionsheet-container').style.transform = 'translateY(0)';
+                    }, 1);
+
+                }
+                else{
+
+                    el.querySelector('.actionsheet-container').style.transform = 'translateY(100%)';
+
+                    setTimeout(()=>{
+                        el.style.display = 'none';
+                    }, 250);
+
+                }
+
+            }
+
+        }
+
+
+
+
+
+
+
+        // OPEN/CLOSE MODAL
+        function toggleModal(id, state){
+
+            let el = document.getElementById(id);
+
+            if (el){
+
+                if (state){
+
+                    el.style.display = 'block';
+
+                    setTimeout(()=>{
+                        el.querySelector('.modal-container').style.transform = 'scale(1)';
+                    }, 1);
+
+                }
+                else{
+
+                    el.querySelector('.modal-container').style.transform = 'scale(0)';
+
+                    setTimeout(()=>{
+                        el.style.display = 'none';
+                    }, 250);
+
+                }
+
+            }
+
+        }
+
+
+
+        
+
+
+        // SET MODAL CONFIRM VALUES
+        function setModalConfirm(title, desc, callback){
+            document.querySelector('#modal-confirm .modal-header').innerHTML = title;
+            document.querySelector('#modal-confirm .modal-content').innerHTML = desc;
+            document.querySelector('#modal-confirm .modal-action-true').onclick = callback;
+            toggleModal('modal-confirm', true);
+        }
+ 
+
+
+
+
+
+
+        function onClickPause(){
+            toggleModal('modal-pause', true);
+        }
+        function onClickMenuContinue(){
+            console.log('contiue');
+            toggleModal('modal-pause', false);
+        }
+
+        function onClickMenuRestart(){
+            console.log('restart');
+            toggleModal('modal-confirm', false);
+            toggleModal('modal-pause', false);
+            time_active = false;
+            tempWon = 0;
+            time_counter = 0;
+            gerarQuiz(tempIndexTema, 0);
+            time_counter = 0;
+            setGameTime(0);
+            time_active = true;
+        }
+
+        function onClickMenuExit(){
+            console.log('exit');
+            time_active = false;
+            time_counter = 0;
+            toggleModal('modal-confirm', false);
+            toggleModal('modal-pause', false);
+            gerarListaTemas();
+            toggleScreenJogo(false);
+            tempWon = 0;
+            tempIndexTema = -1;
+        }
+
+
+        function onClickBack(){
+            console.log('end game click');
+            time_active = false;
+            time_counter = 0;
+            toggleModal('modal-end', false);
+            gerarListaTemas();
+            toggleScreenJogo(false);
+            tempWon = 0;
+            tempIndexTema = -1;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        // FORMAT: SECOUNDS TO TIME (ex: 120 = 2:00)
+        function timeFormat( value = 0 ){
+
+            let hour = Math.trunc(value / 3600);
+            let min = Math.trunc(value / 60 % 60);
+            let sec = Math.trunc(value % 60);
+
+            let str = '';
+
+            if ( value >= 3600 ){
+                str += hour + ':';
+            }
+
+            str += (min < 10 && value >= 3600)? ('0'+min+':') : (min+':');
+            str += (sec<10)? ('0'+sec) : sec;
+
+            return str;
+
+
+        }
+
+
+
+
+
+
+
+        // SET: TIME COUNTER
+        function setGameTime( value = 0 ){
+            if ( value > 0 ){
+                document.getElementById('game-time').innerText = timeFormat(value);
+            }
+        }
+
+
+
+
+
+        // SET: MODAL RESULTADO
+        function setResult( won=0, lose=0, time=0 ){
+
+            document.querySelectorAll('#modal-end .resultado-value')[0].innerText = won;
+            document.querySelectorAll('#modal-end .resultado-value')[1].innerText = lose;
+            document.querySelectorAll('#modal-end .resultado-value')[2].innerText = timeFormat(time);
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        // GERAR: PERGUNTA & LISTA DE PERGUNTAS
+        function gerarQuiz( label = '', options = [] ){
+
+            document.querySelector('#quiz-wrapper .quiz-header').innerText = label;
+            document.querySelector('#quiz-wrapper .quiz-content').innerHTML = '';
+
+            for (let i = 0; i < options.length; i++){
+                let item = document.createElement('button');
+                item.classList.add('quiz-option');
+                item.innerText = options[i];
+                
+
+                item.addEventListener('click', (evt)=>{
+                    console.log("click index", i);
+                });
+                
+                document.querySelector('#quiz-wrapper .quiz-content').appendChild(item);
+            }
+
+        }
+
+
+        // SET: ATUAL/TOTAL
+        function quizPage( current = 0, total = 0 ){
+            document.querySelectorAll('#tela-jogo .quiz-footer span')[0].innerText = current;
+            document.querySelectorAll('#tela-jogo .quiz-footer span')[1].innerText = total;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        function gerarListaTemas(){
+
+
+            document.querySelector("#list-temas").innerHTML = '';
+
+            for (let i = 0; i < LISTA_TEMAS.length; i++){
+
+                let tema = document.createElement('button');
+                tema.classList.add('item-tema');
+
+                tema.innerHTML = `
+                <div class="item-tema-column">
+                    <div class="item-tema-label">${LISTA_TEMAS[i].name}</div>
+                    <div class="item-tema-infos">
+                        <div class="item-tema-time">${timeFormat(LISTA_TEMAS[i].bestTime)}</div>
+                        <div class="item-tema-win_total">${LISTA_TEMAS[i].won}/${LISTA_TEMAS[i].quiz_list.length}</div>
+                    </div>
+                </div>
+
+                <div class="item-tema-column">
+                    <div class="item-tema-option">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                `;
+
+                // ITEM CLICK
+                tema.addEventListener('click', (evt)=>{
+                    console.log('click tema', i);
+                    tempIndexTema = i;
+                    gerarQuiz(i, 0);
+                    time_counter = 0;
+                    setGameTime(0);
+
+                    toggleScreenJogo(true);
+                    time_active = true;
+
+                });
+
+                // OPTION CLICK
+                tema.querySelector('.item-tema-option').addEventListener('click', (evt)=>{
+                    evt.stopImmediatePropagation();
+                    toggleActionsheet('actionsheet-main', true);
+                    console.log('click tema option', i);
+                });
+
+                
+
+
+                document.querySelector("#list-temas").appendChild(tema);
+
+            }
+
+
+        }
+
+
+
+
+
+        gerarListaTemas();
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+        
+
+        function gerarQuiz( tema_index, pergunta_index ){
+
+
+            let list = document.getElementById('quiz-item-list');
+            list.innerHTML = '';
+
+
+            // pergunta
+            document.querySelector('#quiz-wrapper .quiz-header').innerText = LISTA_TEMAS[tema_index].quiz_list[pergunta_index].ask;
+
+
+            // atual
+            document.querySelectorAll('#quiz-wrapper .quiz-footer span')[0].innerText = pergunta_index+1;
+
+            // total
+            document.querySelectorAll('#quiz-wrapper .quiz-footer span')[1].innerText = LISTA_TEMAS[tema_index].quiz_list.length;
+
+
+            
+
+            for (let i = 0; i < LISTA_TEMAS[tema_index].quiz_list[pergunta_index].options.length; i++){
+
+
+                let item_quiz = document.createElement('button');
+                item_quiz.classList.add('quiz-option');
+                item_quiz.innerText = LISTA_TEMAS[tema_index].quiz_list[pergunta_index].options[i].label;
+                item_quiz.setAttribute('item_id', LISTA_TEMAS[tema_index].quiz_list[pergunta_index].options[i].id);
+
+
+                // CLICK
+                item_quiz.onclick = function(){
+                    console.log('item_id', LISTA_TEMAS[tema_index].quiz_list[pergunta_index].options[i].id);
+
+                    // CORRECT
+                    if ( LISTA_TEMAS[tema_index].quiz_list[pergunta_index].won_id == LISTA_TEMAS[tema_index].quiz_list[pergunta_index].options[i].id ){
+                        console.log('correct');
+                        item_quiz.style.borderColor = '#28a745';
+                        tempWon++;
+                    }
+                    // WRONG
+                    else{
+                        console.log('wrong');
+                        item_quiz.style.borderColor = '#dc3545';
+                    }
+
+
+
+                    // PROXIMA PERGUNTA
+                    if ( pergunta_index < LISTA_TEMAS[tema_index].quiz_list.length-1 ){
+                        setTimeout(()=>{
+                            gerarQuiz( tema_index, pergunta_index+1 );
+                        }, 500);
+                    }
+
+                    // ACABOU AS PERGUNTAS
+                    else{
+                        time_active = false;
+                        console.log('end quiz');
+
+                        if ( tempWon > LISTA_TEMAS[tema_index].won ){
+                            LISTA_TEMAS[tema_index].won = tempWon; 
+                        }
+
+                        if ( time_counter < LISTA_TEMAS[tema_index].bestTime || LISTA_TEMAS[tema_index].bestTime == 0 ){
+                            LISTA_TEMAS[tema_index].bestTime = time_counter; 
+                        }
+
+
+                        setResult(tempWon, LISTA_TEMAS[tema_index].quiz_list.length-tempWon, time_counter);
+                        toggleModal('modal-end', true);
+
+                    }
+
+
+
+                    
+
+                }
+
+
+
+                list.appendChild(item_quiz);
+
+
+            }
+            
+
+            
+        }
+
+
+        //gerarQuiz(0, 0);
+
+
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

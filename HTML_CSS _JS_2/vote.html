@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+         
+
+        .wrapper{
+            padding: 8px;
+            padding-bottom: 12px;
+            background-color: #212121;
+            border-radius: 8px;
+            margin: 8px;
+            box-shadow: 0 0 5px 0 #000;
+
+            min-width: 320px;
+            max-width: 480px;
+
+            margin: 8px auto 0 auto;
+        }
+
+
+        .descpt{
+            color: #9e9e9e;
+            margin-top: 4px;
+        }
+
+
+
+        .progress{
+            width: 100%;
+            height: 16px;
+            background-color: #dc3545;
+            margin-top: 4px;
+            margin-bottom: 16px;
+        }
+
+        .progress-fill{
+            width: 0%;
+            height: 100%;
+            background-color: #28a745;
+        }
+
+
+        .value-wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .value{
+            padding: 4px;
+            background-color: #353535;
+            color: #fafafa;
+            border-radius: 4px;
+        }
+
+
+        .total{
+            margin-top: 16px;
+        }
+        .total::before{
+            content: '';
+            display: block;
+            width: 100%;
+            height: 1px;
+            background-color: #9e9e9e;
+            margin-bottom: 8px;
+        }
+
+
+
+
+        .control-wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+
+        .control-wrapper .button:first-child{
+            background-color: #28a745;
+        }
+        
+        .control-wrapper .button:last-child{
+            background-color: #dc3545;
+        }
+
+        .button{
+            border: 1px solid #fff;
+            color: #fff;
+            border-radius: 4px;
+            padding: 8px 10px;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    <div class="wrapper" id="votting">
+
+        <h2 class="title">Título fica aqui!</h2>
+        <div class="descpt">Descrição fica aqui!</div>
+
+        <div class="progress"> <div class="progress-fill"></div> </div>
+
+        <div class="value-wrapper">
+            <div> SIM <span class="value" data-value="0">0</span> </div>
+            <div> <span class="value" data-value="0">0</span> NÃO </div>
+        </div>
+
+        <div class="total"> TOTAL <span class="value" data-value="0">0</span></div>
+
+
+        <div class="control-wrapper">
+
+            <button class="button" onclick="votar('votting', true)">SIM</button>
+            <button class="button" onclick="votar('votting', false)">NÃO</button>
+
+        </div>
+
+    </div>
+     
+
+
+    <script>
+
+
+
+
+
+
+        function votar(id, state = null){
+
+
+            let element = document.getElementById(id);
+            let value_green = element.querySelectorAll('.value-wrapper .value')[0].getAttribute('data-value');
+            let value_red   = element.querySelectorAll('.value-wrapper .value')[1].getAttribute('data-value');
+
+            value_green = parseInt(value_green);
+            value_red   = parseInt(value_red);
+
+
+            if ( state != null ){
+                if ( state ){
+                value_green = parseInt(value_green) + 1;
+                }
+                else{
+                    value_red = parseInt(value_red) + 1;
+                }
+            }
+            
+            
+            let value_total = value_green + value_red;
+            let percent = value_green / value_total * 100; 
+            
+
+            if ( value_total == 0 ){
+                element.querySelector('.progress').style.backgroundColor = '#353535';
+            }
+            else{
+                element.querySelector('.progress').style.backgroundColor = '#dc3545';
+            }
+
+            if ( state == null ){
+                return false;
+            }
+
+
+            element.querySelectorAll('.value-wrapper .value')[0].setAttribute('data-value', value_green);
+            element.querySelectorAll('.value-wrapper .value')[1].setAttribute('data-value', value_red);
+
+            element.querySelectorAll('.value-wrapper .value')[0].innerText = value_green.toLocaleString();
+            element.querySelectorAll('.value-wrapper .value')[1].innerText = value_red.toLocaleString();
+
+            element.querySelector('.total .value').innerText = value_total.toLocaleString();
+            element.querySelector('.progress-fill').style.width = (percent) + '%';
+
+
+        }
+
+
+
+
+        votar('votting', null);
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

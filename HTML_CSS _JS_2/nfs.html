@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+
+        .skew{
+            transform: skewX(-20deg);
+        }
+
+
+        .text{
+            transform: skewX(20deg);
+        }
+
+
+
+        #car-summary{
+            width: 300px;
+            position: fixed;
+            bottom: 100px;
+            right: 60px;
+            /* pointer-events: none; */
+        }
+
+
+        #car-name{
+            width: fit-content;
+            padding: 8px 25px 8px 8px;
+            background-color: #007bff;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+
+
+       
+        .list-item{
+            margin-bottom: 8px;
+            background-color: #007bff;
+            color: #fff;
+            display: flex;
+            align-items: center;
+        }
+
+        .item-icon{
+            display: flex;
+            background-color: #0d47a1;
+            margin-right: 8px;
+            padding: 0 6px;
+            transform: scale(1.2);
+            border: 2px solid #0d47a1;
+        }
+
+        .item-title{
+            font-size: 0.9em;
+        }
+
+
+
+
+        .item-hide{
+            animation: hideItem 500ms forwards alternate-reverse;
+        }
+
+        @keyframes hideItem {
+            0%{
+                opacity: 0;
+                transform: translateX(100px) skewX(-20deg);
+            }
+            100%{
+                transform: translateX(0px) skewX(-20deg);
+            }
+        }
+
+
+
+        .all-hide{
+            animation: hideAll 500ms forwards alternate-reverse;
+        }
+
+        @keyframes hideAll {
+            0%{
+                opacity: 0;
+                transform: translateX(100px) skewX(0deg);
+            }
+            100%{
+                transform: translateX(0px) skewX(0deg);
+            }
+        }
+
+
+
+
+        
+
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+
+    <div id="car-summary">
+
+
+        <div id="car-name" class="skew"> <div class="text">Porche 911 Carrera S</div> </div>
+
+
+        <div id="summary-list">
+
+            <!-- ITEM -->
+            <div class="list-item skew">
+                <div class="item-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text" viewBox="0 0 16 16">
+                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                    </svg>
+                </div>
+                <div class="item-title"> <div class="text">TRACK</div> </div>
+            </div>
+
+
+            <!-- ITEM -->
+            <div class="list-item skew">
+                <div class="item-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text" viewBox="0 0 16 16">
+                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                    </svg>
+                </div>
+                <div class="item-title"> <div class="text">BURN NITROUS</div> </div>
+            </div>
+
+
+            <!-- ITEM -->
+            <div class="list-item skew">
+                <div class="item-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text" viewBox="0 0 16 16">
+                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                    </svg>
+                </div>
+                <div class="item-title"> <div class="text">LIGHTWEIGHT CHASSIS</div> </div>
+            </div>
+
+
+            <!-- ITEM -->
+            <div class="list-item skew">
+                <div class="item-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text" viewBox="0 0 16 16">
+                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                    </svg>
+                </div>
+                <div class="item-title"> <div class="text">STOCK BODY</div> </div>
+            </div>
+
+
+            <!-- ITEM -->
+            <div class="list-item skew">
+                <div class="item-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text" viewBox="0 0 16 16">
+                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                    </svg>
+                </div>
+                <div class="item-title"> <div class="text">STOCK TRANSMISSION</div> </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <script>
+
+        var resumo = document.getElementById("car-summary");
+
+        resumo.querySelectorAll("#summary-list .list-item").forEach((e,i) => {
+            setTimeout(() => {
+                e.classList.add("item-hide");
+
+                if ( i == resumo.querySelectorAll("#summary-list .list-item").length - 1 ){
+                    setTimeout(()=>{
+                        console.log("fim");
+                        resumo.classList.add("all-hide");
+                    }, 400);
+                }
+            }, i*200);
+
+            
+        });
+
+    </script>
+
+
+</body>
+</html>

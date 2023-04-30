@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            padding: 8px;
+        }
+
+
+
+        #lista{
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        
+
+        .item-container{
+            margin: 8px;
+            background-color: #353535;
+            min-height: 120px;
+            
+            min-width: fit-content;
+            width: 120px;
+
+            box-shadow: 0 0 5px 0 #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .item-container > *{
+            padding: 4px;
+        }
+
+        .item-title{
+            background-color: #212121;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+
+    <div id="lista">
+
+
+        <div class="item-container">
+            <div class="item-title">teste</div>
+            <div class="item-content">texto aqui</div>
+        </div>
+
+        <div class="item-container">
+            <div class="item-title">teste</div>
+            <div class="item-content">texto aqui</div>
+        </div>
+
+        <div class="item-container">
+            <div class="item-title">teste</div>
+            <div class="item-content">texto aqui</div>
+        </div>
+
+        <div class="item-container">
+            <div class="item-title">teste</div>
+            <div class="item-content">texto aqui</div>
+        </div>
+
+        <div class="item-container">
+            <div class="item-title">teste</div>
+            <div class="item-content">texto aqui</div>
+        </div>
+
+
+    </div>
+
+
+
+    <script>
+
+
+
+        function motion(x){
+
+            
+            document.querySelectorAll(".item-container").forEach((e)=>{
+
+
+                let angleX = map(x, -9, 9, -90, 90);
+                
+
+                e.style.transform = `rotate(${angleX}deg)`;
+
+            });
+
+
+        }
+
+
+
+        let sensor = new Accelerometer({frequency: 50, referenceFrame: "screen"});
+        sensor.start();
+
+        sensor.onreading = () => {
+            console.log("Acceleration along X-axis: " + sensor.x);
+            console.log("Acceleration along Y-axis: " + sensor.y);
+            console.log("Acceleration along Z-axis: " + sensor.z);
+
+             
+
+            
+            motion(sensor.x|0);
+
+
+
+        }
+
+        sensor.onerror = event => console.log(event.error.name, event.error.message);
+
+
+
+        function map( x,  in_min,  in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+    </script>
+
+    
+</body>
+</html>

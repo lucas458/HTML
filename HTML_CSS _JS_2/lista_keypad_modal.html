@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Values</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html{
+            overflow: hidden;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        .modal{
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            display: none;
+            position: fixed;
+        }
+
+
+        .modal-window{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+
+        .modal-screenOut{
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+         
+
+        .modal-content{
+            max-height: 50%;
+            width: 70%;
+            max-width: 300px;
+            background-color: #1f1f1f; 
+            z-index: 1;
+            box-shadow: 0 0 5px #000;
+            border-radius: 8px;
+            padding: 16px;
+
+            display: flex;
+            flex-direction: column;
+
+            transform: scale(0);
+            transition: 250ms;
+        }
+
+        .dialog-head{
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .dialog-content{
+            height: 100%;
+            margin: 16px 0;
+            color: #9e9e9e;
+            overflow: auto; 
+        }
+         
+
+        .dialog-controls{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center; 
+        }
+
+        .dialog-control-button{
+            color: #bb86fc;
+            padding: 8px 10px;
+            border-radius: 5px;
+        }
+        .dialog-control-button:active{
+            background-color: #353535;
+        }
+
+        
+
+
+
+
+        #addInput{
+            width: 100%;
+            padding: 4px 8px;
+            border: none;
+            border-bottom: 1px solid #353535;
+            background-color: transparent;
+            outline: none;
+            color: #fff;
+        }
+
+
+
+
+         
+
+
+        .screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+        .screen-header{
+            padding: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #353535;
+        }
+
+        .screen-header > div{
+            visibility: hidden;
+        }
+
+        .screen-header-active > div{
+            visibility: visible;
+        }
+
+
+        .screen-content{
+            height: 100%;
+            overflow: auto;
+        }
+
+
+
+
+
+        .value-wrapper{
+            background-color: #353535;
+            width: fit-content;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 4px;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+        .value-label{
+            font-size: 0.8em;
+            color: #bb86fc;
+            
+        }
+
+
+
+
+
+        #tela-main .screen-footer{
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        #add-button{
+            min-width: 48px;
+            height: 48px;
+            background-color: #28a745;
+            box-shadow: 0 0 5px 0 #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            margin: 16px;
+        }
+
+
+
+        .item-wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            color: #9e9e9e;
+            font-size: 1.5em;
+            border-top: 1px solid #353535;
+        }
+        .item-wrapper:first-child{
+            border: none;
+            border-bottom: 1px solid #353535;
+        }
+
+        .item-wrapper:nth-child(even){
+            background-color: #212121;
+        }
+
+        
+
+
+        .item-wrapper > div{
+            padding: 4px;
+            background-color: #353535;
+            border-radius: 4px;
+        }
+        .item-wrapper > div:first-child{
+            margin-right: 8px;
+        }
+
+        .item-value{ 
+            text-align: right;
+            overflow: hidden;
+        }
+
+
+
+
+ 
+
+        /* KEYPAD */
+        #keypad-wrapper{
+            box-shadow: 0 0 5px #000;
+            z-index: 2;
+            transition: 250ms;
+            transform: translateY(100%);
+            width: 100%;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+
+        .keypad-active{
+            transform: translateY(0%) !important;
+        }
+
+        .keypad-row{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #28282a;
+        }
+
+        .keypad-key{
+            background-color: #28282a;
+            flex: 1;
+            font-size: 1.2em;
+            text-align: center;
+            padding: 8px;
+        }
+        .keypad-key:active{
+            background-color: #353535;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+
+
+
+    <!-- MODAL DELETE -->
+    <div class="modal" id="modal-delete">
+
+        <div class="modal-window">
+
+            <div class="modal-screenOut" onclick="toggleModal('modal-delete', false)"></div>
+
+            <div class="modal-content">
+
+                <div class="dialog-head">Deletar</div>
+
+                <div class="dialog-content">
+                    <p>Você quer deletar o item</p>
+                    <p>index: 0</p>
+                    <p>valor: 0</p>
+                </div>
+
+                <div class="dialog-controls">
+                    <div class="dialog-control-button" onclick="toggleModal('modal-delete', false)">CANCELAR</div>
+                    <div class="dialog-control-button" onclick="modalClickDelete()">OK</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- MODAL ADD -->
+    <div class="modal" id="modal-add">
+
+        <div class="modal-window">
+
+            <div class="modal-screenOut" onclick="toggleModal('modal-add', false)"></div>
+
+            <div class="modal-content">
+
+                <div class="dialog-head">Adicionar Item</div>
+
+
+                <div class="dialog-content">
+                    
+
+                    <input type="tel" id="addInput" min="0" placeholder="Valor" readonly>
+
+                </div>
+
+
+                <div class="dialog-controls">
+                    <div class="dialog-control-button" onclick="toggleModal('modal-add', false)">CANCELAR</div>
+                    <div class="dialog-control-button" onclick="modalClickAdd()">OK</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+         
+    <!-- KEYPAD -->
+    <div id="keypad-wrapper">
+            
+        <div class="keypad-row">
+            <div class="keypad-key" att-value="1">1</div>
+            <div class="keypad-key" att-value="2">2</div>
+            <div class="keypad-key" att-value="3">3</div>
+        </div>
+
+        <div class="keypad-row">
+            <div class="keypad-key" att-value="4">4</div>
+            <div class="keypad-key" att-value="5">5</div>
+            <div class="keypad-key" att-value="6">6</div>
+        </div>
+
+        <div class="keypad-row">
+            <div class="keypad-key" att-value="7">7</div>
+            <div class="keypad-key" att-value="8">8</div>
+            <div class="keypad-key" att-value="9">9</div>
+        </div>
+
+        <div class="keypad-row">
+            <div class="keypad-key" att-value="backspace" style="color: #bb86fc;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-backspace-fill" viewBox="0 0 16 16">
+                    <path d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z"/>
+                </svg>
+            </div>
+
+            <div class="keypad-key" att-value="0">0</div>
+
+            <div class="keypad-key" att-value="enter" style="color: #bb86fc;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"/>
+                </svg>
+            </div>
+        </div>
+
+    </div>
+
+     
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+     
+    <!-- MAIN -->
+    <div class="screen" id="tela-main">
+
+
+        <div class="screen-header">
+
+            <div class="value-wrapper">
+                <div class="value-label">QTY.</div>
+                <div class="value-output">0000</div>
+            </div>
+
+            <div class="value-wrapper">
+                <div class="value-label">TOTAL</div>
+                <div class="value-output">0000</div>
+            </div>
+
+            <div class="value-wrapper">
+                <div class="value-label">MAX.</div>
+                <div class="value-output">0000</div>
+            </div>
+
+            <div class="value-wrapper">
+                <div class="value-label">MIN.</div>
+                <div class="value-output">0000</div>
+            </div>
+
+            <div class="value-wrapper">
+                <div class="value-label">MÉDIA</div>
+                <div class="value-output">0000</div>
+            </div>
+
+        </div>
+
+
+
+        <div class="screen-content">
+
+            <!-- LIST -->
+            <div id="list-item">
+
+                <!-- ITEM -->
+                <!-- <div class="item-wrapper">
+                    <div class="item-index">01</div>
+                    <div class="item-value">9.999.999.999</div>
+                </div> -->
+
+            </div>
+
+        </div>
+
+
+
+
+        <div class="screen-footer">
+
+
+
+            <div id="add-button" onclick="openAdd()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></svg>
+            </div>
+
+
+        </div>
+
+
+
+        
+
+
+    </div>
+
+
+
+
+
+
+    <script>
+
+
+
+        let list = document.getElementById('list-item');
+        let addInput = document.getElementById('addInput');
+
+
+
+
+        addInput.addEventListener('input', (evt)=>{
+            evt.preventDefault();
+
+        });
+
+        addInput.addEventListener('focus', (evt)=>{
+            evt.preventDefault();
+            toggleKeypad('keypad-wrapper', true);
+        });
+
+        addInput.addEventListener('blur', (evt)=>{
+            evt.preventDefault();
+            toggleKeypad('keypad-wrapper', false);
+        });
+        
+
+
+
+
+        var index_delete = -1;
+
+
+        function addItem( value = 0 ){
+
+
+            let idx = list.children.length + 1;
+            idx = (idx<10)? ('0'+idx): idx;
+
+            let tempValue = Intl.NumberFormat('pt-br').format(value);
+
+            let item = document.createElement('div');
+            item.classList.add('item-wrapper');
+            item.setAttribute('att-value', value);
+
+            item.innerHTML = `
+            <div class="item-index">${idx}</div>
+            <div class="item-value">${tempValue}</div>`;
+ 
+
+            list.appendChild(item);
+            calcHeader();
+
+            item.addEventListener('click', ()=>{
+
+                for (let i = 0; i < list.children.length; i++){
+                    if (list.children[i] == item){
+                        console.log('click', i);
+                        index_delete = i;
+                        openDeleteDialog(i+1, value);
+                        break;
+                    }
+                }
+
+            });
+
+
+
+            toggleHeader(true);
+
+
+        }
+
+
+
+
+
+
+        function openDeleteDialog(index, value){
+
+            document.querySelectorAll('#modal-delete .dialog-content > p')[1].innerText = 'Index: ' + index;
+            document.querySelectorAll('#modal-delete .dialog-content > p')[2].innerText = 'Valor: ' + value;
+            toggleModal('modal-delete', true);
+
+        }
+
+
+        function modalClickDelete(){
+
+            if ( index_delete >= 0 ){
+
+                if ( list.children[index_delete] ){
+                    list.children[index_delete].remove();
+                    toggleModal('modal-delete', false);
+                    toggleHeader( list.children.length > 0 );
+                    calcHeader();
+                }
+            }
+
+            index_delete = -1;
+        }
+
+
+
+
+
+        function calcHeader(){
+
+            let value_max = 0;
+            let value_min = 0;
+            let sum = 0;
+            let media = 0;
+
+            let temp_arr = []; 
+
+            for (let i = 0; i < list.children.length; i++){
+                let tempValue = list.children[i].getAttribute('att-value');
+                temp_arr.push(tempValue);
+                sum += parseFloat(tempValue);
+
+                list.children[i].children[0].innerText = (i+1<10)? ('0'+(i+1)): i+1;
+            }
+
+            value_max = Math.max(...temp_arr);
+            value_min = Math.min(...temp_arr);
+            media = sum / list.children.length;
+
+
+            document.querySelectorAll('#tela-main .value-output')[0].innerText = Intl.NumberFormat('pt').format(list.children.length);
+            document.querySelectorAll('#tela-main .value-output')[1].innerText = Intl.NumberFormat('pt').format(sum);
+            document.querySelectorAll('#tela-main .value-output')[2].innerText = Intl.NumberFormat('pt').format(value_max);
+            document.querySelectorAll('#tela-main .value-output')[3].innerText = Intl.NumberFormat('pt').format(value_min);
+            document.querySelectorAll('#tela-main .value-output')[4].innerText = Intl.NumberFormat('pt', {maximumFractionDigits: 2}).format(media);  
+
+        }
+
+
+
+
+
+        document.querySelectorAll("#keypad-wrapper .keypad-key").forEach((e, i)=>{
+
+
+            e.onclick = function(evt){
+
+                let keyValue = e.getAttribute('att-value')
+                console.log( keyValue );
+
+                let tempValue = addInput.value;
+
+                if ( keyValue == 'enter' ){
+                    
+                    if ( addInput.value.length <= 0 ){
+                        addInput.focus();
+                    }
+                    modalClickAdd();
+
+                    return;
+                }
+                else if ( keyValue == 'backspace' ){
+                    tempValue = tempValue.slice(0, tempValue.length-1);
+                }
+                else{
+                    tempValue += keyValue;
+                }
+
+                addInput.value = tempValue;
+                addInput.focus();
+
+            }
+
+
+        });
+
+
+
+
+
+        function openAdd(){
+            toggleModal('modal-add', true);
+            addInput.focus();
+        }
+
+
+        function modalClickAdd(){
+
+            if ( !isNaN(addInput.value) && addInput.value.length > 0 ){
+                addItem(addInput.value);
+                addInput.blur();
+                addInput.value = '';
+                toggleModal('modal-add', false);
+            } 
+
+        }
+
+
+
+
+
+
+        function toggleHeader( state ){
+            document.querySelector('#tela-main > .screen-header').classList.toggle('screen-header-active', state);
+        }
+
+
+         
+
+        function toggleModal( id, state ){
+
+            let el = document.getElementById(id);
+
+            if (el){
+
+
+                if ( state ){
+
+                    el.style.display = 'block';
+                    setTimeout(()=>{
+                        el.querySelector('.modal-content').style.transform = 'scale(1)';
+                    }, 1);
+
+                }
+                else{
+                    el.querySelector('.modal-content').style.transform = 'scale(0)';
+                    setTimeout(()=>{
+                        el.style.display = 'none';
+                        addInput.value = '';
+                        index_delete = -1;
+                    }, 250);
+                }
+
+
+            }
+
+        }
+
+
+        
+
+
+
+
+        function toggleKeypad( id, state ){
+            let el = document.getElementById(id);
+
+            if (el){
+                el.classList.toggle('keypad-active', state);
+            }
+
+        }
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

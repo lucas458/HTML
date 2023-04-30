@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #ff6347;
+        }
+
+
+
+        #menu-wrapper{
+            display: flex;
+            padding: 8px 32px;
+        }
+
+        
+
+
+        .menu-item{
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            padding: 4px 8px;
+            transform: skewX(-20deg);
+            background-color: #fff;
+            color: #505050;
+             
+            border-right: 2px solid #ede9e8;
+            user-select: none;
+            transition: 600ms;
+        }
+
+        .menu-item:hover{
+            background-color: #eeeeee;
+            z-index: 1;
+            color: #ff6347;
+            transition: 1ms;
+            transform: scale(1.2) skewX(-20deg);
+        }
+
+
+        #menu-wrapper .menu-item:first-child{
+            border-radius: 3px 0 0 3px;
+        }
+        #menu-wrapper .menu-item:last-child{
+            border-radius: 0 3px 3px 0;
+            border-right: none;
+        }
+
+
+        .menu-text{
+            transform: skewX(20deg);
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+    <div id="menu-wrapper">
+
+
+        <div class="menu-item">
+            <div class="menu-text">HOME</div>
+        </div>
+
+        <div class="menu-item">
+            <div class="menu-text">SEARCH</div>
+        </div>
+
+        <div class="menu-item">
+            <div class="menu-text">LIKES</div>
+        </div>
+
+        <div class="menu-item">
+            <div class="menu-text">NOTIFICATIONS</div>
+        </div>
+
+        <div class="menu-item">
+            <div class="menu-text">PROFILE</div>
+        </div>
+
+
+    </div>
+
+
+
+</body>
+</html>

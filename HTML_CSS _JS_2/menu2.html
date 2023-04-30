@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+        
+
+        #menu{
+            display: flex;
+            align-items: center;
+            width: 100%;
+            background-color: #212121;
+        }
+
+
+        .arrow{
+            margin: 0 4px;
+            font-size: 1.4em;
+            opacity: 0.5;
+        }
+
+        .arow-active{
+            opacity: 1;
+        }
+
+
+        #content{
+            display: flex;
+             
+            overflow: hidden;
+        }
+
+        .item{
+            margin: 0 8px;
+            white-space: nowrap;
+        }
+
+
+        .item-active{
+            color: yellow;
+            animation: pulseText 1.5s infinite ;
+        }
+
+
+
+        @keyframes pulseText {
+            0%{
+                text-shadow: 0 0 0px #fff;
+            }
+            50%{
+                text-shadow: 0 0 8px #fff;
+            }
+            100%{
+                text-shadow: 0 0 0px #fff;
+            }
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+
+    <div id="menu">
+
+        <div class="arrow"> &LeftArrow; </div>
+
+        <div id="content">
+            <div class="item item-active">Item 1</div>
+            <div class="item">Item 2</div>
+			<div class="item">Item 3</div>
+			<div class="item">Item 4</div>
+			<div class="item">Item 5</div>
+			<div class="item">Item 6</div>
+			<div class="item">Item 7</div>
+			<div class="item">Item 8</div>
+        </div>
+
+        <div class="arrow arow-active"> &RightArrow; </div>
+
+        
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+
+
+        function getIndex( id ){
+
+
+            let el = document.getElementById(id);
+
+            for (let i = 0; i < el.children.length; i++){
+                if ( el.children[i].classList.contains('item-active') ){
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        function getMax( id ){
+            let el = document.getElementById(id);
+            return el.children.length;
+        }
+
+
+
+        function setIndex( id, index ){
+
+
+            let el = document.getElementById(id);
+
+            for (let i = 0; i < el.children.length; i++){
+                if ( el.children[i].classList.contains('item-active') ){
+                    el.children[i].classList.remove('item-active');
+                }
+            }
+
+            el.children[index].classList.add('item-active');
+
+
+        }
+
+
+        
+
+
+        document.body.addEventListener('keydown', (evt)=>{
+
+            console.log(evt.key);
+
+            let actual_index = getIndex('content');
+            let max = getMax('content');
+            
+
+            if ( evt.key == 'ArrowLeft' ){
+                if ( actual_index > 0 ){
+                    setIndex('content' ,  --actual_index);
+                }
+            }
+            else if ( evt.key == 'ArrowRight' ){
+                if ( actual_index < max-1 ){
+                    setIndex('content', ++actual_index);
+                }
+            }
+
+
+
+            if ( actual_index == 0 ){
+                document.getElementById('menu').querySelectorAll('.arrow')[0].classList.remove('arow-active');
+            }
+            else{
+                document.getElementById('menu').querySelectorAll('.arrow')[0].classList.add('arow-active');
+            }
+
+
+            if ( actual_index < max-1 ){
+                document.getElementById('menu').querySelectorAll('.arrow')[1].classList.add('arow-active');
+            }
+            else{
+                document.getElementById('menu').querySelectorAll('.arrow')[1].classList.remove('arow-active');
+            }
+
+            
+
+            
+
+
+        });
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Média</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+
+
+        #numberPicker{
+            width: 100%;
+            height: 100%;
+            background-color: #000000AA;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            z-index: 1;
+
+            display: none;
+        }
+
+
+        #numberPickerWindow{
+            width: 75%;
+            height: 25%;
+            background-color: #212121;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 5px 0 #000;
+
+            transition: 200ms;
+            transform: scale(0);
+        }
+
+
+        #numberPickerContent{
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        #numberPickerWrapper{
+            width: 128px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #212121;
+            
+        }
+
+        #numberPickerValue{
+            text-align: center;
+            width: 100%;
+            height: 48px;
+            border: 1px solid #9e9e9e;
+            border-right: none;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+        }
+
+        #numberPickerHandler{
+            text-align: center;
+
+        }
+
+        .numberPickerAction{
+            width: 48px;
+            height: 24px;
+            background-color: #9e9e9e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .numberPickerAction:active{
+            background-color: #353535;
+        }
+
+
+
+
+
+        #numberPickerControls{
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #fff;
+        }
+         
+        .numberPickerButton{
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+        }
+        .numberPickerButton:first-child{
+            border-right: 1px solid #fff;
+        }
+
+        .numberPickerButton:active{
+            background-color: #353535;
+        }
+
+
+
+
+
+
+
+
+         
+
+        #tela{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+
+        #tela > header{
+            padding: 8px;
+            background-color: #212121;
+            font-size: 1.2em;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+        #tela > section{
+            height: 100%;
+        }
+
+
+
+
+        #chip-list{
+            display: flex;
+            flex-wrap: nowrap;
+        }
+
+
+        .chip{
+            margin: 4px;
+            padding: 4px 8px;
+            background-color: #666;
+            color: #fff;
+            border-radius: 25px;
+            width: fit-content;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            transition: 200ms;
+        }
+
+        .chip-text{
+            white-space: nowrap;
+        }
+
+        .chip-delete{
+            width: 20px;
+            height: 20px;
+            background-color: #e0e0e0;
+            color: #666;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+
+
+        .chip-delete:active{
+            background-color: #212121;
+        }
+
+
+        
+
+
+        #add{
+            width: 64px;
+            height: 64px;
+
+            margin-bottom: 16px;
+            margin-left: calc( 100% - 64px - 16px );
+
+            border-radius: 50%;
+            background-color: #28a745;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #value{
+            text-align: center;
+            padding: 20px;
+            background-color: #007bff;
+            font-size: 2em;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+
+
+    <!-- -999999 A 999999 -->
+
+    <div id="numberPicker">
+
+
+        <div id="numberPickerWindow">
+
+            <div id="numberPickerContent">
+
+
+                <div id="numberPickerWrapper">
+
+                    <div id="numberPickerValue">0</div>
+
+                    <div id="numberPickerHandler">
+                        <div class="numberPickerAction" onclick="actionPicker(true)">+</div>
+                        <div class="numberPickerAction" onclick="actionPicker(false)">-</div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <div id="numberPickerControls">
+                <div class="numberPickerButton" onclick="togglePicker(false)">Fechar</div>
+                <div class="numberPickerButton" onclick="saveValue()">Salvar</div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+    
+
+
+
+    <div id="tela">
+
+
+        <header>Média</header>
+
+        <section>
+
+
+            <div id="chip-list">
+
+                <!-- CHIP -->
+                <!-- <div class="chip">
+                    <div class="chip-text">asds</div>
+                    <div class="chip-delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+                    </div>
+                </div> -->
+ 
+
+            </div>
+
+            
+
+        </section>
+
+        <footer>
+            
+            <div id="add" onclick="togglePicker(true)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+            </div>
+
+            <div id="value">0</div>
+            
+
+        </footer>
+
+
+    </div>
+    
+     
+
+
+    <script>
+
+        var list = document.getElementById('chip-list');
+
+
+        function calcularMedia(){
+
+            let value = 0;
+            let list_chip = list.querySelectorAll('.chip');
+
+            for (let i = 0; i < list_chip.length; i++){
+                let value_chip = Math.trunc( list_chip[i].querySelector('.chip-text').innerText );
+                if ( isNaN(value_chip) ){
+                    value = NaN;
+                    break;
+                }
+                value += value_chip;
+            }
+
+
+            if ( list_chip.length > 0 ){
+                value /= list_chip.length;
+            }
+            else{
+                value = NaN;
+            }
+
+            value = (isNaN(value))? 0 : value
+
+            document.getElementById("value").innerText = value; 
+
+
+        }
+        
+
+
+
+        function addChip( text ){
+
+            
+            let chip = document.createElement('div');
+            chip.classList.add('chip');
+            
+            chip.innerHTML = `
+            <div class="chip-text">${text}</div>
+            <div class="chip-delete">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+            </div>
+            `;
+
+
+
+            chip.querySelector('.chip-delete').addEventListener('click', (e)=>{
+                
+                calcularMedia();
+
+                chip.style.transform = 'scale(0)';
+
+                setTimeout(()=>{
+                    chip.remove();
+                }, 300);
+
+            });
+
+
+            list.appendChild(chip);
+            calcularMedia();
+
+        }
+ 
+
+
+
+
+
+
+        function saveValue(){
+
+            let value = document.getElementById('numberPickerValue').innerText;
+            value = Math.trunc(value);
+
+
+            addChip(value);
+
+            document.getElementById('numberPickerValue').innerText = 0;
+        }
+
+
+
+        
+        function actionPicker( state ){
+
+            let value = document.getElementById('numberPickerValue').innerText;
+            value = Math.trunc(value);
+
+            if ( state ){
+                value += 1;
+            }
+            else{
+                value -= 1;
+            }
+
+            document.getElementById('numberPickerValue').innerText = value;
+        }
+
+
+
+
+ 
+
+
+        function togglePicker( state ){
+
+            if ( state ){
+                document.getElementById('numberPickerValue').innerText = 0;
+                document.getElementById('numberPicker').style.display = 'flex';
+
+                setTimeout(()=>{
+                    document.getElementById('numberPickerWindow').style.transform = 'scale(1)';
+
+                }, 100);
+                
+            }
+            else{
+
+                
+ 
+                document.getElementById('numberPickerWindow').style.transform = 'scale(0)';
+                setTimeout(()=>{
+                    document.getElementById('numberPicker').style.display = 'none';
+                    document.getElementById('numberPickerValue').innerText = 0;
+                }, 100);
+            }
+
+        }
+
+
+    </script>
+
+
+</body>
+</html>

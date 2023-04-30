@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+ 
+
+
+
+        .video-wrapper{
+            width: 100%;
+            max-height: 480px;
+            background-color: #000;
+            aspect-ratio: 16/9;
+            user-select: none;
+            position: relative;
+        }
+
+
+
+
+        .video-display{
+            background-color: #000;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+        }
+        .video-element{
+            height: 100%; 
+        }
+
+
+
+
+
+
+        .video-controller-icon{
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        
+         
+
+
+        .video-controls-wrapper{
+            width: 100%;
+            padding: 8px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+
+
+
+
+        .video-seekbar-track,
+        .audio-seekbar-track{
+            height: 8px;
+            background-color: #b5b3b4;
+        }
+
+        .video-seekbar-fill,
+        .audio-seekbar-fill{
+            background-color: #fd4648;
+            width: 00%;
+            height: 100%;
+            position: relative;
+        }
+
+        .video-seekbar-thumb,
+        .audio-seekbar-thumb{
+            height: 100%;
+            aspect-ratio: 1/1;
+            background-color: #fd4648;
+            position: absolute;
+            right: 0;
+            transform: scale(1.5) translateX( calc(100% - 8px/1.5) );
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+
+        .audio-seekbar-track{
+            width: 48px;
+            margin-right: 16px;
+        }
+
+        .audio-seekbar-fill,
+        .audio-seekbar-thumb{
+            background-color: #fff;
+        }
+
+
+
+
+
+
+
+        .video-controller-wrapper{
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+
+        .video-controller-column{
+            display: flex;
+            align-items: center;
+        }
+
+        .video-controller-column:first-child{
+            flex: 1;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .video-settings-wrapper{
+            padding: 0 8px;
+            position: absolute;
+            right: 0;
+            bottom: 100%;
+        }
+        .video-setting-window{
+            background-color: #1c1c1ce6;
+        }
+
+
+
+        .video-setting-item{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+        }
+
+        .video-setting-item > div{
+            display: flex;
+            align-items: center;
+        }
+
+        .video-setting-item > div:first-child{
+            margin-right: 48px;
+        }
+        .video-setting-item > div:first-child span{
+            margin-left: 8px;
+        }
+
+
+
+
+
+
+
+
+
+
+        .video-frame-wrapper{
+            width: 128px;
+            aspect-ratio: 16/9;
+            
+            margin: 8px;
+            
+            position: absolute;
+            left: 0;
+            bottom: 100%;
+
+            display: none;
+        }
+
+
+        .frame-element{
+            width: 100%;
+            border: 2px solid #fff;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    <div class="video-wrapper" id="video-container" att-full="false">
+
+
+
+        <!-- VIDEO -->
+        <div class="video-display">
+            <video class="video-element" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+        </div>
+
+
+
+        <!-- CONTROLS -->
+        <div class="video-controls-wrapper">
+
+
+
+            <!-- FRAMES -- SCREEN -->
+            <div class="video-frame-wrapper">
+                <video class="frame-element" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+            </div>
+
+
+            <!-- SETTINGS -- SCREEN -->
+            <div class="video-settings-wrapper" att-open="false" style="display: none;">
+                
+                <div class="video-setting-window">
+
+
+                    <div class="video-setting-item video-setting-item-loop" onclick="toggleLoop(this)" att-loop="false">
+
+                        
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-repeat" viewBox="0 0 16 16">
+                                <path d="M11 5.466V4H5a4 4 0 0 0-3.584 5.777.5.5 0 1 1-.896.446A5 5 0 0 1 5 3h6V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192Zm3.81.086a.5.5 0 0 1 .67.225A5 5 0 0 1 11 13H5v1.466a.25.25 0 0 1-.41.192l-2.36-1.966a.25.25 0 0 1 0-.384l2.36-1.966a.25.25 0 0 1 .41.192V12h6a4 4 0 0 0 3.585-5.777.5.5 0 0 1 .225-.67Z"/>
+                            </svg>
+                            <span>loop</span>
+                        </div>
+
+                        <div style="visibility: hidden;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                                <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                            </svg>
+                        </div>
+
+                         
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SEEKBAR -->
+            <div class="video-seekbar-track" att-hold="false">
+
+                <div class="video-seekbar-fill">
+                    <div class="video-seekbar-thumb"></div>
+                </div>
+            </div>
+
+
+            <!-- BUTTONS & AUDIO -->
+
+            <div class="video-controller-wrapper">
+
+                <!-- COLUNA -->
+                <div class="video-controller-column">
+
+                    <!-- BACK -->
+                    <div class="video-controller-icon video-button-back">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M.5 3.5A.5.5 0 0 0 0 4v8a.5.5 0 0 0 1 0V8.753l6.267 3.636c.54.313 1.233-.066 1.233-.697v-2.94l6.267 3.636c.54.314 1.233-.065 1.233-.696V4.308c0-.63-.693-1.01-1.233-.696L8.5 7.248v-2.94c0-.63-.692-1.01-1.233-.696L1 7.248V4a.5.5 0 0 0-.5-.5z"/>
+                        </svg>
+                    </div>
+
+
+                    <!-- PLAY/PAUSE -->
+                    <div class="video-controller-icon video-button-playPause">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                        </svg>
+                    </div>
+
+                    <!-- NEXT -->
+                    <div class="video-controller-icon video-button-next">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M15.5 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V8.753l-6.267 3.636c-.54.313-1.233-.066-1.233-.697v-2.94l-6.267 3.636C.693 12.703 0 12.324 0 11.693V4.308c0-.63.693-1.01 1.233-.696L7.5 7.248v-2.94c0-.63.693-1.01 1.233-.696L15 7.248V4a.5.5 0 0 1 .5-.5z"/>
+                        </svg>
+                    </div>
+
+                    <!-- SPEAKER -->
+                    <div class="video-controller-icon video-button-speaker">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
+                            <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/>
+                            <path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/>
+                        </svg>
+                    </div>
+
+                    <!-- AUDIO -- SEEKBAR -->
+                    <div class="audio-seekbar-track" att-hold="false">
+                        <div class="audio-seekbar-fill" style="width: 100%;">
+                            <div class="audio-seekbar-thumb"></div>
+                        </div>
+                    </div>
+
+
+                    <!-- TIME -->
+                    <div class="video-time-wrapper">0:00/0:00</div>
+
+
+
+                </div>
+
+
+
+                <!-- COLUNA -->
+                <div class="video-controller-column">
+
+                    <!-- SETTINGS -->
+                    <div class="video-controller-icon video-button-settings">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                        </svg>
+                    </div>
+
+                    <!-- FULLSCREEN -->
+                    <div class="video-controller-icon video-button-fullscreen">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"/>
+                        </svg>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+        
+
+
+    </div>
+
+
+
+     
+
+
+    <script>
+
+
+
+        
+        var video_container = document.getElementById('video-container');
+        var video_element   = video_container.querySelector(".video-element");
+
+
+
+         
+
+
+
+        video_container.querySelector('.video-seekbar-track').addEventListener('mousedown', (evt)=>{
+ 
+            video_container.querySelector('.video-seekbar-fill').style.width = evt.offsetX + 'px';
+            video_container.querySelector('.video-seekbar-track').setAttribute('att-hold', "true");
+            closeSettings();
+
+        });
+
+
+        video_container.querySelector('.audio-seekbar-track').addEventListener('mousedown', (evt)=>{
+ 
+            video_container.querySelector('.audio-seekbar-fill').style.width = evt.offsetX + 'px';
+            video_container.querySelector('.audio-seekbar-track').setAttribute('att-hold', "true");
+
+
+            if ( video_container.querySelector('.audio-seekbar-track') ){
+
+            let att_hold_audio = video_container.querySelector('.audio-seekbar-track').getAttribute('att-hold');
+
+            if ( att_hold_audio == "true" ){
+                let posX = evt.clientX; 
+
+                posX = clamp(evt.clientX-video_container.querySelector('.audio-seekbar-track').offsetLeft, 0, video_container.querySelector('.audio-seekbar-track').offsetWidth);
+                
+                video_container.querySelector('.audio-seekbar-fill').style.width = posX + 'px';
+                
+                let percent = posX / video_container.querySelector('.audio-seekbar-track').offsetWidth;
+                video_element.volume = percent;
+
+
+                if ( percent > 0.5 ){
+                    console.log('high');
+                    video_container.querySelector('.video-button-speaker').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/><path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/><path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/></svg>`;
+                }
+                else if ( percent > 0 ){
+                    console.log('low');
+                    video_container.querySelector('.video-button-speaker').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zm3.025 4a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"/></svg>`;
+                }
+                else{
+                    console.log('mute');
+                    video_container.querySelector('.video-button-speaker').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zm7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/></svg>`;
+                }
+
+
+            }
+
+            }
+
+        });
+
+        
+
+
+        // MOUSE MOVE -- GLOBAL
+        window.addEventListener('mousemove', (evt)=>{
+
+            let att_hold = video_container.querySelector('.video-seekbar-track').getAttribute('att-hold');
+
+            if ( att_hold == "true" ){
+
+                let posX = evt.clientX - 8;
+
+                if ( posX > video_container.querySelector('.video-seekbar-track').offsetWidth ){
+                    posX = video_container.querySelector('.video-seekbar-track').offsetWidth
+                }
+
+                if ( posX < 0 ){
+                    posX = 0;
+                }
+
+                console.log(posX);
+                video_container.querySelector('.video-seekbar-fill').style.width = posX + 'px';
+                
+                let framme_width = video_container.querySelector('.video-frame-wrapper').offsetWidth;
+                let framme_posX = clamp(evt.clientX-framme_width/2, 0, video_container.querySelector('.video-seekbar-track').offsetWidth - framme_width);
+
+                video_container.querySelector('.video-frame-wrapper').style.left = (framme_posX) + 'px';
+
+                let secValue = video_container.querySelector('.video-seekbar-fill').offsetWidth / video_container.querySelector('.video-seekbar-track').offsetWidth * 100;
+                video_container.querySelector('.frame-element').currentTime = secValue * video_element.duration / 100;
+ 
+                video_container.querySelector('.video-frame-wrapper').style.display = 'block';
+
+            }
+
+
+
+
+           
+
+
+            if ( video_container.querySelector('.audio-seekbar-track') ){
+
+                let att_hold_audio = video_container.querySelector('.audio-seekbar-track').getAttribute('att-hold');
+
+                if ( att_hold_audio == "true" ){
+                    let posX = evt.clientX; 
+
+                    posX = clamp(evt.clientX-video_container.querySelector('.audio-seekbar-track').offsetLeft, 0, video_container.querySelector('.audio-seekbar-track').offsetWidth);
+                    
+                    video_container.querySelector('.audio-seekbar-fill').style.width = posX + 'px';
+                    
+                    let percent = posX / video_container.querySelector('.audio-seekbar-track').offsetWidth;
+                    video_element.volume = percent;
+
+
+                    if ( percent > 0.5 ){
+                        console.log('high');
+                        video_container.querySelector('.video-button-speaker').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/><path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/><path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/></svg>`;
+                    }
+                    else if ( percent > 0 ){
+                        console.log('low');
+                        video_container.querySelector('.video-button-speaker').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zm3.025 4a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"/></svg>`;
+                    }
+                    else{
+                        console.log('mute');
+                        video_container.querySelector('.video-button-speaker').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06zm7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0z"/></svg>`;
+                    }
+
+
+                }
+
+            }
+
+           
+
+
+
+
+        });
+        
+
+
+
+
+        // MOUSE UP -- GLOBAL
+        window.addEventListener('mouseup', ()=>{
+            video_container.querySelector('.video-frame-wrapper').style.display = 'none';
+
+            if ( video_container.querySelector('.video-seekbar-track').getAttribute('att-hold') == "true" ){
+                video_container.querySelector('.video-seekbar-track').setAttribute('att-hold', "false");
+                
+
+                let secValue = video_container.querySelector('.video-seekbar-fill').offsetWidth / video_container.querySelector('.video-seekbar-track').offsetWidth * 100;
+                console.log('set video', secValue);
+                video_element.currentTime = secValue * video_element.duration / 100;
+            }
+
+            
+
+            if ( video_container.querySelector('.audio-seekbar-track') ){
+                video_container.querySelector('.audio-seekbar-track').setAttribute('att-hold', "false");
+            }
+        });
+
+
+
+
+
+
+        video_container.querySelector(".video-button-back").addEventListener('click', ()=>{
+            console.log('back');
+        });
+
+
+        // CLICK PLAY/PAUSE
+        video_container.querySelector(".video-button-playPause").addEventListener('click', (evt)=>{
+            console.log('play/pause');
+
+             
+            if ( video_element.paused ){
+                if ( video_element.currentTime < video_element.duration ){
+                    video_element.play();
+                    evt.target.parentNode.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/></svg>`;
+                    
+                }
+            }
+            else{
+                video_element.pause();
+                evt.target.parentNode.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>`;
+            }
+
+
+        });
+
+
+        video_container.querySelector(".video-button-next").addEventListener('click', ()=>{
+            console.log('next');
+        });
+
+        video_container.querySelector(".video-button-speaker").addEventListener('click', ()=>{
+            console.log('speaker');
+        });
+
+
+
+
+        // CLICK SETTINGS
+        video_container.querySelector(".video-button-settings").addEventListener('click', ()=>{
+
+
+            console.log('settings');
+
+            
+            let att_open = video_container.querySelector('.video-settings-wrapper').getAttribute('att-open');
+
+            
+            video_container.querySelector('.video-settings-wrapper').setAttribute('att-open', (att_open=="true")?"false":"true");
+
+            if ( att_open == "true" ){
+                video_container.querySelector('.video-settings-wrapper').style.display = "none";
+            }
+            else{
+                video_container.querySelector('.video-settings-wrapper').style.display = "block";
+            }
+
+            
+
+
+        });
+
+
+
+        // CLICK FULLSCREEN
+        video_container.querySelector(".video-button-fullscreen").addEventListener('click', ()=>{
+            console.log('fullscreen');
+
+            if ( video_container.getAttribute('att-full') == "true" ){
+                document.exitFullscreen();
+            }
+            else{
+                video_container.requestFullscreen();
+            }
+
+        });
+
+
+        // OPEN/CLOSE FULLSCREEN
+        document.addEventListener('fullscreenchange', ()=>{
+
+            //video_element.style.width = (document.fullscreenElement)? "100%" : "auto";
+            video_container.setAttribute('att-full', (document.fullscreenElement)? "true" : "false" );
+             
+        });
+
+
+
+
+
+        // VIDEO UPDATE
+        video_element.addEventListener('timeupdate', ()=>{
+
+
+            let att_hold = video_container.querySelector('.video-seekbar-track').getAttribute('att-hold');
+ 
+
+            if ( att_hold == "false" ){
+                let percent = video_element.currentTime / video_element.duration * 100;
+                video_container.querySelector('.video-seekbar-fill').style.width = percent + '%';
+                
+                if ( video_container.querySelector('.video-time-wrapper') ){
+                    video_container.querySelector('.video-time-wrapper').innerText = `${timetrack(video_element.currentTime)}/${timetrack(video_element.duration)}`;
+                }
+            }
+
+
+        });
+
+
+
+        // FIM DO VIDEO
+        video_element.addEventListener('ended', ()=>{
+
+            console.log('ok');
+
+            if ( checkLoopMode() ){
+                video_element.currentTime = 0;
+                video_element.play();
+            }
+
+            else{
+                
+                if (video_container.querySelector(".video-button-playPause")){
+                    video_container.querySelector(".video-button-playPause").innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>`;
+                
+                }
+                
+                video_container.querySelector('.video-seekbar-fill').style.width = 0;
+                video_element.currentTime = 0;
+
+
+            }
+
+            
+
+
+
+        });
+
+
+
+
+        video_element.addEventListener("loadedmetadata", ()=>{
+            video_container.querySelector('.video-time-wrapper').innerText = `${timetrack(video_element.currentTime)}/${timetrack(video_element.duration)}`;
+        });
+
+ 
+
+
+
+
+
+
+
+
+        function toggleLoop( el ){
+
+
+            let att_loop = el.getAttribute("att-loop");
+            
+            el.setAttribute('att-loop', (att_loop=="true")?"false":"true");
+
+            if ( att_loop == "true" ){
+                el.children[1].style.visibility = 'hidden';
+            }
+            else{
+                el.children[1].style.visibility = 'visible';
+            }
+
+        }
+
+
+        function closeSettings( state ){
+            video_container.querySelector('.video-settings-wrapper').setAttribute('att-open', "false");
+            video_container.querySelector('.video-settings-wrapper').style.display = "none";
+        }
+
+
+
+        function checkLoopMode(){
+
+
+            if ( video_container.querySelector('.video-setting-item-loop').getAttribute('att-loop') == "true" ){
+                return true;
+            }
+
+            return false;
+        }
+
+
+
+
+
+
+
+
+
+        function clamp(x, min, max){
+
+            if (x > max){
+                return max;
+            }
+            else if (x < min){
+                return min;
+            }
+            return x;
+
+        }
+
+
+
+
+
+
+
+        function timetrack( value = 0 ){
+
+            let hour = Math.trunc(value / 3600);
+            let min  = Math.trunc(value/60%60);
+            let sec  = Math.trunc(value%60);
+
+            let str = '';
+
+            if ( hour > 0 ){
+                str += hour + ':';
+            }
+
+
+            str += (min < 10 && hour > 0 )? `0${min}:` : `${min}:`;
+            str += (sec < 10)? `0${sec}` : sec; 
+
+            return str;
+
+        
+        }
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

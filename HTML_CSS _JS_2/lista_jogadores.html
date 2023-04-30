@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista</title>
+
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+        }
+
+
+
+        header{
+            padding: 8px;
+            background-color: #282828;
+            box-shadow: 0 0 8px 2px #000;
+            position: sticky;
+            top: 0;
+        }
+
+
+
+
+
+        header input{
+            margin: 2px;
+            margin-left: 0;
+            padding: 4px;
+            border-radius: 4px;
+            border: 0;
+        }
+
+        
+
+
+
+
+        .ui-button{
+            padding: 8px;
+            border: 0;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .ui-button:disabled{
+            background-color: #404040;
+        }
+
+        .ui-button:disabled:hover{
+            background-color: #505050;
+        }
+
+
+
+        #buttons{
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+
+        #delete-button,
+        #erase-button{
+            background-color: #dc3545;
+        }
+
+
+
+
+        #inputSort{
+            margin-top: 5px;
+            padding: 5px;
+            background-color: #404040;
+            color: #fff;
+            border: 0;
+        }
+
+
+        #inputSort:hover{
+            background-color: #505050;
+        }
+
+
+
+
+
+
+
+
+        #listaTable{
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+
+        #listaTable th,td{
+            padding: 4px;
+        }
+
+        #listaTable tr{
+            border: 1px solid #9e9e9e;
+            text-align: center;
+            border-width: 1px 1px 1px 1px;
+        }
+
+
+        #listaTable thead tr{
+            background-color: #000;
+            color: #9e9e9e;
+        }
+
+
+
+
+        #listaTable tbody{
+            color: #9e9e9e;
+        }
+
+        #listaTable tbody tr:nth-child(odd){
+            background-color: #282828;
+        }
+
+        #listaTable tbody tr:nth-child(even){
+            background-color: #181818;
+        }
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+    <header>
+
+        <input type="text" id="inputName" placeholder="Nome">
+        <input type="tel" id="inputTel" maxlength="10" placeholder="Tel.">
+        <input type="number" id="inputCota" min="0" placeholder="Nº de cotas">
+
+        
+
+
+
+        <div id="buttons">
+            <button class="ui-button" id="add-button" onclick="gerarItem()">Adicionar</button>
+            <button class="ui-button" id="delete-button" disabled onclick="deleteItem()">Apagar Item</button>
+            <button class="ui-button" id="erase-button" disabled onclick="eraseList()">Zerar Tudo</button>
+        </div>
+
+
+
+
+
+        <select id="inputSort">
+            <option value="">Ordem: A-Z</option>
+            <option value="">Ordem: Cota</option>
+        </select>
+
+
+
+    </header>
+
+
+
+
+
+
+
+    <section>
+
+
+
+        <table id="listaTable">
+
+            <!-- HEADER -->
+            <thead>
+                <tr>
+                    <th style="width: 15px;">Index</th>
+                    <th>Nome</th>
+                    <th style="width: 150px;">Tel.</th>
+                    <th style="width: 15px;">Cotas</th>
+                </tr>
+            </thead>
+
+
+            <!-- BODY -->
+            <tbody id="listItensAll">
+                <tr>
+                    <td>01</td>
+                    <td>Marcos Antonio</td>
+                    <td>9 1515-0012</td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>02</td>
+                    <td>Alexandre</td>
+                    <td>9 9880-5012</td>
+                    <td>2</td>
+                </tr>
+
+
+                <tr>
+                    <td>03</td>
+                    <td>Francisco Silva</td>
+                    <td>9 1202-0215</td>
+                    <td></td>
+                </tr>
+            </tbody>
+
+        </table>
+
+
+
+    </section>
+
+
+
+
+
+
+    <script>
+
+
+
+
+        var listItensAll = document.getElementById("listItensAll");
+
+
+
+        var DELETE_MODE = false;
+
+
+
+
+        var listaItem = [
+
+            {
+                "nome": "nome teste",
+                "tel": "9 xxxx-yyyy",
+                "cotas": 0
+            },
+
+            {
+                "nome": "Marcos Antonio",
+                "tel": "9 1515-0012",
+                "cotas": 0
+            },
+
+            {
+                "nome": "Alexandre",
+                "tel": "9 9880-5012",
+                "cotas": 2
+            },
+
+            {
+                "nome": "Francisco Silva",
+                "tel": "9 1202-0215",
+                "cotas": 0
+            }
+
+        ];
+
+
+
+
+
+        
+        
+
+        var inputName = document.getElementById("inputName");
+        var inputTel = document.getElementById("inputTel");
+        var inputCota = document.getElementById("inputCota");
+
+
+
+        
+
+        function gerarItem(){
+
+            
+            if ( inputName.value.length > 0 && inputTel.value.length > 0 ){
+                
+
+                if (inputCota.value < 0 || inputCota.value == null ){
+                    inputCota.value = 0;
+                }
+
+
+                listaItem.push({
+                    "nome": inputName.value,
+                    "tel": inputTel.value,
+                    "cotas": inputCota.value
+                });
+
+
+                indexSort();
+
+                gerarLista();
+
+
+
+
+                // Clear inputs
+                inputName.value = inputTel.value = inputCota.value ='';
+
+            }
+            else{
+                console.warn("campo vazio")
+            }
+
+
+
+
+        }
+
+
+
+
+
+
+
+        function sortFunction(a, b) {
+
+            //a.nome = a.nome.toLocaleUpperCase();
+            //b.nome = b.nome.toLocaleUpperCase();
+
+            if (a.nome.toLocaleUpperCase() === b.nome.toLocaleUpperCase()) {
+                return 0;
+            }
+            else {
+                return (a.nome.toLocaleUpperCase() < b.nome.toLocaleUpperCase()) ? -1 : 1;
+            }
+        }
+
+
+
+        // SORT: A-Z
+        function sortByNameAZ(){
+            listaItem.sort(sortFunction);
+            gerarLista();
+        }
+
+
+        // SORT: COTA
+        function sortByCota(){
+            listaItem = listaItem.sort((a, b)=> b.cotas - a.cotas);
+            gerarLista();
+        }
+
+
+
+
+
+
+        
+
+
+        var inputSort = document.getElementById("inputSort");
+
+
+        function indexSort(){
+            if (inputSort.selectedIndex == 0){
+                sortByNameAZ();
+            }
+            else if (inputSort.selectedIndex == 1){
+                sortByCota();
+            }
+        }
+
+
+
+        inputSort.addEventListener("change", function(){
+            
+            indexSort();
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function eraseList(){
+
+            let res = confirm("Deseja Zerar Tudo?");
+
+            if (res){
+                listItensAll.innerHTML = '';
+                listaItem = [];
+            }
+
+            
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function gerarLista(){
+
+
+            listItensAll.innerHTML = '';
+
+
+            if ( listaItem.length > 0 ){
+
+                document.getElementById("delete-button").disabled = false;
+                document.getElementById("erase-button").disabled = false;
+ 
+            }
+
+
+            
+
+            
+
+
+
+            for ( let i = 0; i < listaItem.length; i++ ){
+
+                console.log(`item adicionado: item[${i}]`);
+
+
+
+
+                // ITEM DIV
+                let itemRow = document.createElement("tr");
+
+                // INDEX NUMBER
+                let index = i+1;
+                index = (index < 10)? ('0'+index) : index;
+
+                // COTAS NUMBER
+                let cotas = listaItem[i].cotas;
+                cotas = (cotas == 0)? "" : cotas;
+
+
+
+                // Event Click
+                itemRow.onclick = function(){
+
+                    
+
+                    // DELETE ITEM
+                    if ( DELETE_MODE ){
+                        document.getElementById("listItensAll").children[i].remove();
+                        listaItem.splice(i, 1);
+                        gerarLista();
+                    }
+
+                }
+
+
+
+                // CONTENT ROW
+                itemRow.innerHTML = `
+                 
+                    <td>${index}</td>
+                    <td>${listaItem[i].nome}</td>
+                    <td>${listaItem[i].tel}</td>
+                    <td>${cotas}</td>
+                 
+
+                `;
+
+
+                listItensAll.appendChild(itemRow);
+
+            }
+
+
+        }
+
+
+
+
+        gerarLista();
+
+
+
+
+
+
+        function deleteItem(){
+
+
+            if (listaItem.length > 0){
+                
+                document.getElementById("delete-button").style.backgroundColor = (DELETE_MODE)? "#dc3545" : "#e65100";
+                DELETE_MODE = !DELETE_MODE;
+
+                if ( DELETE_MODE ){
+                    console.warn("delete: ON");
+                }
+
+                else{
+                    console.warn("delete: OFF");
+                }
+
+
+            }
+
+
+            else{
+                if (!DELETE_MODE){
+                    console.warn("não pode apagar item de lista vazia")
+                }
+                
+
+                DELETE_MODE = false;
+                document.getElementById("delete-button").style.backgroundColor = "#dc3545";
+
+            }
+
+            
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

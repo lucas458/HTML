@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+
+
+        /* URNA */
+        #urna-wrapper{
+            display: flex;
+            padding: 4px;
+            background-color: #fff;
+        }
+
+
+
+
+
+
+
+        /* TELA */
+
+        #urna-tela-wrapper{
+            flex: 1;
+        }
+
+
+
+
+        #tela-container{
+            
+            width: 100%;
+            height: 100%; 
+            padding: 32px 24px;
+        }
+
+        .tela{
+            
+            width: 100%;
+            height: 100%;
+            outline: 2px solid #666;
+            background-color: #000;
+            min-width: 320px;
+        }
+
+        
+
+
+
+
+
+
+
+        /* TECLADO */
+        #urna-teclado-wrapper{
+            background-color: #212121;
+            width: fit-content;
+            padding: 8px 24px;
+            margin-left: 4px;
+        }
+
+
+        .teclado-linha{
+            display: flex;
+            justify-content: center;
+        }
+
+
+        .teclado-numeros > div{
+            width: 48px;
+            height: 32px;
+            justify-content: flex-start;
+            padding: 0 8px;
+        }
+
+
+        .teclado-numeros{
+            justify-content: space-around;
+        }
+        .teclado-numeros:last-child{
+            justify-content: center;
+        }
+
+
+
+
+
+        .teclado-controles{
+            align-items: flex-end;
+            color: #000;
+            margin-top: 8px;
+        }
+
+        .teclado-controles > div{
+            padding: 8px;
+            height: 48px;
+            align-items: flex-start;
+        }
+
+
+        .teclado-controles > div:last-child{
+           width: 128px;
+           height: 64px;
+
+        }
+
+
+        .tecla{
+            padding: 4px;
+            box-shadow: 0 0 5px 0 #000;
+            margin: 8px;
+            text-align: center;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            transition: 200ms;
+
+            cursor: pointer;
+        }
+
+
+        .tecla:active{
+            transition: 1ms;
+            transform: scale(0.95);
+        }
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+
+    <div id="urna-wrapper">
+
+ 
+
+
+        <div id="urna-tela-wrapper">
+
+            <div id="tela-container">
+
+
+
+                <div class="tela" id="votar"></div>
+
+
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+        <div id="urna-teclado-wrapper">
+
+            <div class="teclado-linha teclado-numeros">
+                <div class="tecla">1</div>
+                <div class="tecla">2</div>
+                <div class="tecla">3</div>
+            </div>
+
+            <div class="teclado-linha teclado-numeros">
+                <div class="tecla">4</div>
+                <div class="tecla">5</div>
+                <div class="tecla">6</div>
+            </div>
+
+            <div class="teclado-linha teclado-numeros">
+                <div class="tecla">7</div>
+                <div class="tecla">8</div>
+                <div class="tecla">9</div>
+            </div>
+
+            <div class="teclado-linha teclado-numeros">
+                <div class="tecla">0</div>
+            </div>
+
+            <div class="teclado-linha teclado-controles">
+                <div class="tecla" style="background-color: #fff;">BRANCO</div>
+                <div class="tecla" style="background-color: #f96b37;">CORRIGE</div>
+                <div class="tecla" style="background-color: #71be6e;">CONFIRMA</div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+    
+
+
+
+
+    <script>
+
+    </script>
+
+
+</body>
+</html>

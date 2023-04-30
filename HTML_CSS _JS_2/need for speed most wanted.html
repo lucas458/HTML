@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>need for speed most wanted</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+        html, body{
+            width: 100%;
+            height: 100%;
+        }
+
+
+
+
+        #main{
+            
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            
+
+            display: flex;
+            flex-direction: column;
+        }
+
+
+
+
+
+        /* CONTENT */
+        #content{
+            height: 100%;
+        }
+
+
+        .screen{
+            height: 100%;
+            display: none;
+        }
+
+        .screen-active{
+            display: block;
+        }
+
+
+
+        .screen-window{
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+        .screen-content{
+            height: 100%;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* TELA -- MAPA */
+
+
+        #screen-mapa{
+            background-image: url('https://cdn.videogamesblogger.com/wp-content/uploads/2012/11/need-for-speed-most-wanted-2012-speed-cameras-map.jpg');
+            /* background-image: url('https://2img.net/h/www.videogamesblogger.com/wp-content/uploads/2012/11/need-for-speed-most-wanted-2012-jack-spots-map-hd-646x383.jpg'); */
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .profile-header{
+            float: right;
+
+            display: flex;
+            align-items: center;
+        }
+
+
+        
+
+
+
+
+        .profile-string{
+            text-align: right;
+            margin-right: 8px;
+        }
+
+        .profile-name{
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 2px;
+        }
+
+        .profile-mark{
+            border-radius: 50%;
+            padding: 1px; 
+            height: 8px;
+            width: 8px;
+            border: 1px solid #505050;
+            margin-left: 2px;
+        }
+
+        .profile-mark > div{
+            border-radius: 50%;
+            background-color: #f00;
+            width: 100%;
+            height: 100%;
+        }
+
+
+        .profile-xp{
+            display: flex;
+            color: yellow;
+            font-weight: bold;
+        }
+
+        .profile-xp-icon{
+            background-color: yellow;
+            font-weight: bold;
+            color: #181818;
+            transform: skew(-25deg);
+            margin-left: 8px;
+        }
+
+        .profile-img{
+            width: 48px;
+            height: 48px; 
+            background-image: url('https://st.depositphotos.com/2101611/4338/v/600/depositphotos_43381243-stock-illustration-male-avatar-profile-picture.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+
+
+
+
+
+
+
+        .easydrive-wrapper{
+            background-color: #6c757d;
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            padding-bottom: 4px;
+            transform: skewX(-25deg);
+            margin-left: 24px;
+            margin-bottom: 16px;
+            padding-left: 35px;
+            position: relative;
+        }
+
+        .easydrive-wrapper:hover{
+            opacity: 0.5;
+        }
+
+
+        .easydrive-round{
+            transform: skewX(25deg) rotate(180deg);
+            height: 39px;
+            width: 39px;
+            border-radius: 50%;
+            background-color: #212121;
+            position: absolute;
+            top: 0;
+            left: -16px;
+            border: 2px solid #6c757d;
+            box-shadow: 0 0 5px 0 #000;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .easydrive-string{
+            font-weight: bold;
+            background-color: #212121;
+            width: fit-content;
+            padding: 0 8px;
+            
+
+        }
+        .easydrive-title{
+            font-size: 0.8em;
+            transform: skewX(25deg);
+        }
+        .easydrive-subTitle{
+            color: #505050;
+            transform: skewX(25deg);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* TELA -- GARAGEM */
+
+
+        .screen-header{
+            float: right;
+        }
+
+        .garagem-sort-cash-wrapper{
+            float: right;
+            margin-right: 16px;
+            margin-top: 8px;
+            display: flex;
+            font-size: .8em;
+            font-weight: bold;
+        }
+
+        /* SORT */
+        .garagem-sort-wrapper,
+        .garagem-cash-wrapper{
+            display: flex;
+            align-items: center;
+            margin-right: 8px; 
+        }
+        .garagem-sort-wrapper > div,
+        .garagem-cash-wrapper > div:first-child{
+            transform: skew(25deg);
+            padding: 2px 4px;
+        }
+        .garagem-sort-wrapper > div > div{
+            transform: skewX(-25deg);
+        }
+        .garagem-sort-text,
+        .garagem-cash-text{
+            width: calc( 16px * 9 ) ;
+            white-space: nowrap;
+            overflow: hidden;
+            background-color: #212121;
+        }
+
+
+        .garagem-sort-text{
+            color: #181818;
+            background-color: #fff;
+        }
+
+
+        .garagem-sort-arrow{
+            color: #181818;
+            background-color: #9e9e9e;
+        }
+
+
+        /* CASH */
+        .garagem-cash-wrapper{
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .garagem-cash-text{
+            width: calc( 16px * 6 );
+        }
+        .garagem-cash-text > div{
+            transform: skewX(-25deg);
+        }
+
+        .garagem-cash-plus{
+            background-color: #424242;
+            color: #212121;
+            width: 26px;
+            height: 26px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: rotate(45deg);
+            position: absolute;
+            left: 78px;
+            top: 5px;
+            border: 1px solid #212121;
+        }
+
+        .garagem-cash-plus > div{
+            transform: rotate(-45deg); 
+        }
+
+
+
+
+
+
+
+
+
+
+        /* GARAGEM -- LISTA DE CARROS */
+
+        #screen-garagem .screen-content{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: auto; 
+        } 
+
+
+        .garagem-list-wrapper{ 
+            width: 100%;
+            padding: 0 10%;
+            height: 0; 
+        }
+
+
+        .garagem-list-subTitle-wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+
+        .garagem-list{
+
+            width: 100%;
+            border: 2px solid #9e9e9e;
+            padding: 4px;
+
+        }
+
+
+        .garagem-row{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .garagem-row:last-child{
+            margin-bottom: 0;
+        }
+
+        .garagem-carro-wrapper{
+            width: calc( 100% / 4 );
+            height: 128px;
+            background-color: #000;
+            overflow: hidden;
+            position: relative;
+            font-size: .8em;
+        }
+
+
+
+        .garagem-list-title{
+            color: #ff1c1c; 
+        }
+
+        .garagem-list-subTitle-wrapper{ 
+            font-size: 1.2em;
+        }
+
+
+        .carro-foto{
+            
+            background-size: 100% 100%;
+            height: 100%;
+            width: 100%;
+            background-repeat: no-repeat;
+            position: absolute;
+        }
+
+
+        .carro-nfsEdition{
+
+            width: fit-content;
+            background-color: red;
+            padding: 2px 8px;
+            transform: skewX(25deg);
+            position: absolute;
+            right: -4px;   
+        }
+
+        .carro-nfsEdition > div{
+            transform: skewX(-25deg);
+        }
+
+        
+        .carro-valor,
+        .carro-xpMode{
+            
+            background-color: #212121;
+            color: #9e9e9e;
+            padding: 2px 8px;
+            transform: skewX(25deg);
+
+            position: absolute;
+            bottom: 0;
+            left: -5px;
+            
+        }
+
+
+        .carro-xpMode{
+            display: flex;
+            color: yellow;
+        }
+
+        .carro-valor > div,
+        .carro-xpMode > div{
+            transform: skewX(-25deg);
+        }
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* FOOTER */
+        #footer{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+
+        .footer-button{
+            background-color: #fff;
+            color: #181818;
+            padding: 16px;
+            transform: skewX(-25deg);
+            box-shadow: 0 0 5px 0 #000;   
+        }
+
+        .footer-button:hover{
+            background-color: red;
+            color: #fff;
+        }
+
+
+        .footer-button > div{
+            transform: skewX(25deg);
+        }
+
+
+        .footer-active{
+            background-color: red;
+            color: #fff;
+        }
+
+ 
+
+
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+
+
+
+    <div id="main">
+
+
+        <div id="content">
+
+
+            <!-- MAPA -->
+            <div class="screen" id="screen-mapa">
+
+
+
+                <div class="screen-window">
+                    
+                    <div class="screen-header" style="height: 100%;">
+
+                        <!-- PROFILE -->
+                        <div class="profile-header">
+                            <div class="profile-string">
+                                <!-- NOME -->
+                                <div class="profile-name">
+                                    <div class="profile-name-value">Você</div>
+                                    <div class="profile-mark"> <div></div> </div>
+                                </div>
+                                <!-- XP -->
+                                <div class="profile-xp">
+                                    <div class="profile-xp-value">202.500</div>
+                                    <div class="profile-xp-icon">SP</div>
+                                </div>
+                            </div>
+                            <!-- FOTO -->
+                            <div class="profile-img"></div>
+                        </div>
+                        <!-- END -- PROFILE -->
+
+                    </div>
+                    
+                    
+                    <div class="screen-footer">
+
+
+
+                        <div class="easydrive-wrapper">
+
+                            <div class="easydrive-round">
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8.404 7.304a.802.802 0 0 0 0 1.392l6.363 3.692c.52.302 1.233-.043 1.233-.696V4.308c0-.653-.713-.998-1.233-.696L8.404 7.304Z"/>
+                                    <path d="M.404 7.304a.802.802 0 0 0 0 1.392l6.363 3.692c.52.302 1.233-.043 1.233-.696V4.308c0-.653-.713-.998-1.233-.696L.404 7.304Z"/>
+                                </svg>
+
+                            </div>
+
+                            <div class="easydrive-string">
+
+                                <div class="easydrive-title">EASYDRIVE</div>
+                                <div class="easydrive-subTitle">PRÓXIMO EVENTO</div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+
+            <!-- GARAGEM -->
+            <div class="screen screen-active" id="screen-garagem">
+
+                <div class="screen-window">
+
+                    <div class="screen-header">
+
+
+                        
+                        <div class="garagem-sort-cash-wrapper">
+
+                            <div class="garagem-sort-wrapper">
+                                <div class="garagem-sort-text"> <div>CLASSE - TODOS</div> </div>
+                                <div class="garagem-sort-arrow"> <div>▼</div> </div>
+                            </div>
+
+                            <div class="garagem-cash-wrapper">
+
+                                <div class="garagem-cash-text"> <div>$88.000</div> </div>
+                                <div class="garagem-cash-plus"> <div>+</div> </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="screen-content">
+                        
+
+
+                        <div class="garagem-list-wrapper">
+
+                            <h1 class="garagem-list-title">GARAGEM</h1>
+
+                            <div class="garagem-list-subTitle-wrapper">
+                                <div class="garagem-list-subTitle-value">TODOS</div>
+                                <div class="garagem-list-myCars">6/55 ADQUIRIDOS</div>
+                            </div>
+
+
+
+                            <!-- LISTA -->
+                            <div class="garagem-list">
+
+                                
+                                <!-- LINHA -->
+                                <!-- <div class="garagem-row"> -->
+
+                                    <!-- CARRO -->
+                                    <!-- <div class="garagem-carro-wrapper">
+                                        <div class="carro-foto"></div>
+                                        <div class="carro-valor"> <div>$27.000</div> </div>
+                                        <div class="carro-nfsEdition"> <div>NFS EDITION</div> </div>
+                                    </div> -->
+
+                                    <!-- CARRO -->
+                                    <!-- <div class="garagem-carro-wrapper">
+                                        <div class="carro-foto"></div>
+                                        <div class="carro-valor"> <div>$45.000</div> </div>
+                                    </div> -->
+
+                                    <!-- CARRO -->
+                                    <!-- <div class="garagem-carro-wrapper">
+                                        <div class="carro-foto"></div>
+                                    </div> -->
+
+                                <!-- </div> -->
+
+
+
+                            </div>
+
+ 
+
+
+
+
+
+
+                        </div>
+
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- INFO -->
+            <div class="screen" id="screen-info">INFO</div>
+
+
+            <!-- WANTED -- SIDE RIGHT SCREEN -->
+            <div class="screen" id="screen-wanted">WANTED</div>
+
+
+            <!-- LOJA -->
+            <div class="screen" id="screen-loja">LOJA</div>
+
+
+            <!-- AJUSTE -->
+            <div class="screen" id="screen-ajuste">AJUSTE</div>
+
+
+            <!-- SAIR -- MODAL -->
+            <div class="screen" id="screen-map">SAIR</div>
+
+
+
+        </div>
+
+
+        <div id="footer">
+
+            <div class="footer-button footer-active"> <div><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" width="24"><path d="m15 21-6-2.1-4.65 1.8q-.5.2-.925-.113Q3 20.275 3 19.75v-14q0-.325.188-.575.187-.25.512-.375L9 3l6 2.1 4.65-1.8q.5-.2.925.112.425.313.425.838v14q0 .325-.188.575-.187.25-.512.375Zm-1-2.45V6.85l-4-1.4v11.7Zm2 0 3-1V5.7l-3 1.15ZM5 18.3l3-1.15V5.45l-3 1ZM16 6.85v11.7Zm-8-1.4v11.7Z"/></svg></div> </div>
+            <div class="footer-button"> <div><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" width="24"><path d="M4 21V9l8-6 8 6v12h-2V10l-6-4.5L6 10v11Zm5-2h6v-2H9Zm0-4h6v-2H9Zm-2 6V11h10v10Z"/></svg></div> </div>
+            <div class="footer-button"> <div><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" width="24"><path d="M4 22q-.825 0-1.412-.587Q2 20.825 2 20V9q0-.825.588-1.413Q3.175 7 4 7h5V4q0-.825.588-1.413Q10.175 2 11 2h2q.825 0 1.413.587Q15 3.175 15 4v3h5q.825 0 1.413.587Q22 8.175 22 9v11q0 .825-.587 1.413Q20.825 22 20 22Zm0-2h16V9h-5q0 .825-.587 1.412Q13.825 11 13 11h-2q-.825 0-1.412-.588Q9 9.825 9 9H4v11Zm2-2h6v-.45q0-.425-.238-.788-.237-.362-.662-.562-.5-.225-1.012-.337Q9.575 15.75 9 15.75q-.575 0-1.087.113-.513.112-1.013.337-.425.2-.662.562Q6 17.125 6 17.55Zm8-1.5h4V15h-4ZM9 15q.625 0 1.062-.438.438-.437.438-1.062t-.438-1.062Q9.625 12 9 12t-1.062.438Q7.5 12.875 7.5 13.5t.438 1.062Q8.375 15 9 15Zm5-1.5h4V12h-4ZM11 9h2V4h-2Zm1 5.5Z"/></svg></div> </div>
+            <div class="footer-button"> <div><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" width="24"><path d="M6 19v1q0 .425-.287.712Q5.425 21 5 21H4q-.425 0-.712-.288Q3 20.425 3 20v-8l2.1-6q.15-.45.538-.725Q6.025 5 6.5 5h11q.475 0 .863.275.387.275.537.725l2.1 6v8q0 .425-.288.712Q20.425 21 20 21h-1q-.425 0-.712-.288Q18 20.425 18 20v-1Zm-.2-9h12.4l-1.05-3H6.85ZM5 12v5Zm2.5 4q.625 0 1.062-.438Q9 15.125 9 14.5t-.438-1.062Q8.125 13 7.5 13t-1.062.438Q6 13.875 6 14.5t.438 1.062Q6.875 16 7.5 16Zm9 0q.625 0 1.062-.438Q18 15.125 18 14.5t-.438-1.062Q17.125 13 16.5 13t-1.062.438Q15 13.875 15 14.5t.438 1.062Q15.875 16 16.5 16ZM5 17h14v-5H5Z"/></svg></div> </div>
+            <div class="footer-button"> <div><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" width="24"><path d="M7 22q-.825 0-1.412-.587Q5 20.825 5 20q0-.825.588-1.413Q6.175 18 7 18t1.412.587Q9 19.175 9 20q0 .825-.588 1.413Q7.825 22 7 22Zm10 0q-.825 0-1.412-.587Q15 20.825 15 20q0-.825.588-1.413Q16.175 18 17 18t1.413.587Q19 19.175 19 20q0 .825-.587 1.413Q17.825 22 17 22ZM6.15 6l2.4 5h7l2.75-5ZM5.2 4h14.75q.575 0 .875.512.3.513.025 1.038l-3.55 6.4q-.275.5-.738.775Q16.1 13 15.55 13H8.1L7 15h12v2H7q-1.125 0-1.7-.988-.575-.987-.05-1.962L6.6 11.6 3 4H1V2h3.25Zm3.35 7h7Z"/></svg></div> </div>
+            <div class="footer-button"> <div><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" width="24"><path d="m9.25 22-.4-3.2q-.325-.125-.612-.3-.288-.175-.563-.375L4.7 19.375l-2.75-4.75 2.575-1.95Q4.5 12.5 4.5 12.337v-.675q0-.162.025-.337L1.95 9.375l2.75-4.75 2.975 1.25q.275-.2.575-.375.3-.175.6-.3l.4-3.2h5.5l.4 3.2q.325.125.613.3.287.175.562.375l2.975-1.25 2.75 4.75-2.575 1.95q.025.175.025.337v.675q0 .163-.05.338l2.575 1.95-2.75 4.75-2.95-1.25q-.275.2-.575.375-.3.175-.6.3l-.4 3.2Zm2.8-6.5q1.45 0 2.475-1.025Q15.55 13.45 15.55 12q0-1.45-1.025-2.475Q13.5 8.5 12.05 8.5q-1.475 0-2.488 1.025Q8.55 10.55 8.55 12q0 1.45 1.012 2.475Q10.575 15.5 12.05 15.5Zm0-2q-.625 0-1.062-.438-.438-.437-.438-1.062t.438-1.062q.437-.438 1.062-.438t1.063.438q.437.437.437 1.062t-.437 1.062q-.438.438-1.063.438ZM12 12Zm-1 8h1.975l.35-2.65q.775-.2 1.438-.588.662-.387 1.212-.937l2.475 1.025.975-1.7-2.15-1.625q.125-.35.175-.738.05-.387.05-.787t-.05-.788q-.05-.387-.175-.737l2.15-1.625-.975-1.7-2.475 1.05q-.55-.575-1.212-.963-.663-.387-1.438-.587L13 4h-1.975l-.35 2.65q-.775.2-1.437.587-.663.388-1.213.938L5.55 7.15l-.975 1.7 2.15 1.6q-.125.375-.175.75-.05.375-.05.8 0 .4.05.775t.175.75l-2.15 1.625.975 1.7 2.475-1.05q.55.575 1.213.962.662.388 1.437.588Z"/></svg></div> </div>
+            <div class="footer-button"> <div><svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" width="24"><path d="M5 21q-.825 0-1.413-.587Q3 19.825 3 19V5q0-.825.587-1.413Q4.175 3 5 3h7v2H5v14h7v2Zm11-4-1.375-1.45 2.55-2.55H9v-2h8.175l-2.55-2.55L16 7l5 5Z"/></svg></div> </div>
+            
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+
+
+    <script>
+
+
+
+        $(".footer-button").click(function(){
+            console.log( $(this).index() );
+
+            $(".footer-button").removeClass("footer-active");
+            $(".screen").removeClass("screen-active");
+
+
+            $(this).addClass("footer-active");
+            $(".screen").eq( $(this).index() ).addClass("screen-active");
+
+
+
+
+        });
+
+
+
+
+
+
+        var lista_carros = [
+
+            {'value': 27e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/f/fa/NFSMW2012_Hummer_H1Alpha_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413204259&path-prefix=en'},
+            {'value': 45e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/c/c7/NFSMW2012_Ford_F150SVTRaptor_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+            {'value': 0, 'xp': 0, 'unlock': true, 'buy': true, 'url': 'https://static.wikia.nocookie.net/nfs/images/6/6e/NFSMW2012_LandRover_RangeRoverEvoque_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+
+            {'value': 12e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/d/d4/NFSMW2012_Lancia_DeltaHFIntegrale_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+            {'value': 40e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/5/54/NFSMW2012_Tesla_RoadsterSport_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+            {'value': 0, 'xp': 0, 'unlock': true, 'buy': true, 'url': 'https://static.wikia.nocookie.net/nfs/images/0/01/NFSMW2012_Ford_FocusRS500_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+
+            {'value': 100e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/b/ba/NFSMW2012_Jeep_GrandCherokeeSRT8_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413204257&path-prefix=en'},
+            {'value': 120e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': true, 'url': 'https://static.wikia.nocookie.net/nfs/images/c/cb/NFSMW2012_Porsche_911Turbo30_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+            {'value': 55e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/2/2e/NFSMW2012_AlfaRomeo_4CConcept_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201709&path-prefix=en'},
+
+            {'value': 70e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/b/b8/NFSMW2012_Mitsubishi_EvolutionX_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': 'https://static.wikia.nocookie.net/nfs/images/2/24/NFSMW2012_Dodge_ChallengerSRT8392_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+            {'value': 50e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/4/4d/NFSMW2012_BMW_M3Coupe_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+
+            {'value': 0, 'xp': 0, 'unlock': true, 'buy': true, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/9/98/NFSMW2012_Jaguar_XKR_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+            {'value': 0, 'xp': 0, 'unlock': true, 'buy': true, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/9/9b/NFSMW2012_Subaru_CosworthImpreza_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+            {'value': 85e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/3/36/NFSMW2012_Chevrolet_CamaroZL1_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+
+            {'value': 80e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/1/19/NFSMW2012_Ford_MustangBoss302_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+            {'value': 60e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/d/d4/NFSMW2012_Maserati_GTMCStradale_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+            {'value': 0, 'xp': 0, 'unlock': true, 'buy': true, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/f/fc/NFSMW2012_Audi_A1clubsport_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': 'https://static.wikia.nocookie.net/nfs/images/2/2b/NFSMW2012_Lamborghini_Countach5000QV_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': 'https://static.wikia.nocookie.net/nfs/images/d/d8/NFSMW2012_Chevrolet_C2Stingray_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413204259&path-prefix=en'},
+            {'value': 65e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/f/f9/NFSMW2012_AstonMartin_DBS_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201709&path-prefix=en'},
+
+            {'value': 200e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/e/e2/NFSMW2012_Bentley_ContinentalSuperSportsISRConvertible_Icon.png/revision/latest/scale-to-width-down/105?cb=20210410152903&path-prefix=en'},
+            {'value': 0, 'xp': 0, 'unlock': true, 'buy': true, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/9/92/NFSMW2012_Porsche_PanameraTurboS_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201712&path-prefix=en'},
+            {'value': -1, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/9/9e/NFSMW2012_Porsche_911CarreraS_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': 'https://static.wikia.nocookie.net/nfs/images/b/b4/NFSMW2012_Marussia_B2_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+            {'value': -1, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/e/e3/NFSMW2012_MercedesBenz_SL65AMG_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+            {'value': 110e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/e/e6/NFSMW2012_Lexus_LFA_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+
+            {'value': 130e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/e/ec/NFSMW2012_MercedesBenz_SLSAMG_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+            {'value': 150e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/b/b9/NFSMW2012_Nissan_GTREgoist_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+            {'value': 0, 'xp': 240e3, 'unlock': false, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/d/d8/NFSMW2012_BMW_M3GTR_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+
+            {'value': -1, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/e/ea/NFSMW2012_Audi_R8GTSpyder_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': 'https://static.wikia.nocookie.net/nfs/images/1/1e/NFSMW2012_Chevrolet_CorvetteZR1_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+            {'value': -1, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/e/e1/NFSMW2012_Ford_GT_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': 'https://static.wikia.nocookie.net/nfs/images/2/23/NFSMW2012_Lamborghini_GallardoLP5704SpyderPerformante_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+            {'value': 350e3, 'xp': 0, 'unlock': true, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/b/b0/NFSMW2012_SRT_ViperGTS_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': 'https://static.wikia.nocookie.net/nfs/images/2/20/NFSMW2012_McLaren_MP412C_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+
+            {'value': -1, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/8/8d/NFSMW2012_Lamborghini_Aventador_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+            {'value': -1, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/3/3a/NFSMW2012_Pagani_Huayra_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+            {'value': 0, 'xp': 240e3, 'unlock': false, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/c/c7/NFSMW2012_Pagani_ZondaR_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201711&path-prefix=en'},
+
+            {'value': 0, 'xp': 280e3, 'unlock': false, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/4/40/NFSMW2012_Koenigsegg_AgeraR_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+            {'value': 0, 'xp': 320e3, 'unlock': false, 'buy': false, 'nfs': false, 'url': 'https://static.wikia.nocookie.net/nfs/images/8/8b/NFSMW2012_Bugatti_VeyronSuperSport_Icon.png/revision/latest/scale-to-width-down/105?cb=20210413201710&path-prefix=en'},
+            {'value': 0, 'xp': 360e3, 'unlock': false, 'buy': false, 'nfs': false, 'url': ''},
+
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': ''},
+            {'value': -1, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': false, 'url': ''},
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': ''},
+
+            {'value': 0, 'xp': 440e3, 'unlock': false, 'buy': false, 'nfs': false, 'url': ''},
+            {'value': -1, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': false, 'url': ''},
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': ''},
+
+            {'value': 0, 'xp': 520e3, 'unlock': false, 'buy': false, 'nfs': false, 'url': ''},
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': ''},
+            {'value': 0, 'xp': 600e3, 'unlock': false, 'buy': false, 'nfs': false, 'url': ''},
+
+            {'value': 0, 'xp': 700e3, 'unlock': false, 'buy': false, 'nfs': false, 'url': ''},
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': ''},
+            {'value': 0, 'xp': 0, 'unlock': false, 'buy': false, 'nfs': true, 'url': ''},
+
+            {'value': 0, 'xp': 800e3, 'unlock': false, 'buy': false, 'nfs': false, 'url': ''},
+
+
+
+
+        ];
+
+
+
+
+
+
+        function gerar_garagem(){
+
+
+            
+
+            $(".garagem-list").empty();
+
+
+
+
+
+            var formatNum = new Intl.NumberFormat();
+            //formatNum.format(12345);
+            
+            let row;
+
+            for ( let i = 0; i < lista_carros.length; i++ ){
+
+
+                
+
+
+                if ( i%3 == 0 ){
+                    
+
+                    if ( row != null ){
+                        $(".garagem-list").append( row );
+                    }
+
+                    row = document.createElement("div");
+                    row.classList.add("garagem-row");
+
+                }
+
+
+                let item = document.createElement("div");
+                item.classList.add("garagem-carro-wrapper");
+                
+
+
+                if ( lista_carros[i].nfs ){
+
+                    
+
+                    if ( lista_carros[i].unlock ){
+                        item.innerHTML = `
+                        <div class="carro-foto"></div>
+                        <div class="carro-valor"> <div>$${formatNum.format(lista_carros[i].value)}</div> </div>
+                        <div class="carro-nfsEdition"> <div>NFS EDITION</div> </div>
+                        `;
+                    }
+                    else{
+                        item.innerHTML = `
+                        <div class="carro-foto"></div>
+                        <div class="carro-nfsEdition"> <div>NFS EDITION</div> </div>
+                        `;
+                    }
+
+                    
+                }
+
+
+                else if ( lista_carros[i].xp > 0 ){
+
+                    item.innerHTML = `
+                    <div class="carro-foto"></div>
+                    <div class="carro-xpMode">
+                        <div class="carro-xp-value">${formatNum.format(lista_carros[i].xp)}</div>
+                        <div class="profile-xp-icon">SP</div>
+                    </div>
+                    `;
+
+
+                }
+
+
+                else{
+                    
+                    
+                    
+
+
+                    if ( lista_carros[i].value == 0 ){
+                        item.innerHTML = `
+                        <div class="carro-foto"></div>
+                        `;
+                    }
+
+                    else if ( lista_carros[i].value < 0 ){
+                        item.innerHTML = `
+                        <div class="carro-foto"></div>
+                        <div class="carro-valor"> <div>VENÇA O EVENTO</div> </div>
+                        `;
+                    }
+
+                    else{
+                        item.innerHTML = `
+                        <div class="carro-foto"></div>
+                        <div class="carro-valor"> <div>$${formatNum.format(lista_carros[i].value)}</div> </div>
+                        `;
+                    }
+                    
+                    
+                    
+
+
+                }
+
+                
+                
+
+
+                if ( row != null ){
+
+                    item.querySelector(".carro-foto").style.backgroundImage = `url(${lista_carros[i].url})`;
+                    
+
+                    row.appendChild(item);
+
+                    
+
+                }
+
+            }
+
+
+
+
+
+
+
+
+
+        }
+
+
+        gerar_garagem();
+
+
+
+
+
+
+
+    </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        
+        #wrapper{
+            padding: 8px;
+            display: flex;
+        }
+
+
+
+        .control{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+            background-color: #353535;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .control:first-child{
+            margin-right: 4px;
+        }
+        .control:last-child{
+            margin-left: 4px;
+        }
+
+
+
+        .slot_list{
+            display: flex;
+        }
+
+        .slot{
+            width: 48px;
+            height: 32px;
+            background-color: #3e3e3e;
+            margin-right: 4px;
+            cursor: pointer;
+        }
+
+        .slot:last-child{ 
+            margin: 0;
+        }
+
+
+
+        .slot_active{
+            background-color: #fafafa;
+        }
+
+
+
+
+
+
+
+
+        #value{
+            padding: 8px 16px;
+            border-radius: 8px;
+            background-color: #3e3e3e;
+            width: fit-content;
+            margin-left: 8px;
+            font-family: monospace;
+            font-size: 1.4em;
+        }
+
+
+
+
+
+
+
+
+
+        #audio_element{
+            margin-top: 8px;
+            margin-left: 8px;
+        }
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="wrapper">
+
+        <div class="control" onclick="controlClick(false)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+            </svg>
+        </div>
+        
+        <div class="slot_list">
+            <div class="slot slot_active"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+        </div>
+
+        
+
+        <div class="control" onclick="controlClick(true)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+        </div>
+
+    </div>
+
+    <div id="value">0.0</div>
+     
+
+
+    <audio id="audio_element" src="https://t4.bcbits.com/stream/e2e24720ba0797acc7b3c0121811aa38/mp3-128/163052287?p=0&ts=1676166262&t=5fe8c68bcadbf7cdade7be6aaf017b630afef6ce&token=1676166262_a1997429c77b3c44f56f783d35b97d9f16aff2cc" controls></audio>
+
+
+
+
+    <script>
+
+
+
+
+        var wrapper = document.getElementById("wrapper");
+        var value = document.getElementById("value");
+
+
+        var audio_element = document.getElementById("audio_element");
+        audio_element.volume = 0;
+
+
+        wrapper.querySelectorAll(".slot").forEach((e, i)=>{
+
+            e.onclick = ()=>{
+                fill( wrapper, i+1 );
+                value.innerHTML = (i/10).toFixed(1);
+            };
+ 
+
+        });
+ 
+        
+
+
+        function fill( container, value = 0 ){ 
+            
+            if ( value <= 0 ){
+                value = 1;
+            }
+            if ( value >= container.querySelectorAll(".slot_list .slot").length ){
+                value = container.querySelectorAll(".slot_list .slot").length  ;
+            } 
+            
+            container.querySelectorAll(".slot_list .slot").forEach((e, i)=>{
+                e.classList.toggle("slot_active", i < value ); 
+            });
+            
+            audio_element.volume = (value-1) / 10; 
+           
+        }
+
+
+
+
+        function getCurrentValue( container ){ 
+            return container.querySelectorAll(".slot_list .slot_active").length - 1; 
+        }
+
+
+
+
+        function controlClick( isUp ){
+            
+            let current = getCurrentValue( wrapper );
+
+            if ( isUp && current < wrapper.querySelectorAll(".slot_list .slot").length - 1 ){
+                current++; 
+            }
+            else if ( !isUp && current > 0 ){
+                current--; 
+            }
+
+            fill( wrapper, current+1 );
+            value.innerHTML = (current/10).toFixed(1);
+            
+        }
+
+
+
+
+
+
+
+
+
+
+        audio_element.oninput = ()=>{
+            
+            console.log( audio_element.volume )
+            if ( audio_element.volume > 0.9 ){
+                fill( wrapper, 11 ); 
+            }else{
+                fill( wrapper, Math.trunc(audio_element.volume * 10)+1 ); 
+            }
+
+            
+            value.innerHTML = (audio_element.volume).toFixed(1);
+
+        }
+
+
+
+
+ 
+
+        
+        
+        
+
+
+    </script>
+
+
+</body>
+</html>

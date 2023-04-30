@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        
+        #scroll_wrapper{
+            padding: 8px;
+        }
+
+        #scroll_track{
+            width: 100%;
+            height: 24px;
+            background-color: #353535;
+            position: relative;
+        }
+
+
+        #scroll_thumb{
+            width: 48px;
+            height: 100%;
+            background-color: #9e9e9e;
+            position: absolute;
+            left: 0;
+        }
+
+
+
+
+
+
+        
+        #list{
+            padding: 8px;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .item{
+            min-width: 64px;
+            height: 64px;
+            background-color: red;
+            margin-right: 4px;
+        }
+        .item:last-child{
+            margin: 0;
+            background-color: rebeccapurple;
+        }
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+    <div id="scroll_wrapper">
+        <div id="scroll_track">
+            <div id="scroll_thumb" initX="0" initY="0" press="false"></div>
+        </div>
+    </div>
+
+
+
+
+     
+
+    <div id="list" initX="0" initY="0" press="false">
+
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div> 
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div> 
+        <div class="item"></div> 
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        
+        
+    </div>
+
+    
+
+
+     
+
+
+    <script>
+
+
+
+        var scroll_thumb = document.getElementById("scroll_thumb");
+        var list = document.getElementById("list");
+
+
+        scroll_thumb.ontouchstart =  (evt)=>{
+            scroll_thumb.setAttribute("initX", evt.touches[0].clientX);
+            scroll_thumb.setAttribute("initY", evt.touches[0].clientY);
+            scroll_thumb.setAttribute("press", true); 
+        };
+
+
+        list.ontouchstart = (evt)=>{
+            list.setAttribute("initX", evt.touches[0].clientX);
+            list.setAttribute("initY", evt.touches[0].clientY);
+            list.setAttribute("press", true);
+        };
+
+
+
+        window.ontouchend = ()=>{
+            scroll_thumb.setAttribute("press", false);
+            list.setAttribute("press", false);
+        };
+
+
+
+        window.ontouchmove = (evt)=>{
+
+
+            if ( scroll_thumb.getAttribute("press") === "true" ){
+
+                let posX = scroll_thumb.offsetLeft + ( evt.touches[0].clientX - parseInt(scroll_thumb.getAttribute("initX")));
+                posX = clamp(posX, 0, scroll_thumb.parentElement.offsetWidth - scroll_thumb.offsetWidth);
+                scroll_thumb.style.left = posX + 'px';
+
+                if ( posX < scroll_thumb.parentElement.offsetWidth - scroll_thumb.offsetWidth && posX > 0 ){
+                    scroll_thumb.setAttribute("initX", evt.touches[0].clientX); 
+                }
+
+                let percent = posX / (scroll_thumb.parentElement.offsetWidth - scroll_thumb.offsetWidth);
+                list.scrollLeft = percent * (list.scrollWidth - list.offsetWidth);
+                
+            }
+
+
+            else if ( list.getAttribute("press") === "true"){
+
+                let posX = list.scrollLeft - ( evt.touches[0].clientX - parseInt(list.getAttribute("initX")));
+                list.setAttribute("initX", evt.touches[0].clientX); 
+                posX = clamp(posX, 0, list.scrollWidth);
+                list.scrollLeft = posX;
+
+                
+
+            }
+
+            
+
+        };
+
+
+
+
+
+
+
+        function calcSizeScroll(){
+            if ( list.scrollWidth > list.offsetWidth ){
+                let percent = 100 - ((list.scrollWidth - list.offsetWidth)/list.offsetWidth * 100);
+                scroll_thumb.style.width = percent + '%';
+            }
+        }
+
+
+
+        calcSizeScroll();
+
+
+
+        function clamp(value, min, max){
+            if ( value < min ) return min;
+            if ( value > max ) return max;
+            return value;
+        }
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        
+
+        #screen{
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+
+            position: fixed;
+        }
+
+
+
+        #name_app{
+            padding: 8px;
+            text-align: center;
+        }
+
+
+
+        #content{
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+        #content_items{
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            justify-items: center;
+            align-items: center;
+        }
+
+        .menu_item{
+            width: 64px;
+            height: 64px;
+            background-color: #353535; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .menu_item_selected::after{
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: -20px;
+            border: 4px solid orangered;
+            width: 100%;
+            height: 100%;
+            padding: 16px;
+            border-radius: 50%;
+        }
+
+ 
+
+
+        #scroll_track{
+            width: 8px;
+            height: 100%;
+            background-color: #353535;
+        }
+
+        #scroll_thumb{
+            height: 80px;
+            background-color: #9e9e9e;
+            position: relative;
+            top: 0px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        #keypad{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+        }
+
+        .key_slot{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 48px;
+        }
+
+
+
+        .key_slot:active:has(.key_button){
+            background-color: #353535;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    
+    <div id="screen">
+
+
+        <div id="name_app">nome do app</div>
+
+        <div id="content">
+
+
+            <div id="content_items">
+                <div class="menu_item menu_item_selected"></div>
+                <div class="menu_item"></div>
+                <div class="menu_item"></div>
+
+                <div class="menu_item"></div>
+                <div class="menu_item"></div>
+                <div class="menu_item"></div>
+
+                <div class="menu_item"></div>
+                <div class="menu_item"></div>
+                <div class="menu_item"></div>
+            </div>
+
+            <div id="scroll_track">
+                <div id="scroll_thumb"></div>
+            </div>
+
+            
+
+        </div>
+
+
+        <div id="keypad">
+
+            <div class="key_slot"></div>
+            <div class="key_slot"> <div class="key_button" onclick="moveUp()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/></svg></div> </div>
+            <div class="key_slot"></div>
+            
+            <div class="key_slot"> <div class="key_button" onclick="moveLeft()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg></div> </div>
+            <div class="key_slot"> <div class="key_button" onclick="select()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/></svg></div> </div>
+            <div class="key_slot"> <div class="key_button" onclick="moveRight()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg></div> </div>
+
+            <div class="key_slot"></div>
+            <div class="key_slot"> <div class="key_button" onclick="moveDown()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg></div> </div>
+            <div class="key_slot"></div> 
+
+        </div>
+
+
+    </div>
+
+
+
+     
+
+
+    <script>
+
+
+        
+        
+
+        var APPS = [
+
+            {
+                'name': 'Reg. de cham.'
+            },
+            {
+                'name': 'Contatos'
+            },
+            {
+                'name': 'Fotos'
+            },
+            {
+                'name': 'Rádio'
+            },
+            {
+                'name': 'Menssagens'
+            },
+            {
+                'name': 'Músicas'
+            },
+            {
+                'name': 'Relógio'
+            },
+            {
+                'name': 'Câmera'
+            },
+            {
+                'name': 'Cobra'
+            },
+            {
+                'name': 'Vídeo'
+            },
+            {
+                'name': 'Gravador'
+            },
+            {
+                'name': 'Calculadora'
+            },
+            {
+                'name': 'Calendário'
+            },
+            {
+                'name': 'Lanterna'
+            },
+            {
+                'name': 'Configurações'
+            },
+            {
+                'name': 'Gerenciador de arquivos'
+            },
+            {
+                'name': 'Ninja Up'
+            },
+            {
+                'name': 'DOODLE JUMP'
+            },
+            {
+                'name': 'FOOTBALL CUP'
+            },
+            {
+                'name': 'Air Strike'
+            },
+            {
+                'name': 'Mundo Oi'
+            },
+
+
+
+        ];
+        
+
+        var name_app        = document.getElementById("name_app");
+        var content_items   = document.getElementById("content_items");
+
+        var currentSelected = 4;
+        var currentRow      = 0;
+
+        name_app.innerHTML  = APPS[0].name;
+                
+
+        const GRID_WIDTH  = 3;
+        const GRID_HEIGHT = 3;
+
+
+
+
+
+
+
+        function scroll_move(){
+
+
+            let posY = currentRow * (document.getElementById("scroll_track").offsetHeight / Math.ceil(APPS.length/3-3));
+
+            if ( posY < 0 ){
+                posY = 0;
+            }else if ( posY > document.getElementById("scroll_track").offsetHeight - document.getElementById("scroll_thumb").offsetHeight ){
+                posY = document.getElementById("scroll_track").offsetHeight - document.getElementById("scroll_thumb").offsetHeight;
+            }
+
+            document.getElementById("scroll_thumb").style.top = posY + 'px';
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        function genAppGrid( offsetRow = 0 ){ 
+            let count = 0;
+
+            content_items.innerHTML = '';
+
+            let start = 3*offsetRow;
+            let end   = 9*(offsetRow+1);
+
+            for (let i = start; i < end; i++){
+
+                if ( APPS[i] ){
+                    count++;
+                    let item = document.createElement('div');
+                    item.classList.add('menu_item');
+                    item.innerHTML = i;
+                    content_items.appendChild(item);
+                    if ( count >= 9 ) break;
+                }else{
+                    break;
+                }
+
+                
+            }
+
+             
+
+        }
+
+
+
+
+        genAppGrid(0);
+        selectByIndex(currentSelected);
+
+
+        function selectByIndex( idx = 0 ){
+
+
+            content_items.querySelectorAll(".menu_item_selected").forEach(e => {
+                e.classList.remove("menu_item_selected");
+            });
+
+            currentSelected = idx;
+            
+            if ( currentSelected < 0 ){
+                currentSelected = 0;
+            }
+            else if  (currentSelected > content_items.children.length-1){
+                currentSelected = content_items.children.length - 1;
+            }
+
+            
+
+            content_items.children[currentSelected].classList.add("menu_item_selected");
+            currentSelected + (currentRow * 3);
+            name_app.innerHTML  = APPS[currentSelected + (currentRow * 3)].name;
+
+        }
+
+
+
+
+
+
+
+
+
+        function moveLeft(){
+            currentSelected--;
+            if (currentSelected < 0){
+                currentSelected = 3 - 1;
+                currentRow--;
+                if ( currentRow < 0 ){
+                    currentRow = Math.ceil(APPS.length/3-3);
+                    currentSelected = 8;
+                }
+                genAppGrid(currentRow);
+
+            }
+             
+            selectByIndex(currentSelected);
+            scroll_move();
+        }
+
+
+
+
+        function moveRight(){
+            currentSelected++;
+            if ( currentSelected >= content_items.children.length ){
+                currentSelected = 9 - 3;
+                currentRow++;
+                if (currentRow > Math.ceil(APPS.length/3-3)){
+                    currentRow = 0;
+                    currentSelected = 0;
+                }
+                genAppGrid(currentRow);
+            }
+            selectByIndex(currentSelected);
+            scroll_move();
+        }
+
+
+
+
+
+
+        function moveUp(){
+            if ( currentSelected-3 < 0 ){
+                currentRow--;
+                if ( currentRow < 0 ){
+                    currentRow = Math.ceil(APPS.length/3-3);
+                    currentSelected += 6;
+                }
+                genAppGrid(currentRow);
+            }else{
+                currentSelected -= 3;
+            }
+            selectByIndex(currentSelected);
+            scroll_move();
+        }
+
+
+
+
+
+
+
+
+
+        function moveDown(){
+            if (currentSelected+3 >= 9){
+                currentRow++;
+                if (currentRow > Math.ceil(APPS.length/3-3)){
+                    currentRow = 0;
+                    currentSelected -= 6;
+                }
+                genAppGrid(currentRow);
+            }else{
+                currentSelected += 3;
+            }
+            selectByIndex(currentSelected);
+            scroll_move();
+        }
+
+
+
+
+        function select(){
+            alert("Selecionado: " + (APPS[currentSelected + (currentRow * 3)].name));
+        }
+
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

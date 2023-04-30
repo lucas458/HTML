@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+ 
+
+
+
+        .number-spinner{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            
+            width: 64px;
+
+            background-color: #fff;
+            color: #000;
+            padding-left: 4px;
+            user-select: none;
+        }
+        
+
+        .number-value{
+            overflow: hidden;
+        }
+
+
+        .number-control{
+            color: #353535;
+            margin: 1px;
+        }
+
+
+
+        .number-arrow{
+            background-color: #bababa;
+        }
+
+        .number-arrow:first-child{ 
+            margin-bottom: 1px;
+        }
+
+        .number-arrow:hover{
+            background-color: #9e9e9e;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+    <div class="number-spinner" spinner-step="1" spinner-min="0" spinner-max="100">
+
+        <div class="number-value">0</div>
+
+        <div class="number-control">
+            <div class="number-arrow" onmousedown="arrowClick(this, true)">&triangle;</div>
+            <div class="number-arrow" onmousedown="arrowClick(this, false)">&triangledown;</div>
+        </div>
+
+    </div>
+
+
+
+     
+ 
+
+    <script>
+
+
+
+        function arrowClick(element, isUp){
+
+
+
+            console.log((isUp)?"+":"-");
+            
+            
+            
+            let isPress = true;
+
+            let step = element.parentNode.parentNode.getAttribute('spinner-step');
+            let min = element.parentNode.parentNode.getAttribute('spinner-min');
+            let max = element.parentNode.parentNode.getAttribute('spinner-max');
+
+            let value = parseFloat(element.parentNode.parentNode.querySelector('.number-value').innerText);
+
+            if ( isUp ){
+                value = parseFloat(value) + parseFloat(step);
+                if ( value > max ){
+                    value = max;
+                }
+            }
+            else{
+                value = parseFloat(value) - parseFloat(step);
+                if ( value < min ){
+                    value = min;
+                }
+            }
+
+            element.parentNode.parentNode.querySelector('.number-value').innerText = value;
+
+
+
+
+
+            window.addEventListener('mouseup', ()=>{
+                isPress = false;
+            });
+
+
+
+            setTimeout(()=>{
+                
+ 
+
+                let timer = setInterval(()=>{
+                    if ( isPress ){
+                        if ( isUp ){
+                            value = parseFloat(value) + parseFloat(step);
+                            if ( value > max ){
+                                value = max;
+                            }
+                        }
+                        else{
+                            value = parseFloat(value) - parseFloat(step);
+                            if ( value < min ){
+                                value = min;
+                            }
+                        }
+                        element.parentNode.parentNode.querySelector('.number-value').innerText = value;
+                    }
+                    else{
+                        console.log('out');
+                        clearInterval(timer);
+                    }
+                }, 50);
+
+            }, 500);
+
+            
+
+
+             
+
+
+        }
+
+
+    </script>
+
+
+</body>
+</html>

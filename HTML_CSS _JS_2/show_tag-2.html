@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #212121;
+        }
+
+
+
+        header{
+            box-shadow: 0 0 5px 0 #000;
+            position: sticky;
+            top: 0;
+        }
+
+
+        #controls{
+            display: flex;
+            flex-wrap: wrap;
+            padding: 8px;
+            padding-bottom: 0;
+            user-select: none;
+        }
+
+
+
+
+        .ui-checkbox input,
+        .ui-checkbox-all input{
+            display: none;
+        }
+
+        .ui-checkbox-all .chip{
+            border-color: #28a745;
+            color: #28a745;
+        }
+
+
+        .chip{
+            padding: 8px 16px;
+            border-radius: 16px;
+            background-color: inherit;
+            border: 1px solid #007bff;
+            color: #007bff;
+            width: fit-content;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            transition: 100ms;
+        }
+
+
+        .ui-checkbox input:checked ~ .chip{
+            background-color: #007bff;
+             
+            color: inherit;
+        }
+
+        .ui-checkbox-all input:checked ~ .chip{
+            background-color: #28a745;
+            color: #fff;
+             
+        }
+
+
+
+        .item{
+            padding: 8px;
+            background-color: #353535;
+            margin-bottom: 1px;
+            
+        }
+        .item-title{
+            color: #fff;
+        }
+        .item-subTitle{
+            color: #9e9e9e;
+            font-size: small;
+        }
+
+
+
+
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+
+
+    <header>
+
+        <div id="controls">
+
+            <!-- ITEM -->
+            <label class="ui-checkbox">
+                <input type="checkbox">
+                <div class="chip">TODOS (5)</div>
+            </label>
+
+            <!-- ITEM -->
+            <label class="ui-checkbox">
+                <input type="checkbox">
+                <div class="chip">ANIMAL</div>
+            </label>
+
+            <!-- ITEM -->
+            <label class="ui-checkbox">
+                <input type="checkbox">
+                <div class="chip">COMIDA</div>
+            </label>
+
+            <!-- ITEM -->
+            <label class="ui-checkbox">
+                <input type="checkbox">
+                <div class="chip">OBJETO</div>
+            </label>
+
+            <!-- ITEM -->
+            <label class="ui-checkbox">
+                <input type="checkbox">
+                <div class="chip">PESSOA</div>
+            </label>
+
+
+            <!-- ITEM -->
+            <label class="ui-checkbox">
+                <input type="checkbox">
+                <div class="chip">VEICULO</div>
+            </label>
+
+        </div>
+
+
+    </header>
+
+
+
+
+
+
+
+    <section id="container">
+
+        <!-- <div class="item">
+            <div class="item-title">nome do item</div>
+            <div class="item-subTitle">sub title</div>
+        </div> -->
+
+    </section>
+
+
+
+
+
+
+    <script>
+
+
+
+        var lista = [
+
+            {'title': 'uva', 'tags': ['comida']},
+            {'title': 'luiz', 'tags': ['pessoa']},
+            {'title': 'mesa', 'tags': ['objeto']},
+            {'title': 'celular', 'tags': ['objeto']},
+            {'title': 'maria', 'tags': ['pessoa']},
+            {'title': 'pão', 'tags': ['comida']},
+            {'title': 'carro', 'tags': ['veiculo', 'objeto']},
+            {'title': 'gato', 'tags': ['animal']},
+            {'title': 'marcos', 'tags': ['pessoa']},
+            {'title': 'moto', 'tags': ['veiculo', 'objeto']}
+
+        ];
+
+
+
+
+
+
+
+        function getTagString( tagList = [] ){
+
+            let tempString = '';
+
+            tagList.forEach((e,i)=>{
+
+                if (i==0){
+                    if (e.length > 0) tempString += e;
+                }
+                else{
+                    if (e.length>0) tempString += ', ' + e;
+                }
+
+            });
+
+            return tempString;
+        }
+
+
+
+
+
+
+
+        function getTaggedLength( tagName ){
+
+            let count = 0;
+
+            lista.forEach((e,i)=>{
+                
+
+                for (let j = 0; j < e.tags.length; j++){
+
+                    if ( e.tags[j] == tagName ){
+                        count++;
+                        break;
+                    }
+
+
+                }
+
+
+            });
+
+            return count;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        function gerarTagsButton(){
+
+            document.getElementById("controls").innerHTML = '';
+
+
+            let listTags = [];
+
+
+            lista.forEach((e,i)=>{
+                e.tags.forEach((tag)=>{
+                    listTags.push(tag);
+                });
+            });
+
+
+            listTags = [...new Set(listTags)];
+
+
+
+
+            //console.log(listTags);
+            
+
+
+            // TOGGLE SHOW ALL
+            let itemButton = document.createElement("label");
+            itemButton.classList.add("ui-checkbox-all");
+            itemButton.innerHTML = `<input type="checkbox"><div class="chip">TODOS (${lista.length})</div>`;
+            itemButton.children[0].addEventListener("change", ()=>{
+                console.warn( 'ALL' );
+                let buttons = document.getElementsByClassName("ui-checkbox");
+                for (let i = 0; i < buttons.length; i++){
+                    buttons[i].children[0].checked = itemButton.children[0].checked;
+                }
+                gerarLista();
+            });
+            document.getElementById("controls").appendChild(itemButton);
+            
+
+            
+
+            // CHIP BUTTON
+            listTags.forEach((tagName, i)=>{
+                let itemButton = document.createElement("label");
+                itemButton.classList.add("ui-checkbox");
+                itemButton.setAttribute("tag", tagName);
+                itemButton.innerHTML = `<input type="checkbox"><div class="chip">${tagName.toUpperCase()} (${getTaggedLength(tagName)})</div>`;
+
+                itemButton.children[0].addEventListener("change", ()=>{
+                    console.log( `${itemButton.children[1].innerText} = ${itemButton.children[0].checked}` );
+
+                    let buttons = document.getElementsByClassName("ui-checkbox");
+                    for (let i = 0; i < buttons.length; i++){
+                        if (buttons[i].children[0].checked == false){
+                            console.warn("UM FALTA");
+                            document.querySelector(".ui-checkbox-all input").checked = false;
+                            break;
+                        }
+                        document.querySelector(".ui-checkbox-all input").checked = true;
+                    }
+
+                    gerarLista();
+                });
+
+                document.getElementById("controls").appendChild(itemButton);
+
+            });
+
+
+ 
+
+        }
+
+        gerarTagsButton();
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function gerarLista(){
+
+
+            let flag = false;
+            let tempList = [];
+
+            let buttons = document.getElementsByClassName("ui-checkbox");
+
+
+            document.getElementById("container").innerHTML = '';
+
+
+
+            for (let i = 0; i < lista.length; i++){
+
+
+                for (let j = 0; j < buttons.length; j++){
+
+                    if ( buttons[j].children[0].checked == false ) continue;
+
+
+                    for (let k = 0; k < lista[i].tags.length; k++){
+
+                        if ( lista[i].tags[k].toLowerCase() == buttons[j].getAttribute('tag').toLowerCase() ){
+                            flag = true;
+                            
+                            tempList.push(lista[i]);
+
+                            break;
+                        }
+
+                    }
+
+                    if (flag){
+                        flag = false;
+                        break;
+                    }
+
+
+                }
+
+            }
+
+            
+
+
+
+            tempList.sort((a,b)=>{
+                let fa = a.title.toLowerCase();
+                let fb = b.title.toLowerCase();
+                if (fa > fb)return 1;
+                if (fa < fb)return -1;
+                return 0;
+            });
+
+
+            console.log( tempList );
+
+
+
+            if ( tempList.length > 0 ){
+
+
+                let itemCouter = document.createElement("div");
+                itemCouter.innerHTML = `Encontrados (${tempList.length})`;
+                itemCouter.style.padding = "8px 4px";
+                itemCouter.style.color = "#9e9e9e";
+                itemCouter.style.backgroundColor = "#181818";
+                document.getElementById("container").appendChild(itemCouter);
+
+
+                tempList.forEach((e, i)=>{
+
+                    let item = document.createElement("div");
+                    item.classList.add("item");
+                    item.innerHTML = `
+                    <div class="item-title">${e.title}</div>
+                    <div class="item-subTitle">${getTagString(e.tags.sort())}</div>
+                    `;
+
+                    document.getElementById("container").appendChild(item);
+
+                });
+            }
+
+            
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+    
+ 
+</body>
+</html>

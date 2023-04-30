@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Árvore Etária</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+ 
+
+        .row{
+            width: 100%;
+            height: fit-content;
+            background-color: #424242;
+            display: flex;
+            padding: 0 4px;
+        }
+
+        .row > .bar{
+            flex: 1;
+        }
+
+
+
+        .label{
+            width: fit-content;
+            padding: 0 4px;
+            width: 60px;
+            text-align: center;
+        }
+
+        
+
+        .bar{
+            width: 100%;
+            height: 16px;
+            background-color: #181818;
+        }
+
+
+
+        .bar > div{
+            width: 0;
+            height: 16px;
+            background-color: green;
+        }
+
+        .bar-man > div{
+            float: right;
+            background-color: royalblue;
+            border-right: 1px solid #424242;
+        }
+
+        .bar-woman > div{
+            border-left: 1px solid #424242;
+            background-color: pink;
+        }
+
+  
+    </style>
+
+</head>
+<body>
+    
+
+
+
+
+
+    <div id="container">
+
+        
+
+        <div class="row">
+            <!-- <div class="label">5-9</div>
+            <div class="bar bar-man"><div></div></div>
+            <div class="bar bar-woman"><div></div></div> -->
+        </div>
+
+       
+
+
+    </div>
+
+
+
+
+
+
+
+    <script>
+
+
+
+        var ARVORE = [
+
+            {'label': '+100','man': 917,'woman': 2317},
+            {'label': '95-99','man': 4534,'woman': 12323},
+            {'label': '90-94','man': 20758,'woman': 45806},
+            {'label': '85-89','man': 63558,'woman': 121030},
+            {'label': '80-84','man': 150452,'woman': 246113},
+            {'label': '75-79','man': 246532,'woman': 354796},
+            {'label': '70-74','man': 371655,'woman': 484550},
+            {'label': '65-69','man': 449180,'woman': 609906},
+            {'label': '60-64','man': 705940,'woman': 831069},
+            {'label': '55-59','man': 930303,'woman': 1057688},
+            {'label': '50-54','man': 1149501,'woman': 1286603},
+            {'label': '45-49','man': 1308852,'woman': 1444270},
+            {'label': '40-44','man': 1444231,'woman': 1536444},
+            {'label': '35-39','man': 1549270,'woman': 1634852},
+            {'label': '30-34','man': 1741346,'woman': 1815101},
+            {'label': '25-29','man': 1881495,'woman': 1908293},
+            {'label': '20-24','man': 1835222,'woman': 1802466},
+            {'label': '15-19','man': 1667482,'woman': 1636426},
+            {'label': '10-14','man': 1687826,'woman': 1637087},
+            {'label': '5-9','man': 1457203,'woman': 1403430},
+            {'label': '0-4','man': 1361616,'woman': 1313756},
+
+        ];
+
+
+
+
+        var container = document.getElementById("container");
+
+
+
+        // GET TOTAL DE HABITANTES 
+        function getSomaTotal(){
+            let valor = 0;
+            ARVORE.forEach((e)=>{
+                valor += e.man + e.woman;
+            });
+            return valor;
+        }
+
+
+
+        function gerar(){
+
+
+            container.innerHTML = '';
+
+            let total = getSomaTotal();
+
+
+            ARVORE.forEach((e, i)=>{
+
+
+                let item = document.createElement("div");
+                item.classList.add("row");
+
+                // PERCENTAGEM
+                let percent_man = e.man / (total/10) * 100;
+                let percent_woman = e.woman / (total/10) * 100;
+
+                // FORAMTAÇÂO DE NUMERO ex: 1023 >> 1.023
+                let total_man = Intl.NumberFormat().format(e.man);
+                let total_woman = Intl.NumberFormat().format(e.woman);
+
+                // TITULO QUANDO PASSO O MOUSE POR CIMA
+                let title_man =  `${e.label.replace("-", " a ")} anos, ${total_man} habitante(s) (${(percent_man.toFixed(1))}%)`;
+                let title_woman = `${e.label.replace("-", " a ")} anos, ${total_woman} habitante(s) (${(percent_woman.toFixed(1))}%)`;
+
+
+                item.innerHTML = `
+                <div class="label">${e.label}</div>
+                <div class="bar bar-man" title="${title_man}"><div style="width:${percent_man}%"></div></div>
+                <div class="bar bar-woman" title="${title_woman}"><div style="width:${percent_woman}%"></div></div>
+                `;
+
+                
+                
+
+                container.appendChild(item);
+ 
+
+
+            });
+
+        }
+
+
+        gerar();
+
+
+
+
+
+    </script>
+
+
+
+
+</body>
+</html>

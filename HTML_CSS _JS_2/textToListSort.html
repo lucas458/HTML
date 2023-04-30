@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorter</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            position: fixed;
+        }
+        .window{
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        #sorter_types{ 
+            display: flex;
+        }
+        .sorter_item{  
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 4px;
+            padding: 8px 20px;
+            background-color: #353535;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: 250ms;
+            flex: 1;
+        }
+        .sorter_item:last-child{
+            margin: 0;
+        }
+        .sorter_item_selected{
+            background-color: #28a745; 
+        }
+        .sorter_item:hover{
+            opacity: 0.8;
+        }
+        #textArea{
+            resize: none;
+            width: 100%;
+            height: 100%;
+            outline: none;
+            border: none;
+            padding: 8px;
+            background-color: #353535;
+            color: #e0e0e0;
+            border-radius: 0 0 16px 16px;
+        }
+        #listItems{
+            overflow: hidden auto; 
+        }
+        .item{
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            background-color: #353535;
+        }
+        .item_number{
+            width: 48px;
+            min-width: 48px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #212121;
+            color: #acacac;
+        }
+        .item_text{
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div id="main_screen">
+
+        <div class="window">
+            
+            <div id="sorter_types">
+                <div class="sorter_item sorter_item_selected" item-sort=";">;</div>
+                <div class="sorter_item" item-sort=",">,</div>
+                <div class="sorter_item" item-sort="-">-</div>
+                <div class="sorter_item" item-sort="/">/</div>
+                <div class="sorter_item" item-sort="+">+</div>
+                <div class="sorter_item" item-sort="&#10">line</div>
+            </div>
+
+            <textarea id="textArea"></textarea>
+        </div>
+
+        <div class="window">
+            <div id="listItems"></div>
+        </div>
+
+    </div>
+
+
+    <script>
+
+        var textArea = document.getElementById("textArea");
+        var listItems = document.getElementById("listItems");
+        var sorter_types = document.getElementById("sorter_types");
+
+        for (let i = 0; i < sorter_types.children.length; i++){
+            sorter_types.children[i].onclick = () => {
+                selectSorterByIndex(i);
+                textArea.focus();
+                sorter();
+            };
+        }
+
+        function selectSorterByIndex( index = 0 ){
+            for (let i = 0; i < sorter_types.children.length; i++){
+                sorter_types.children[i].classList.toggle("sorter_item_selected", i == index);
+            }
+        }
+
+        function getSelectedSorterString(){
+            for (let i = 0; i < sorter_types.children.length; i++){
+                if ( sorter_types.children[i].classList.contains("sorter_item_selected") ){
+                    return sorter_types.children[i].getAttribute("item-sort");
+                }
+            }
+        }
+
+        function sorter(){
+            let arr = textArea.value.split( getSelectedSorterString() );
+            for (let i = 0; i < arr.length; i++){
+                arr[i] = arr[i].replaceAll("\n", "");
+            }
+            arr.sort();
+            listItems.innerHTML = '';
+            let x = 0;
+            arr.forEach((e, i) => {
+                if ( e.length > 0 && e.replaceAll("\n", "").length > 0 ){
+                    x++;
+                    let item = document.createElement("div");
+                    item.classList.add("item");
+                    item.innerHTML = `
+                    <div class="item_number">${(x<10)?"0"+x : x}</div>
+                    <div class="item_text">${e}</div>`;
+                    listItems.appendChild(item);
+                    listItems.scrollTop = listItems.scrollHeight;
+                }
+            });
+        }
+
+        textArea.oninput = () => {
+            sorter();
+        };
+
+    </script>
+
+</body>
+</html>

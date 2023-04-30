@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+         
+
+
+        .item{
+            padding: 8px;
+            background-color: #353535;
+        }
+
+        .item-checked{
+            background-color: #28a745 !important;
+        }
+
+        .item-hidden{
+            display: none;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+
+    <input type="search" id="inputSearch" placeholder="Buscar" onsearch="serachItens(this.value)" oninput="serachItens(this.value)">
+
+
+    <div id="lista">
+
+
+        <div class="item item-checked">Lucas</div>
+        <div class="item item-checked">Marcos</div>
+        <div class="item">João</div>
+        <div class="item item-checked">Mária</div>
+        <div class="item">Antônio</div>
+        <div class="item">José</div>
+
+
+    </div>
+    
+     
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+
+    <script>
+
+
+        let lista = document.getElementById("lista");
+
+        function serachItens( value ){
+            
+            for (let i = 0; i < lista.children.length; i++){
+
+                // format 'search'
+                let formatedStr = value.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+                // format 'content'
+                let itemContent = lista.children[i].innerHTML.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+                // show/hide item?
+                lista.children[i].classList.toggle("item-hidden", (itemContent.search( formatedStr ) < 0) );
+            }
+
+        }
+
+
+
+
+
+         
+
+
+        lista.addEventListener('click', function(){
+
+            let listaItens = this.querySelectorAll('.item')
+
+            if (listaItens){
+
+                listaItens.forEach(function(e, i){
+
+                    e.onclick = function(){
+                        e.classList.toggle('item-checked');
+                    }
+
+                });
+
+            }
+
+        }, true);
+
+
+
+
+    </script>
+
+
+</body>
+</html>

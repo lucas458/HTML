@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+
+        #list_chips{
+            padding: 8px;
+            display: flex;
+        }
+
+        .chip{
+            flex-shrink: 0;
+            padding: 8px 16px;
+            border-radius: 25px;
+            border: 2px solid #007bff;
+            background-color: transparent;
+            width: fit-content;
+            margin-right: 10px;
+        }
+
+        .chip_active{
+            background-color: #007bff;
+        }
+
+
+
+
+
+
+
+        #list_items{
+            padding: 8px;
+        }
+
+
+        .item{
+            padding: 8px;
+            border-radius: 4px;
+            border: 2px solid #353535;
+            margin-bottom: 8px;
+        }
+
+        .item_label{
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            padding-left: 8px;
+        }
+
+
+        .item_tag_list{
+            display: flex;
+        }
+        .item_tag{
+            flex-shrink: 0;
+            color: #9e9e9e;
+            margin-right: 8px;
+            background-color: #353535;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+
+
+
+ 
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    
+    <div id="list_chips">
+        <!-- <div class="chip">algo</div>
+        <div class="chip">algo2</div> -->
+    </div>
+
+
+
+
+
+
+    <div id="list_items">
+
+        <!-- ITEM -->
+        <!-- <div class="item">
+            <div class="item_label">Carro</div>
+            <div class="item_tag_list">
+                <div class="item_tag">objeto</div>
+                <div class="item_tag">veiculo</div>
+            </div>
+        </div> -->
+
+
+    </div>
+
+
+
+
+
+     
+
+
+    <script>
+
+
+
+         
+        var LIST = [
+
+
+            {
+                'label': 'carro',
+                'tags': ['objeto', 'veiculo']
+            },
+            {
+                'label': 'banana',
+                'tags': ['fruta', 'comida']
+            },
+            {
+                'label': 'moto',
+                'tags': ['objeto', 'veiculo']
+            },
+            {
+                'label': 'celular',
+                'tags': ['objeto']
+            },
+            {
+                'label': 'marcos',
+                'tags': ['pessoa']
+            }
+
+
+        ];
+        
+
+
+        var list_chips = document.getElementById("list_chips");
+        var list_items = document.getElementById("list_items");
+
+
+        var tags = [];
+
+        for (let i = 0; i < LIST.length; i++){
+            for (let j = 0; j < LIST[i].tags.length; j++){
+                if ( tags.indexOf(LIST[i].tags[j]) == -1 ){
+                    tags.push( LIST[i].tags[j] );
+                }
+            }
+        }
+
+        tags.sort();
+
+
+        tags.forEach(e => {
+            addTagChip(e);
+        });
+        
+
+
+
+
+        function addTagChip( label ){
+            let chip = document.createElement('div');
+            chip.classList.add('chip');
+            chip.innerHTML = label;
+            list_chips.appendChild(chip);
+        }
+
+
+
+
+        function addItem( label, tags = [] ){
+
+
+            let item = document.createElement('div');
+            item.classList.add('item');
+
+            item.innerHTML = `
+            <div class="item_label">${label}</div>
+            <div class="item_tag_list"></div>`;
+
+            tags.sort();
+
+            for (let i = 0; i < tags.length; i++){
+                let tag = document.createElement('div');
+                tag.classList.add('item_tag');
+                tag.innerHTML = tags[i];
+                item.querySelector('.item_tag_list').appendChild(tag);
+            }
+
+            list_items.appendChild(item);
+
+
+        }
+
+
+
+
+
+
+        function getSelectedTags(){
+
+            let temp = [];
+
+            for (let i = 0; i < list_chips.children.length; i++){
+                if ( list_chips.children[i].classList.contains("chip_active") ){
+                    temp.push( list_chips.children[i].innerHTML );
+                }
+            }
+            return temp;
+        }
+
+
+
+
+
+        list_chips.onmousedown = () => {
+
+            for (let i = 0; i < list_chips.children.length; i++){
+                list_chips.children[i].onclick = () => {
+                    list_chips.children[i].classList.toggle("chip_active");
+                    genListItems();
+                };
+            }
+
+        };
+
+
+
+
+
+
+        function genListItems(){
+
+            list_items.innerHTML = '';
+
+            let selected_tags = getSelectedTags();
+            let temp_list_sorted = JSON.parse(JSON.stringify(LIST));
+
+            temp_list_sorted.sort((a, b) => {
+                if (a.label > b.label) return 1;
+                if (a.label < b.label) return -1;
+                return 0;
+            });
+
+
+            for (let i = 0; i < temp_list_sorted.length; i++){
+                for (let j = 0; j < selected_tags.length; j++){
+                    if ( temp_list_sorted[i].tags.indexOf( selected_tags[j] ) >= 0 ){
+                        addItem(temp_list_sorted[i].label, temp_list_sorted[i].tags);
+                        break;
+                    }
+                }
+            }
+            
+
+
+
+        }
+
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
