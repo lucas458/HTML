@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+
+        #radio_container{
+            background-color: brown;
+            width: fit-content;
+            padding: 5px;
+        }
+    </style>
+
+</head>
+<body>
+    
+    <div id="radio_container">
+        <input id="radio_valor_atual" type="text" placeholder="DIREITA">
+        <input type="button" value="<->" onclick="radio_swap()">
+        <input id="radio_valor_stand" type="text" placeholder="ESQUERDA">
+    </div>
+
+
+    <!-- START: JavaScript -->
+    <script>
+        var radio_valor_atual = document.getElementById("radio_valor_atual");
+        var radio_valor_stand = document.getElementById("radio_valor_stand");
+
+        function radio_swap(){
+            console.log("SWAP...");
+
+            let temp = radio_valor_atual.value; // VALOR: ESQUERDA
+            
+            radio_valor_atual.value = radio_valor_stand.value;  // VALOR: ESQUERDA = DIREIRA
+            radio_valor_stand.value = temp;                     // DIREITA = TEMP (ESQUERDA)
+        }
+
+    </script>
+    <!-- FIM: JavaScript -->
+
+</body>
+</html>

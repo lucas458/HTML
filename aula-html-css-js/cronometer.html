@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+    <style>
+
+        :root{
+            --header-color: #1565C0;
+            
+
+            --bg-color: #fff;
+            --fg-color: #fff;
+
+            --font-primary: #000;
+            --font-secundary: #646464;
+            
+            --font-item: #007bff;
+            --font-item_secundary: #24568a;
+
+            --press-color: #ddd;
+        }
+
+
+        [data-theme="dark"]{
+
+            --header-color: #212121;
+            
+
+            --bg-color: #212121;
+            --fg-color: #1e1e1e;
+
+            --font-primary: #fff;
+            --font-secundary: #646464;
+            --font-item: #03dac5;
+
+            --press-color: #2a2a2a;
+        }
+
+
+
+
+
+        *{
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+
+            background-color: var(--bg-color);
+            transition: 200ms background-color;
+        }
+
+
+
+        /* HEADER */
+
+        header{
+            padding: 10px;
+            background-color: var(--header-color);
+            color: #fff;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            
+            font-weight: bold;
+        }
+
+
+
+
+
+
+
+
+
+        /* MAIN CONTENT */
+
+
+        article{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+        }
+
+
+
+
+
+
+        /****** COUNTER ******/
+
+        #counterContainer{
+            margin: 10px 0;
+        }
+
+
+        .couterValue{
+            text-align: center;
+        }
+
+        /* BIG COUNTER */
+        #couterBig{
+            font-size: 2.5em;
+            color: #007bff94;
+        }
+
+        /* MINI COUNTER */
+        #counterMini{
+            font-size: 1.5em;
+            color: var(--font-secundary);
+        }
+
+
+
+
+
+        #lapsContainer{
+
+            overflow: scroll;
+            height: 261px;
+            width: 100%;
+            
+            color: var(--font-primary);
+            border-top: 1px solid #646464;
+        }
+
+
+        .lapItem{
+            display: flex;
+            justify-content: space-around;
+            padding: 5px;
+        }
+        .lapItem:active{
+            background-color: var(--press-color);
+        }
+
+        
+
+        .lapItem div:nth-child(3){
+            color: #007bff;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* FOOTER */
+        .controlContainer{
+
+            
+            
+            color: var(--font-primary);
+
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+
+            border-top: 1px solid #646464;
+
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            
+        }
+
+        .controlContainer div{
+            padding: 10px;
+            width: 100%;
+            
+            text-align: center;
+        }
+
+        .controlContainer div:active{
+
+            background-color: var(--press-color);
+        }
+
+
+
+    </style>
+
+
+    <title>Cronometro</title>
+</head>
+
+
+
+<body>
+
+
+    <!-- HEADER -->
+    <header onclick="changeTheme()">
+        <div>Cronometro</div>
+    </header>
+
+
+
+
+    <!-- CONTENT -->
+    <article>
+
+
+
+
+        <!-- TIMER -->
+        <div id="counterContainer">
+
+            <!-- MASTER COUNTER -->
+            <div id="couterBig" class="couterValue">
+                <span>00</span>
+                <span>:</span>
+                <span>00</span>
+                <span>.</span>
+                <span>00</span>
+            </div>
+
+
+            <!-- LAP COUNTER -->
+            <div id="counterMini" class="couterValue">
+                <span>00</span>
+                <span>:</span>
+                <span>00</span>
+                <span>.</span>
+                <span>00</span>
+            </div>
+
+        </div>
+
+
+
+
+        <!-- LAPS REGISTER -->
+        <div id="lapsContainer">
+
+
+            <!-- ITEM -- VOLTA -->
+            <!-- <div class="lapItem">
+                <div>00</div>
+                <div>00:00.00</div>
+                <div>00:00.00</div>
+            </div> -->
+
+
+        </div>
+
+
+
+
+    </article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- FOOTER -->
+    <footer>
+        
+
+        <!-- FIRST STRT -->
+        <div class="controlContainer" id="controlToStart" style="display: flex;" >
+            <div style="color: #007bff;" onclick="masterStart();">Iniciar</div>
+        </div>
+
+
+        <!-- STOP | LAP -->
+        <div class="controlContainer" id="controlToStop" style="display: none;">
+            <div style="color: #cd3545;" onclick="counterPause();">Parar</div>
+            <div onclick="counterLap();">Marcar</div>
+        </div>
+
+
+        <!-- INIT | RESET -->
+        <div class="controlContainer" id="controlToContinue" style="display: none;">
+            <div style="color: #28a745;" onclick="counterContinue();">Iniciar</div>
+            <div onclick="counterReset();">Reinicar</div>
+        </div>
+
+
+
+
+
+    </footer>
+
+
+
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+
+        var isRunning = false;
+        var lapActive = false;
+
+        var masterCounter = {
+            min: 0,
+            sec: 0,
+            milis: 0
+        }
+
+
+        var lapCounter = {
+            min: 0,
+            sec: 0,
+            milis: 0,
+            length: 0
+        }
+
+
+
+
+        setInterval( function(){
+
+            if ( isRunning ){
+
+
+                // MASTER COUNTER
+                masterCounter.milis++;
+                if ( masterCounter.milis > 99 ){
+                    masterCounter.milis = 0;
+                    masterCounter.sec++;
+                    if (masterCounter.sec > 59){
+                        masterCounter.sec = 0;
+                        masterCounter.min++;
+                        if (masterCounter.min > 99){
+                            masterCounter.milis = 0;
+                        }
+                    }
+                }
+                // UPDATE MASTER
+                $(".couterValue").eq(0).children("span").eq(0).text( (masterCounter.min < 10)? ("0" + masterCounter.min) : masterCounter.min );  // MIN
+                $(".couterValue").eq(0).children("span").eq(2).text( (masterCounter.sec < 10)? ("0" + masterCounter.sec) : masterCounter.sec );  // SEC
+                $(".couterValue").eq(0).children("span").eq(4).text( (masterCounter.milis < 10)? ("0" + masterCounter.milis) : masterCounter.milis );  // MILI
+
+
+
+
+                if ( lapActive ){
+
+                    // MASTER COUNTER
+                    lapCounter.milis++;
+                    if ( lapCounter.milis > 99 ){
+                        lapCounter.milis = 0;
+                        lapCounter.sec++;
+                        if (lapCounter.sec > 59){
+                            lapCounter.sec = 0;
+                            lapCounter.min++;
+                            if (lapCounter.min > 99){
+                                lapCounter.milis = 0;
+                            }
+                        }
+                    }
+                    // UPDATE MASTER
+                    $(".couterValue").eq(1).children("span").eq(0).text( (lapCounter.min < 10)? ("0" + lapCounter.min) : lapCounter.min );  // MIN
+                    $(".couterValue").eq(1).children("span").eq(2).text( (lapCounter.sec < 10)? ("0" + lapCounter.sec) : lapCounter.sec );  // SEC
+                    $(".couterValue").eq(1).children("span").eq(4).text( (lapCounter.milis < 10)? ("0" + lapCounter.milis) : lapCounter.milis );  // MILI
+                }
+
+
+                
+
+            }
+
+
+
+        }, 10 );
+        
+
+
+
+
+        // TOGGLE THEME
+        function changeTheme(){
+
+            data = document.documentElement.getAttribute("data-theme");
+
+
+            if ( data == "light" ){
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+            else{
+                document.documentElement.setAttribute("data-theme", "light");
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        // FIRST TIME START
+        function masterStart(){
+            $("#controlToStart").fadeOut(1);
+            $("#controlToStop").fadeIn(1);
+
+
+            isRunning = true;
+
+        }
+
+
+
+
+        // PAUSE
+        function counterPause(){
+            $("#controlToStop").fadeOut(1);
+            $("#controlToContinue").fadeIn(1);
+
+            isRunning = false;
+        }
+
+
+
+
+
+        // CONTINUE
+        function counterContinue(){
+            $("#controlToContinue").fadeOut(1);
+            $("#controlToStop").fadeIn(1);
+
+
+            isRunning = true;
+        }
+
+
+
+
+
+        // RESET
+        function counterReset(){
+
+            isRunning = lapActive = false;
+            
+            masterCounter.milis = 0;
+            masterCounter.sec = 0;
+            masterCounter.min = 0;
+
+            lapCounter.milis = 0;
+            lapCounter.sec = 0;
+            lapCounter.min = 0;
+            lapCounter.length = 0;
+
+
+            $("#controlToContinue").fadeOut(1);
+            $("#controlToStart").fadeIn(1);
+
+            // RESET BIG COUNTER
+            $(".couterValue").eq(0).children("span").eq(0).text("00");
+            $(".couterValue").eq(0).children("span").eq(2).text("00");
+            $(".couterValue").eq(0).children("span").eq(4).text("00");
+
+            // RESET MINI COUNTER
+            $(".couterValue").eq(1).children("span").eq(0).text("00");
+            $(".couterValue").eq(1).children("span").eq(2).text("00");
+            $(".couterValue").eq(1).children("span").eq(4).text("00");
+
+
+            // CLEAR LAPS
+            $("#lapsContainer").empty();
+
+
+        }
+
+
+
+
+
+        // LAP
+        function counterLap(){
+            lapActive = true;
+
+            lapCounter.length++;
+
+
+            // 0 - 999 : items
+            if ( lapCounter.length > 999 ){
+                lapCounter.length = 0;
+            }
+
+
+
+            if ( lapCounter.length == 1){
+                $("#lapsContainer").prepend(`
+                <div class="lapItem">
+                    <div>${(lapCounter.length < 10)?("0" + lapCounter.length): lapCounter.length}</div>
+                    <div>${(masterCounter.min < 10)?("0" + masterCounter.min): masterCounter.min}:${(masterCounter.sec < 10)?("0" + masterCounter.sec): masterCounter.sec}.${(masterCounter.milis < 10)?("0" + masterCounter.min): masterCounter.milis}</div>
+                    <div>${(masterCounter.min < 10)?("0" + masterCounter.min): masterCounter.min}:${(masterCounter.sec < 10)?("0" + masterCounter.sec): masterCounter.sec}.${(masterCounter.milis < 10)?("0" + masterCounter.min): masterCounter.milis}</div>
+                    
+                </div>
+                `);
+            }
+
+            else{
+                $("#lapsContainer").prepend(`
+                <div class="lapItem">
+                    <div>${(lapCounter.length < 10)?("0" + lapCounter.length): lapCounter.length}</div>
+                    <div>${(masterCounter.min < 10)?("0" + masterCounter.min): masterCounter.min}:${(masterCounter.sec < 10)?("0" + masterCounter.sec): masterCounter.sec}.${(masterCounter.milis < 10)?("0" + masterCounter.min): masterCounter.milis}</div>
+                    <div>${(lapCounter.min < 10)?("0" + lapCounter.min): lapCounter.min}:${(lapCounter.sec < 10)?("0" + lapCounter.sec): lapCounter.sec}.${(lapCounter.milis < 10)?("0" + lapCounter.min): lapCounter.milis}</div>
+                    
+                </div>
+                `);
+            }
+
+
+            lapCounter.milis = 0;
+            lapCounter.sec = 0;
+            lapCounter.min = 0;
+            
+        }
+
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teclado 10x4</title>
+
+    <style>
+        #teclado{
+            background-color: red;
+            width: 550px;
+            height: 250px;
+
+        }
+        .tecla{
+            background-color: teal;
+            width: 50px;
+            height: 50px;
+            float: left;
+            margin: 2px;
+            user-select: none;
+            font-family: Consolas;
+            box-sizing: border-box;
+            padding-top: 15px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .tecla:active{
+            background-color: whitesmoke;
+        }
+
+        .tecla_letras{
+            background-color: thistle;
+        }
+
+        .tecla_setas{
+            background-color: violet;
+        }
+    </style>
+
+</head>
+<body>
+    
+    <div id="app">
+        <div id="teclado">
+            <div class="tecla tecla_letras" onclick="keyPress(this)">q</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">w</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">e</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">r</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">t</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">y</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">u</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">i</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">o</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">p</div>
+
+            <div class="tecla tecla_letras" onclick="keyPress(this)">a</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">s</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">d</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">f</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">g</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">h</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">j</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">k</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">l</div>
+            <div class="tecla" onclick="keyPress(this)">←</div>
+
+            <div class="tecla" onclick="update_keyboard('1')">↑</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">z</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">x</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">c</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">v</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">b</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">n</div>
+            <div class="tecla tecla_letras" onclick="keyPress(this)">m</div>
+            <div class="tecla tecla_setas" onclick="keyPress(this)">▲</div>
+            <div class="tecla" onclick="keyPress(this)">↵</div>
+
+            <div class="tecla" onclick="keyPress(this)">§</div>
+            <div class="tecla" onclick="update_keyboard('0')">A <sup>1</sup> </div>
+            <div class="tecla" onclick="keyPress(this)">.com</div>
+            <div class="tecla" onclick="keyPress(this)">,</div>
+            <div class="tecla" style="width: 104px;" onclick="keyPress(this)"></div>
+            <div class="tecla" onclick="keyPress(this)">.</div>
+            <div class="tecla tecla_setas" onclick="keyPress(this)">◄</div>
+            <div class="tecla tecla_setas" onclick="keyPress(this)">▼</div>
+            <div class="tecla tecla_setas" onclick="keyPress(this)">►</div>
+        </div>
+    </div>
+
+    <script>
+
+        var caps    = false;
+        var simbolo = false;
+
+        var lista_teclas = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,21,22,23,24,25,26,27,32,33,35];
+        var lista_simbolos = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "@", "$", "&", "_", "(", ")", ":", ";", "\"", "*", "!", "#", "=", "/", "+", "?", "☻", "-", "\'"];
+        var lista_temp = [];
+        var tecla = document.getElementsByClassName("tecla");
+
+
+
+        function update_keyboard(tipo){
+
+            // LETRA/SIMBOLO
+            if (tipo == 0){
+                simbolo = !simbolo;
+                //caps = true;
+                console.log("MODO: " + ((simbolo)?"SIMBOLO":"LETRA"));
+
+                for (let x = 0; x != lista_teclas.length; x++){
+                    
+                    // CAPSLOCK:OFF QUANDO SAIR DO MODO:SIMBOLO
+                    tecla[lista_teclas[x]].innerText = tecla[lista_teclas[x]].innerText.toLowerCase();
+                    
+                    // SIMBOLOS
+                    if (simbolo){
+                        lista_temp[x] = tecla[lista_teclas[x]].innerText;
+                        tecla[lista_teclas[x]].innerText = lista_simbolos[x];
+                    }
+                    // LETRAS
+                    else{
+                        tecla[lista_teclas[x]].innerText = lista_temp[x];
+                    }
+                }
+            }
+
+            // CAPS TOGGLE
+            else if (tipo == 1 && simbolo == false){
+                caps = !caps;
+                console.log("CAPS: " + ((caps)?"ON":"OFF"));
+
+                for (let x = 0; x != lista_teclas.length-3; x++){
+                    // CAPSLOCK: ON
+                    if (caps){
+                        tecla[lista_teclas[x]].innerText = tecla[lista_teclas[x]].innerText.toUpperCase();
+                    }
+                    // CAPSLOCK: OFF
+                    else{
+                        tecla[lista_teclas[x]].innerText = tecla[lista_teclas[x]].innerText.toLowerCase();
+                    }
+                }
+            }
+        }
+
+
+        function keyPress(a){
+            console.log("TECLA: " + a.innerText);
+        }
+    </script>
+</body>
+</html>

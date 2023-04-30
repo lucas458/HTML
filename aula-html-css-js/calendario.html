@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+ 
+
+
+
+
+
+
+
+        #calendar-wrapper{
+            background-color: #fff;
+            box-shadow: 0 0 5px 0 #000;
+            width: 320px;
+            border-radius: 10px;
+
+            margin: 10px;
+            user-select: none;
+        }
+
+
+        
+
+
+
+
+
+        #calendar-header{
+            /* background-color: blue; */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 2px solid #cacaca;
+        }
+
+
+        #calendar-title{
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 5px;
+            transition: 200ms;
+            border-radius: 5px;
+        }
+        #calendar-title:hover{
+            background-color: #e2e2e2;
+        }
+
+
+        #calendar-buttons{
+            display: flex;
+            color: #fff;
+        }
+
+
+        .calendar-button{
+            /* background-color: yellow; */
+            padding: 8px 10px;
+            margin-left: 10px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+
+            background-color: #d713ff;
+            box-shadow: 0 0 5px 0 #d713ff;
+
+            transition: 200ms;
+        }
+        .calendar-button:hover{
+            opacity: 0.5;
+        }
+
+
+
+        #calendar-dates-container{
+            padding: 5px 0;
+        }
+
+
+
+        #calendar-dates{
+            /* background-color: green; */
+            padding: 0 10px 50px 10px;
+        }
+
+        
+        
+
+
+
+        #calendar-weekdays{
+            /* background-color: rebeccapurple; */
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 0 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .calendar-weekday{
+            width: 32px;
+            height: 32px;
+            padding: 2px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+
+
+
+
+
+        .calendar-row{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2px;
+        }
+        .calendar-day:first-child{
+            color: #dc3545;
+        }
+
+        .calendar-day{
+            /* background-color: red; */
+            width: 32px;
+            height: 32px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 200ms;
+        }
+
+        .calendar-day:hover{
+            background-color: #cacaca;
+        }
+
+
+        .calendar-active{
+            color: #fff;
+            background-color: #d713ff;
+            box-shadow: 0 0 5px 0 #d713ff;
+        }.calendar-active:hover{background-color: #d713ff;}
+
+
+
+        .calendar-dummy:hover{
+            background-color: inherit;
+        }
+
+
+
+    </style>
+
+</head>
+
+
+
+<body>
+ 
+
+
+
+
+
+
+
+    <div id="calendar-wrapper">
+
+        <!-- HEADER -->
+        <div id="calendar-header">
+
+            <div id="calendar-title">july 2021</div>
+
+            <div id="calendar-buttons">
+
+                <div class="calendar-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                    </svg>
+                </div>
+
+                <div class="calendar-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CONTENTS -->
+
+        <div id="calendar-dates-container">
+
+
+            <!-- WEEKDAY -->
+            <div id="calendar-weekdays">
+                <div class="calendar-weekday">Mo</div>
+                <div class="calendar-weekday">Tu</div>
+                <div class="calendar-weekday">We</div>
+                <div class="calendar-weekday">Th</div>
+                <div class="calendar-weekday">Fr</div>
+                <div class="calendar-weekday">Sa</div>
+                <div class="calendar-weekday">Su</div>
+            </div>
+
+
+
+            <!-- DATES -->
+
+            <div id="calendar-dates">
+
+                
+
+                <!-- ROW -->
+                <div class="calendar-row">
+                    <div class="calendar-day calendar-dummy"></div>
+                    <div class="calendar-day calendar-dummy"></div>
+                    <div class="calendar-day calendar-dummy"></div>
+                    <div class="calendar-day">1</div>
+                    <div class="calendar-day">2</div>
+                    <div class="calendar-day">3</div>
+                    <div class="calendar-day">4</div>
+                </div>
+
+                <!-- ROW -->
+                <div class="calendar-row">
+                    <div class="calendar-day">5</div>
+                    <div class="calendar-day calendar-active">6</div>
+                    <div class="calendar-day">7</div>
+                    <div class="calendar-day">8</div>
+                    <div class="calendar-day">9</div>
+                    <div class="calendar-day">10</div>
+                    <div class="calendar-day">11</div>
+                </div>
+
+                <!-- ROW -->
+                <div class="calendar-row">
+                    <div class="calendar-day">12</div>
+                    <div class="calendar-day">13</div>
+                    <div class="calendar-day">14</div>
+                    <div class="calendar-day">15</div>
+                    <div class="calendar-day">16</div>
+                    <div class="calendar-day">17</div>
+                    <div class="calendar-day">18</div>
+                </div>
+
+                <!-- ROW -->
+                <div class="calendar-row">
+                    <div class="calendar-day">19</div>
+                    <div class="calendar-day">20</div>
+                    <div class="calendar-day">21</div>
+                    <div class="calendar-day">22</div>
+                    <div class="calendar-day">23</div>
+                    <div class="calendar-day">24</div>
+                    <div class="calendar-day">25</div>
+                </div>
+
+                <!-- ROW -->
+                <div class="calendar-row">
+                    <div class="calendar-day">26</div>
+                    <div class="calendar-day">27</div>
+                    <div class="calendar-day">28</div>
+                    <div class="calendar-day">29</div>
+                    <div class="calendar-day">30</div>
+                    <div class="calendar-day">31</div>
+                    <div class="calendar-day calendar-dummy"></div>
+                </div>
+
+                 
+                
+
+                
+
+            </div>
+
+
+        </div>
+
+
+
+    </div>
+
+    
+
+
+
+
+
+
+
+    <script>
+
+        
+
+
+
+    </script>
+
+
+
+
+</body>
+</html>

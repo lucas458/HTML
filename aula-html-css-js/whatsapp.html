@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>WhatsApp</title>
+		
+		<style>
+				
+			*{
+				margin: 0;
+				font-family: Arial;
+				box-sizing: border-box;
+			}
+			
+			body{
+				margin: 0 auto;
+				background-color: #101d25;
+			}
+
+			
+			nav{
+				background-color: #2a2f32;
+				color: #fff;
+				user-select: none;
+			}
+			
+			
+			#nav-row1{
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 5px;
+				font-size: 1.3em;
+				font-weight: bold;
+
+				color: #949da5;
+			}
+			
+
+
+			#nav-row1-controls{
+				display: flex;
+				flex-direction: row;
+			}
+
+			#nav-row1-controls span{
+				margin-left: 15px;
+				width: 40px;
+				height: 40px;
+				display: flex;
+				align-content: center;
+				justify-content: center;
+				align-items: center;
+			}
+			#nav-row1-controls span:active{
+				background-color: #ffffff1a;
+				
+				border-radius: 50%;
+			}
+
+
+			
+			
+			/* ROW2 */
+			#nav-selection{
+				display: flex;
+				justify-content: space-between;
+				
+				font-size: 1em;
+				
+				width: 100%;
+			}
+			
+			
+			.nav-opt{
+				flex: 1 1 auto;
+				text-align: center;
+				
+				padding: 16px 5px 5px 5px;
+				
+				transition: 350ms;
+	
+				color: #949da5;
+
+				font-weight: bold;
+				
+				border-bottom: 4px inset transparent;
+			}
+			
+			
+			
+			.nav-opt:active{
+				background-color: #ffffff1a;
+				transition: 1ms;
+			}
+			
+			
+			.nav-opt-selected{
+				border-bottom: 4px inset #1c9486;
+				color: #1c9486;
+			}
+		
+
+
+
+			.app-content{
+				color: #fff;
+				display: none;
+			}
+			#screen-chats{
+				display: block;
+			}
+
+
+
+
+
+
+
+
+
+			/* CHATS */
+
+			.chat-item{
+				display: flex;
+				align-items: center;
+				width: 100%;
+				padding: 5px;
+				 
+			}
+			.chat-item:active{
+				background-color: #ffffff1a;
+				 
+			}
+
+
+			.chat-img{
+				margin-right: 15px;
+			}
+
+			.chat-img img{
+				border-radius: 50%;
+				background-color: red;
+				width: 49px;
+				height: 49px;
+				overflow: hidden;
+			}
+
+
+
+
+			.chat-row1{
+				
+				width: 100%;
+				display: flex;
+			}
+
+			.chat-row1 div{
+				display: flex;
+			}
+
+				
+		</style>
+		
+</head>
+
+<body>
+		
+	<div id="app">
+			
+		<nav>
+				
+			<div id="nav-row1">
+					
+				<div>WhatsApp</div>
+				
+				<div id="nav-row1-controls">
+					<span >
+						<svg viewBox="0 0 24 24" width="24" height="24" class="">
+							<path fill="currentColor" d="M15.9 14.3H15l-.3-.3c1-1.1 1.6-2.7 1.6-4.3 0-3.7-3-6.7-6.7-6.7S3 6 3 9.7s3 6.7 6.7 6.7c1.6 0 3.2-.6 4.3-1.6l.3.3v.8l5.1 5.1 1.5-1.5-5-5.2zm-6.2 0c-2.6 0-4.6-2.1-4.6-4.6s2.1-4.6 4.6-4.6 4.6 2.1 4.6 4.6-2 4.6-4.6 4.6z"></path>
+						</svg>
+					</span>
+
+					<span>
+						<svg viewBox="0 0 24 24" width="24" height="24" class="">
+							<path fill="currentColor" d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z"></path>
+						</svg>
+					</span>
+				</div>
+					
+			</div>
+			
+			
+			<!-- cam | conversas | status | chamadas -->
+			<div id="nav-row2">
+					
+				<div id="nav-selection">
+						
+					<div class="nav-opt">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-camera" viewBox="0 0 16 16">
+							<path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1v6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z"/>
+							<path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
+						</svg>
+					</div>
+					
+					<div class="nav-opt nav-opt-selected">CONVERSAS</div>
+					<div class="nav-opt">STATUS</div>
+					<div class="nav-opt">CHAMADAS</div>
+					
+				</div>
+					
+			</div>
+				
+				
+		</nav>
+		
+
+		
+		<!-- content | camera -->
+		<div class="app-content" id="screen-cam">
+		camera
+		</div>
+		
+		
+		<!-- content | conversas -->
+		<div class="app-content" id="screen-chats">
+
+			<div id="chat-list">
+
+				
+				<!-- ITEM -->
+				<div class="chat-item">
+
+
+					<div class="chat-img">
+						<img src="#" width="49" height="49">
+					</div>
+
+
+					<div class="chat-parameters">
+						
+						<div class="chat-row1">
+							<div class="chat-user">User Name</div>
+							<div class="chat-time">03:36</div>
+						</div>
+
+						<div class="chat-row2">
+							<div class="chat-msg">Last Message</div>
+
+							<div class="chat-icons">
+								<span>S</span>
+							</div>
+
+						</div>
+
+					</div>
+					
+				</div>
+
+
+				<!-- ITEM -->
+				<div class="chat-item">
+
+
+					<div class="chat-img">
+						<img src="#" width="49" height="49">
+					</div>
+
+
+					<div class="chat-parameters">
+						
+						<div class="chat-row1">
+							<div class="chat-user">User Name</div>
+							<div class="chat-time">03:36</div>
+						</div>
+
+						<div class="chat-row2 chat-msg">Last Message</div>
+
+					</div>
+					
+				</div>
+				
+
+
+
+			</div>
+
+		</div>
+		
+		
+		<!-- content | status -->
+		<div class="app-content" id="screen-status">
+		status
+		</div>
+		
+		
+		<!-- content | chamadas -->
+		<div class="app-content" id="screen-calls">
+		chamadas
+		</div>
+			
+			
+			
+	</div>
+
+
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<script>
+		
+		$(".nav-opt").click(function(){
+			
+			$(".nav-opt").removeClass("nav-opt-selected");
+			
+			$(this).addClass("nav-opt-selected");
+			
+			
+			
+			$(".app-content").fadeOut(1);
+			
+			$(".app-content").eq( $(this).index() ).fadeIn(1);
+			
+			
+			
+		});
+		
+	</script>
+		
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

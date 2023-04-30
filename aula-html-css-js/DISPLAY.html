@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Document </title>
+
+    <style>
+        #tela{
+            width: 10px;
+            height: 10px;
+            background-color: #555;
+            margin: 0 auto;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div id="controles" style="user-select: none;">
+        Largura<input type="range" style="margin-right: 50px;" id="largura" min="10" max="900" value="10" oninput="res()">
+        Altura<input type="range"  style="margin-right: 50px;" id="altura" min="10" max="500" value="10" oninput="res()">
+        Round<input type="range"  id="round" min="0" max="100" value="10" oninput="curvar()">
+        <input type="checkbox" onclick="roundModeSelect()">
+        <button onclick="inverter()">INVERTER</button>
+        
+        <p id="resolution" style="font-family: monospace; font-size: 1.4em; font-weight: bold; margin: 0;">0x0</p>
+
+        
+    </div>
+    
+    <div id="tela"></div>
+    
+    <script>
+        largura = document.getElementById("largura");
+        altura = document.getElementById("altura");
+
+        round = document.getElementById("round");
+        resolution = document.getElementById("resolution")
+
+        tela = document.getElementById("tela");
+
+        function res(){
+            tela.style.height = altura.value + "px";
+            tela.style.width  = largura.value + "px";
+
+            resolution.innerText = ((largura.value < 100)?" ":"") + largura.value + "x" + altura.value + " | " +round.value;
+        }
+        res();
+
+
+        var state = 0;
+
+        function inverter(){
+            
+            var temp1 = altura.value;
+            var temp2 = largura.value;
+
+            tela.style.height = temp2 + "px";
+            tela.style.width  = temp1 + "px";
+
+            altura.value = temp2;
+            largura.value = temp1
+
+            resolution.innerText = ((temp1 < 100)?" ":"") + temp1 + "x" + temp2 + " | " +round.value;
+        
+        }
+
+        var roundMode = 0;
+        
+        function curvar(){
+            if (roundMode == 0){
+                
+                tela.style.borderRadius = round.value + "px";
+            }
+            else{
+                tela.style.borderRadius = round.value + "%";
+            }
+
+            resolution.innerText = ((largura.value < 100)?" ":"") + largura.value + "x" + altura.value + " | " +round.value;
+        }
+
+
+        function roundModeSelect(){
+            roundMode = !roundMode;
+            curvar();
+        }
+    </script>
+</body>
+</html>

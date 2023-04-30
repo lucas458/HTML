@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REGRA DE 3</title>
+
+    <style>
+
+        body{
+            background-color: #909090;
+        }
+
+        #container{
+            width: 550px;
+            height: 140px;
+            background-color: red;
+            border-radius: 25px;
+            padding: 5px;
+
+        }
+        .valor{
+            width: 170px;
+            height: 30px;
+            border: 1px solid black;
+            border-radius: 30px;
+            outline: none;
+            padding: 5px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1.2em;
+
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .botao{
+            width: 100px;
+            height: 30px;
+            border-radius: 30px;
+            border: 1px dashed black;
+            box-sizing: border-box;
+            margin-top: 10px;
+            margin-left: 5px;
+            padding: 5px;
+            user-select: none;
+            cursor: pointer;
+            float: left;
+        }
+        .botao:hover{
+            background-color: magenta;
+        }
+    </style>
+</head>
+<body>
+    
+
+    <div id="container">
+        <input class="valor" type="number" placeholder="Valor A">
+        <input class="valor" type="number" placeholder="Valor B">
+        <input class="valor" type="number" placeholder="Valor C">
+        
+        <input class="valor" type="number" placeholder="X" readonly="true">
+        
+        <input type="checkbox" id="check" onclick="regra3()" checked>
+        <label for="check"> PROPORCIONAL </label>
+        
+        <div class="botao" id="calc" onclick="regra3()">Calcular</div>
+
+        <div class="botao" id="limpar" onclick="limpar()">Limpar</div>
+    </div>
+
+
+    <script>
+
+        tipo = document.getElementById("check");
+
+        A = document.getElementsByClassName("valor")[0];
+        B = document.getElementsByClassName("valor")[1];
+        C = document.getElementsByClassName("valor")[2];
+
+        X = document.getElementsByClassName("valor")[3];
+
+        function regra3(){
+            /*
+                A - B
+                C - X
+
+                TIPO 1 = PROPORCIONAL
+                TIPO 2 = INVERSAMENTE PROPORCIONAL
+            */
+
+            if (A.value.length && B.value.length && C.value.length > 0){
+                X.value = (tipo.checked)? (C.value * B.value) / A.value : (A.value * B.value) / C.value;
+            }
+            else{
+                alert("preencher os campos A, B e C!");
+            }
+        }
+
+        function limpar(){
+            A.value = B.value = C.value = X.value = "";
+        }
+    </script>
+</body>
+</html>

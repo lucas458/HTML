@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+
+    <style>
+
+
+        *{
+            box-sizing: border-box;
+            font-family: Arial;
+        }
+
+        body{
+            margin: 0 auto;
+
+            background-color: #000;
+        }
+
+
+        
+
+        #app{
+            position: relative;
+
+            overflow: hidden auto;
+            width: 240px;
+            height: 240px;
+
+            background-color: #9e9e9e;
+        }
+
+
+
+        #keyboard, #keyboard-number{
+            
+            display: none;
+
+            width: 240px;
+
+            color: #fff;
+            background-color: #202020;
+
+            position: fixed;
+            left: 0;
+            top: 141px;
+
+            padding: 2px;
+        }
+
+
+        /* QWERTY */
+        input[type="text"]:focus ~ #keyboard{
+            display: initial;
+        }
+        input[type="password"]:focus ~ #keyboard{
+            display: initial;
+        }
+        input[type="email"]:focus ~ #keyboard{
+            display: initial;
+        }
+        input[type="search"]:focus ~ #keyboard{
+            display: initial;
+        }
+        input[type="tel"]:focus ~ #keyboard{
+            display: initial;
+        }
+        input[type="url"]:focus ~ #keyboard{
+            display: initial;
+        }
+
+
+        /* NUMERIC */
+        input[type="date"]:focus ~ #keyboard-number{
+            display: initial;
+        }
+        input[type="datetime-local"]:focus ~ #keyboard-number{
+            display: initial;
+        }
+        input[type="month"]:focus ~ #keyboard-number{
+            display: initial;
+        }
+        input[type="number"]:focus ~ #keyboard-number{
+            display: initial;
+        }
+        input[type="time"]:focus ~ #keyboard-number{
+            display: initial;
+        }
+        input[type="week"]:focus ~ #keyboard-number{
+            display: initial;
+        }
+
+
+
+
+
+        .key-row{
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+
+            margin-top: 5px;
+        }
+        .key-row:first-child{
+            margin-top: 0;
+        }
+
+
+
+        .key{
+            user-select: none;
+
+            background-color: #6c757d;
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 20px;
+            height: 20px;            
+            
+        }
+        .key:active{
+            background-color: #007bff;
+        }
+
+
+        .key-symbol, .key-shift{ 
+            background-color: #28a745;
+        }
+
+
+
+        .key-num{
+            width: 50px;
+        }
+
+        
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <div id="app">
+
+        <div>texto</div>
+        <input type="text">
+        <input type="password">
+        <input type="email">
+        <input type="search">
+        <input type="tel">
+        <input type="url">
+
+        <div>numeros</div>
+
+        
+        <input type="date">
+        <input type="datetime-local">
+        <input type="month">
+        <input type="number">
+        <input type="time">
+        <input type="week">
+
+        <input type="color">
+        
+
+
+
+
+
+
+        <!-- KEYBOARD - NUMBER -->
+        <div id="keyboard-number">
+
+
+            <div class="key-row">
+                <div class="key key-num">1</div>
+                <div class="key key-num">2</div>
+                <div class="key key-num">3</div>
+                <div class="key key-num">-</div>
+            </div>
+
+            <div class="key-row">
+                <div class="key key-num">4</div>
+                <div class="key key-num">5</div>
+                <div class="key key-num">6</div>
+                <div class="key key-num">,</div>
+            </div>
+
+            <div class="key-row">
+                <div class="key key-num">7</div>
+                <div class="key key-num">8</div>
+                <div class="key key-num">9</div>
+                <div class="key key-num">&lArr;</div>
+            </div>
+
+            <div class="key-row">
+                <div class="key key-num">x</div>
+                <div class="key key-num">0</div>
+                <div class="key key-num">.</div>
+                <div class="key key-num">&hookleftarrow;</div>
+            </div>
+        </div>
+
+
+        <!-- KEYBOARD - NORMAL -->
+        <div id="keyboard">
+            
+            <div class="key-row">
+                <div class="key">q</div>
+                <div class="key">w</div>
+                <div class="key">e</div>
+                <div class="key">r</div>
+                <div class="key">t</div>
+                <div class="key">y</div>
+                <div class="key">u</div>
+                <div class="key">i</div>
+                <div class="key">o</div>
+                <div class="key">p</div>
+            </div>
+
+            <div class="key-row">
+                <div class="key">a</div>
+                <div class="key">s</div>
+                <div class="key">d</div>
+                <div class="key">f</div>
+                <div class="key">g</div>
+                <div class="key">h</div>
+                <div class="key">j</div>
+                <div class="key">k</div>
+                <div class="key">l</div>
+                <div class="key">&lArr;</div>
+            </div>
+
+            <div class="key-row">
+                <div class="key key-shift">&uArr;</div>
+                <div class="key">z</div>
+                <div class="key">x</div>
+                <div class="key">c</div>
+                <div class="key">v</div>
+                <div class="key">b</div>
+                <div class="key">n</div>
+                <div class="key">m</div>
+                <div class="key">&triangle;</div>
+                <div class="key">&hookleftarrow;</div>
+            </div>
+
+            <div class="key-row">
+                <div class="key">&#167;</div>
+                <div class="key key-symbol">A¹ </div>
+                <div class="key">☺</div>
+                <div class="key"> &comma; </div>
+                <div class="key" style="width: 44.9px;"></div>
+                <div class="key"> &period; </div>
+                <div class="key">&triangleleft;</div>
+                <div class="key">&triangledown;</div>
+                <div class="key">&triangleright;</div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+</body>
+</html>

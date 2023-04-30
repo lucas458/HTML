@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        *{margin: 0 auto; padding: 0; border: 0;}
+        body{
+            background-color: gray;
+        }
+        #relogio{
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background-color: honeydew;
+            margin-top: 40px;
+            background-image: url("relogio.jpg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 513px;
+        }
+        .bola{
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            position: absolute;
+
+        }
+        .ponteiro{
+            width: 10px;
+            height: 50%;
+            background-color: black;
+            border-radius: 5px;
+        }
+        #sec{
+            background-color: red;
+        }
+        #min{
+            background-color: blue;
+        }
+        #horas{
+            background-color: chartreuse;
+        }
+    </style>
+</head>
+<body>
+    <div id="relogio">
+        <div class="bola">
+            <div id="sec" class="ponteiro">
+
+            </div>
+        </div>
+
+        <div class="bola">
+            <div id="min" class="ponteiro">
+                
+            </div>
+        </div>
+
+        <div class="bola">
+            <div id="horas" class="ponteiro">
+                
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        ponteiro = document.getElementsByClassName("bola");
+        sec = 0;
+        min = 0;
+        horas = 0;
+        function hora(){
+            sec += 5
+            ponteiro[0].style.transform = `rotate(${sec}deg)`;
+            if (sec == 360){
+                console.log(sec)
+                sec = 0;
+                min += 6;
+                ponteiro[1].style.transform = `rotate(${min}deg)`;
+            }
+            if (min == 360){
+                console.log(min)
+                min = 0;
+                horas += 6;
+                ponteiro[2].style.transform = `rotate(${horas}deg)`;
+            }
+            if (horas == 360){
+                console.log(horas)
+                clearInterval(x)
+            }
+        }
+
+        x = setInterval(hora, 1);
+    </script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            color: #fff;
+            background-color: #212121;
+        }
+
+
+
+
+
+        .votting{
+            margin: 15px;
+            padding: 5px;
+            background-color: #181818;
+            border-radius: 8px;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+        
+        .stars{
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .stars > div:first-child{
+            margin-right: 10px;
+        }
+
+
+        .star-idle{
+            margin-right: 8px;
+            color: #424242;
+        }
+
+
+        .star-active{
+            color: #ffc107;
+        }
+
+
+
+
+
+        .ratting{
+            margin-bottom: 15px;
+        }
+
+        .ratting::after{
+            content: '';
+            display: block;
+            height: 5px;
+            background-color: #424242;
+            width: 100%;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+
+        .progress-wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5px;
+            margin-bottom: 10px;
+        }
+        .progress-wrapper > div{
+            text-align: center;
+            width: 100%;
+        }
+        .progress-wrapper > .progress-container{
+            
+            width: 250%;
+        }
+
+
+
+        
+
+
+
+        .progress-container{
+            background-color: #424242;
+            border-radius: 25px;
+            overflow: hidden;
+        }
+        
+        .progress-fill{
+            
+            text-align: center;
+            width: 0;
+            border-radius: 25px;
+        }
+
+
+        .progress-fill span{
+            opacity: 0;
+            transition: 200ms;
+            user-select: none;
+            margin-left: 50%;
+        }
+        .progress-container:hover span{
+            opacity: 1;
+        }
+
+
+        .progress-label{
+            
+        }
+
+        .progress-count{
+            color: #bdbdbd;
+			font-weight: bold;
+        }
+
+
+
+        .progress-fill-start5{
+            background-color: #04aa6d;
+             
+        }
+
+
+        .progress-fill-start4{
+            background-color: #2196F3;
+            
+        }
+
+        .progress-fill-start3{
+            background-color: #00bcd4;
+            
+        }
+
+        .progress-fill-start2{
+            background-color: #ff9800;
+             
+        }
+
+        .progress-fill-start1{
+            background-color: #f44336;
+            
+        }
+        
+        
+
+         
+         
+
+    </style>
+
+
+</head>
+
+
+<body>
+
+
+
+
+
+
+
+    <div class="votting">
+
+        <!-- STARS -->
+        <div class="stars">
+            
+            <div>AVALIAÇÕES</div>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="star-idle" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+            </svg>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="star-idle" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+            </svg>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="star-idle" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+            </svg>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="star-idle" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+            </svg>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="star-idle" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+            </svg>
+           
+            
+
+             
+
+        </div>
+
+
+
+        <div class="ratting"> <span></span> <strong></strong> </div>
+
+
+        <!-- RANGE -->
+        <div class="progress-list">
+
+
+            <div class="progress-wrapper">
+                <div class="progress-label">5</div>
+                <div class="progress-container">
+                    <div class="progress-fill progress-fill-start5"><span></span></div>
+                </div>
+                <div class="progress-count"></div>
+            </div>
+
+            <div class="progress-wrapper">
+                <div class="progress-label">4</div>
+                <div class="progress-container">
+                    <div class="progress-fill progress-fill-start4"><span></span></div>
+                </div>
+                <div class="progress-count"></div>
+            </div>
+
+            <div class="progress-wrapper">
+                <div class="progress-label">3</div>
+                <div class="progress-container">
+                    <div class="progress-fill progress-fill-start3"><span></span></div>
+                </div>
+                <div class="progress-count"></div>
+            </div>
+
+            <div class="progress-wrapper">
+                <div class="progress-label">2</div>
+                <div class="progress-container">
+                    <div class="progress-fill progress-fill-start2"><span></span></div>
+                </div>
+                <div class="progress-count"></div>
+            </div>
+
+            <div class="progress-wrapper">
+                <div class="progress-label">1</div>
+                <div class="progress-container">
+                    <div class="progress-fill progress-fill-start1"><span></span></div>
+                </div>
+                <div class="progress-count"></div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+ 
+    <script>
+
+        // ATIVAR ESTRELA X
+        //document.getElementsByClassName("stars")[0].children[1].classList.add("star-active")
+
+
+        function activeStars( value ){
+
+            if ( value > 0 ){
+
+                for ( let i = 1; i <= value; i++){
+                    document.getElementsByClassName("stars")[0].children[i].classList.add("star-active");
+                }
+
+            }
+
+            else{
+                for ( let i = 1; i <= 5; i++){
+                    document.getElementsByClassName("stars")[0].children[i].classList.remove("star-active");
+                }
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function writeCountStar( value, index ){
+            document.getElementsByClassName("progress-list")[0].children[index].children[2].innerText = value;
+        }
+
+
+
+        function writeProgress( value, index ){
+            document.getElementsByClassName("progress-list")[0].children[index].children[1].children[0].style.width = value;
+        }
+
+
+        function writeProgressHover(value, index){
+            document.getElementsByClassName("progress-fill")[index].children[0].innerText = value + '%';
+        }
+
+
+
+
+        function writeAvg(value){
+            document.getElementsByClassName("ratting")[0].children[0].innerText = value + ' média com base em'
+        }
+
+
+        function writeTotal(value){
+            document.getElementsByClassName("ratting")[0].children[1].innerText = value + ' avaliações';
+        }
+
+
+
+
+
+        var valores = [];
+        var total = 0;
+
+
+        for ( let x = 0; x < 5; x++ ){
+
+            let temp = 0;
+            do{
+                temp = prompt("Users com " + (5-x) + " estrelas.");
+            }
+            while( isNaN(temp) );
+
+            temp = parseInt(temp);
+            temp = Math.abs(temp);
+
+            valores[x] = temp;
+            console.log( "Users com " + (5-x) + " estrelas: " + (temp) );
+            
+            total += temp;
+
+            // END
+            if ( x == 4 ){
+
+                let avg = (1*valores[4] + 2*valores[3] + 3*valores[2] + 4*valores[1] + 5*valores[0]) / total;
+
+                activeStars( parseInt(avg.toFixed(1)) );
+                writeAvg( avg.toFixed(1) );
+                writeTotal(total);
+
+                for ( let j = 0; j < 5; j++ ){
+                    let percent = parseInt(valores[j] / total * 100);
+                    writeProgress(percent + '%', j);
+                    writeProgressHover(percent, j);
+                    writeCountStar(valores[j], j);
+                }
+
+            }
+
+
+
+        }
+
+
+
+
+
+    </script>
+
+</body>
+</html>

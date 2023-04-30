@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br" onmousemove="track(event)" onclick="travar()">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOUSE TRACK</title>
+
+    <style>
+        html{cursor: none;}
+        body{margin: 0px;}
+
+        #linha{
+            color: red;
+            background-color: red;
+            height: 1px;
+            z-index: -1;
+            user-select: none;
+            position: absolute;
+        }
+
+        #coluna{
+            color: #0000a2;
+            background-color: blue;
+            width: 1px;
+            z-index: -1;
+            user-select: none;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="linha"></div>
+    <div id="coluna"></div>
+
+
+
+    <script>
+        tela_x  = window.screen.availWidth;
+        tela_y  = window.screen.availHeight;
+
+        linha   = document.getElementById("linha");
+        coluna  = document.getElementById("coluna");
+
+        linha.style.width = tela_x + "px"
+        coluna.style.height = tela_y + "px"
+
+
+        var eixo = 0;
+        function track(valor){
+            console.log("mover")
+            
+
+            valor.clientX;
+            valor.clientY;
+
+            switch (eixo){
+                case 0:
+                    if (valor.clientX >= 3){
+                        coluna.style.left = valor.clientX + "px";
+                    }
+                    else{
+                        coluna.style.left = 0;
+                    }
+
+
+                    if (valor.clientY >= 3){
+                        linha.style.top = valor.clientY + "px";
+                    }
+                    else{
+                        linha.style.top = 0;
+                    }
+
+                    linha.innerHTML     = valor.clientY;
+                    coluna.innerHTML    = valor.clientX;
+
+                    break;
+
+                case 1:
+                    
+                    linha.innerHTML     = valor.clientY;
+                    linha.style.top = (valor.clientY) + "px";
+                    break;
+
+            }
+        }
+
+        function travar(){
+            (eixo < 2)? eixo++ : eixo = 0;
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Score</title>
+
+
+
+    <style>
+
+        *{
+            font-family: Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+        }
+
+
+        
+        .UI-button{
+            background-color: #007bff;
+            color: #fff;
+            border: 0;
+            padding: 10px;
+            transition: 300ms;
+            border: 1px solid #2a2a2a;
+        }
+        .UI-button:nth-child(3){
+            border-radius: 10px 0 0 10px;
+        }
+
+        .UI-button:last-child{
+            border-radius: 0 10px 10px 0;
+        }
+        /* PRESS */
+        .UI-button:active{
+            background-color: #6c757d;
+            transition: none;
+        }
+
+
+
+        
+
+        .chips{
+            background-color: #007bff;
+            color: #fff;
+            width: fit-content;
+            padding: 5px 10px;
+            border-radius: 5px 10px;
+            margin-top: 5px;
+        }
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+    
+    
+    
+
+    <div style="width: fit-content; background-color: #37474f; padding: 5px; border-radius: 5px;">
+        <progress id="progressBar" value="0" min="0" max="100" style="width: 100%;"></progress>
+        <br>
+        <button class="UI-button" onclick="addScore(1);">add +1</button><button class="UI-button" onclick="addScore(5);">add +5</button><button class="UI-button" onclick="addScore(10);">add +10</button>
+    </div>
+
+
+    <div id="score" class="chips">Score: 0</div>
+    <div id="life" class="chips">Life: 3</div>
+
+
+
+    <script>
+
+
+        gameScore = 0;      // TOTAL SCORE
+        gameTempScore = 0;  // 
+
+        gameLife = 3;       // VIDAS
+
+
+        progressBar = document.getElementById("progressBar");
+        score = document.getElementById("score");
+        life = document.getElementById("life");
+
+
+        function addScore(value){
+ 
+            gameTempScore = gameScore % 100;    // pega o SCORE RAGE DE 0-99
+            gameScore += value;                 // NOVO VALOR
+
+            
+            // VERIFICAR OVERFLOW PARA ADD LIFE
+            if ( (gameScore >= 100) && (gameScore%100 < gameTempScore)){
+                gameLife++;
+            }
+
+ 
+            // progress bar
+            progressBar.value = gameScore % 100;         // PROGRESS-BAR PARA O PROXIMO LIFE
+            // score value
+            score.innerText = "Score: " + gameScore;    // SCORE TOTAL
+            // life value
+            life.innerText = "Life: " + gameLife;       // LIFES
+
+        }
+
+    </script>
+
+</body>
+</html>

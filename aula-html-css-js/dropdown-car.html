@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        *{
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        
+        .dropdown{
+            display: inline;
+            margin-right: 5px;
+
+            background-color: #007bff;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            transition: 250ms;
+            position: relative;
+            width: fit-content;
+            user-select: none;
+        }
+
+        .dropdown:hover .dropdown-content{
+            display: block;
+        }
+        .dropdown:hover{
+            border-radius: 5px 5px 0 0;
+        }
+
+        .dropdown-content{
+            min-width: 100%;
+            display: none;
+            color: #fff;
+            background-color: #757575;
+            padding: 2px;
+            position: absolute;
+            left: 0;
+            top: 100%;
+        }
+
+
+        .dropdown-item{
+            padding: 5px;
+            border-radius: 5px;
+            transition: 250ms;
+        }
+
+        .dropdown-item:hover{
+            background-color: #9e9e9e;
+        }
+
+
+        .dropdown-selected{
+            background-color: #9e9e9e;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #gerar{
+            display: block;
+            margin-top: 5px;
+            border: 0;
+            background-color: #28a745;
+            color: #fff;
+            font-size: 1.1em;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+
+        #parametros{
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 10px;
+            border-radius: 5px;
+            width: fit-content;
+            margin-top: 10px;
+        }
+
+        #parametros p{
+            margin: 2px 0 0 0;
+            padding: 0;
+        }
+
+        #modelo, #cor{
+            color: #000;
+        }
+
+
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- DROPDOWN -->
+    <div class="dropdown">
+        <span class="dropdown-title">Modelo &blacktriangledown; </span>
+
+        <div class="dropdown-content">
+            <div class="dropdown-item dropdown-selected">Gol</div>
+            <div class="dropdown-item">Golf</div>
+            <div class="dropdown-item">Fox</div>
+            <div class="dropdown-item">Up</div>
+        </div>
+
+    </div>
+
+
+    <!-- DROPDOWN -->
+    <div class="dropdown">
+        <span class="dropdown-title">Cor &blacktriangledown; </span>
+
+        <div class="dropdown-content">
+            <div class="dropdown-item dropdown-selected">Preto</div>
+            <div class="dropdown-item">Branco</div>
+            <div class="dropdown-item">Prata</div>
+            <div class="dropdown-item">Vermelho</div>
+            <div class="dropdown-item">Azul</div>
+            <div class="dropdown-item">Amarelo</div>
+        </div>
+
+    </div>
+
+
+
+    <button id="gerar" onclick="gerarParemetros();">Gerar</button>
+
+    <div id="parametros">
+        <p>Modelo: <span id="modelo"></span> </p>
+        <p>Cor: <span id="cor"></span> </p>
+    </div>
+    
+    
+    
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+        
+        $(".dropdown-content").on("click", ".dropdown-item", function(){
+
+            
+            
+            console.log("Selected:", $(this).index() );
+
+            // REMOVE SELECTED
+            $(this).parent().find(".dropdown-selected").removeClass("dropdown-selected");
+            
+            // SELECT NEW
+            $(this).addClass("dropdown-selected");
+
+
+        });
+
+
+        function readSelected(dropIndex, indexOrText){
+
+            if (indexOrText){
+                return $(".dropdown").eq(dropIndex).find(".dropdown-selected").index();
+            }
+            else{
+                return $(".dropdown").eq(dropIndex).find(".dropdown-selected").text();
+            }
+
+            
+        }
+
+
+
+
+        function gerarParemetros(){
+
+            $("#modelo").text(`${ readSelected(0, false) }`);
+
+            $("#cor").text(`${ readSelected(1, false) }`);
+
+        }
+
+
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+

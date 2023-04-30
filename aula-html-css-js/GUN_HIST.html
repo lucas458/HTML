@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUN LOGIC </title>
+
+    <style>
+        #clip{
+            color: #000;
+        }
+        #ammo{
+            color: #000;
+        }
+
+        .text_gun{
+            background-color: rosybrown;
+            width: 90px;
+            padding: 5px;
+            user-select: none;
+            border-radius: 0 10px 10px 0;
+            text-align: center;
+            font-size: 1.8em;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        #listaCompras{
+            height: 150px;
+            width: 120px;
+            background-color: #404040;
+            overflow-y: auto;
+            padding: 5px;
+            list-style-type: none;
+        }
+        
+        .listaItem{
+            height: 25px;
+            margin-top: 5px;
+            font-size: 1.2em;
+            font-family: monospace;
+            user-select: none;
+            border-radius: 30px;
+            text-align: center;
+            
+            background-color: #94f9ba;
+            transition: 300ms;
+        }
+        .listaItem:hover{
+            cursor: pointer;
+            background-color: teal;
+        }
+        
+
+        #itemPrimeiro{
+            color: white;
+            border: 1px white solid;
+            border-radius: 30px;
+            text-align: center;
+            user-select: none;
+        }
+        #itemPrimeiro:hover{
+            background-color: teal;
+        }
+
+        .botoes{
+            height: 25px;
+            background-color: teal;
+            border-radius: 25px;
+            border: 0;
+            user-select: none;
+            cursor: pointer;
+            transition: 300ms;
+        }
+        .botoes:hover{
+            background-color: #2e8000;
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div id="cont">
+
+        <div class="text_gun" id="clip">12<span id="ammo">/24</span></div>
+
+    </div>
+    <br>
+
+    <div style="border: 2px black solid; width: fit-content; padding: 5px; border-radius: 15px; user-select: none;">
+        <button class="botoes" onclick="fire()">ATIRAR</button>
+        <button class="botoes" onclick="reload()">RELOAD</button>
+        <button class="botoes" onclick="buyAmmo()">BUY AMMO: +5</button>
+    </div>
+
+    <ul id="listaCompras">
+        <li id="itemPrimeiro">Histórico</li>
+    </ul>
+
+    <script>
+
+
+        clip_div = document.getElementById("clip");
+        
+        
+
+        clip = 12;
+        ammo = 24;
+
+        clip_max = 12;
+        ammo_max = 24;
+
+        buy_step = 5;
+
+
+        // SCROLL PARA BAIXO
+        function scrollToBottom (id) {
+            var div = document.getElementById(id);
+            div.scrollTop = div.scrollHeight - div.clientHeight;
+        }
+
+
+        // CRIAR ITEM NA LISTA
+        function listarCompras(valor){
+            var ul = document.getElementById("listaCompras");
+            var li = document.createElement("li");
+            li.classList.add("listaItem");
+
+            li.appendChild(document.createTextNode("Comprou: +" + valor));
+
+            ul.appendChild(li);
+
+        }
+
+        /*** GUN ***/
+        // UPDATE VALUE
+        function update(){
+
+            clip_div.innerText = clip + "/" + ammo;
+        }
+
+        // RELOAD
+        function reload(){
+
+            if (ammo == 0 || clip == clip_max){ return; }
+
+            if ( (ammo >= clip_max) || ((clip+ammo) > clip_max) ){
+                ammo -= (clip_max - clip);
+                clip += (clip_max - clip);
+            }
+            else{
+                clip += ammo;
+                ammo = 0;
+            }
+            update();
+            console.log("RELOAD")
+        }
+
+        // FIRE
+        function fire(){
+            if (clip > 0){ clip--; update(); }
+        }
+
+        // BUY AMMO
+        function buyAmmo(){
+            if (ammo == ammo_max){ return; } 
+
+            if ((ammo+buy_step) > ammo_max){
+                
+                console.log("AMMO: +" + (ammo_max - ammo));
+                listarCompras(ammo_max-ammo);
+                ammo += (ammo_max - ammo);
+
+            }
+            else{
+                ammo += buy_step;
+                listarCompras(buy_step);
+                console.log("AMMO +" + buy_step);
+            }
+
+            if (!(document.getElementsByClassName("listaItem")[4] == null)){
+                listaCompras.style.width = "137px";
+            }
+            else{
+                listaCompras.style.width = "120px";
+            }
+
+            scrollToBottom("listaCompras");
+            update();
+        }
+
+    </script>
+</body>
+</html>

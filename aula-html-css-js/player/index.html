@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Músicas</title>
+
+    <style>
+        *{
+            margin: 0 auto;
+            padding: 0;
+        }
+        body{
+            background-color: gray;
+        }
+        nav{
+            width: 100%;
+            height: 50px;
+            background-color: #383838b4;
+            border-bottom: solid 1px gray;
+            position: fixed;
+            transition: 0.3s;
+            z-index: 1;
+            
+        }
+        #caixa{
+            float: left;
+            width: 50px;
+            height: 50px;
+            transition: 0.3s;
+            /*background-color: red;*/
+        }
+        #capa{
+            width: 50px;
+            height: 50px;
+            transition: 0.3s;
+        }
+        .btn{
+            float: left;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            /*background-color: blue;*/
+            margin: 5px 10px 0px 10px;
+        }
+        .btn:hover{
+            filter: opacity(60%);
+        }
+        #banda_container{
+            float: left;
+            width: 170px;
+            height: 50px;
+            overflow: hidden;
+        }
+        #nome{
+            color: rgb(255, 255, 255);
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 600;
+        }
+        #banda{
+            color: lightgray;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.7em;
+            font-weight: 400;
+            position: relative;
+            bottom: 0px;
+            left: 0px;
+        }
+        #numero{
+            color: rgb(168, 168, 168);
+            font-family: Arial, Helvetica, sans-serif;
+            margin-top: 11px;
+        }
+        header{
+            width: 1000px;
+            height: 900px;
+            background-color: rgb(168, 168, 168);
+            position: relative;
+            top: 50px;
+        }
+    </style>
+</head>
+<body onscroll="barra()" onplaying="acabar()">
+    <nav id="nav">
+        <div id="container-musicas">
+            <!--capa do album-->
+            <div id="caixa">
+                <img id="capa" src="musicas//capa.jpg">
+            </div>
+
+            
+            
+
+            <!--play e pause-->
+            <img class="btn" src="botoes/play-button.png" onclick="tocar()">
+            <!--container do nome da musica e nome da banda-->
+            <div id="banda_container">
+                <!--nome da musica-->
+                <p id="nome">nome da musica</p>
+                <!--nome da banda-->
+                <p id="banda">nome da banda</p>
+            </div>
+
+            <!--voltar-->
+            <img class="btn" src="botoes/back.png" onclick="voltar()">
+            <!--avançar-->
+            <img class="btn" src="botoes/next.png" onclick="avancar()">
+        </div>
+
+        <p id="numero"></p>
+
+        <audio class="musica" src="musicas/Apologies.mp3" onended="avancar()"></audio>
+        <audio class="musica" src="musicas/Dislocated.mp3" onended="avancar()"></audio>
+        <audio class="musica" src="musicas/Falter Ego.mp3" onended="avancar()"></audio>
+        <audio class="musica" src="musicas/Goodbye Kiss.mp3" onended="avancar()"></audio>
+        <audio class="musica" src="musicas/I Guess This Is Progress.mp3" onended="avancar()"></audio>
+        <audio class="musica" src="musicas/If You Were Real Youd Do Your Own Stunts.mp3" onended="avancar()"></audio>
+        <audio class="musica" src="musicas/Reasons To Smile.mp3" onended="avancar()"></audio>
+        <audio class="musica" src="musicas/Shes With You.mp3" onended="avancar()"></audio>
+        <audio class="musica" src="musicas/State Of Confusion.mp3" onended="avancar()"></audio>
+        <audio class="musica" src="musicas/Thick As Thieves.mp3" onended="fim()"></audio>
+    </nav>
+
+    <header>
+        texto do header
+    </header>
+
+    <script>
+        nav = document.getElementById("nav");
+        //scroll efeito
+        function barra(){
+            scrollValor = document.documentElement.scrollTop;
+            //scroll
+            console.log(scrollValor);
+            //altura da barra
+            console.log(nav.style.height);
+
+            scrollValor += 50;
+
+            if (scrollValor < 99){
+                document.getElementById("caixa").style.height = scrollValor + "px";
+                document.getElementById("caixa").style.width = scrollValor + "px";
+                document.getElementById("capa").style.height = scrollValor + "px";
+                document.getElementById("capa").style.width = scrollValor + "px";
+                nav.style.height = scrollValor + "px";
+            }
+            else if (scrollValor > 50){
+                document.getElementById("caixa").style.height = "100px";
+                document.getElementById("caixa").style.width = "100px";
+                document.getElementById("capa").style.height = "100px";;
+                document.getElementById("capa").style.width = "100px";
+                document.getElementById("nav").style.height = "100px";
+            }
+        }
+
+        //play e pause
+        controle = 0;
+        btn_img = document.getElementsByClassName("btn");
+        musica = document.getElementsByClassName("musica");
+
+        //altera o nome da muscia
+        nome = {
+            0:"Apologies",
+            1:"Dislocated",
+            2:"Falter Ego",
+            3:"Goodbye Kiss",
+            4:"I Guess This Is Progress",
+            5:"If You Were Real Youd Do Your Own Stunts",
+            6:"Reasons To Smile",
+            7:"Shes With You",
+            8:"State Of Confusion",
+            9:"Thick As Thieves",
+            banda:"Not Tonight & The Headaches"
+        };
+        nomeMusica = document.getElementById("nome");
+        nomeBanda = document.getElementById("banda");
+        num = document.getElementById("numero");
+        m = 0;
+        function tocar(){
+            if (controle == 0){
+                controle++;
+                console.log("play");
+                btn_img[0].src = "botoes/pause.png"
+                musica[m].play();
+                console.log(nome[m]);
+                
+            }
+            else if (controle == 1){
+                controle = 0;
+                console.log("pause");
+                btn_img[0].src = "botoes/play-button.png"
+                musica[m].pause();
+            }
+        }
+        
+        //voltar
+        function voltar(){
+            console.log("voltar");
+            musica[m].load();
+            m--;
+            
+            if (m < 0){
+                m = 0;
+                musica[m].pause();
+                console.log("voltou " + m);
+            }
+            num.innerHTML = m+1 + "/" + musica.length;
+            nomeMusica.innerHTML = nome[m];
+            btn_img[0].src = "botoes/pause.png"
+            controle = 1;
+            musica[m].play();
+            console.log(m);
+            console.log(nome[m]);
+            if (m < 0){
+                m = 0;
+            }
+        }
+        
+        //avançar
+        function avancar(){
+            console.log("avançar");
+            
+            musica[m].load();
+            m++;
+            
+            if (m > 9){
+                m = 9;
+                musica[m].pause();
+                console.log("avançou " + m);
+            }
+            num.innerHTML = m+1 + "/" + musica.length;
+            nomeMusica.innerHTML = nome[m];
+            
+            btn_img[0].src = "botoes/pause.png"
+            controle = 1;
+            musica[m].play();
+            console.log(m);
+            console.log(nome[m]);
+            
+        }
+
+        function fim(){
+            console.log("fim");
+            
+            musica[0].load();
+            nomeMusica.innerHTML = nome[0];
+            
+            btn_img[0].src = "botoes/play-button.png"
+            controle = 0;
+            console.log(0);
+            console.log(nome[0]);
+            
+        }
+        nomeMusica.innerHTML = nome[0];
+        nomeBanda.innerHTML = nome.banda;
+        num.innerHTML = m+1 + "/" + musica.length;
+    
+    </script>
+</body>
+</html>

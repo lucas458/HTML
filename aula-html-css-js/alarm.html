@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarme</title>
+
+    
+
+    <style>
+
+        /* LIGHT THEME */
+        :root{
+
+            /* COR DO ITEM */
+            --item-color: #f2f2f2;
+
+            /* ITEM PRESS */
+            --item-ative: #e0e0e0;
+
+            /* BACKGROUND */
+            --bg-color: #fff;
+            
+            /* FONT HEADER | TITLES | LABELs */
+            --font-color: #000;
+
+            /* FONT VALUE */
+            --font-value: #007bff;
+
+
+            /* WIDGETs PRI. */
+            --widget-primary: #6c6c6c;
+
+            /* WIDGETs SEC. */
+            --widget-secundary: #fafafa;
+
+            /* WIDGET CHECKED */
+            --widget-checked: #007bff;
+
+
+            /* TOGGLE WEEKDAY */
+            --widget-weekday: #6c6c6c;
+
+
+
+            /* FLOAT BUTTON */
+            --float-bg-color: #28a745;
+            --float-color: #fff;
+
+
+
+
+            /* DIA DA SEMANA -- default color */
+            --day: #6c6c6c;
+
+            /* DIA DA SEMANA - active repeat */
+            --day-active: #007bff;
+
+             /* LABEL SEPARATOR LINE */
+             --widget-line: #dddddd;
+
+
+
+             /* TIME EDITOR */
+             --time-bg-color: #bdbdbd;
+
+        }
+
+
+
+        /* DARK THEME */
+        [data-theme="dark"]{
+
+            /* COR DO ITEM */
+            --item-color: #6c6c6c;
+
+            /* ITEM PRESS */
+            --item-ative: #505050;
+
+            /* BACKGROUND */
+            --bg-color: #212121;
+            
+            /* FONT HEADER | TITLES | LABELs */
+            --font-color: #fff;
+
+            /* FONT VALUE */
+            --font-value: #2196f3;
+
+
+            /* WIDGETs PRI. */
+            --widget-primary: #343434;
+
+            /* WIDGETs SEC. */
+            --widget-secundary: #fafafa;
+
+            /* WIDGET CHECKED */
+            --widget-checked: #2196f3;
+
+
+            /* TOGGLE WEEKDAY */
+            --widget-weekday: #a3a3a3;
+
+
+
+            /* FLOAT BUTTON */
+            --float-bg-color: #6c6c6c;
+            --float-color: #fff;
+
+
+
+
+            /* DIA DA SEMANA -- default color */
+            --day: #262626;
+
+            /* DIA DA SEMANA - active repeat */
+            --day-active: #2196f3;
+
+
+            /* LABEL SEPARATOR LINE */
+            --widget-line: #343434;
+
+            
+            /* TIME EDITOR */
+            --time-bg-color: #343434;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+
+
+        
+
+
+        body{
+            width: 100%;
+            background-color: var(--bg-color);
+            transition: 200ms background-color;
+
+            user-select: none;
+            
+        }
+
+
+
+        /*** WIDGET ***/
+        .UI-widget input{
+            visibility: hidden;
+            display: none;
+        }
+
+
+
+
+
+
+
+        /*** TOGGLE SWITCH ***/
+
+        /* BODY */
+        .UI-switch > div{
+
+            background-color: var(--widget-primary);
+            width: 32px;
+            border-radius: 25px;
+            
+        }
+
+        /* THUMB */
+        .UI-switch > div > div{
+            width: 16px;
+            height: 16px;
+            
+            transform: scale(1.2);
+            box-shadow: 0 0 2px 0 #000;
+
+            border-radius: 50%;
+            background-color: var(--widget-secundary);
+            
+            transition: 250ms;
+            position: relative;
+            left: 0;
+        }
+
+        /* CHECKED - BODY */
+        .UI-switch input:checked ~ div{
+            background-color: var(--widget-checked);
+        }
+
+        /* CHECKED - THUMB */
+        .UI-switch input:checked ~ div > div{
+            left: calc( 32px - 16px );  
+        }
+
+
+
+
+
+
+
+
+        /*** RADIO BUTTON ***/    
+
+        /* BODY */
+        .UI-radio > div{
+            width: 24px;
+            height: 24px;
+            margin-right: 5px;   
+            border-radius: 50%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border: 2px solid var(--widget-primary);
+            overflow: hidden;
+       
+            
+        }
+
+        /* SELECTED */
+        .UI-radio > div > div{
+            transform: scale(0);
+            padding: 10px;
+            border-radius: 50%;
+            background-color: var(--widget-checked);
+            transition: 150ms;
+        }
+
+        /* CHECKED */
+        .UI-radio input:checked ~ div > div{
+            transform: scale(0.5);
+        }
+
+
+
+
+
+
+
+
+        /*** TOGGLE BUTTON - WEEKDAYs ***/
+
+        .UI-toggleButton > div{
+            width: 24px;
+            height: 24px;
+            border-radius: 0px;
+            transition: 200ms;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid var(--widget-weekday);
+            color: var(--widget-weekday);
+        }
+
+
+        .UI-toggleButton input:checked ~ div{
+            color: var(--widget-checked);
+            border-color: var(--widget-checked);
+            border-radius: 50%;
+        }
+
+
+
+
+
+
+
+
+
+
+        /*** SELECT BUTTON ***/
+
+        .UI-selectButton > div{
+            width: fit-content;
+            background-color: var(--widget-primary);
+
+            color: #fff;
+
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .UI-selectButton input:checked ~ div{
+            background-color: var(--widget-checked);
+            
+        }
+
+
+
+
+
+
+
+
+
+        /***** TELA 1 *****/
+
+        /* HEADER */
+        #tela-header{
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 5px;
+
+            background-color: var(--item-ative);
+        }
+
+        #tela-header strong{
+            color: var(--font-color);
+        }
+
+
+        #addAlarm-button{
+            box-shadow: 0 0 5px 0px #000;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            margin: 25px;
+            
+            width: 48px;
+            height: 48px;
+            
+            background-color: var(--float-bg-color);
+            color: var(--float-color);
+            font-size: 2em;
+            
+            border-radius: 50%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+        }
+
+
+
+
+
+
+        
+        /*** ALARM CONTAINER ITEM ***/
+        .alarmItemContainer{
+            margin: 5px;
+            padding: 5px;
+            border-radius: 5px;
+            background-color: var(--item-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        /* HORA:MUNUTO -- FONTE MAIOR */
+
+        .alarmItem-time{
+            color: var(--font-color);
+        }
+
+        .alarmItem-time span{
+            font-size: 1.4em;
+        }
+
+        /* NOME DO ALARME -- dummy value */
+        .alarmItem-name{
+            white-space: pre;
+            color: var(--font-value);
+        }
+
+
+
+        /* DIA DA SEMANA CONTAINER */
+        .alarmItem-weeekdays{
+            display: flex;
+            color: var(--day);  /* OFF COLOR */
+        }
+
+        .alarmItem-weeekdays div{
+            margin: 0 2px;
+        }
+
+        /* DIA DA SEMANA QUE O ALARME REPETE */
+
+        .alarmItem-weekdayRepeat{
+            color: var(--day-active);   /* ON COLOR */
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /**** TELA 2 ****/
+        #tela2 > div{
+            margin-bottom: 5px;
+        }
+
+        .tela2-itemHeader{
+            color: var(--font-color);
+            
+        }
+
+        .tela2-value{
+            margin-top: 5px;
+            color: var(--font-value);
+        }
+
+
+
+        /* SERVE PARA BACKGROUD COLOR DOS ELEMENTOS DE CONFIG. */
+        .tela2-config{
+            background-color: var(--item-color);
+            padding: 10px 4px;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        
+
+
+
+        .tela2-configToggle{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-right: 8px;
+            
+        }   
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* TELA 2 -- HORA:MINUTOS */
+
+        #tela2-time{
+
+            display: flex;
+            align-items: center;
+
+        }
+
+
+        
+        .tela2-time_editor{
+            background: var(--time-bg-color);
+            color: var(--font-color);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+
+            
+
+            border-radius: 19px;
+            overflow: hidden;
+        }
+
+        
+
+        /* BOTOES UP/DOWN */
+        .tela2-time-control{
+            width: 100%;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .tela2-time-control:active{
+            background-color: var(--item-ative);
+        }
+
+
+        /* VALOR */
+        .tela2-time-value{
+            padding: 24px;
+            width: 80px;
+            font-size: 1.5em;
+            text-align: center;
+            color: #fff;
+            white-space: pre;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*** MODAL ***/
+        /* 
+            MODAL pertence à tela2. é usado para SET de parametros para CRIAR NOVO ALARME
+        */
+
+
+        /* FECHAR / SALVAR  -- CONTAINER */
+        .modal-actions{
+
+            display: flex;
+
+            width: 100%;
+        }
+
+        .modal-actions > div{
+            text-align: center;
+            width: 100%;
+            padding: 10px;
+
+            color: var(--font-value);
+        }
+
+        .modal-actions > div:active{
+            background-color: var(--item-ative);
+        }
+
+
+
+        .modalScreen{
+            display: none;
+        }
+
+
+
+
+
+
+
+
+
+        /* MODAL - NAME */
+
+        #modalGetName{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        #modalGetName input{
+            border: 0;
+            border-bottom: 2px solid var(--item-color);
+            transition: 200ms;
+            padding: 4px;
+            color: var(--font-color);
+            background-color: transparent;
+            outline: none;
+        }
+        #modalGetName input:focus{
+            border-bottom: 2px solid var(--widget-checked);
+        }
+
+
+
+        #modalGetName div{
+            color: #dc3545;
+            font-size: 0.8em;
+            
+        }
+
+
+
+
+        /* MODAL - SNOOZE */
+
+        .radioWithLabel{
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            padding: 5px;
+            color: var(--font-color);
+        }
+
+        .radioWithLabel > div:last-child{
+            border-bottom: 1px solid var(--widget-line);
+            width: 100%;
+        }
+
+
+
+
+
+
+        
+
+    </style>
+
+
+</head>
+
+<body>
+
+
+
+
+
+    <!-- SWITCH -->
+    <!-- <label class="UI-widget UI-switch">
+        <input type="checkbox">
+        <div><div></div></div>
+    </label> -->
+
+
+
+    <!-- RADIO -->
+    <!-- <label class="UI-widget UI-radio">
+        <input type="radio" name="">
+        <div><div></div></div>
+    </label> -->
+
+
+
+    <!-- WEEKDAYs - TOGGLE -->
+    <!-- <label class="UI-widget UI-toggleButton">
+        <input type="checkbox">
+        <div>S</div>
+    </label> -->
+
+
+
+    <!-- SELECT BOX -- RADIO BUTTON BEHAVIOUR -->
+    <!-- <label class="UI-widget UI-selectButton">
+        <input type="radio" name="timeMode">
+        <div>AM</div>
+    </label> -->
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+    <!-- TELA1 - MAIN -->
+    <div class="screen" id="tela1">
+
+
+
+
+        <!-- HEADER -->
+        <div id="tela-header">
+
+            <!-- APP NAME -->
+            <div><strong class="tela2-itemHeader">Alarme</strong></div>
+            
+            <!-- TOGLE MODE -- LIGHT/DARK + ICON -->
+            <div>
+                <label class="UI-widget UI-switch">
+                    <input type="checkbox" onchange="toggleTheme(this);">
+                    <div><div id="themeMode-icon"></div></div>
+                </label>
+            </div>
+
+        </div>
+
+
+
+
+
+        <!-- ITEMS  -->
+
+
+        <div class="alarmListContainer">
+
+
+            <!-- ITEM-1 -->
+            <div class="alarmItemContainer">
+                <!-- HORA:MINUTO AM/PM  | NOME  -->
+                <div class="alarmItem-timeContainer">
+                    <div class="alarmItem-time"> <span>12:00</span>AM </div>
+                    <div class="alarmItem-name">nome (opt.)</div>
+                </div>
+
+                <!-- MOSTRA OS DIAS DA SEMANA QUE O ALARME TOCA -- DESTACA OS ATIVOS -->
+                <div class="alarmItem-weeekdays">
+                    <div>D</div>
+                    <div class="alarmItem-weekdayRepeat">S</div>
+                    <div class="alarmItem-weekdayRepeat">T</div>
+                    <div class="alarmItem-weekdayRepeat">Q</div>
+                    <div class="alarmItem-weekdayRepeat">Q</div>
+                    <div class="alarmItem-weekdayRepeat">S</div>
+                    <div class="alarmItem-weekdayRepeat">S</div>
+                </div>
+
+                <!-- SERVE PARA  ativar/destaivar O ALARME -->
+                <div class="alarmItem-toggle">
+                    <label class="UI-widget UI-switch">
+                        <input type="checkbox">
+                        <div><div></div></div>
+                    </label>
+                </div>
+            </div>
+
+
+
+
+
+            
+
+
+
+
+        </div>
+
+
+        
+
+
+        
+
+
+
+        <!-- FLOAT BUTTON -- ADD ALARM -->
+        <div id="addAlarm-button" onclick="newAlarm();">&plus;</div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- TELA2 - CRIAR NOVO ou CONFIGURAR -->
+    <div class="screen" id="tela2" style="display: none;">
+
+
+
+
+        <!-- CONTROLES -->
+        <div class="modal-actions">
+            <div onclick="closeTela2();" style="color: #dc3545;">Cancelar</div>
+            <div onclick="salveButtonMaster();">Salvar</div>
+        </div>
+
+
+
+
+        <!-- HORA:MINUTO  | AM/PM -->
+        <div id="tela2-time" class="tela2-config">
+
+
+            <!-- HOURS -->
+            <div class="tela2-time_editor">
+
+                <!-- UP -->
+                <div class="tela2-time-control" onclick="timeHourEdit(true)"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                    </svg>
+                </div>
+
+                <!-- VALUE -->
+                <div class="tela2-time-value">12</div>
+
+                <!-- DOWN -->
+                <div class="tela2-time-control" onclick="timeHourEdit(false)"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </div>
+
+
+            </div>
+
+
+
+            <!-- GROOVE SEPARATOR -->
+            <div style="font-size: 3em;margin: 5px;color: var(--widget-primary);">:</div>
+
+
+
+
+
+            <!-- MINUTES -->
+            <div class="tela2-time_editor">
+
+                <!-- UP -->
+                <div class="tela2-time-control" onclick="timeMinuteEdit(true)"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                    </svg>
+                </div>
+
+                <!-- VALUE -->
+                <div class="tela2-time-value">00</div>
+
+                <!-- DOWN -->
+                <div class="tela2-time-control" onclick="timeMinuteEdit(false)"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </div>
+
+            </div>
+
+
+            <!-- TIME MODE -->
+            <div style="margin: 5px;">
+
+                <label class="UI-widget UI-selectButton">
+                    <input type="radio" name="timeMode" checked>
+                    <div style="margin-bottom: 8px;">AM</div>
+                </label>
+
+                <label class="UI-widget UI-selectButton">
+                    <input type="radio" name="timeMode">
+                    <div style="margin-top: 8px;">PM</div>
+                </label>
+                
+            </div>
+
+
+        </div>
+
+
+
+
+
+        <!-- REPETIR -->
+        <div id="tela2-repeat" class="tela2-config">
+
+            <div class="tela2-itemHeader"><strong>Repetir</strong></div>
+
+            <div id="tela2-weekdays" style="display: flex; justify-content: space-around;margin-top: 10px;">
+                <label class="UI-widget UI-toggleButton"><input type="checkbox"><div>D</div></label>
+                <label class="UI-widget UI-toggleButton"><input type="checkbox"><div>S</div></label>
+                <label class="UI-widget UI-toggleButton"><input type="checkbox"><div>T</div></label>
+                <label class="UI-widget UI-toggleButton"><input type="checkbox"><div>Q</div></label>
+                <label class="UI-widget UI-toggleButton"><input type="checkbox"><div>Q</div></label>
+                <label class="UI-widget UI-toggleButton"><input type="checkbox"><div>S</div></label>
+                <label class="UI-widget UI-toggleButton"><input type="checkbox"><div>S</div></label>
+            </div>
+
+        </div>
+
+
+
+        <!-- NOME DO ALARME -->
+        <div id="tela2-name" class="tela2-config" onclick="openModal(1);">
+            <div class="tela2-itemHeader"><strong>Nome do alarme</strong></div>
+            <div class="tela2-value">Nenhum</div>
+        </div>
+
+
+
+
+        <!-- SONECA -->
+        <div id="tela2-snooze" class="tela2-config tela2-configToggle">
+            
+            <div style="width: 100%;" onclick="openModal(2);">
+                <div class="tela2-itemHeader" ><strong>Soneca</strong></div>
+                <div class="tela2-value">5 Minutos, 3 Vezes</div>
+            </div>
+
+            <div>
+                <label class="UI-widget UI-switch"><input type="checkbox" onchange="toggleSnooze(this);" checked><div><div></div></div></label>
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+        <!-- SOM DO ALARME -->
+        <div id="tela2-song" class="tela2-config tela2-configToggle">
+            
+            <div style="width: 100%;"onclick="openModal(3);">
+                <div class="tela2-itemHeader" ><strong>Som do alarme</strong></div>
+                <div class="tela2-value">Astro</div>
+            </div>
+
+            <div>
+                <label class="UI-widget UI-switch"><input type="checkbox" onchange="toggleSong(this)" checked><div><div></div></div></label>
+            </div>
+
+        </div>
+
+
+
+
+        <!-- VIBRAR -->
+        <div id="tela2-vibrate" class="tela2-config tela2-configToggle">
+            
+            <div>
+                <div class="tela2-itemHeader"><strong>Vibrar</strong></div>
+                <div class="tela2-value">Desativado</div>
+            </div>
+
+            <div>
+                <label class="UI-widget UI-switch"><input type="checkbox" onchange="toggleVibrate(this);" checked><div><div></div></div></label>
+            </div>
+
+        </div>
+
+
+
+        
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- PSEUDO TELA ASSOCIADA A "TELA 2" -->
+    <div id="modal-container" style="display: none;">
+
+        <!-- CONTROLES -->
+        <div class="modal-actions">
+            <div onclick="saveParam();">Salvar</div>
+        </div>
+
+
+        
+
+        <!-- NAME -->
+        <div class="modalScreen" id="modalScreen-name">
+
+            <div><strong class="tela2-itemHeader">Nome do Alarme</strong></div>
+
+            <div id="modalGetName">
+                <input type="text"  placeholder="Digite" oninput="formatName();">
+                <div> </div>
+            </div>
+
+        </div>
+
+
+
+
+
+        <!-- SNOOZE -->
+        <div class="modalScreen" id="modalScreen-snooze">
+
+            <!-- INTEVALO -->
+            <div><strong class="tela2-itemHeader">Intervalo</strong></div>
+
+            
+
+            <label class="radioWithLabel modalScreen-snoozeInterval">
+                <div class="UI-widget UI-radio">
+                    <input type="radio" name="radioInterval" checked>
+                    <div><div></div></div>
+                </div>
+                <div>5 Minutos</div>
+            </label>
+
+            <label class="radioWithLabel modalScreen-snoozeInterval">
+                <div class="UI-widget UI-radio">
+                    <input type="radio" name="radioInterval">
+                    <div><div></div></div>
+                </div>
+                <div>10 Minutos</div>
+            </label>
+
+            <label class="radioWithLabel modalScreen-snoozeInterval">
+                <div class="UI-widget UI-radio">
+                    <input type="radio" name="radioInterval">
+                    <div><div></div></div>
+                </div>
+                <div>15 Minutos</div>
+            </label>
+
+            <label class="radioWithLabel modalScreen-snoozeInterval">
+                <div class="UI-widget UI-radio">
+                    <input type="radio" name="radioInterval">
+                    <div><div></div></div>
+                </div>
+                <div>30 Minutos</div>
+            </label>
+
+
+            <!-- REPETIR -->
+            <div><strong class="tela2-itemHeader">Repetir</strong></div>
+
+            <label class="radioWithLabel modalScreen-snoozeRepeat">
+                <div class="UI-widget UI-radio">
+                    <input type="radio" name="radioRepeat" checked>
+                    <div><div></div></div>
+                </div>
+                <div>3 Vezes</div>
+            </label>
+
+            <label class="radioWithLabel modalScreen-snoozeRepeat">
+                <div class="UI-widget UI-radio">
+                    <input type="radio" name="radioRepeat">
+                    <div><div></div></div>
+                </div>
+                <div>5 Vezes</div>
+            </label>
+
+            <label class="radioWithLabel modalScreen-snoozeRepeat">
+                <div class="UI-widget UI-radio">
+                    <input type="radio" name="radioRepeat">
+                    <div><div></div></div>
+                </div>
+                <div>Continuamente</div>
+            </label>
+
+
+        </div>
+
+
+
+
+
+        <!-- SONG -->
+        <div class="modalScreen" id="modalScreen-song">
+
+            <div><strong class="tela2-itemHeader">Som do alarme</strong></div>
+
+            <label class="radioWithLabel">
+                <div class="UI-widget UI-radio">
+                    <input type="radio" name="radioSong" class="optionSong" checked>
+                    <div><div></div></div>
+                </div>
+                <div class="songName">Astro</div>
+            </label>
+
+            <label class="radioWithLabel">
+                <div class="UI-widget UI-radio">
+                    <input type="radio" class="optionSong" name="radioSong">
+                    <div><div></div></div>
+                </div>
+                <div class="songName">Basic Bell</div>
+            </label>
+
+            <label class="radioWithLabel">
+                <div class="UI-widget UI-radio">
+                    <input type="radio" class="optionSong" name="radioSong">
+                    <div><div></div></div>
+                </div>
+                <div class="songName">Orange</div>
+            </label>
+
+            <label class="radioWithLabel">
+                <div class="UI-widget UI-radio">
+                    <input type="radio" class="optionSong" name="radioSong">
+                    <div><div></div></div>
+                </div>
+                <div class="songName">Shimmer</div>
+            </label>
+
+
+        </div>
+
+    </div>
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+
+        // TOGGLE THEME
+        function toggleTheme(e){
+
+            if ( e.checked ){
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+
+            else{
+                document.documentElement.setAttribute("data-theme", "light");
+            }
+
+        }
+
+
+
+
+
+        /************/
+
+
+
+        
+        
+
+
+
+
+        // class Alarme{
+
+        //     constructor(){
+
+        //         this.isEnable   = true;     // is enabled?
+        //         this.hour       = 0;        // hour
+        //         this.minute     = 0;        // minute
+        //         this.amPm       = true;    // true = am | false = pm
+        //         this.name       = "";       // alarm name
+        //         this.repeat     = 0x00;     // binary pattern
+                
+        //         this.snoozeEnable = true;
+        //         this.songEnable = true;
+        //         this.vibrate    = true;    // vibrate?
+
+        //         this.songIndex  = 0;        // from list songs
+        //         this.snooze     = [0, 0];   // [0] - interval  |  [1]  - repeat
+
+        //     }
+
+        // }
+
+
+        
+        
+
+
+        var alarmListAll = [
+            {
+            isEnable: true,
+            hour: 0,
+            minute: 0,
+            amPm: true,
+            name: "",
+            repeat: 0x00,
+
+            snoozeEnable: true,
+            songEnable: true,
+            vibrate: true,
+
+            songIndex: 0,
+            snooze: [0, 0]
+            }
+        ];
+
+
+
+
+        function resetTemp(){
+            alarmListAll[0] = {
+                isEnable: true,
+                hour: 0,
+                minute: 0,
+                amPm: true,
+                name: "",
+                repeat: 0x00,
+
+                snoozeEnable: true,
+                songEnable: true,
+                vibrate: true,
+
+                songIndex: 0,
+                snooze: [0, 0]
+            };
+        }
+
+
+
+
+        // var oldTempAlarm = tempAlarm;
+
+        
+
+        
+        // ITEM 1
+        // tempAlarm.hour = 12;
+        // tempAlarm.isEnable = false;
+        // tempAlarm.repeat = 63;
+        // tempAlarm.name = "nome (opt.)";
+
+        // alarmListAll.push(tempAlarm);
+        //tempAlarm = new Alarme();
+
+        
+        
+
+
+
+        // // ITEM 2
+        // tempAlarm.hour = 7;
+        // tempAlarm.minute = 25;
+        // tempAlarm.isEnable = true;
+        // tempAlarm.repeat = 31;
+        // tempAlarm.name = "teste";
+        // tempAlarm.amPm = false;
+        // tempAlarm.snooze[0] = 1;
+
+        // tempAlarm.songIndex = 1;
+
+        // tempAlarm.snoozeEnable = false;
+        // tempAlarm.songEnable = false;
+        // tempAlarm.vibrate = false;
+
+
+        // alarmListAll.push(tempAlarm);
+        // tempAlarm = new Alarme();
+
+
+
+
+
+
+
+
+        // SERVE PARA SABER SE ESTA NO MODO : CRIAR | EDITAR
+        var isEditMode  = false;
+
+
+        // SERVE PARA SABER QUAL "MODAL" ESTAVA ABERTO QUANDO APERTAR "OK"
+        var buttonOkIndex = 0;
+
+
+        // ALARM to EDIT INDEX 
+        var indexAlarmClicked = -1;
+
+        // ALARM to REMOVE INDEX
+        var indexAlarmRemove = -1;
+
+
+        // MODAL OPENNED
+        var indexModal = 0;
+
+
+
+
+
+
+
+
+
+
+
+
+        // FECHAR TELA2
+        function closeTela2(){
+
+            $("#tela2").fadeOut(1);
+            $("#tela1").fadeIn(100);
+
+
+
+
+            // FECHOU QUNADO TAVA NO MODO: EDITAR ALARME
+            if (isEditMode){
+                
+                console.log("não vai mais editar")
+            }
+
+            // FECHOU QUNADO TAVA NO MODO: CRIAR ALARME
+            else{
+
+                // RESETA PARA OS VALORES PADRAO
+                resetTemp();
+            }
+
+
+        }
+
+
+
+
+
+
+
+        // ABRIR TELA2
+        function openTela2(){
+            $("#tela1").fadeOut(1);
+            $("#tela2").fadeIn(100);
+
+            
+
+
+            // ABRIU PELO MODO: EDITAR ALARME
+            if (isEditMode){
+
+                
+                //tempAlarm = alarmListAll[indexAlarmClicked];
+                
+
+                // indexAlarmClicked
+
+                $(".tela2-time-value").eq(0).text( alarmListAll[indexAlarmClicked].hour );  // READ HORA
+
+                tempMin = alarmListAll[indexAlarmClicked].minute;
+                
+                $(".tela2-time-value").eq(1).text( (tempMin < 10)?("0"+tempMin):tempMin );  // RAAD MINUTO
+
+
+                document.getElementsByName("timeMode")[ (alarmListAll[indexAlarmClicked].amPm?0:1) ].checked = true;   // TIME MODE | AM/PM
+
+
+                // READ WEEKDAYS
+                $("#tela2-weekdays input").eq(0).prop("checked", (alarmListAll[indexAlarmClicked].repeat & 1 << 6)?1:0 );
+                $("#tela2-weekdays input").eq(1).prop("checked", (alarmListAll[indexAlarmClicked].repeat & 1 << 5)?1:0 );
+                $("#tela2-weekdays input").eq(2).prop("checked", (alarmListAll[indexAlarmClicked].repeat & 1 << 4)?1:0 );
+                $("#tela2-weekdays input").eq(3).prop("checked", (alarmListAll[indexAlarmClicked].repeat & 1 << 3)?1:0 );
+                $("#tela2-weekdays input").eq(4).prop("checked", (alarmListAll[indexAlarmClicked].repeat & 1 << 2)?1:0 );
+                $("#tela2-weekdays input").eq(5).prop("checked", (alarmListAll[indexAlarmClicked].repeat & 1 << 1)?1:0 );
+                $("#tela2-weekdays input").eq(6).prop("checked", (alarmListAll[indexAlarmClicked].repeat & 1 << 0)?1:0 );
+
+
+                // READ NAME
+                if ( alarmListAll[indexAlarmClicked].name.length > 0 ){
+                    $(".tela2-value").eq(0).text(alarmListAll[indexAlarmClicked].name);
+                }
+                else{
+                    $(".tela2-value").eq(0).text("Nenhum");
+                }
+
+
+
+
+                // READ SNOOZE -- VALUE
+                snoozeInterval = alarmListAll[indexAlarmClicked].snooze[0];
+                snoozeRepeat = alarmListAll[indexAlarmClicked].snooze[1];
+
+                document.getElementsByName("radioInterval")[ snoozeInterval ].checked = true;
+                document.getElementsByName("radioRepeat")[ snoozeRepeat ].checked = true;
+
+
+                snoozeIternvalName = $(".modalScreen-snoozeInterval").eq(snoozeInterval).children("div").eq(1).text();
+                snoozeRepeatName = $(".modalScreen-snoozeRepeat").eq(snoozeRepeat).children("div").eq(1).text();
+
+                $(".tela2-value").eq(1).text(`${snoozeIternvalName}, ${snoozeRepeatName}`);
+
+
+
+
+
+
+                // READ SONG - VALUE
+
+                $(".tela2-value").eq(2).text( $(".songName").eq(alarmListAll[indexAlarmClicked].songIndex).text() );
+
+
+
+
+                /**** READ TOGGLES ****/
+
+                // READ SNOOZE -- ACTIVE?
+                $("#tela2-snooze input").prop("checked", alarmListAll[indexAlarmClicked].snoozeEnable );
+
+
+                // READ SONG -- ACTIVE?
+                $("#tela2-song input").prop("checked", alarmListAll[indexAlarmClicked].songEnable );
+
+
+                // READ VIBRATE -- ACTIVE?
+                $("#tela2-vibrate input").prop("checked", alarmListAll[indexAlarmClicked].vibrate );
+
+
+
+
+
+
+
+
+
+
+                
+
+            }
+
+            // ABRIU PELO MODO: CRIAR ALARME
+            else{
+
+                
+                
+
+            }
+
+        }
+
+
+        
+
+
+
+
+        // ABRIR "MODAL" ASSOCIADO À TELA 2
+        function openModal( screen ){
+
+            console.log("ABRIR MODAL: ", screen);
+
+            indexModal = screen;
+
+
+            $("#tela2").fadeOut(1);
+            $("#modalScreen-name").fadeOut(1);
+            $("#modalScreen-snooze").fadeOut(1);
+            $("#modalScreen-song").fadeOut(1);
+
+            $("#modal-container").fadeIn(100);
+
+
+            switch (screen){
+
+                // NAME
+                case 1:
+                    $("#modalScreen-name").fadeIn(100);
+                    break;
+                
+                case 2:
+                    $("#modalScreen-snooze").fadeIn(100);
+                    break;
+
+                case 3:
+                    $("#modalScreen-song").fadeIn(100);
+                    break;
+
+            }
+
+            
+
+        }
+
+
+
+        // SALVAR MODAL
+        function saveParam(){
+
+
+            console.log("PARAMETRO SALVO");
+
+
+            $("#modal-container").fadeOut(1);
+            $("#modalScreen-name").fadeOut(1);
+            $("#modalScreen-snooze").fadeOut(1);
+            $("#modalScreen-song").fadeOut(1);
+
+            $("#tela2").fadeIn(100);
+
+
+        
+
+        }
+
+
+
+
+
+
+
+
+        // BOTAO -- NOVO ALARME
+        function newAlarm(){
+
+            console.log("BOTAO: NOVO ALARME");
+
+            isEditMode = false;
+
+            
+            resetTemp();
+
+            openTela2();
+            
+        }
+
+
+        // BOTAO -- EDITAR ALARME
+        $(".alarmListContainer").on("click", ".alarmItem-timeContainer", function(){
+
+
+            console.log("BOTAO: EDITAR ALARME");
+
+            isEditMode = true;
+
+            indexAlarmClicked = $(this).parent().index();
+
+
+            tempAlarm = alarmListAll[indexAlarmClicked];
+            
+            openTela2();
+        });
+
+
+
+
+
+
+
+
+
+
+        // HOUR EDIT
+        function timeHourEdit( isIncrement ){
+
+            
+            
+            tempHour = tempAlarm.hour;
+
+            
+                
+            
+
+            
+
+            
+
+            // UP
+            if ( isIncrement ){
+                tempHour = ( tempHour + 1 ) % 13;
+
+                console.log("subir: hora")
+            }
+
+            // DOWN
+            else{
+
+                if ( tempHour > 0 ){
+                    tempHour--;
+                }
+                else{
+                    tempHour = 12;
+                }
+
+            }
+
+            tempAlarm.hour = tempHour;
+
+            // UPDATA VALUE
+            $(".tela2-time-value").eq(0).text(tempHour);
+
+
+        }
+
+
+
+
+
+        // MINUTE EDIT
+        // HOUR EDIT
+        function timeMinuteEdit( isIncrement ){
+
+            // GET ATUAL VALUE        
+            if ( isEditMode ){
+                tempMin = alarmListAll[indexAlarmClicked].minute;
+            }
+            else{
+                tempMin = tempAlarm.minute;
+            }
+
+
+            // UP
+            if ( isIncrement ){
+                tempMin = ( tempMin + 1 ) % 60;
+            }
+
+            // DOWN
+            else{
+
+                if ( tempMin > 0 ){
+                    tempMin--;
+                }
+                else{
+                    tempMin = 59;
+                }
+
+            }
+
+            tempAlarm.minute = tempMin;
+
+            // UPDATA VALUE
+            $(".tela2-time-value").eq(1).text((tempMin < 10)?("0" + tempMin):tempMin);
+
+
+        }
+
+
+
+
+
+
+        // MODAL TOGGLES
+        
+
+
+        
+
+
+        
+
+    </script>
+
+</body>
+</html>

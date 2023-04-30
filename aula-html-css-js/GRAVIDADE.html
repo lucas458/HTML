@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> MINHA MASSA </title>
+
+    <style>
+        #container{
+            width: 80px;
+            height: fit-content;
+            background-color: darkgray;
+            padding: 10px;
+            border-radius: 30px;
+        }
+        .corpos{
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1.2em;
+            user-select: none;
+            cursor: pointer;
+            transition: 300ms;
+            border-radius: 10px;
+            
+        }
+        .corpos:hover{
+            text-align: center;
+        }
+
+        #gravidade{
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+        }
+
+        #valor{
+            outline: none;
+        }
+
+
+        #botao{
+            width: 70px;
+            height: 25px;
+            background-color: rgb(101, 250, 109);
+            user-select: none;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: center;
+            box-sizing: border-box;
+            margin-top: 5px;
+            padding-top: 3px;
+
+        }
+    </style>
+</head>
+<body>
+    
+
+    <div id="container">
+        <div class="corpos" onclick="selecionar(this)">Mercúrio</div>
+        <div class="corpos" onclick="selecionar(this)">Vênus</div>
+        <div class="corpos" onclick="selecionar(this)">Terra</div>
+        <div class="corpos" onclick="selecionar(this)">Lua</div>
+        <div class="corpos" onclick="selecionar(this)">Marte</div>
+        <div class="corpos" onclick="selecionar(this)">Júpiter</div>
+        <div class="corpos" onclick="selecionar(this)">Saturno</div>
+        <div class="corpos" onclick="selecionar(this)">Urano</div>
+        <div class="corpos" onclick="selecionar(this)">Netuno</div>
+        <div class="corpos" onclick="selecionar(this)">Plutão</div>
+    </div>
+
+    <p id="gravidade"></p>
+
+    <input type="number" id="valor" placeholder="DIGITE A MASSA">
+    <div id="botao" onclick="calc()" >Calular</div>
+
+    <p id="resp">RESPOSTA:</p>
+
+
+    <script>
+
+
+        corpos = document.getElementsByClassName("corpos");
+        gravidade = document.getElementById("gravidade");
+        resp = document.getElementById("resp");
+        
+        valor = document.getElementById("valor");
+        var G = 0;
+
+
+        function calc(){
+            if (G > 0 && valor.value > 0){
+                console.log("calcular...")
+                resp.innerText = "RESPOSTA: " + ((valor.value * G) / 9.807) + "Kg";
+            }
+        }
+
+
+
+        function selecionar(val){
+            for (let i = 0; i != corpos.length; i++){
+                corpos[i].style.backgroundColor = "darkgray";
+                corpos[i].style.textAlign = "";
+            }
+            val.style.backgroundColor = "gray";
+            val.style.textAlign = "center";
+
+            corpo = val.innerText;
+            console.log("selecionado: " + corpo);
+
+            if (corpo == "Mercúrio"){
+                G = 3.7;
+            }
+            else if (corpo == "Vênus"){
+                G = 8.87;
+            }
+            else if (corpo == "Terra"){
+                G = 9.807;
+            }
+            else if (corpo == "Lua"){
+                G = 1.622;
+            }
+            else if (corpo == "Marte"){
+                G = 3.711;
+            }
+            else if (corpo == "Júpiter"){
+                G = 24.79;
+            }
+            else if (corpo == "Saturno"){
+                G = 10.44;
+            }
+            else if (corpo == "Urano"){
+                G = 8.69;
+            }
+            else if (corpo == "Netuno"){
+                G = 11.15;
+            }
+            else if (corpo == "Plutão"){
+                G = 0.62;
+            }
+            gravidade.innerText = "G = " + G + "m/s²"
+            calc();
+
+        }
+    </script>
+</body>
+</html>

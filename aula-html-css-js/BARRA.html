@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Document </title>
+
+    <style>
+
+        #container{
+            width: fit-content;
+            height: 60px;
+            background-color: #dbdbdb;
+            box-shadow: 0px 0px 5px 0px black;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        #track_container{
+            width: 500px;
+            height: 7px;
+            background-color: #838383;
+        }
+
+        #track_bar{
+            width: 0%;
+            height: 7px;
+            background-color: red;
+        }
+
+        #track_valor{
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 20px;
+            text-align: right;
+            user-select: none;
+            
+        }
+
+        #play_pause{
+            width: 50px;
+            height: 50px;
+            background-color: blueviolet;
+            margin-bottom: 5px;
+            user-select: none;
+            cursor: pointer;
+        }
+
+
+        #track_time{
+            position: relative;
+            left: -365px;
+            bottom: 20px;
+            width: fit-content;
+            float: left;
+        }
+
+        #track_nome{
+            position: relative;
+            left: 64px;
+            bottom: 56px;
+            width: 430px;
+            float: left;
+            font-family: monospace;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div id="container" >
+        
+        <div id="play_pause"></div>
+        <div id="track_nome">Nome Da Música Da Lista</div>
+        <div id="track_time">0:00<span style="color: #8f8f8f;"> / 0:00</span></div>
+        
+
+        <div id="track_container" onmousedown="setValorClick(event)" onmouseup="setValorMouseUp()" onmousemove="setValorHold(event)" >
+            
+            <div id="track_bar"></div>
+        </div>
+
+        
+    </div>
+
+    <script>
+        play_pause  = document.getElementById("play_pause");    // SIMBOLO PLAY/PAUSE
+        track_nome  = document.getElementById("track_nome");    // NOME DA MUSICA
+        track_time  = document.getElementById("track_time");    // TEMPO ATUAL e DURAÇÃO
+
+        track_bar   = document.getElementById("track_bar");     // 
+
+        hold = false;
+
+        function setValorClick(a){
+            console.log("CLICK");
+
+            hold = true;
+            console.log(a.clientX);
+
+            track_bar.style.width = (a.clientX - 12) * 100 / (512 - 12) + "%";
+        }
+
+        function setValorMouseUp(){
+            hold = false;
+        }
+
+        function setValorHold(a){
+            if (hold){
+                console.log("HOLD");
+
+                console.log(a.clientX);
+
+                track_bar.style.width = (a.clientX - 12) * 100 / (512 - 12) + "%";
+            }
+            
+        }
+
+        //setValor(25);
+
+    </script>
+</body>
+</html>

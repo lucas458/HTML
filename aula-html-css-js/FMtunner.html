@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio FM</title>
+
+    <style>
+
+
+        *{
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body,html, #app{
+            height: 100%;
+        }
+
+
+        header{
+            background-color: #fff;
+            position: fixed;
+            width: 100%;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+
+
+
+
+        /* HEADER -- botoes */
+        #controlsHeader{
+            padding: 5px;
+            display: flex;
+            justify-content: flex-start;
+            width: fit-content;
+        }
+        
+        /* BOTOES TOPO */
+        .buttonHeader{
+            width: 32px;
+            height: 32px;
+            background-color: #e6e6e6;
+            border-radius: 50%;
+            margin-right: 16px;
+            box-shadow: 0 0 5px 0 #616161;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+
+
+
+
+        /* CONTOLS AND FREQUENCY */
+        #controls-freq-container{
+            display: flex;
+            justify-content: center;
+        }
+
+        #controls-freq{
+            display: flex;
+            align-items: center;
+            margin: 0 8px;
+            width: fit-content;
+        }
+
+
+
+        /* CONTROLS AND FREQ -- CONTROLS */
+        .controlButton{
+            padding: 10px;
+            background-color: #e6e6e6;
+            box-shadow: 0 0 5px 0 #616161;
+            border-radius: 50%;
+            transition: 250ms;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .controlButton:active{
+            background-color: #d3d3d3;
+            transition: 1ms;
+        }
+
+
+        /* CONTROL AND FREQ -- FREQUENCIA */
+        #frequencyContainer{
+            text-align: center;
+            padding: 5px 8px;
+            color: #616161;
+            width: 100%;
+        }
+
+        /* FREQ. ATUAL */
+        #frequency{
+            font-size: 2.5em;
+        }
+
+        /* MENSAGEM ABAIXO DA FREQ. */
+        #radioState-MSG{
+            font-size: 0.8em;
+            color: #9e9e9e;
+            white-space: pre;
+        }
+
+
+
+
+
+
+        /* SLIDE TUNNER */
+        #sliderContainer{
+            width: 100%;
+            padding: 12px 10px;
+            display: flex;
+            align-items: center;
+        }
+        #inputSlider{
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #d3d3d3;
+            outline: none;
+            border-radius: 5px;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+        #inputSlider::-webkit-slider-thumb{
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 20px;
+            background: #04AA6D;
+            cursor: pointer;
+        }
+
+
+
+
+
+
+        /* LISTA DE ITENS */
+        #channelList{
+            position: relative;
+            top: 144px;
+        }
+
+
+        /* ITEM DA LISTA */
+        .itemList{
+            padding: 10px;
+            transition: 200ms;
+        }
+        .itemList:active, .buttonHeader:active{
+            background-color: #d3d3d3;
+            
+            transition: 1ms;
+        }
+
+        /* SELECIONADO O ITEM DA LISTA */
+        .itemSelected{
+            color: #2196f3;
+            background-color: #f1f1f1;
+        }
+        
+
+
+    </style>
+
+</head>
+
+
+
+<body>
+    
+
+
+
+    <div id="app">
+
+
+        <header>
+
+
+
+            <div id="controlsHeader">
+
+                <!-- ON/OFF -->
+                <div class="buttonHeader">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-power" viewBox="0 0 16 16">
+                        <path d="M7.5 1v7h1V1h-1z"/>
+                        <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
+                    </svg>
+                </div>
+
+                <!-- FONE / ALTO-FALANTE -->
+                <div class="buttonHeader">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-volume-up" viewBox="0 0 16 16">
+                        <path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
+                        <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/>
+                        <path d="M10.025 8a4.486 4.486 0 0 1-1.318 3.182L8 10.475A3.489 3.489 0 0 0 9.025 8c0-.966-.392-1.841-1.025-2.475l.707-.707A4.486 4.486 0 0 1 10.025 8zM7 4a.5.5 0 0 0-.812-.39L3.825 5.5H1.5A.5.5 0 0 0 1 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 7 12V4zM4.312 6.39 6 5.04v5.92L4.312 9.61A.5.5 0 0 0 4 9.5H2v-3h2a.5.5 0 0 0 .312-.11z"/>
+                    </svg>
+                </div>
+
+                <!-- PESQUISAR -->
+                <div class="buttonHeader">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+
+
+
+           
+            <div id="controls-freq-container">
+
+                <div id="controls-freq">
+
+                    <!-- BACKWARD -->
+                    <div class="controlButton" onclick="backwardButton();">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                    </div>
+
+                    <!-- FREQUENCIA -->
+                    <div id="frequencyContainer">
+                        <span id="frequency"></span>
+                        <span id="freqScale">MHz</span>
+                        <div id="radioState-MSG"> Ativar o Rádio</div>
+                    </div>
+
+                    <!-- FORWARD -->
+                    <div class="controlButton" onclick="forwardButton();">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                        </svg>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- TUNNER -->
+            <div id="sliderContainer">
+                <input type="range" min="87.5" max="108" step="0.1" value="87.5" id="inputSlider">
+            </div>
+
+
+        </header>
+
+
+
+        <!-- LISTA -->
+        <div id="channelList">
+
+            <div class="itemList">87.7 MHz</div>
+            <div class="itemList">87.9 MHz</div>
+            <div class="itemList">88.9 MHz</div>
+            <div class="itemList">89.9 MHz</div>
+            <div class="itemList">90.9 MHz</div>
+            <div class="itemList">91.1 MHz</div>
+            <div class="itemList">91.9 MHz</div>
+            <div class="itemList">92.5 MHz</div>
+            <div class="itemList">95.5 MHz</div>
+            <div class="itemList">94.3 MHz</div>
+            <div class="itemList">95.9 MHz</div>
+            <div class="itemList">96.7 MHz</div>
+            <div class="itemList">97.9 MHz</div>
+            <div class="itemList">98.9 MHz</div>
+            <div class="itemList">100.1 MHz</div>
+            <div class="itemList">102.1 MHz</div>
+            <div class="itemList">102.9 MHz</div>
+            <div class="itemList">103.7 MHz</div>
+            <div class="itemList">103.9 MHz</div>
+            <div class="itemList">104.7 MHz</div>
+            <div class="itemList">105.9 MHz</div>
+            <div class="itemList">106.9 MHz</div>
+
+        </div>
+
+        
+
+    </div>
+
+    
+
+
+
+    
+
+    <script>
+
+        var radioState = false;
+        var speakerState = false;
+        var atualIndex = 0;
+        inputSlider = document.getElementById("inputSlider");
+        itemList = document.getElementsByClassName("itemList");
+        freq = document.getElementById("frequency");
+        channelList = document.getElementById("channelList");
+        buttonHeader = document.getElementsByClassName("buttonHeader");
+        radioState_MSG = document.getElementById("radioState-MSG");
+
+
+        function setFrequency(value, mode){
+
+            if ( !radioState ){
+                
+                
+                
+
+                inputSlider.value = itemList[0].innerText.split(" MHz")[0];
+                freq.innerText = (inputSlider.value - 0).toFixed(1);
+        
+                
+                
+                
+                return;
+            }
+
+            if ( itemList.length <= 0 ){
+                inputSlider.value = 0;
+                return;
+            }
+
+
+
+            console.log("range:");
+
+
+            if ( mode == 0 ){
+                freq.innerText = (inputSlider.value - 0).toFixed(1);
+            }
+
+            
+
+
+            for ( let i = 0; i < itemList.length; i++ ){
+
+                itemList[i].classList = "itemList";
+
+                if ( freq.innerText == itemList[i].innerText.split(" MHz")[0] ){
+
+                    itemList[i].classList += " itemSelected";
+                    atualIndex = i;
+
+                }
+
+            }
+            scrollTo(document.documentElement, itemList[atualIndex].offsetTop-32, 600);
+
+        }
+        setFrequency(0, 0);
+
+
+
+        // SLIDER
+        inputSlider.oninput = function(){
+            setFrequency(this.value, 0);
+        }
+
+
+
+
+
+
+        // CLICAR NO CANAL
+        function genClickEvent(){
+            for ( let i = 0; i < itemList.length; i++ ){
+
+                itemList[i].addEventListener("click", function(){
+
+
+                    
+                    if ( !radioState ){ return; }
+                    
+
+                    freq.innerText = itemList[i].innerText.split(" MHz")[0];
+
+                    setFrequency(freq.innerText, 1);
+                    inputSlider.value = freq.innerText;
+                    
+
+                    console.log("click: ", itemList[i].innerText.split(" MHz")[0]);
+                    
+
+                }, false);
+
+            }
+        }
+        genClickEvent();
+        
+        
+
+
+
+
+
+        // TURN ON/OFF RADIO
+        buttonHeader[0].addEventListener("click", function(){
+
+            radioState = !radioState;
+
+            if ( radioState ){
+
+                radioState_MSG.innerText = " ";
+
+                this.style.color = "#fff";
+                this.style.backgroundColor = "#28a745";
+                this.style.boxShadow = "0 0 5px 1px #28a745";
+
+                itemList[atualIndex].classList = "itemList itemSelected";
+
+                scrollTo(document.documentElement, itemList[atualIndex].offsetTop-32, 600);
+
+                
+            }
+
+            else{
+
+                radioState_MSG.innerText = " Ativar o Rádio";
+
+                this.style.color = "#000";
+                this.style.backgroundColor = "#e6e6e6";
+                this.style.boxShadow = "0 0 5px 0px #616161";
+
+                // not highlight selected
+                itemList[atualIndex].classList = "itemList"
+
+
+                // OFF SPEAKER
+                buttonHeader[1].style.color = "#000";
+                buttonHeader[1].style.backgroundColor = "#e6e6e6";
+                buttonHeader[1].style.boxShadow = "0 0 5px 0px #616161";
+            }
+
+
+        });
+
+
+
+
+        // SPEAKER
+        buttonHeader[1].addEventListener("click", function(){
+
+            if ( !radioState ){return};
+
+            speakerState = !speakerState;
+
+            if ( speakerState ){
+
+                this.style.color = "#fff";
+                this.style.backgroundColor = "#28a745";
+                this.style.boxShadow = "0 0 5px 1px #28a745";
+
+            }
+
+            else{
+                this.style.color = "#000";
+                this.style.backgroundColor = "#e6e6e6";
+                this.style.boxShadow = "0 0 5px 0px #616161";
+            }
+
+
+        });
+
+
+
+
+        // Search
+        buttonHeader[2].addEventListener("click", function(){
+
+            if ( !radioState ){ return; }
+
+            radioState_MSG.innerText = " Procurando...";
+
+            
+            // SEARCH MODE
+            this.style.color = "#fff";
+            this.style.backgroundColor = "#28a745";
+            this.style.boxShadow = "0 0 5px 1px #28a745";
+
+
+
+
+            // GERAR ITENS
+            channelList.innerHTML = "";
+
+            
+            for ( let i = 5; i <= 210; i++ ){
+
+                temp = `${(i/10+87).toFixed(1)}`;
+
+                inputSlider.value = temp;
+
+
+                if ( temp == 88.9 || temp == 89.9 || temp == 106.9 || temp == 98.9 ){
+
+                    channelList.innerHTML += `<div class="itemList">${temp} MHz</div>`;
+                }
+
+
+                
+            }
+
+
+            
+
+
+            genClickEvent();
+
+            
+            
+            
+            
+            
+
+            // fake not found
+            //channelList.innerHTML = "";
+
+            if ( itemList.length > 0 ){
+                radioState_MSG.innerText = " ";
+                inputSlider.value = itemList[0].innerText.split(" MHz")[0];
+                setFrequency( inputSlider.value  , 0);
+            }
+            else{
+                radioState_MSG.innerText = " Nenhuma Rádio Encontrada";
+                inputSlider.value = 0;
+                freq.innerHTML = "";
+                document.getElementById("freqScale").innerText = "";
+            }
+
+
+
+            // NORMAL COLOR
+            this.style.color = "#000";
+            this.style.backgroundColor = "#e6e6e6";
+            this.style.boxShadow = "0 0 5px 0px #616161";
+            
+
+
+        });
+
+
+
+
+
+
+
+        // VOLTAR ESTAÇÃO
+        function forwardButton(){
+            
+
+            if ( itemList.length > 0 && radioState ){
+
+                itemList[atualIndex].classList = "itemList";
+                atualIndex = ((atualIndex+1) % itemList.length);
+                itemList[atualIndex].classList = "itemList itemSelected";
+                freq.innerText = itemList[atualIndex].innerText.split(" MHz")[0];
+
+                scrollTo(document.documentElement, itemList[atualIndex].offsetTop-32, 600);
+
+            }
+
+        }
+
+        // AVANÇAR ESTAÇÃO
+        function backwardButton(){
+
+            if ( itemList.length > 0 && radioState ){
+
+                itemList[atualIndex].classList = "itemList";
+
+                if ( (atualIndex - 1) < 0){
+                    atualIndex = itemList.length -1;
+                }
+                else{
+                    atualIndex = ((atualIndex-1) % itemList.length);
+                }
+
+                itemList[atualIndex].classList = "itemList itemSelected";
+                freq.innerText = itemList[atualIndex].innerText.split(" MHz")[0];
+
+                scrollTo(document.documentElement, itemList[atualIndex].offsetTop-32, 600);
+            }
+
+            
+        }
+
+
+
+        // SMOOTH SCROLL TO (Extenral Code)
+        function scrollTo(element, to, duration) {
+            if (duration <= 0 || itemList.length <= 0) return;
+            var difference = to - element.scrollTop;
+            var perTick = difference / duration * 10;
+
+            setTimeout(function() {
+                element.scrollTop = element.scrollTop + perTick;
+                if (element.scrollTop === to) return;
+                scrollTo(element, to, duration - 10);
+            }, 10);
+        }
+
+   
+
+
+    </script>
+
+</body>
+</html>

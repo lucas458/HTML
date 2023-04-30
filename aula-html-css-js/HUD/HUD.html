@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+		<title>HUD</title>
+
+		<style>
+			body{
+				overflow: hidden;
+			}
+			#container{
+				width: 100px;
+				height: 50px;
+				background-color: red;
+				margin: 0 auto;
+				font-size: 3em;
+				overflow: hidden;
+				z-index: 1;
+			}
+			#numeros{
+				position: relative;
+				left: 5px;
+				white-space: nowrap;
+				letter-spacing: 10px;
+				user-select: none;
+				z-index: 1;
+			}
+			#roll{
+				width: 200px;
+				height: 15px;
+				background-color: green;
+				user-select: none;
+				padding-left: 7%;
+				box-sizing: border-box;
+				transition: 200ms;
+				border-radius: 15px 15px 0px 0px ;
+				position: absolute;
+				left: 43%;
+				top: 43%;
+
+			}
+			#HUD{
+				position: absolute;
+				z-index: 1;
+				
+			}
+			#ceu{
+				transition: 300ms;
+				margin: 0 auto;
+				position: absolute;
+				left: -50%;
+				top: -50%;
+				
+			}
+		</style>
+	</head>
+
+	<body onkeydown="botao(event)" onkeyup="sync()">
+		<img src="cockpit.png" width="99%" height="98%" id="HUD">
+		<img src="ceu2.jpg" width="200%" height="250%" id="ceu">
+		<div id="container">
+			<div id="numeros">
+				 
+			</div>
+		</div>
+
+		<div id="cont">
+			<div id="roll">
+			</div>
+		</div>
+	</body>
+
+	<script>
+		numeros = document.getElementById("numeros")
+		roll = document.getElementById("roll")
+		img = document.getElementById("ceu")
+		class Bussola{
+			constructor(){
+				this.dir = 0
+			}
+			
+			right(){
+				this.dir++;
+				if (this.dir > 359){
+					this.dir = 0;
+				}
+			}
+			left(){
+				this.dir--;
+				if (this.dir < 0){
+					this.dir = 359;
+				}
+			}
+			
+
+		}
+		bussola = new Bussola()
+		giro = 0;
+		ceu = 0;
+		function botao(a){
+			tecla = a.key
+			
+			
+			if (tecla == "a"){
+				bussola.left()
+			}
+			else if (tecla == "d"){
+				bussola.right()
+			}
+			else if (tecla == "ArrowLeft"){
+				giro--
+				ceu-=5
+				if (giro <= -35){
+					giro = -35
+				}
+				roll.style.transform = `rotate(${giro}deg)`
+				img.style.transform = `rotate(${ceu}deg)`
+				roll.innerHTML = `${giro}º`
+			}
+			else if (tecla == "ArrowRight"){
+				giro++
+				ceu+=5
+				if (giro >= 35){
+					giro = 35
+				}
+				roll.style.transform = `rotate(${giro}deg)`
+				img.style.transform = `rotate(${ceu}deg)`
+				roll.innerHTML = `${giro}º`
+			}
+
+			if (bussola.dir < 10){
+				numeros.style.left = "38px"
+			}
+			if (bussola.dir > 9){
+				numeros.style.left = "20px"
+			}
+			if (bussola.dir > 99){
+				numeros.style.left = "3px"
+			}
+			if (bussola.dir == 0){
+				numeros.style.left = "31px"
+				numeros.innerHTML = "N"
+			}
+			else if (bussola.dir == 90){
+				numeros.style.left = "35px"
+				numeros.innerHTML = "L"
+			}
+			else if (bussola.dir == 180){
+				numeros.style.left = "35px"
+				numeros.innerHTML = "S"
+			}
+			else if (bussola.dir == 270){
+				numeros.style.left = "32px"
+				numeros.innerHTML = "O"
+			}
+			else{
+				numeros.innerHTML = bussola.dir
+			}
+			console.log(bussola.dir)
+			
+			
+		}
+		numeros.style.left = "31px"
+		numeros.innerHTML = "N"
+
+		roll.innerHTML = `${giro}º`
+
+		function sync(){
+			giro = 0;
+			roll.style.transform = `rotate(${giro}deg)`
+			roll.innerHTML = `${giro}º`
+		}
+	</script>
+</html>

@@ -1,0 +1,697 @@
+
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+    user-select: none;
+}
+
+
+
+
+body{
+    background-color: #161c1f;
+    
+}
+
+html,body{
+    height: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/****** WIDGETs ******/
+.UI-widget input{
+    display: none;
+    visibility: hidden;
+}
+
+
+
+
+/* TOGGLE SWITCH -- BODY*/
+.UI-switch > div{
+    width: 30px;
+    background-color: #5d6163;
+    
+    transition: 200ms;
+    border-radius: 25px;
+     
+}
+
+/* TOGGLE SWITCH -- THUMB */
+.UI-switch > div > div{
+    width: 16px;
+    height: 16px;
+    background-color: #b9b9b9;
+    transform: scale(1.2);
+    border-radius: 30px;
+    transition: 200ms;
+    
+    position: relative;
+    left: 0;
+}
+
+
+/* TOGGLE SWITCH -- ON CHECK */
+
+.UI-switch input:checked ~ div{
+    background-color: #2c4260;
+}
+
+.UI-switch input:checked ~ div > div{
+    left: calc( 30px - 16px );
+    background-color: #5d94f1;
+   
+}
+
+
+
+
+
+
+
+
+/* TOGGLE BUTTON -> WEEKDAY -- BODY  */
+.UI-toggleButton > div{
+    
+    
+    color: #fff;
+    /* background-color: #373b3d; */
+
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    
+    font-family: Arial, Helvetica, sans-serif;
+
+    transition: 200ms;
+}
+
+/* TOGGLE BUTTON -> WEEKDAY -- ON CHECK  */
+.UI-toggleButton input:checked ~ div{
+    background-color: #fff;
+    color: #202124;
+    border-radius: 50%;
+}
+
+.toggle-weekday > div{
+    margin-top: -24px;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* CHECKBOX  */
+.UI-checkbox > div{
+    width: 16px;
+    height: 16px;
+    /* background-color: #202124; */
+
+    border: 1px solid #fff;
+
+    transition: 100ms;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+/* CHECKBOX -- ON CHECK */
+.UI-checkbox input:checked ~ div{
+    background-color: #fff;
+    
+}
+
+
+
+
+
+
+
+/* OPTION BOX -- RADIO BEHAVIOUR */
+.UI-optionBox > div {
+    width: 100%;
+    padding: 12px;
+    transition: 200ms;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: #fff;
+}
+.UI-optionBox .optionSongIcon {
+    margin-right: 5px;
+    display: flex;
+}
+
+
+/* OPTION BOX -- ON CHECK */
+.UI-optionBox input:checked ~ div{
+    background-color: #2b3133;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* HEADER */
+.header-container{
+    z-index: 1;
+    background-color: #161c1f;
+
+    border-bottom: 1px solid #292e31;
+    color: #b9bbbc;
+    padding: 5px;
+
+    position: fixed;
+
+    height: 45px;
+    width: 100%;
+
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+
+
+
+
+
+
+
+
+/****** TELA 1 ******/
+.screen{
+    font-family: 'Roboto', sans-serif;
+    height: 100%;
+    overflow: hidden auto;
+    background-color: #161c1f;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* CONTAINER DE TODOS OS ITENS */
+#alarmListContainer{
+    /* padding: 50px 5px 5px 5px; */
+    padding-top: 45px;
+    padding-bottom: 80px;
+}
+
+
+/* ITEM */
+.alarmItemContainer{
+    /* background-color: #161c1f; */
+    color: #fff;
+    padding: 5px 5px 0 5px;
+    /* border-radius: 10px; */
+    margin-bottom: 5px;
+}
+
+
+.alarmItemContainer::after{
+    content: '';
+    display: block;
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 5px;
+    height: 2px;
+    background-color: #3a3f41;
+}
+
+
+
+/* HORA:MINUTO -- AM/PM */
+.alarmClockContainer{
+    display: flex;
+    justify-content: space-between;
+    margin-right: 10px;
+    align-items: center;
+}
+
+/* AUMENTEA FONTE DA HORA:MINUTO */
+.alarmClockContainer span:first-child{
+    font-size: 1.5em;
+}
+
+/* NOME DO ALARME */
+.alarmName{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+
+
+
+/* MAIS OPÇÔES -- EDITAR */
+.alarmMoreOptions details{
+    padding: 5px;
+    margin-top: 5px;
+    border-radius: 10px;
+}
+
+.alarmMoreOptions details[open]{
+    background-color: #1c2426;
+}
+
+
+
+
+
+/* REPETIR - ON/OFF */
+.alarmRepeatToggle{
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    margin-top: 15px;
+}
+.alarmRepeatToggle label{
+    margin-right: 5px;
+}
+
+
+
+
+/* REPEITR -- TOGGLES */
+.alarmRepeatContainer{
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+}
+
+
+
+/* SOM DO ALARME | NOME DO ALARME | EXCLUIR */
+.iconWithLabel{
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    padding: 2px;
+}
+.iconWithLabel svg{
+    margin-right: 5px;
+}
+
+.alarmDelete:active, .alarmSongButton:active{
+    background-color: #34393c;
+}
+
+
+/* SONG SELECT */
+.alarmSongButton{
+    padding: 4px
+}
+
+
+/* DELETE */
+.alarmDelete{
+    width: fit-content;
+    padding: 4px;
+}
+
+
+
+
+/* INPUT DO NOME DO ALARME */
+.alarmInputName{
+    background-color: transparent;
+    border: 0;
+    outline: none;
+    border-bottom: 2px solid #5d6163;
+    transition: 200ms;
+    padding: 5px;
+    color: #fff;
+    width: 100%;
+}
+.alarmInputName:focus{
+    border-color: #5d94f1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/****** TELA-2 ******/
+
+#tela2{
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    /* background-color: #202124; */
+    transition: 200ms;
+    position: absolute;
+    left: -100%;
+    top: 0;
+
+    overflow: auto;
+   
+}
+
+#tela2-header{
+    justify-content: flex-start;
+}
+
+#tela2-backArrow{
+    padding: 5px;
+    border-radius: 50%;
+    display: flex;
+    margin-right: 5px;
+}
+
+#tela2-backArrow:active{
+    background-color: #34393c;
+}
+
+
+
+
+#tela2-headerTitle{
+    color: #fff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/****** TELA-3 ******/
+
+#tela3{
+
+    
+    z-index: 1;
+    background-color: #08080866;
+    width: 100%;
+    height: 100%;
+    
+    
+    
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.5em;
+
+    color: #fff;
+}
+
+
+
+
+
+
+#tela3-timeModeContainer{
+    margin: 10px;
+}
+
+
+
+
+
+
+
+/* HORAS:MINUTOS */
+.tela3-timePicker{
+    background-color: #5b5e5f;
+    
+    text-align: center;
+    border-radius: 5px;
+    margin: 5px;
+    
+}
+.tela3-timePicker div{
+    padding: 5px 16px;
+    border-radius: 5px;
+    width: 64px;
+}
+
+
+.tela3-timePicker div:first-child:active,  .tela3-timePicker div:last-child:active{
+    background-color: #2196f3;
+    transition: 200ms;
+}
+
+
+
+
+
+
+
+/* AM/PM */
+.timeModeScreen3Item input{
+    visibility: hidden;
+    display: none;
+}
+
+.timeModeScreen3Item > div{
+    color: #bdbdbd;
+    background-color: #5b5e5f;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 5px;
+    transition: 200ms;
+}
+
+.timeModeScreen3Item input:checked ~ div{
+    background-color: #2196f3;
+    color: #fff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#tela3-controls{
+
+    
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+
+    
+}
+
+#tela3-controls div{
+    width: 100%;
+    padding: 10px;
+    background-color: #2b3133;
+}
+
+#tela3-controls div:active{
+    background-color: #161c1f;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/****** CRIAR ALARME ******/
+#newAlarm-container{
+
+    padding: 20px;
+
+    position: fixed;
+    right: 0;
+    bottom: 0;
+}
+
+#newAlarm-button{
+    width: 48px;
+    height: 48px;
+    background-color: #5f97f6;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 1.5em;
+    transition: 200ms;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#newAlarm-button:active{
+    transition: 1ms;
+    background-color: #34393c;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/****** POPUP ******/
+#popup-container{
+    font-family: 'Roboto', sans-serif;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+#popup-message{
+    text-align: center;
+    background-color: #b9b9b9;
+    border-radius: 15px;
+    width: fit-content;
+    margin: 5px;
+    padding: 5px 25px;
+    display: none;
+}

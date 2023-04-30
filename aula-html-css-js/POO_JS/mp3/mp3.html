@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MP3</title>
+
+    <style>
+        *{margin: 0; padding: 0;}
+        nav{
+            width: 100%;
+            height: 50px;
+            background-color: gray;
+        }
+        #cont_btn{
+            position: relative;
+            top: 5px;
+            left: 5px;
+            user-select: none;
+        }
+        .btn{
+            user-select: none;
+        }
+        .btn:hover{
+            filter: invert();
+            cursor: pointer;
+        }
+        #add{
+            position: relative;
+            bottom: 60px;
+            padding: 1px;
+            box-sizing: border-box;
+            user-select: none;
+            border: 2px solid black;
+            border-radius: 6px;
+            background-color: #1bff04;
+            cursor: pointer;
+            transition: 500ms;
+        }
+        #add:active{
+            background-color: white;
+            transition: 100ms;
+        }
+        #nome{
+            width: fit-content;
+            margin: 0;
+            font: 1em sans-serif;
+            position: relative;
+            left: 160px;
+            bottom: 40px;
+        }
+        #barra{
+            width: 500px;
+            position: relative;
+            left: 159px;
+            bottom: 35px;
+            user-select: none;
+        }
+        #pai{
+            transition: 300ms;
+            position: relative;
+            left: 0px;
+        }
+        #togglePai{
+            width: 50px;
+            height: 25px;
+            border-radius: 20px;
+            padding: 2px;
+            background-color: #505050;
+            cursor: pointer;
+            float: right;
+            position: relative;
+            top: -52px;
+            right: 5px;
+        }
+        #toggle{
+            width: 25px;
+            height: 25px;
+            border-radius: 20px;
+            background-color: #17bdec;
+            box-shadow: 0 0 7px 1px black;
+            transition: 200ms;
+            cursor: pointer;
+            position: relative;
+            left: 0px;
+        }
+        #toggle:hover{
+            background-color: #2d5cc2;
+        }
+        #cont{
+            width: 300px;
+            height: 500px;
+            background-color: #464646;
+            overflow-y: auto;
+            position: relative;
+            left: -300px;
+            transition: 200ms;
+        }
+        #hide{
+            width: 50px;
+            height: 50px;
+            background-color: #666666;
+            font-size: 2em;
+            padding: 6px;
+            padding-left: 9px;
+            user-select: none;
+            box-sizing: border-box;
+            border-radius: 0px 0px 20px;
+            position: absolute;
+            left: 0px;
+            z-index: 1;
+        }
+        #hide:hover{
+            cursor: pointer;
+            color: white;
+        }
+        .musicas{
+            height: 40px;
+            background-color: inherit;
+            padding: 12px;
+            box-sizing: border-box;
+            font: 1em sans-serif;
+            color: white;
+			user-select: none;
+            cursor: pointer;
+        }
+        #texto_add{
+            user-select: none;
+            font-size: 1.2em;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            color:#f96969;
+            position: absolute;
+            left: 70px;
+            top: 200px;
+        }
+
+
+        /* CRONOMETRO */
+        cronometro{
+            left: 10px;
+
+        }
+
+    </style>
+</head>
+<body id="body" style="transition: 200ms;">
+    <nav>
+        <div id="cont_btn">
+            <img class="btn" src="botoes/back.png" width="40" height="40" onclick="mp3.back()" draggable="false">
+            <img class="btn" src="botoes/play.png" width="40" height="40" onclick="mp3.iniciar()" draggable="false">
+            <img class="btn" src="botoes/next.png" width="40" height="40" onclick="mp3.next()" draggable="false">
+            
+            <div id="cronometro" style="position: absolute;left: 673px;top: 21px;font-family: monospace;font-size: 1.4em;">0:00:00/0:00:00</div>
+        </div>
+        
+        <p id="nome">.</p>
+        <input id="barra" type="range" min="0" max="0" value="0" onmousedown="mp3.segurar()" onmouseup="mp3.soltar()" oninput="mp3.deslizar()"/>
+        <input type="file" id="file" style="position: relative; bottom: 60px; user-select: none; border-radius: 10px;background-color: #d6a951;">
+        <input type="submit" id="add" value="ADD" onclick="mp3.add()">
+        
+
+        <div id="togglePai" onclick="tema()">
+            <div id="toggle"></div>
+        </div>
+    </nav>
+
+    <div id="pai">
+        <div id="hide">♫</div>
+        <div id="cont">
+            <p id="texto_add">Sem Músicas :(<span style="color: white;position: absolute;left: -63px;top: 63px;">para acionar Música(s) selecione <span style="color: #7de25a">"Escolher arquivo"</span> e depois em <span style="color: #7de25a">"ADD"</span></span></p>
+        </div>
+    </div>
+
+    <script>
+
+        var maxDuracao = "";
+        var atualDuracao = "";
+        ///////////////////////////////////////////
+        function time_track(valor){
+
+            
+
+            var dias  = parseInt(valor/86400);
+            var horas = parseInt((valor/3600)%24);
+            var min   = parseInt((valor/60)%60);
+            var seg   = parseInt(valor%60);
+
+
+            // DIAS
+            if (valor >= 86400){
+                maxDuracao += (dias + ":");
+            }
+
+            // HORAS
+            if (valor >= 3600){
+                if (horas > 9){
+                    maxDuracao += (horas + ":");
+                }
+                else{
+                    if (dias > 0){
+                        maxDuracao += ("0" + horas + ":");
+                    }
+                    else{
+                        maxDuracao += (horas + ":");
+                    }
+                }
+            }
+
+            // MINUTOS : SEGUNDOS
+            if (valor >= 0){
+
+                // MINUTOS
+                if (min > 9){
+                    maxDuracao += (min);
+                }
+
+                else{
+                    if ((dias || horas) > 0){
+                        maxDuracao += ("0" + min);
+                    }
+                    else{
+                        maxDuracao += (min);
+                    }
+
+                }
+
+
+                // SEGUNDOS
+                if (seg > 9){
+                    maxDuracao += (":" + seg);
+                }
+                else{
+                    maxDuracao += (":0" + seg);
+                }
+                
+                
+            }
+            //console.log(maxDuracao);
+            }
+        ///////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+        //conteudo da lateral
+        container = document.getElementById("cont")
+        containerPai = document.getElementById("pai")
+        botao = document.getElementById("hide")
+        controle = false
+        var elemento;
+        var div;
+        botao.onclick = function(){
+            if (!controle){
+                controle = true
+                containerPai.style.left = "300px";
+            }
+            else if (controle){
+                controle = false
+                containerPai.style.left = "0px"
+            }
+        }
+        //classe
+        playPause = document.getElementsByClassName("btn")[1];
+        file = document.getElementById("file");
+        nome = document.getElementById("nome")
+        musica = document.getElementsByTagName("audio")
+        barra = document.getElementById("barra")
+        class MP3{
+            constructor(){
+                this.musicaNome = ["None"];
+                this.tocando = false;
+                this.musicaAtual = 1;
+                this.musciaTotal = this.musicaNome.length-1;
+                this.c = 0
+
+                this.numero = 1;
+                this.seguro = true;
+            }
+            back(){
+                if (musica.length > 1){
+                    musica[this.musicaAtual].load()
+                    div[this.musicaAtual-1].style.backgroundColor = "#464646"
+                    div[this.musicaAtual-1].style.color = "white"
+                    this.musicaAtual--;
+                    playPause.src = "botoes/pause.png";
+                    this.tocando = true;
+                    musica[this.musicaAtual].load()
+                    if (this.musicaAtual <= 1){
+                        this.musicaAtual = 1;
+                    }
+                    div[this.musicaAtual-1].style.backgroundColor = "#7ebaef"
+                    div[this.musicaAtual-1].style.color = "black"
+                    musica[this.musicaAtual].play()
+                    nome.innerHTML = mp3.musicaNome[mp3.musicaAtual] //
+                    console.log("MUSICA: " + this.musicaNome[this.musicaAtual])
+                    console.log("TOCANDO: " + this.musicaAtual)
+                    if (musica.length > 1){ // trocar nome da musica
+                        var x = "";
+                        for (let i = 0; i <= mp3.musicaNome[mp3.musicaAtual].length-5; i++){
+                            x += mp3.musicaNome[mp3.musicaAtual][i]
+                            nome.innerHTML = x
+							document.title = x
+                        }
+                    }
+                }
+            }
+            iniciar(){
+                if (musica.length > 1){
+                    if (!this.tocando){
+                        this.tocando = !this.tocando;
+                        playPause.src = "botoes/pause.png";
+                        musica[this.musicaAtual].play()
+                        div[this.musicaAtual-1].style.backgroundColor = "#7ebaef"
+                        div[this.musicaAtual-1].style.color = "black"
+                    }
+                    else if (this.tocando){
+                        this.tocando = !this.tocando;
+                        playPause.src = "botoes/play.png";
+                        musica[this.musicaAtual].pause()
+                    }console.log("TOCANDO: " + this.tocando)
+                }
+            }
+            next(){
+                if (musica.length > 1){
+                    musica[this.musicaAtual].load()
+                    div[this.musicaAtual-1].style.backgroundColor = "#464646"
+                    div[this.musicaAtual-1].style.color = "white"
+                    this.musicaAtual++;
+                    playPause.src = "botoes/pause.png";
+                    this.tocando = true;
+                    if (this.musicaAtual >= this.musciaTotal){
+                        this.musicaAtual = 1;
+                    }div[this.musicaAtual-1].style.backgroundColor = "#7ebaef"
+                    div[this.musicaAtual-1].style.color = "black"
+                    musica[this.musicaAtual].load()
+                    musica[this.musicaAtual].play()
+                    nome.innerHTML = mp3.musicaNome[mp3.musicaAtual] //
+                    console.log("MUSICA: " + this.musicaNome[this.musicaAtual])
+                    console.log("TOCANDO: " + this.musicaAtual)
+                    if (musica.length > 1){ // trocar nome da musica
+                        var x = "";
+                        for (let i = 0; i <= mp3.musicaNome[mp3.musicaAtual].length-5; i++){
+                            x += mp3.musicaNome[mp3.musicaAtual][i]
+                            nome.innerHTML = x
+							document.title = x
+                        }
+                    }
+                }
+            }
+
+            add(x){
+                if (file.value.length > 0){
+                    //deletar mensassem de SEM MUSICAS
+                    document.getElementById("texto_add").innerHTML = "";
+
+                    var cont = document.getElementById("cont")
+                    cont.scrollTop = cont.scrollHeight+10;
+
+                    this.audio = document.createElement("audio")
+                    this.lista = []
+                    document.body.appendChild(this.audio)
+                    for (this.x = 12; this.x <= file.value.length; this.x++){
+                        this.lista.push(file.value[this.x]);
+                    }
+                    this.audio.src = "" + this.lista.join("")               // PASTA DAS MUSICAS
+                    this.musicaNome.push(this.lista.join(""))
+                    this.musciaTotal = this.musicaNome.length;
+                    //container
+                    elemento = document.createElement("div")
+                    elemento.className = "musicas"
+                    container.appendChild(elemento)
+                    
+                    div = document.getElementsByClassName("musicas")
+                    if (musica.length > 1){
+                        var x = "";
+                        for (let i = 0; i <= this.musicaNome[this.musicaAtual].length-5; i++){
+                            x += this.musicaNome[this.musicaAtual][i]
+                            nome.innerHTML = x
+							document.title = x
+                        }
+                        var y = this.numero + ": ";
+                        this.numero++;
+                        
+                        for (let i = 0; i <= this.musicaNome[this.c+1].length-5; i++){
+                            y += this.musicaNome[this.musciaTotal-1][i]
+                            div[this.c].innerHTML = y
+                        }
+                        this.c++
+                    }
+                }
+            }
+
+            //RANGE DA MUSICA
+
+            deslizar(){
+                this.seguro = true;
+
+                time_track(musica[mp3.musicaAtual].duration);
+                atualDuracao = (maxDuracao + "/");
+                maxDuracao = "";
+                
+                time_track(barra.value);
+                atualDuracao += maxDuracao;
+                maxDuracao = "";
+
+                console.log(atualDuracao);
+                document.getElementById("cronometro").innerHTML = atualDuracao;
+            }
+
+            segurar(){
+                this.seguro = true;
+
+            }
+            soltar(){
+                this.seguro = false;
+                musica[mp3.musicaAtual].currentTime = barra.value;
+
+                
+            }
+
+            
+            //SYNC DO TEMPO 
+            sync(){
+                if ((musica.length > 1) && !this.seguro){ // barra de duracao
+                    
+                    if (this.seguro){
+                        barra.max = musica[mp3.musicaAtual].duration
+                        barra.value = musica[mp3.musicaAtual].currentTime
+                    }
+                    else{
+                        barra.max = musica[mp3.musicaAtual].duration
+                        //barra.value = musica[mp3.musicaAtual].currentTime
+                    }
+                        
+                    
+                    
+
+                    time_track(musica[mp3.musicaAtual].duration);
+                    atualDuracao = (maxDuracao + "/");
+                    maxDuracao = "";
+                    
+                    time_track(musica[mp3.musicaAtual].currentTime);
+                    atualDuracao += maxDuracao;
+                    maxDuracao = "";
+
+                    console.log(atualDuracao);
+                    document.getElementById("cronometro").innerHTML = atualDuracao;
+                }
+                
+            }
+        }
+        mp3 = new MP3();
+        function passar(){ // passar a musica sozinho
+            if (parseInt(barra.max) == barra.value){
+                mp3.next()
+            }
+        }
+        setInterval(mp3.sync, 500)
+        setInterval(passar, 500)
+        //tema
+        toggleBtn = document.getElementById("toggle")
+        toggle = false
+        function tema(){
+            if (!toggle){
+                toggle = true
+                toggleBtn.style.left = "25px"
+                document.body.style.backgroundColor = "black"
+            }
+            else if (toggle){
+                toggle = false
+                toggleBtn.style.left = "0px"
+                document.body.style.backgroundColor = "white"
+            }
+        }
+    </script>
+    <audio></audio>
+</body>
+</html>
