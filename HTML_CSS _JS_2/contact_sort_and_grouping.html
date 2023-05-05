@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contatos</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+
+        /* SCREEN HEADER */
+
+        #screen_header{
+            padding: 16px;
+            background-color: #212121;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            box-shadow: 0 0 5px 0 #555;
+        }
+
+
+
+
+
+
+
+
+        /* SEARCH */
+
+        #search_wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #353535;
+            border-radius: 25px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        #search_input{
+            width: 100%;
+            background-color: transparent;
+            border: none; 
+            font-size: 1.2em;
+            color: #fafafa;
+            caret-color: #6c757d;
+            outline: none;
+            padding: 0 8px 0 16px;
+        }
+
+        #search_clear{
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            transform: translateX(100%);
+            transition: 100ms;
+        }
+        #search_clear:active{
+            background-color: #dc3545;
+        }
+
+        .search_clear_visible{
+            transform: translateX(0) !important;
+        }
+
+
+
+
+
+
+
+
+        /* CHIP LIST */
+        #sort_chip_list{
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+
+        .sort_chip_label{
+            margin: 4px;
+            margin-left: 0;
+        }
+
+        .sort_chip_label:has(.sort_chip_all){
+            margin-right: 0;
+        }
+
+        .sort_chip_label input{
+            display: none;
+        }
+
+
+        .sort_chip{
+            padding: 8px 16px;
+            background-color: #303030;
+            border-radius: 8px; 
+            display: flex;
+            align-items: center;
+            transition: 200ms;
+        }
+        .sort_chip:last-child{
+            margin: 0;
+        }
+
+
+        .sort_chip_label input:checked ~ div{
+            background-color: #6c757d;
+        }
+        
+
+        .sort_chip_label .sort_chip_all{
+            margin-right: 10px;
+        }
+
+        .sort_chip_all{
+            position: relative;
+        }
+        .sort_chip_all::after{
+            content: '';
+            display: block;
+            width: 2px;
+            height: 100%;
+            border-radius: 25px;
+            background-color: #444;
+            position: absolute;
+            left: calc(100% + 4px);
+        }
+
+ 
+
+
+
+
+
+
+
+
+
+        /* SCREEN CONTENT */
+
+        #screen_content{
+            padding: 8px;
+            overflow: hidden auto;
+        }
+
+        .item_container{
+            display: flex; 
+            align-items: center;
+            padding: 8px;
+            background-color: #212121;
+            border-radius: 10px;
+            transition: 200ms;
+            transform: translateX(0);
+            margin-bottom: 8px;
+        }
+        .item_container:last-child{
+            margin: 0;
+        }
+
+        .item_container:active{
+            background-color: #353535;
+            box-shadow: 0 0 5px 0 #212121;
+        }
+
+        .item_container:active .item_image,
+        .item_container:active .item_group_chip{
+            background-color: #555;
+        }
+ 
+        
+        .item_image{
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.1em;
+            line-height: 0;
+            font-weight: 600; 
+            border-radius: 50%;
+            border: 2px solid #353535;
+        }
+        
+
+        .item_content{
+            margin-left: 10px;
+            width: 100%;
+        }
+
+        .item_title{
+            color: #fafafa;
+            font-weight: 600;
+        }
+        .item_subTitle{
+            color: #9e9e9e;
+        }
+        
+
+        .item_groups{
+            display: flex;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .item_group_chip{
+            padding: 2px 8px;
+            background-color: #353535;
+            border-radius: 25px;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            margin-right: 8px;
+        }
+        .item_group_chip:last-child{
+            margin: 0;
+        }
+
+
+
+
+
+        .item_favorite{
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            color: #ffc107;
+        }
+
+        .item_favorite svg{
+            display: flex;
+        }
+
+
+
+
+
+
+
+
+        #modal_container{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #00000080;
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            display: none;
+        }
+
+        #modal_header{
+            border-bottom: 1px solid #9e9e9e;
+            padding-bottom: 4px;
+            font-size: 1.2em;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-right: 8px;
+        }
+
+
+
+
+        #modal_window{
+            width: 75%;
+            height: 50%;
+            background-color: #212121;
+            border: 1px solid #353535;
+            border-radius: 16px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+
+
+
+
+
+
+
+        #modal_content{
+            height: 100%;
+            overflow: hidden auto;
+        }
+
+
+        #modal_content > div{
+            padding: 2px;
+        }
+
+
+        #modal_content > div > span:first-child{
+            font-weight: bold;
+        }
+
+
+        #modal_contact_grupos > div{
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #modal_contact_grupos > div > div{
+            padding: 4px 16px;
+            background-color: #353535;
+            margin: 4px;
+            border-radius: 25px;
+        }
+
+
+
+
+
+
+
+
+        #modal_close{
+            text-align: center;
+            padding: 8px 0;
+            background-color: #dc3545;
+            margin-top: 8px;
+            border-radius: 25px;
+            transition: 200ms;
+        }
+
+        #modal_close:active{
+            transition: 0ms;
+            transform: scale(1.05);
+        }
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+
+
+    <div id="screen_header">
+        
+        <div id="search_wrapper">
+            <input type="text" id="search_input" placeholder="Pesquiar" spellcheck="false">
+            <div id="search_clear">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/></svg>
+            </div>
+        </div>
+
+        <div id="sort_chip_list"></div>
+
+    </div>
+
+
+
+    <div id="screen_content"></div>
+
+ 
+
+
+
+
+
+
+
+
+    <div id="modal_container">
+
+        <div id="modal_window">
+
+            <div id="modal_header">
+                <div>Contato</div>
+                <div id="modal_star">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div id="modal_content">
+                
+                <div id="modal_contact_nome">
+                    <span>Nome:</span>
+                    <span></span>
+                </div>
+
+                <div id="modal_contact_numero">
+                    <span>Numero:</span>
+                    <span></span>
+                </div>
+
+                <div id="modal_contact_grupos">
+                    <span>Grupo(s):</span>
+                    <div></div>
+                </div>
+
+            </div>
+
+            <div id="modal_footer">
+                <div id="modal_close">FECHAR</div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+     
+
+
+    <script>
+
+
+        var screen_header           = document.getElementById("screen_header");
+        var sort_chip_list          = document.getElementById("sort_chip_list");
+        var screen_content          = document.getElementById("screen_content");
+        var search_input            = document.getElementById("search_input");
+        var search_clear            = document.getElementById("search_clear");
+        var contact_can_move        = false;
+        var contact_init_positionX  = 0;
+
+
+        function addItemContactToList(name, number, index, groups = [], favorite = false){
+
+            let item = document.createElement("div");
+            item.classList.add("item_container"); 
+            item.setAttribute("item-index", index);
+            item.innerHTML = `
+            <div class="item_image">${name.charAt(0).toUpperCase()}</div>
+            <div class="item_content">
+                <div class="item_title">${name}</div>
+                <div class="item_subTitle">${number}</div>
+            </div>
+            ${(favorite)? `<div class="item_favorite"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg></div>`: ''}`;
+
+
+            if ( groups.length > 0 ){
+
+                let gp = document.createElement("div");
+                gp.classList.add("item_groups");
+                item.querySelector(".item_content").appendChild(gp);
+
+                groups.sort((a, b) => a.localeCompare(b) ).forEach(e => {
+                    let gp_item = document.createElement("div");
+                    gp_item.classList.add("item_group_chip");
+                    gp_item.innerHTML = e;
+                    gp.appendChild(gp_item);
+                });
+
+            }
+
+
+
+            item.ontouchstart = (evt) => {
+                contact_init_positionX = evt.touches[0].clientX - item.offsetLeft;
+                contact_can_move = true;
+            }
+
+
+            item.ontouchmove = (evt) => {
+                
+                if ( contact_can_move ){
+                    let posX = evt.touches[0].clientX - contact_init_positionX;
+                    item.style.opacity = 1 - (Math.abs(posX) / document.body.offsetWidth);
+                    item.style.transition = '0ms';
+                    item.style.transform = `translateX(${posX}px)`;
+
+                    if ( !evt.cancelable ){
+                        item.style.transform = `translateX(0)`;
+                        item.style.opacity = 1;
+                        contact_can_move = false;
+                    }
+                } 
+              
+            };
+
+
+            item.ontouchend = (evt) => { 
+                
+                item.style.transition = '200ms';
+                let posX = evt.changedTouches[0].clientX - contact_init_positionX;
+                
+                if ( Math.abs(posX) >= 0.5 * document.body.offsetWidth && contact_can_move ){
+                    console.log('delete');
+
+                    contact_can_move = false;
+                    item.style.transform = `translateX(${(posX>0)?100:-100}%)`; 
+                    CONTATOS.splice(item.getAttribute("item-index"), 1);
+
+                    setTimeout(()=>{
+                        onSortChange(false);
+                    }, 250);
+
+                }
+                else{
+                    item.style.transform = `translateX(0)`;
+                    item.style.opacity = 1;
+                }
+                
+            };
+
+
+
+
+            item.onclick = () => {
+                console.log('click');
+                openContactByIndex( item.getAttribute("item-index") );
+            };
+
+
+            screen_content.appendChild(item);
+
+        }
+
+
+
+
+ 
+        
+
+
+
+
+
+        
+        var CONTATOS = [
+
+            {'nome': 'alex','numero': '1234-5678','grupos': ['trabalho', 'familia'],'favorito' : false},
+            {'nome': 'marcos','numero': '1234-5678','grupos': ['trabalho', 'casa'],'favorito' : false},
+            {'nome': 'ana','numero': '1234-5678','grupos': ['familia', 'casa'],'favorito' : true},
+            {'nome': 'igor','numero': '1234-5678','grupos': ['loja'],'favorito' : false},
+            {'nome': 'marcelo','numero': '1234-5678','grupos': [],'favorito' : false},
+            {'nome': 'luiz','numero': '1234-5678','grupos': [],'favorito' : true},
+            {'nome': 'luiz feile','numero': '1234-5678','grupos': [],'favorito' : true}
+
+        ];
+
+
+
+
+
+
+
+
+
+
+
+
+        function openContactByIndex( index ){
+
+
+            document.getElementById("modal_container").style.display = "flex";
+
+            document.getElementById("modal_star").style.color = (CONTATOS[index].favorito)? "#ffc107" : "#353535";
+            
+            document.getElementById("modal_contact_nome").lastElementChild.innerHTML = CONTATOS[index].nome;
+            document.getElementById("modal_contact_numero").lastElementChild.innerHTML = CONTATOS[index].numero;
+
+
+            document.getElementById("modal_contact_grupos").lastElementChild.innerHTML = '';
+
+            CONTATOS[index].grupos.forEach(e => {
+                let gp = document.createElement("div");
+                gp.innerHTML = e;
+                document.getElementById("modal_contact_grupos").lastElementChild.appendChild(gp);
+            });
+
+        }
+
+
+
+        document.getElementById("modal_close").onclick = () => {
+            document.getElementById("modal_container").style.display = "none";
+        };
+
+
+
+
+
+        function generateList( searchName = '', searchGroup, animate = true ){
+
+            screen_content.innerHTML = '';
+
+            CONTATOS = CONTATOS.sort((a, b) => a.nome.localeCompare(b.nome.toUpperCase()) );
+
+            let list = [];
+
+            if ( searchGroup ){
+                list = CONTATOS.filter(e => e.grupos.indexOf(searchGroup) >= 0).filter(e => e.nome.indexOf(searchName) >= 0);
+            }else{
+                list = CONTATOS.filter(e => e.nome.indexOf(searchName) >= 0);
+            }
+
+
+            list.forEach((e, i) => {
+
+                if ( animate ){
+                    setTimeout(()=>{
+                        let index = 0;
+                        CONTATOS.filter((el, idx) => {
+                            if (el == e){ index = idx; }
+                            return el;
+                        });
+                        addItemContactToList(e.nome, e.numero, index, e.grupos, e.favorito);
+                    }, 100*i);
+                }
+                else{
+                    let index = 0;
+                    CONTATOS.filter((el, idx) => {
+                        if (el == e){ index = idx; }
+                        return el;
+                    });
+                    addItemContactToList(e.nome, e.numero, index, e.grupos, e.favorito);
+                }
+                
+            });
+
+
+
+            sort_chip_list.innerHTML = '';
+            let tempGroupList = [];
+            let sort_chip = document.createElement("label");
+            sort_chip.classList.add("sort_chip_label");
+            sort_chip.innerHTML = `
+                <input type="radio" name="sort_radio" checked>
+                <div class="sort_chip sort_chip_all">TODOS</div>`;
+            
+            sort_chip_list.appendChild(sort_chip);
+            sort_chip.onchange = onSortChange;
+
+
+            CONTATOS.forEach(e => {
+                e.grupos.forEach(el => {
+                    if ( tempGroupList.indexOf(el) < 0 ){
+                        tempGroupList.push(el);
+                    }
+                });
+            });
+            
+
+            tempGroupList.sort((a, b) => a.localeCompare(b) ).forEach(el => { 
+                let sort_chip = document.createElement("label");
+                sort_chip.classList.add("sort_chip_label");
+                sort_chip.innerHTML = ` 
+                    <input type="radio" name="sort_radio" ${(searchGroup==el)? 'checked' : ''}>
+                    <div class="sort_chip">${el}</div>`;
+
+                sort_chip_list.appendChild(sort_chip);
+                sort_chip.onchange = onSortChange;
+            }); 
+
+        }
+        
+
+        
+
+
+        function onSortChange(animate = true){
+            generateList(search_input.value, (document.querySelector('input[name="sort_radio"]:checked').nextElementSibling.classList.contains("sort_chip_all"))? null : document.querySelector('input[name="sort_radio"]:checked').nextElementSibling.innerText, animate);
+        }
+        
+
+        window.onload = () => {
+            generateList();
+        };
+        
+
+        search_input.oninput = () => {
+            search_clear.classList.toggle("search_clear_visible", search_input.value.length > 0);
+            onSortChange();
+        };
+
+
+        search_clear.onclick = () => {
+            search_input.value = '';
+            search_clear.classList.toggle("search_clear_visible", false);
+            search_input.focus();
+            onSortChange();
+        };
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
