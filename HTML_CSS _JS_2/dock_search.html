@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{ 
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #fff;
+            color: #252525;
+			user-select: none; 
+        }
+
+
+
+        #main_header{ 
+            box-shadow: 0 0 5px 0 #9e9e9e;
+            margin: 10px;
+            overflow: hidden;
+            border-radius: 4px;
+            height: 100%;
+            position: sticky;
+            top: 10px;
+        }
+
+        #search_wrapper #search_input{
+            outline: none;
+            border: none;
+            width: 100%;
+            height: calc(54px - 16px);
+            font-size: large;
+        }
+        #search_wrapper .list_item_icon{
+            color: #757575;
+        }
+ 
+
+        #search_result .list_item_icon{
+            color: #9d9d9d;
+        }
+
+        .list_item{
+            display: flex; 
+            align-items: center;
+            background-color: #fff;
+             
+            height: 54px;
+            padding: 16px;
+        }
+
+
+
+
+        .list_item_label{
+            flex: 1;
+        }
+
+        .list_item_icon{
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0; 
+            display: flex; 
+            justify-content: center;
+            align-items: center; 
+        }
+
+        .list_item_icon *{
+            pointer-events: none;
+        }
+
+        .list_item_icon:first-child{
+            margin-right: 32px;
+        }
+        
+        .list_item_label{
+            margin-right: 24px;
+        }
+
+
+
+        #search_result{
+            overflow: auto;
+            transition: 200ms;
+            border-top: 1px solid #e0e0e0;
+            height: 0; 
+        } 
+
+
+
+
+
+        #main_content .list_item{
+            height: 64px;
+        }
+
+
+        #main_content .list_item_icon{
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #757575; 
+            border-radius: 50%;
+            border: 1px solid #757575;
+            width: 48px;
+            height: 48px;
+        } 
+
+        #main_content .list_item_label::after{
+            content: '';
+            display: block;
+            width: 100%;
+            height: 1px;
+            margin-top: 8px;
+            background-color: #e0e0e0;
+        }
+
+        #main_content .list_item_label div:first-child{
+            font-size: large;
+            font-weight: bold;
+            color: #252525;
+        }
+
+        #main_content .list_item_label div:last-child{
+            font-size: small;
+            color: #757575;
+        }
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+
+    <div id="main_header">
+
+        <div id="search_wrapper">
+            <div class="list_item">
+                <div class="list_item_icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg></div>
+                <div class="list_item_label"> <input type="text" inputmode="search" id="search_input" spellcheck="false" placeholder="Pesquisar"> </div>
+                <div class="list_item_icon"></div>
+            </div>
+        </div>
+
+        <div id="search_result"></div>
+
+    </div>
+
+
+
+    <div id="main_content"></div>
+ 
+
+
+     
+
+
+    <script>
+
+
+
+        
+        var search_input = document.getElementById('search_input');
+        
+        var search_wrapper = document.getElementById('search_wrapper');
+        var search_result = document.getElementById('search_result');
+
+
+        var main_content = document.getElementById('main_content');
+
+
+        var LISTA = [
+
+            {'nome': 'luiz', 'numero': '12345678'},
+            {'nome': 'marcos', 'numero': '45841597'},
+            {'nome': 'alex', 'numero': '75314785'},
+            {'nome': 'joao', 'numero': '12375694'},
+            {'nome': 'igor', 'numero': '05781522'},
+            {'nome': 'ana', 'numero': '84751230'},
+            {'nome': 'maria', 'numero': '66325801'},
+            {'nome': 'alef', 'numero': '45681455'}
+
+        ];
+
+
+        var LISTA_RECENTE = [];
+
+
+
+        search_input.onfocus = () => {
+            if ( search_input.value.length == 0 ){
+                gerarRecentes();
+            }else{
+                gerarPesquisa(search_input.value);
+            }
+            search_wrapper.querySelector('.list_item_icon:last-child').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/></svg>`;
+        };
+
+
+        search_input.oninput = () => { 
+            (search_input.value.length == 0)? gerarRecentes() : gerarPesquisa(search_input.value);
+        };
+
+
+        search_input.onkeydown = (evt) => {
+            if (evt.keyCode == 13){
+                if ( LISTA_RECENTE.findIndex(e => e.toUpperCase() == search_input.value.toUpperCase()) < 0 && search_input.value.length > 0 ){
+                    LISTA_RECENTE.push(search_input.value);
+                }
+            }
+            else if (evt.keyCode == 27){
+                search_result.innerHTML = '';
+                search_result.style.height = '';
+                search_input.value = '';
+                search_wrapper.querySelector('.list_item_icon:last-child').innerHTML = '';
+                search_input.blur();
+            }
+
+
+        };
+
+
+
+
+        search_wrapper.querySelector('.list_item_icon:last-child').onclick = (evt) => { 
+            evt.target.innerHTML = ``;
+            search_result.style.height = '0px';
+            search_input.value = '';
+        };
+
+
+         
+
+
+
+
+
+        function gerarRecentes(){
+
+            search_result.innerHTML = '';
+
+            LISTA_RECENTE.sort().forEach((e, i) => {
+
+                let item = document.createElement('div');
+                item.classList.add("list_item", 'recent_item');
+                item.innerHTML = `
+                <div class="list_item_icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/></svg></div>
+                <div class="list_item_label">${e}</div>
+                <div class="list_item_icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"></path></svg></div>`;
+                search_result.appendChild(item);
+
+                item.onclick = () => {
+                    console.log('recente');
+                    search_input.value = e;
+                    search_input.focus();
+                    gerarPesquisa(e);
+                };
+
+
+                item.lastElementChild.onclick = (evt) => {
+                    evt.stopImmediatePropagation();
+                    LISTA_RECENTE.splice(i, 1);
+                    item.remove();
+                    search_result.style.height = (search_result.children.length * 54) + 'px';
+                    search_input.focus();
+                }
+
+                search_result.style.height = ((i >= 5)? 5*54 : search_result.children.length * 54 ) + 'px';
+
+            });
+
+            if ( LISTA_RECENTE.length == 0 ){
+                search_result.style.height = '0px';
+            }
+
+        }
+
+
+
+
+        function gerarPesquisa( query = '' ){
+
+            search_result.innerHTML = '';
+            
+            let list = LISTA.sort((a, b) => a.nome.localeCompare(b.nome)).filter(e => e.nome.toUpperCase().indexOf(query.toUpperCase()) >= 0 );
+            
+            list.forEach((e, i) => {
+
+                let item = document.createElement('div');
+                item.classList.add("list_item");
+                item.innerHTML = `
+                <div class="list_item_icon"></div>
+                <div class="list_item_label">${e.nome}</div>`;
+                search_result.appendChild(item);
+
+                item.onclick = () => { 
+                    let nome = e.nome.toUpperCase();
+                    if ( LISTA_RECENTE.findIndex(e => e.toUpperCase() == nome) < 0 ){
+                        LISTA_RECENTE.push(e.nome);
+                    }
+                    search_result.innerHTML = '';
+                    search_result.style.height = '';
+                    search_input.value = '';
+                    search_wrapper.querySelector('.list_item_icon:last-child').innerHTML = '';
+                    alert('CLICK: ' + e.nome);
+                };
+
+                search_result.style.height = ((i >= 5)? 5*54 : search_result.children.length * 54 ) + 'px';
+
+            });
+
+            if ( list.length == 0 ){
+                search_result.style.height = '0px';
+            }
+
+
+        }
+
+
+
+
+
+
+        window.onload = () => {
+
+            main_content.innerHTML = '';
+
+            LISTA.sort((a, b) => a.nome.localeCompare(b.nome)).forEach(e => {
+                let item = document.createElement('div');
+                item.classList.add("list_item");
+                item.innerHTML = `
+                <div class="list_item_icon">${e.nome.charAt(0).toUpperCase()}</div>
+                <div class="list_item_label">
+                    <div>${e.nome}</div>
+                    <div>${e.numero}</div>
+                </div>`;
+                main_content.appendChild(item);
+            });
+
+        };
+        
+
+
+
+        
+        
+
+
+    </script>
+
+
+</body>
+</html>

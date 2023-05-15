@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+
+
+        .screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+        .screen_header,
+        .screen_footer{
+            font-size: x-large;
+            border-bottom: 1px solid #353535;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+        }
+
+        .screen_footer{
+            border: none;
+            border-top: 1px solid #353535;
+        }
+
+        .screen_content{
+            height: 100%;
+            overflow: hidden auto;
+        }
+
+        .item{
+            height: 72px;
+            background-color: #212121;
+            position: relative;
+            overflow: hidden;
+            left: 0;
+        }
+        
+        .item_content{
+            padding: 8px;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+ 
+    <div class="screen" id="screen_main">
+
+
+        <div class="screen_header">Headline</div>
+
+        <div class="screen_content">
+
+            <div id="main_list">
+                <div class="item"><div class="item_content">algo</div></div>
+                <div class="item"><div class="item_content">algo</div></div>
+                <div class="item"><div class="item_content">algo</div></div>
+                <div class="item"><div class="item_content">algo</div></div>
+                <div class="item"><div class="item_content">algo</div></div>
+                <div class="item"><div class="item_content">algo</div></div>
+                <div class="item"><div class="item_content">algo</div></div>
+                <div class="item"><div class="item_content">algo</div></div>
+                <div class="item"><div class="item_content">algo</div></div>
+            </div>
+
+        </div>
+
+        <div class="screen_footer">Footerline</div>
+        
+    </div>
+
+     
+
+
+    <script>
+
+
+
+
+
+        var main_list = document.getElementById("main_list");
+
+        var item_init_touch = {x: 0, y: 0};
+        var item_can_swipe = false;
+        var item_can_scroll = false;
+
+        main_list.querySelectorAll('.item').forEach((e, i) => {
+
+            e.ontouchstart = (evt) => {
+                item_init_touch = {
+                    x: evt.touches[0].clientX,
+                    y: evt.touches[0].clientY
+                }; 
+            };
+
+
+
+            e.ontouchmove = (evt) => {
+                
+                let item_diff_touch = {
+                    x: evt.touches[0].clientX - item_init_touch.x,
+                    y: evt.touches[0].clientY - item_init_touch.y
+                };
+                
+                e.style.transition = '';
+
+                if ( Math.abs(item_diff_touch.x) > 10 && !item_can_scroll || item_can_swipe ){
+                    console.log('X');
+                    item_can_swipe = true;
+                    item_can_scroll = false;
+                    e.style.left = item_diff_touch.x + 'px';
+                }
+
+                else if ( Math.abs(item_diff_touch.y) > 10 && !item_can_swipe ){
+                    console.log('Y');
+                    item_can_scroll = true;
+                    item_can_swipe = false;
+                } 
+
+            };
+
+
+            e.ontouchend = () => {
+                item_can_swipe = false;
+                item_can_scroll = false;
+                e.style.transition = '200ms';
+
+                if ( Math.abs(e.offsetLeft) > main_list.offsetWidth/2 ){
+                    e.style.left = (e.offsetLeft > 0)? '100%' : '-100%';
+                    
+                    setTimeout(()=>{
+                        e.style.height = 0;
+                        setTimeout(()=>{
+                            e.remove();
+                        }, 200);
+                    }, 250);
+                }else{
+                    e.style.left = '0px';
+                }
+
+            };
+
+
+
+
+
+        });
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
