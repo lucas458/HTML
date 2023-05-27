@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+
+        #main{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+ 
+
+
+        .box{
+            width: 32px;
+            height: 64px;
+            background-color: red;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    <div id="main">
+
+
+        <!-- <div class="box" pressed="false" gspeed="0"></div> -->
+
+    </div>
+ 
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+        const colors = ["red", "green", "blue", "purple", "cyan", "brown"];
+
+
+        var main = document.getElementById("main");
+
+        var gravity       = 0.1;
+        var bounce        = 0.6;
+
+
+
+
+
+        function update(){
+
+            document.querySelectorAll(".box").forEach((e) => {
+                let gspeed = parseFloat(e.getAttribute("gspeed"));
+                let posY = e.offsetTop;
+                if ( e.getAttribute("pressed") === "false" ){
+                    gspeed += gravity;
+                    e.setAttribute("gspeed", gspeed);
+                    posY = e.offsetTop + gspeed;
+                }
+                
+                
+
+                if ( posY > main.offsetHeight - e.offsetHeight ){
+                    posY = main.offsetHeight - e.offsetHeight;
+                    e.setAttribute("gspeed", -gspeed * bounce);
+                }
+
+                document.querySelectorAll(".box").forEach((el) => {
+                    if ( e.getAttribute("pressed") === "false" && e != el && gspeed > 0 && e.offsetLeft < el.offsetLeft + el.offsetWidth && e.offsetLeft + e.offsetWidth > el.offsetLeft && posY < el.offsetTop + el.offsetHeight && e.offsetHeight + posY > el.offsetTop ){
+                        e.setAttribute("gspeed", -gspeed * bounce);                       
+                    }
+                });
+
+                e.style.top = (posY) + "px";
+
+            });
+
+            requestAnimationFrame(update); 
+        }
+
+
+
+
+
+
+
+        window.onload = () => {
+
+
+            for (let i = 0; i < 6; i++){
+
+                let box = document.createElement("div");
+                box.classList.add("box");
+                box.setAttribute("pressed", false);
+                box.setAttribute("gspeed", 0);
+
+                let pos = {
+                    x: Math.random() * (main.offsetWidth - 32) | 0,
+                    y: Math.random() * (main.offsetHeight/4) | 0
+                };
+                box.style.left = (pos.x) + "px";
+                box.style.top  = (pos.y) + "px";
+                box.style.backgroundColor = colors[ Math.random() * colors.length | 0 ];
+                main.appendChild(box);
+
+
+                box.ontouchend = () => {
+                    box.setAttribute("gspeed", 0);
+                    box.setAttribute("pressed", false);
+                };
+
+                box.ontouchmove = (event) => {
+                    box.setAttribute("pressed", true);
+                    box.style.left = Math.clamp(event.touches[0].clientX - box.offsetWidth/2, 0, main.offsetWidth - box.offsetWidth) + "px";
+                    box.style.top  = Math.clamp(event.touches[0].clientY - box.offsetHeight/2, 0, main.offsetHeight - box.offsetHeight) + "px";
+                };
+
+
+            }
+            
+
+            update();
+        }
+
+        
+
+
+
+
+
+
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

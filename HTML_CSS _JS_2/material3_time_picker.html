@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+
+
+
+        .timepicker{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+
+
+
+
+        .timepicker_window{
+            width: 328px;
+            /* height: 243px; */
+            border-radius: 24px;
+            padding: 24px;
+            background-color: #2b2930;
+        }
+
+
+
+        .timepicker_headline{
+            height: 16px;
+            margin-bottom: 20px;
+            /* background-color: green; */
+            line-height: 16px;
+            color: #cac4d0;
+        }
+
+
+
+
+
+        .timepicker_selector_container{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+
+
+        .timepicker_selector_wrapper{
+            width: 100%;
+        }
+
+
+ 
+
+
+        .timepicker_selector_wrapper:last-child{
+            margin-left: 11.5px;
+            width: 52px;
+            flex-shrink: 0; 
+        }
+
+
+
+
+        .timepicker_selector{
+            width: 100%;
+            height: 72px;
+            border-radius: 8px;
+            /* background-color: transparent; */
+            background-color: #48454e; 
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; 
+        }
+
+        .timepicker_selector:focus-within{
+            border: 2px solid #938f99;
+            background-color: #4f378b;
+        }
+
+         
+
+        .timepicker_selector:last-child{
+            font-size: 1.2em;
+            overflow: hidden;
+            border: 1px solid #938f99;
+            background-color: transparent;
+        }
+
+        .timepicker_timemode{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #cac4d0;
+        }
+
+        .timepicker_timemode:first-child{
+            border-bottom: 1px solid #938f99;
+        }
+
+        .timepicker_timemode:active,
+        .timepicker_timemode_selected{
+            background-color: #633b48;
+            color: #ffd8e4;
+        }
+
+
+
+        .timepicker_selector input{
+            width: 100%;
+            border: none;
+            outline: none;
+            background-color: transparent;
+            height: 72px;
+            font-size: 2.5em;
+            display: block;
+            text-align: center;
+            color: #cac4d0;
+            caret-color: #938f99;
+        }
+
+        .timepicker_selector input:focus{
+            color: #ffd8e4;
+        }
+
+
+
+
+        .timepicker_selector_label{
+            height: 23px;
+            line-height: 23px;
+            /* background-color: rebeccapurple; */
+            color: #cac4d0;
+        }
+
+
+
+
+
+
+
+        .timepicker_dot{
+            width: 24px;
+            height: 72px;
+            font-size: 2.5em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+
+
+
+
+
+
+
+
+        .timepicker_footer{
+            height: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* background-color: green; */
+            padding-left: 8px;
+        }
+
+
+        .timepicker_toggle{
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #d0bcff;
+            border-radius: 50%;
+        }
+
+
+
+        .timepicker_controls{
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+        .timepicker_control_button{
+            height: 100%;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            margin-left: 8px;
+            color: #d0bcff;
+            border-radius: 4px;
+        }
+
+
+        .timepicker_control_button:active,
+        .timepicker_toggle:active{
+            background-color: #d1bdff1a;
+        }
+ 
+
+
+
+
+
+
+        .timepicker_radial_wrapper{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+
+        .timepicker_radial{
+            width: 256px;
+            height: 256px;
+            background-color: #48454e;
+            border-radius: 50%;
+            padding: 4px;
+            position: relative;
+        }
+
+
+ 
+
+
+        .timepicker_radial_center{
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #d0bcff;
+            position: absolute;
+            left: calc(50% - 4px);
+            top: calc(50% - 4px);
+        }
+
+
+
+
+
+        /*.timepicker_radial_line{
+            width: calc(50% - 4px);
+            background-color: #d0bcff;
+            height: 4px;
+            transform: rotate(90deg);
+            transform-origin: right 2px;
+            position: absolute;
+            top: calc(50% - 2px);
+        }
+
+
+        .timepicker_radial_handle{
+            width: 48px;
+            height: 48px;
+            background-color: #d0bcff; 
+            font-size: 1.2em; 
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: calc(100% - 26px);    
+        }
+
+
+
+        .timepicker_radial_handle_dot::after{
+            content: '';
+            display: block;
+            width: 4px;
+            height: 4px;
+            background-color: #000;
+            border-radius: 50%;
+        }*/
+
+
+
+
+
+
+
+        .timepicker_radial_step_list{
+            pointer-events: none;
+            position: absolute;
+            left: calc(50% - 8px);
+        }
+
+
+
+        .timepicker_radial_step{
+            position: absolute;
+        }
+
+
+        .timepicker_radial_step:nth-child(2){
+            left: 8px;
+        }
+
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div class="timepicker">
+
+
+        <div class="timepicker_window">
+
+            <div class="timepicker_headline">Select time</div>
+
+
+            <div class="timepicker_selector_container">
+                <div class="timepicker_selector_wrapper">
+                    <div class="timepicker_selector"><input type="number" maxlength="2" value="12" autofocus></div>
+                    <div class="timepicker_selector_label">Hour</div>
+                </div>
+
+                <div class="timepicker_dot">:</div>
+
+                <div class="timepicker_selector_wrapper">
+                    <div class="timepicker_selector"><input type="number" maxlength="2" value="59"></div>
+                    <div class="timepicker_selector_label">Hour</div>
+                </div>
+
+                <div class="timepicker_selector_wrapper">
+                    <div class="timepicker_selector">
+                        <div class="timepicker_timemode timepicker_timemode_selected">AM</div>
+                        <div class="timepicker_timemode">PM</div>
+                    </div> 
+                </div>
+            </div>
+
+
+
+            <!-- RADIAL -- HOUR -->
+            <div class="timepicker_radial_wrapper">
+                
+                <div class="timepicker_radial">
+
+                    <div class="timepicker_radial_center">
+                         
+                        <svg style="overflow: visible;">
+                            <circle cx="4" cy="-98" r="24" fill="#d0bcff"/>
+                            <rect x="3" y="-100" width="2" height="100" fill="#d0bcff"/>
+                          </svg> 
+                    </div>
+
+                    <div class="timepicker_radial_line">
+                        <div class="timepicker_radial_handle" timepicker-tick="12"></div>
+                    </div>
+
+                    <div class="timepicker_radial_step_list">
+                        <div class="timepicker_radial_step" style="top: 10px; left: 0px;">12</div>
+                        <div class="timepicker_radial_step" style="top: 24px; left: 54px;">1</div>
+                        <div class="timepicker_radial_step" style="top: 60px; left: 92px;">2</div>
+                        <div class="timepicker_radial_step" style="top: 113px; left: 107px;">3</div>
+                        <div class="timepicker_radial_step" style="top: 162px; left: 94px;">4</div>
+                        <div class="timepicker_radial_step" style="top: 200px; left: 57px;">5</div>
+                        <div class="timepicker_radial_step" style="top: 214px; left: 5px;">6</div>
+                        <div class="timepicker_radial_step" style="top: 200px; left: -44px;">7</div>
+                        <div class="timepicker_radial_step" style="top: 164px; left: -82px;">8</div>
+                        <div class="timepicker_radial_step" style="top: 114px; left: -97px;">9</div>
+                        <div class="timepicker_radial_step" style="top: 64px; left: -90px;">10</div>
+                        <div class="timepicker_radial_step" style="top: 26px; left: -52px;">11</div>
+                    </div>
+
+
+
+                </div>
+                
+
+            </div>
+
+            
+
+
+
+            <div class="timepicker_footer">
+
+                <div class="timepicker_toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="40" viewBox="0 96 960 960" width="40" fill="currentColor"><path d="m612 764 56-56-148-148V376h-80v216l172 172ZM480 976q-83 0-156-31.5T197 859q-54-54-85.5-127T80 576q0-83 31.5-156T197 293q54-54 127-85.5T480 176q83 0 156 31.5T763 293q54 54 85.5 127T880 576q0 83-31.5 156T763 859q-54 54-127 85.5T480 976Zm0-400Zm0 320q133 0 226.5-93.5T800 576q0-133-93.5-226.5T480 256q-133 0-226.5 93.5T160 576q0 133 93.5 226.5T480 896Z"/></svg>
+                </div>
+
+                <div class="timepicker_controls">
+                    <div class="timepicker_control_button">Cancel</div>
+                    <div class="timepicker_control_button">OK</div>
+                </div>
+
+            </div>
+
+            
+
+
+        </div>
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+
+
+
+
+
+        document.querySelectorAll('.timepicker').forEach((e, i) => {
+
+
+            
+
+            e.querySelector('.timepicker_radial_center circle').addEventListener('touchmove', (event)=>{
+                let pivot = e.querySelector('.timepicker_radial_center');
+                let pos = {
+                    x: event.touches[0].clientX - pivot.offsetLeft - 52 - pivot.offsetWidth/2,
+                    y: event.touches[0].clientY - pivot.offsetTop - 256 + 8 - pivot.offsetHeight/2
+                };
+                let angle = 180 - (Math.atan2(pos.x, pos.y) * 180 / Math.PI);
+
+                
+                let step = Math.round(angle / (360/12));
+
+                console.log(   );
+                e.querySelector('.timepicker_radial_center').style.transform = `rotate(${360/12*step}deg)`;
+            });
+
+
+
+        });
+
+
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
