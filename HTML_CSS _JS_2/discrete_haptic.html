@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+            overflow: hidden;
+            scroll-behavior: none;
+            padding: 60px 30px;
+        }
+
+
+
+        .seekbar_discrete{
+            position: relative;
+        }
+
+        .seekbar_wrapper{
+            width: 100%;
+            height: 4px;
+            background-color: #353535;
+            display: flex;
+            align-items: center;
+        }
+
+        .seekbar_fill{
+            width: 2px;
+            height: 6px;
+            background-color: #007bff;
+            position: relative;
+        }
+
+        .seekbar_wrapper,
+        .seekbar_fill{
+            border-radius: 8px;
+        }
+
+        .seekbar_handle{
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #007bff;
+            box-shadow: 0 0 5px #000;
+            z-index: 1;
+            position: absolute;
+            right: -10px;
+            top: calc(-10px + 3px);
+        }
+
+        .seekbar_handle::before{
+            content: '';
+            display: block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 200ms;
+            background-color: #007bff33;
+            position: relative;
+            left: -10px;
+            top: -10px;
+        } 
+
+
+        .seekbar_handle:active::before{
+            transition: 100ms;
+            transform: scale(1);
+        }
+
+
+
+
+        .seekbar_tooltip{
+            background-color: #666666;
+            border-radius: 4px;
+            text-align: center;
+            padding: 4px 8px;
+            z-index: 1;
+            transform: scale(0);
+            transition: 200ms transform;
+            position: absolute;
+            left: 0;
+            top: -46px;
+        }
+
+        .seekbar_tooltip::after{
+            width: 0;
+            content: '';
+            display: block;
+            border: 6px solid #00000000;
+            border-top-color: #666666;
+            margin: auto;
+            
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 100%;
+        }
+
+        .seekbar_tooltip_show .seekbar_tooltip{
+            transform: scale(1);
+        }
+ 
+
+
+
+
+
+        .seekbar_tick_list{
+            height: 6px;
+            width: 100%;
+            padding: 0 2px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            
+            position: relative;
+            top: -5px;
+        }
+
+        .seekbar_tick{
+            width: 2px;
+            height: 2px;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+ 
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    
+    
+    <!-- seekbar_handle_ghost -->
+    <div class="seekbar_discrete" seek-tick="0">
+
+        <div class="seekbar_tooltip">100</div>
+
+        <div class="seekbar_wrapper">
+            <div class="seekbar_fill">
+                <div class="seekbar_handle"></div>
+            </div>
+        </div>
+
+        <div class="seekbar_tick_list">
+            <div class="seekbar_tick" tick-value="5"></div>
+            <div class="seekbar_tick" tick-value="15"></div>
+            <div class="seekbar_tick" tick-value="25"></div>
+            <div class="seekbar_tick" tick-value="35"></div>
+            <div class="seekbar_tick" tick-value="45"></div>
+            <div class="seekbar_tick" tick-value="55"></div>
+            <div class="seekbar_tick" tick-value="65"></div>
+            <div class="seekbar_tick" tick-value="75"></div>
+            <div class="seekbar_tick" tick-value="85"></div>
+            <div class="seekbar_tick" tick-value="95"></div>
+        </div>
+
+    </div>
+    
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        
+
+        document.querySelectorAll(".seekbar_discrete").forEach(e => {
+
+            e.ontouchmove = (event) => {
+                
+                const seekbar_width = e.querySelector(".seekbar_wrapper").offsetWidth;
+                let tooltip         = e.querySelector(".seekbar_tooltip");
+                let tick_list       = e.querySelectorAll(".seekbar_tick");
+                let touchX          = Math.clamp(event.touches[0].clientX - 40, 0, seekbar_width);
+                let tick_index      = Math.clamp( Math.round( (touchX - (seekbar_width / 20)) / (seekbar_width / tick_list.length)), 0, tick_list.length - 1 );
+                let fillPosX        = tick_list[tick_index].offsetLeft;
+                
+
+                tooltip.innerHTML = tick_list[tick_index].getAttribute("tick-value");
+
+                if ( parseInt(e.getAttribute("seek-tick")) != tick_index ){
+                    navigator.vibrate(30);
+                }
+
+                e.setAttribute("seek-tick", tick_index);
+                e.querySelector(".seekbar_fill").style.width = (fillPosX) + 'px';
+                tooltip.style.left = (fillPosX - tooltip.offsetWidth/2 ) + 'px';
+                e.classList.add("seekbar_tooltip_show");
+            }
+
+            e.ontouchend = () => {
+                e.classList.remove("seekbar_tooltip_show");
+            };
+
+
+        });
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
