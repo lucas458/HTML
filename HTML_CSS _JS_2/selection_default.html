@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    <select id="select_box">
+        <option value="aaa">item 0</option>
+        <option value="bbb">item 1</option>
+        <option value="ccc">item 2</option>
+        <option value="ddd">item 3</option>
+        <option value="eee">item 4</option>
+        <option value="fff">item 5</option>
+        <option value="ggg">item 6</option>
+        <option value="hhh">item 7</option>
+        <option value="iii">item 8</option>
+        <option value="jjj">item 9</option>
+        <option value="kkk">item 10</option>
+        <option value="lll">item 11</option>
+        <option value="mmm">item 12</option>
+        <option value="nnn">item 13</option>
+        <option value="ooo">item 14</option>
+        <option value="ppp">item 15</option>
+        <option value="qqq">item 16</option>
+        <option value="rrr">item 17</option>
+        <option value="sss">item 18</option>
+        <option value="ttt">item 19</option>
+        <option value="uuu">item 20</option>
+        <option value="vvv">item 21</option>
+        <option value="www">item 22</option>
+        <option value="xxx">item 23</option>
+        <option value="yyy">item 24</option>
+        <option value="zzz">item 25</option>
+    </select>
+    
+
+    <script>
+        select_box.onchange = () => {
+            console.log(select_box.selectedIndex + '/' + (select_box.options.length-1) + ' | ' + select_box.options[select_box.selectedIndex].value + " = " + select_box.options[select_box.selectedIndex].innerText);
+        };
+    </script>
+    
+</body>
+</html>

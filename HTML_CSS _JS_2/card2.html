@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+
+
+        #lista{
+            display: grid;
+            column-gap: 8px;
+            row-gap: 8px;
+            grid-template-columns: repeat(3, 1fr);
+            padding: 8px;
+            justify-items: center;
+        }
+
+
+        .card{
+            max-width: 230px;
+            padding: 4px;
+            border-radius: 8px;
+            text-align: center;
+            background-color: #353535;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card_image{
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+        }
+        .card_iamge_icon_wrapper{
+            color: #9e9e9e;
+            background-color: #353535;
+            z-index: 0;
+            position: absolute;
+            border-radius: 8px 0 8px 0;
+            display: flex;
+            padding: 4px;
+        }
+        .card_iamge_icon_wrapper > svg{
+            margin-left: 8px;
+        }
+        .card_iamge_icon_wrapper > svg:first-child{
+            margin-left: 0;
+        }
+        .card_subTitle{
+            color: #C9BEBE;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+
+
+
+
+
+    <div id="lista">
+
+
+        <!-- ITEM -->
+        <div class="card">
+            <div class="card_image">
+                <div class="card_iamge_icon_wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>
+                </div>
+                <img src="https://dummyimage.com/222x222/000/fff">
+            </div>
+            <div class="card_title">titulo aqui</div>
+            <div class="card_subTitle">sub titulo</div>
+        </div>
+        <!-- ITEM -->
+        <div class="card">
+            <div class="card_image">
+                <div class="card_iamge_icon_wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>
+                </div>
+                <img src="https://dummyimage.com/222x222/000/fff">
+            </div>
+            <div class="card_title">titulo aqui</div>
+            <div class="card_subTitle">sub titulo</div>
+        </div>
+        <!-- ITEM -->
+        <div class="card">
+            <div class="card_image">
+                <div class="card_iamge_icon_wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>
+                </div>
+                <img src="https://dummyimage.com/222x222/000/fff">
+            </div>
+            <div class="card_title">titulo aqui</div>
+            <div class="card_subTitle">sub titulo</div>
+        </div>
+        <!-- ITEM -->
+        <div class="card">
+            <div class="card_image">
+                <div class="card_iamge_icon_wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>
+                </div>
+                <img src="https://dummyimage.com/222x222/000/fff">
+            </div>
+            <div class="card_title">titulo aqui</div>
+            <div class="card_subTitle">sub titulo</div>
+        </div>
+        <!-- ITEM -->
+        <div class="card">
+            <div class="card_image">
+                <div class="card_iamge_icon_wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/></svg>
+                </div>
+                <img src="https://dummyimage.com/222x222/000/fff">
+            </div>
+            <div class="card_title">titulo aqui</div>
+            <div class="card_subTitle">sub titulo</div>
+        </div>
+
+
+
+    </div>
+
+
+ 
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
