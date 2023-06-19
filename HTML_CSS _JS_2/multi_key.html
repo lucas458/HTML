@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        #player{
+            width: 32px;
+            height: 32px;
+            background-color: red;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+      
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+ 
+
+ 
+    <div id="player"></div>
+
+
+
+
+
+    <script>
+
+
+        
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+        
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+
+        var player = document.getElementById('player');
+        var speed  = 3;
+        
+
+
+        function playerMoveLeft(){
+            player.style.left = (player.offsetLeft - speed) + 'px';
+        }
+        function playerMoveRight(){
+            player.style.left = (player.offsetLeft + speed) + 'px';
+        }
+        function playerMoveUp(){
+            player.style.top = (player.offsetTop - speed) + 'px';
+        }
+        function playerMoveDown(){
+            player.style.top = (player.offsetTop + speed) + 'px';
+        }
+        
+
+
+
+
+        const controller = {
+            37: {pressed: false, func: playerMoveLeft},
+            38: {pressed: false, func: playerMoveUp},
+            39: {pressed: false, func: playerMoveRight},
+            40: {pressed: false, func: playerMoveDown}
+        };
+        
+
+
+        document.addEventListener("keydown", (e) => {
+            if(controller[e.keyCode]){
+                controller[e.keyCode].pressed = true;
+            }
+        });
+
+
+        document.addEventListener("keyup", (e) => {
+            if(controller[e.keyCode]){
+                controller[e.keyCode].pressed = false;
+            }
+        });
+
+
+
+        const executeMoves = () => {
+            Object.keys(controller).forEach(key=> {
+                controller[key].pressed && controller[key].func();
+            });
+        };
+
+
+        
+        const update = () => { 
+            executeMoves(); 
+            window.requestAnimationFrame(update);
+        };
+
+
+
+        update();
+        
+
+
+    </script>
+
+
+</body>
+</html>

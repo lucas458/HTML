@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        #mapWrapper{
+            padding: 10px;
+            position: absolute;
+            bottom: 0;
+            left: 0;    
+        }
+
+        #map{
+            width: 256px;
+            height: 128px;
+            background-color: #353535;
+            position: relative;
+        }
+
+
+        .axie{
+            width: 16px;
+            height: 16px;
+            background-color: #000;
+            border-radius: 50%;
+            font-size: 0.5em;
+            text-align: center;
+            line-height: 16px;
+            margin: auto;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0; 
+        }
+
+        .axie:nth-child(1){
+            top: calc(-100% + 16px);
+        }
+        .axie:nth-child(3){
+            top: calc(100% - 16px);
+        }
+
+        .axie:nth-child(2){
+            left: calc(100% - 16px);
+        }
+        .axie:nth-child(4){
+            left: calc(-100% + 16px);
+        }
+
+        
+
+      
+        input{
+            margin: 16px;
+            width: 50%;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+
+
+
+    
+    <input type="range" value="0" min="0" max="360" oninput="onInput(this.value)">
+
+
+    <div id="mapWrapper">
+
+
+        <div id="map">
+            <div id="axies_list">
+                <div class="axie">N</div>
+                <div class="axie">E</div>
+                <div class="axie">S</div>
+                <div class="axie">W</div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+
+        var axies_list = document.querySelectorAll(".axie");
+        var map = document.getElementById("map");
+
+        function onInput( value ){
+
+            console.log(value);
+            let angle = value * Math.PI / 180;
+
+            axies_list[0].style.left = Math.clamp(Math.sin(-angle + Math.PI) * (256 + 16*2), -256+16, 256-16) + 'px';
+            axies_list[0].style.top =  Math.clamp(Math.cos(-angle + Math.PI) * (256 - 16), -128+16, 128-16) + 'px';
+            
+            axies_list[1].style.left = Math.clamp(Math.sin(-angle + Math.PI/2) * (256 + 16*2), -256+16, 256-16) + 'px';
+            axies_list[1].style.top =  Math.clamp(Math.cos(-angle + Math.PI/2) * (256 - 16), -128+16, 128-16) + 'px';
+            
+            axies_list[2].style.left = Math.clamp(Math.sin(-angle) * (256 + 16*2), -256+16, 256-16) + 'px';
+            axies_list[2].style.top =  Math.clamp(Math.cos(-angle) * (256 - 16), -128+16, 128-16) + 'px';
+            
+            axies_list[3].style.left = Math.clamp(Math.sin(-angle - Math.PI/2) * (256 + 16*2), -256+16, 256-16) + 'px';
+            axies_list[3].style.top =  Math.clamp(Math.cos(-angle - Math.PI/2) * (256 - 16), -128+16, 128-16) + 'px';
+            
+        }
+ 
+
+
+
+
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

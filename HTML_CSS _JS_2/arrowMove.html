@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrow</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+        
+
+
+
+        #main{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+        #screen{
+            width: calc(15 * 16px);
+            height: calc(15 * 16px);
+            background-color: #000;
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+            align-items: center;
+            justify-items: center;
+        }
+
+        .slot{
+            transform-origin: center;
+            transform: rotate(0);
+            color: #555;
+            width: 16px;
+            height: 16px;
+            text-align: center;
+            line-height: 16px;
+            border-radius: 50%;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+
+
+
+
+    <div id="main">
+        <div id="screen"></div>
+    </div>
+
+
+
+
+    <script>
+
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+
+        var screen_element = document.getElementById("screen");
+
+
+        for (let i = 0; i < 10*10; i++){
+            let slot = document.createElement('div');
+            slot.classList.add("slot");
+            slot.innerHTML = '&uparrow;';
+            screen_element.appendChild(slot);
+        }
+
+
+
+
+        onmousemove = (event) => {
+            
+            document.querySelectorAll(".slot").forEach((e, i) => {
+                    let center = {
+                        x: e.offsetLeft + e.offsetWidth/2,
+                        y: e.offsetTop + e.offsetHeight/2
+                    };
+                    let distance = Math.hypot(event.clientX - center.x, event.clientY - center.y);
+                    let percent = Math.clamp(distance/100, 0, 1);
+                    let angle_rad = Math.atan2(event.clientX - center.x, event.clientY - center.y);
+                    let angle_deg = 360 - (angle_rad * 180 / Math.PI + 180);
+                    e.style.transform = `rotate(${angle_deg}deg)`;
+                    e.style.color = `rgb(${255-percent*255}, ${percent*255}, 0)`;
+            });
+
+        };
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

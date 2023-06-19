@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{ 
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        #main{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            position: fixed;
+        }
+
+        #canvas{
+            flex-shrink: 0;
+        }
+        #controls{
+            padding: 16px;
+            position: absolute;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    <div id="main">
+        <canvas id="canvas" width="500" height="500" style="background-color: #000;"></canvas>
+
+        <div id="controls">
+            <div>Velocidade: 0 m/s</div>
+            <input type="range" min="0" max="30" value="0" id="input_speed">
+
+            <div>Angulo: 0°</div>
+            <input type="range" min="0" max="90" value="0" id="input_angle">
+
+            <div>Gravidade: 0 m/s<sup>2</sup> </div>
+            <input type="range" min="0" max="10" value="9.8" step="0.1" id="input_gravity">
+
+            <div>Altura: 0 m</div>
+            <input type="range" min="0" max="50" value="0" id="input_height">
+
+            <div>Distância: 0.00 m</div>
+            <div>Tempo: 0.000 s</div>
+        </div>
+
+    </div>
+
+
+ 
+
+    
+
+     
+
+
+    <script>
+        
+        
+         
+
+
+        function calc( speed, angle_deg = 0, gravity = 9.8, height = 0 ){
+
+            
+
+            var Vo = parseFloat(speed);
+            var th = parseFloat(angle_deg);
+            var Yo = parseFloat(height);
+
+            if ((th > 90.0) || (th < 0.0) || (Vo < 0.0)) return;
+
+            th      = (Math.PI/180.0) * th;
+            var Ge  = parseFloat(gravity);
+            var Vx  = Vo * Math.cos(th);
+            var Vy  = Vo * Math.sin(th);
+            var hgt = Yo + Vy * Vy / (2 * Ge);
+
+            if (hgt < 0.0) return;
+            
+            var upt = Vy / Ge;
+            var dnt = Math.sqrt(2 * hgt / Ge);
+            var rng = Vx*(upt + dnt);
+            var imp = upt + dnt;
+            var spd = Math.sqrt((Ge*dnt)*(Ge*dnt) + Vx*Vx);
+
+            return [rng, hgt, height, imp];
+           
+            // RANGE:  rng
+            // HEIGHT: hgt
+            // TIME:   imp
+            // SPPED:  spd
+          
+        }
+
+
+
+
+        const canvas = document.getElementById("canvas");
+        canvas.width = main.offsetWidth;
+        canvas.height = main.offsetHeight;
+        const ctx = canvas.getContext("2d");
+
+        var label_list = document.querySelectorAll("#controls div");
+
+
+        document.querySelectorAll("input").forEach((e, i) => {
+
+            e.oninput = () => {
+
+                let result = calc(input_speed.value, input_angle.value, input_gravity.value, input_height.value);
+                let label  = label_list[i];
+                
+                if ( i == 0 ){
+                    label.innerHTML = `Velocidade: ${e.value} m/s`;
+                }else if ( i == 1 ){
+                    label.innerHTML = `Angulo: ${e.value}°`;
+                }else if ( i == 2 ){
+                    label.innerHTML = `Gravidade: ${e.value} m/s<sup>2</sup>`;
+                }else{
+                    label.innerHTML = `Altura: ${e.value} m`;
+                }
+                
+                
+                label_list[label_list.length-2].innerHTML = `Distância: ${result[0].toFixed(2)} m`;
+                label_list[label_list.length-1].innerHTML = `Tempo: ${result[3].toFixed(3)} s`;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.strokeStyle = 'red';
+                ctx.beginPath();
+                ctx.moveTo(0, canvas.height-result[2]*10);
+                ctx.quadraticCurveTo(result[0]*10/2, canvas.height-result[1]*10, result[0]*10, canvas.height);
+                ctx.stroke();
+
+            };
+
+        });
+
+    </script>
+
+
+</body>
+</html>
