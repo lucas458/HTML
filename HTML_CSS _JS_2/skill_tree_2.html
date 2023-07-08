@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        
+
+        .skill{
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: red;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .skill_unlocked{
+            background-color: #007bff;
+            cursor: pointer;
+        }
+
+        .skill_paid{
+            background-color: #5f5;
+        }
+
+        img{
+            width: 893px;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    <img src="https://clan.akamai.steamstatic.com/images/40369939/fb17d8bcaa023d0befd4e7fed4ab01bd6ef38d67.png">
+
+
+    <div id="skill_list">
+
+        <div class="skill skill_unlocked" style="left: 160px; top: 256px;" skill-name="health"></div>
+
+        <div class="skill" style="left: 86px; top: 194px;" skill-name="speed"></div>
+        <div class="skill" style="left: 86px; top: 319px;" skill-name="damage"></div>
+
+        <div class="skill" style="left: 207px; top: 335px;" skill-name="red_flame"></div>
+        <div class="skill" style="left: 250px; top: 390px;" skill-name="explosive_blast"></div>
+        <div class="skill" style="left: 351px; top: 329px;" skill-name="spiked_tail"></div>
+        <div class="skill" style="left: 351px; top: 401px;" skill-name="fire_tail"></div>
+        <div class="skill" style="left: 479px; top: 386px;" skill-name="block_ability"></div>
+        <div class="skill" style="left: 602px; top: 341px;" skill-name="dragon_might"></div>
+        <div class="skill" style="left: 752px; top: 384px;" skill-name="super_nova"></div>
+
+        <div class="skill" style="left: 270px; top: 256px;" skill-name="dragon_breath"></div>
+        <div class="skill" style="left: 363px; top: 256px;" skill-name="hardened_scale"></div>
+        <div class="skill" style="left: 472px; top: 256px;" skill-name="mana_increase"></div>
+        <div class="skill" style="left: 573px; top: 256px;" skill-name="experience_increase"></div>
+
+        <div class="skill" style="left: 207px; top: 179px;" skill-name="blue_flame"></div>
+        <div class="skill" style="left: 250px; top: 126px;" skill-name="plasma_blast"></div>
+        <div class="skill" style="left: 351px; top: 187px;" skill-name="bashing_tail"></div>
+        <div class="skill" style="left: 351px; top: 113px;" skill-name="shock_tail"></div>
+        <div class="skill" style="left: 479px; top: 129px;" skill-name="dodge_ability"></div>
+        <div class="skill" style="left: 602px; top: 175px;" skill-name="dragon_force"></div>
+        <div class="skill" style="left: 752px; top: 132px;" skill-name="fly_ability"></div>
+
+    </div>
+    
+
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+
+
+
+        function getNodeByName( nodeName ){
+            return SKILL.find(e => e.name == nodeName);
+        }
+
+
+
+
+        document.querySelectorAll(".skill").forEach(e => {
+
+            e.onclick = () => {
+                
+                if ( e.classList.contains("skill_unlocked") && !e.classList.contains("skill_paid") ){
+
+                    const name = e.getAttribute("skill-name");
+                    let skill  = getNodeByName(name);
+                    skill.paid = true;
+                    e.classList.add("skill_paid");
+
+                    console.log("%cbuy:", "color:#5f5;", name);
+
+                    if ( skill.nodes != null ){
+
+                        skill.nodes.forEach(el => {
+                            let subSkill = getNodeByName(el);
+                            subSkill.locked = false; 
+                            document.querySelector(`.skill[skill-name="${el}"]`).classList.add("skill_unlocked");
+
+                            console.log("\t%cunlocked:", "color:#007bff", el);
+                        });
+
+                        console.log(skill.nodes.length + " Habilidade(s) Desbloqueada(s)")
+
+                    }
+
+                    console.log("");
+
+                }
+
+            }; 
+
+        });
+
+
+        
+ 
+
+        var SKILL = [
+
+            
+
+            {
+                "name": "health",
+                "locked": false,
+                "paid": false,
+                "nodes": ["speed", "damage", "red_flame", "dragon_breath", "blue_flame"]
+            },
+
+            {
+                "name": "speed",
+                "locked": true,
+                "paid": false
+            },
+
+            {
+                "name": "damage",
+                "locked": true,
+                "paid": false
+            },
+
+
+            //
+
+
+            {
+                "name": "red_flame",
+                "locked": true,
+                "paid": false,
+                "nodes": ["explosive_blast", "spiked_tail"]
+            },
+
+            {
+                "name": "explosive_blast",
+                "locked": true,
+                "paid": false
+            },
+
+            {
+                "name": "spiked_tail",
+                "locked": true,
+                "paid": false,
+                "nodes": ["fire_tail", "block_ability"]
+            },
+
+            {
+                "name": "fire_tail",
+                "locked": true,
+                "paid": false
+            },
+
+            {
+                "name": "block_ability",
+                "locked": true,
+                "paid": false,
+                "nodes": ["dragon_might"]
+            },
+
+            {
+                "name": "dragon_might",
+                "locked": true,
+                "paid": false,
+                "nodes": ["super_nova"]
+            },
+
+            {
+                "name": "super_nova",
+                "locked": true,
+                "paid": false
+            },
+
+
+            // 
+
+
+            {
+                "name": "dragon_breath",
+                "locked": true,
+                "paid": false,
+                "nodes": ["hardened_scale"]
+            },
+
+            {
+                "name": "hardened_scale",
+                "locked": true,
+                "paid": false,
+                "nodes": ["mana_increase"]
+            },
+
+            {
+                "name": "mana_increase",
+                "locked": true,
+                "paid": false,
+                "nodes": ["experience_increase"]
+            },
+
+            {
+                "name": "experience_increase",
+                "locked": true,
+                "paid": false
+            },
+
+
+            //
+
+            
+            {
+                "name": "blue_flame",
+                "locked": true,
+                "paid": false,
+                "nodes": ["plasma_blast", "bashing_tail"]
+            },
+
+            {
+                "name": "plasma_blast",
+                "locked": true,
+                "paid": false
+            },
+
+            {
+                "name": "bashing_tail",
+                "locked": true,
+                "paid": false,
+                "nodes": ["shock_tail", "dodge_ability"]
+            },
+
+            {
+                "name": "shock_tail",
+                "locked": true,
+                "paid": false
+            },
+
+            {
+                "name": "dodge_ability",
+                "locked": true,
+                "paid": false,
+                "nodes": ["dragon_force"]
+            },
+
+            {
+                "name": "dragon_force",
+                "locked": true,
+                "paid": false,
+                "nodes": ["fly_ability"]
+            },
+
+            {
+                "name": "fly_ability",
+                "locked": true,
+                "paid": false
+            },
+
+
+             
+
+        ];
+
+
+        
+        let xml = "";
+
+        for (let i = 0; i < SKILL.length; i++) {
+
+            const skill = SKILL[i]; 
+            let tempXml = `<skill name="${skill.name}" locked="${skill.locked}" paid="${skill.paid}">\n`;
+
+            if ( skill.nodes != null ){
+                skill.nodes.forEach(e => {
+                    tempXml += `\t<node>${e}</node>\n`;
+                });
+            }
+
+            tempXml += "</skill>\n\n";
+
+            xml += tempXml;
+        }
+        
+        console.log(xml);
+
+
+
+        
+         
+
+
+    </script>
+
+
+</body>
+</html>

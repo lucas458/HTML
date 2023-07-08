@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        #main{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+
+
+
+
+        #enemyList{
+            padding: 8px 8px 0 8px;
+            display: grid;
+            grid-template-columns: repeat(16, 1fr);
+            row-gap: 8px;
+            justify-items: center;
+        }
+        
+        .enemy{
+            width: 32px;
+            height: 32px;
+        }
+        
+        .enemy_active{
+            background-color: #5f5;
+        }
+
+
+
+
+        #player{
+            width: 55px;
+            width: 55px;
+            height: 102px;
+            background-position: -57px -7px;
+            background-size: 152px 111px;
+            /* background-color: #f55; */
+            background-image: url("https://opengameart.org/sites/default/files/tank_0.svg");
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+
+        #turret{
+            width: 36px;
+            height: 76px;
+            background-position: -114px -7px;
+            background-size: 152px 111px;
+            background-image: url("https://opengameart.org/sites/default/files/tank_0.svg");
+            /* background-color: rebeccapurple; */
+            transform-origin: center 44px;
+            z-index: 1; 
+            position: relative;
+            left: 11px; 
+            top: 0;
+        }
+
+
+
+
+        .bullet{
+            width: 8px;
+            height: 8px;
+            background-color: #f5f;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+
+
+        #vector_line{
+            width: 80px;
+            height: 1px;
+            background-color: red;
+            transform-origin: left center;
+            position: absolute;
+            left: 0;
+            top: 0;
+
+        }
+
+ 
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+
+    <div id="main">
+        
+
+        <div id="enemyList">
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+            <div class="enemy enemy_active"></div>
+        </div>
+
+        <div id="player">
+            <div id="turret"></div>
+        </div>
+
+        <div id="player_bullet_list">
+            <!-- <div class="bullet"></div> -->
+        </div>
+
+
+        <div id="vector_line"></div>
+
+    </div>
+    
+
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+        var main_screen = document.getElementById("main");
+
+        var enemyList = document.getElementById("enemyList");
+
+        var player = document.getElementById("player");
+        var player_bullet_list = document.getElementById("player_bullet_list");
+
+
+
+        function playerFire( bulletAngle = 0 ){
+             
+
+            if ( player_bullet_list.children.length >= 100 ) return;
+            
+            // if ( Math.abs(180-bulletAngle) < 100 ){
+            //     bulletAngle = (180 - bulletAngle > 0)? 80 : -80;
+            // }
+
+
+            let bullet = document.createElement("div");
+            bullet.classList.add("bullet");
+            bullet.setAttribute("angle", bulletAngle);
+
+            player_bullet_list.appendChild(bullet);
+
+            bullet.style.top  = (player.offsetTop + player.offsetHeight/2 - bullet.offsetHeight/2) + "px";
+            bullet.style.left = (player.offsetLeft + player.offsetWidth/2 - bullet.offsetWidth/2) + "px";
+
+            
+            console.log("BULLET", bulletAngle);
+             
+
+        }
+
+
+
+        onmousemove = (event) => {
+
+            let angle = 0;
+
+            
+            angle = Math.atan2(event.clientX - (player.offsetLeft+player.offsetWidth/2 - 1), event.clientY - (player.offsetTop+player.offsetHeight/2 - 9));
+            angle = 360 - (angle * 180 / Math.PI + 180);
+
+
+            let distance = Math.hypot(event.clientX - (player.offsetLeft+player.offsetWidth/2 -1), event.clientY - (player.offsetTop+player.offsetHeight/2 - 9));
+
+             
+
+            vector_line.style.left = (player.offsetLeft+player.offsetWidth/2 - 1) + "px";
+            vector_line.style.top = (player.offsetTop + player.offsetHeight/2 - 9) + "px";
+            vector_line.style.transform = `rotate(${angle-90}deg)`;
+            vector_line.style.width = distance + "px";
+
+
+            if ( event.shiftKey ){
+                player.firstElementChild.style.transform = `rotate(${angle}deg)`; 
+            }else{
+                player.style.left = (event.clientX - player.offsetWidth/2) + "px";
+                player.firstElementChild.style.transform = '';
+                angle = 0;
+            }
+
+
+            
+
+
+            onmousedown = () => {
+                playerFire(angle);
+            };
+
+
+            onkeydown = (event) => {
+                if (!event.repeat){
+                    if ( event.key == " " ){
+                        playerFire(angle);
+                    }
+                }
+            };
+
+
+        };
+
+
+
+
+
+        function update(){
+
+            player_bullet_list.querySelectorAll(".bullet").forEach(e => {
+                
+                angle = 90 - parseFloat(e.getAttribute("angle"));
+                angle = angle * Math.PI/180;
+
+                let Vx = 5 * Math.cos(angle);
+                let Vy = 5 * Math.sin(angle);
+
+                e.style.top = (e.offsetTop - Vy) + "px";
+                e.style.left = (e.offsetLeft + Vx) + "px";
+
+
+
+                if ( e.offsetTop < -e.offsetHeight ){
+                    e.remove();
+                }
+
+
+                if ( e.offsetLeft < 0 || e.offsetLeft > main_screen.offsetWidth - e.offsetWidth ){
+                    e.setAttribute("angle", -parseFloat(e.getAttribute("angle")));
+                }
+
+
+                enemyList.querySelectorAll(".enemy.enemy_active").forEach(enemy => {
+
+                    let collision = (e.offsetLeft + e.offsetWidth > enemy.offsetLeft) &&
+                                    (e.offsetTop + e.offsetHeight > enemy.offsetTop) &&
+                                    (enemy.offsetLeft + enemy.offsetWidth > e.offsetLeft) &&
+                                    (enemy.offsetTop + enemy.offsetHeight > e.offsetTop);
+
+                    if (collision){
+                        console.log("kill enemy"); 
+                        enemy.classList.remove("enemy_active");
+                        e.remove();
+                    }
+
+                    return !collision;
+
+                });
+
+
+            });
+            
+            requestAnimationFrame(update);
+
+        }
+
+
+
+
+        // playerFire(0);
+
+
+        
+        update();
+        
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>
