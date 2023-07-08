@@ -1,0 +1,410 @@
+
+@font-face {
+    font-family: 'minecraftfont';
+    src: url('./minecraftfont.eot');
+    src: local('minecraftfont'), url('./minecraftfont.woff') format('woff'), url('./minecraftfont.ttf') format('truetype');
+}
+
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    image-rendering: pixelated;
+    font-family: 'minecraftfont' !important;
+    background-color: #181818;
+    color: #fff;
+    user-select: none;
+}
+input{
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-family: 'minecraftfont' !important;
+}
+
+
+#main{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("assets/background.png");
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+
+#blocks_interface,
+#survival_interface{
+    background-repeat: no-repeat;
+    width: 195px;
+    height: 136px;
+    position: absolute;
+    display: none;
+}
+
+.interface_active{
+    display: block !important;
+}
+
+#blocks_interface{
+    background-image: url("assets/list_items.png");
+}
+#survival_interface{
+    background-image: url("assets/survival_inv.png");
+}
+
+
+.search_mode{
+    background-image: url("assets/search.png") !important;
+}
+
+
+.slot,
+#tempSlot{
+    width: 16px;
+    height: 16px;
+}
+
+.slot{
+    position: relative;
+    outline: none;
+}
+.slot:hover::after{
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #cecece80;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+
+
+#tempSlot{
+    z-index: 3;
+    pointer-events: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.slot_grid{
+    display: grid;
+    grid-template-columns: repeat(9, 16px);
+    row-gap: 2px;
+    column-gap: 2px;
+}
+
+
+#blocks_interface .slot_grid{
+    position: absolute;
+    left: 9px;
+    top: 18px;
+}
+
+
+
+ 
+
+
+
+/* INTERFACE */
+#interface{
+    width: 195px;
+    height: 136px;
+    position: relative;
+}
+#interface > div{
+    z-index: 1;
+}
+
+
+
+/* INVENTORY */
+#survival_interface .slot_grid{
+    position: absolute;
+    left: 9px;
+    top: 54px;
+}
+
+
+
+
+/* SLOT ARMOR */
+#slot_armor > .slot{
+    position: absolute;
+}
+
+
+#slot_armor .slot:nth-child(1){
+    background-image: url("assets/slot_empty_helmet.png");
+    left: 9px;
+    top: 6px;
+}
+#slot_armor .slot:nth-child(2){
+    background-image: url("assets/slot_empty_chestplate.png");
+    left: 9px;
+    top: 33px;
+}
+#slot_armor .slot:nth-child(3){
+    background-image: url("assets/slot_empty_leggings.png");
+    left: 63px;
+    top: 6px;
+}
+#slot_armor .slot:nth-child(4){
+    background-image: url("assets/slot_empty_boots.png");
+    left: 63px;
+    top: 33px;
+}
+
+
+#slot_armor .slot:not(:empty){ 
+    background-image: none;
+}
+
+
+ 
+
+
+
+/* HAND */
+#hand .slot_grid{
+    z-index: 2;
+    position: absolute;
+    left: 9px;
+    top: 112px;
+}
+
+/* DELETE ITEM */
+#slot_delete{
+    position: absolute;
+    left: 173px;
+    top: 112px;
+}
+
+
+
+
+/* ITEM */
+.item{
+    background-size: 512px;
+    background-image: url("assets/InvSprite.png");
+    width: 100%;
+    height: 100%;
+    font-size: 6px;
+    line-height: 8px;
+    text-shadow: 0 1px #000;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+
+
+
+/* INPUT TEXT */
+#inputTextWrapper{
+    width: 88px;
+    height: 10px; 
+    display: none;
+    position: absolute;
+    left: 81px;
+    top: 5px;
+}
+
+#inputText{
+    width: 100%;
+    height: 100%;
+    line-height: 0;
+    display: block;
+    border: none;
+    outline: none;
+    font-size: 8px;
+    text-shadow: 0 1px #000;
+    background-color: #00000000;
+    color: #fff;
+}
+
+.interface_active.search_mode #inputTextWrapper{
+    display: initial !important;
+}
+
+
+/* SCROLL */
+#scroll_track{
+    width: 12px;
+    height: 110px;
+    position: absolute;
+    left: 175px;
+    top: 18px;
+}
+.scroll_thumb{
+    width: 12px;
+    height: 15px;
+    background-position: 12px -15px;
+    background-image: url("assets/allitems.png");
+    /* cursor: not-allowed; */
+    position: relative;
+    top: 0;
+}
+.scroll_enabled{
+    background-position: 12px 0px !important;
+    /* cursor: pointer; */
+}
+
+
+
+
+
+/* TABS */
+.tab{
+    width: 28px;
+    height: 32px;
+    background-image: url("assets/allitems.png");
+    margin-right: 1px;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.tab_active{
+    z-index: 1 !important;
+}
+
+
+
+.tab_row{
+    display: flex;
+    position: absolute;
+    left: 0;
+    top: 132px;
+}
+.tab_row:first-child{
+    top: -28px;
+}
+.tab_row .tab:last-child{
+    margin-left: 22px;
+}
+.tab_row:last-child .tab{
+    background-position: 0 -64px;
+}
+
+
+/* TAB ROW UP */
+.tab_row:first-child .tab.tab_active:first-child{
+    background-position: 0 -32px; 
+}
+.tab_row:first-child .tab.tab_active{
+    background-position: -28px -32px; 
+}
+.tab_row:first-child .tab.tab_active:last-child{
+    background-position: -140px -32px; 
+}
+
+/* TAB ROW DOWN */
+.tab_row:last-child .tab.tab_active:first-child{
+    background-position: 0 -96px; 
+}
+.tab_row:last-child .tab.tab_active{
+    background-position: -28px -96px; 
+}
+.tab_row:last-child .tab.tab_active:last-child{
+    background-position: -140px -96px; 
+}
+
+/* TAB ICON SLOT */
+.tab_row:last-child .tab > div{
+    margin-bottom: 2px;
+}
+.tab > div{
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+    background-size: 512px;
+    background-image: url("assets/InvSprite.png");
+}
+
+
+.tab_row:first-child .tab:nth-child(1) > div{ background-position: calc(-16px * 5) calc(-16px * 27); }
+.tab_row:first-child .tab:nth-child(2) > div{ background-position: calc(-16px * 11) calc(-16px * 107); }
+.tab_row:first-child .tab:nth-child(3) > div{ background-position: calc(-16px * 17) calc(-16px * 35); }
+.tab_row:first-child .tab:nth-child(4) > div{ background-position: calc(-16px * 14) calc(-16px * 104); }
+.tab_row:first-child .tab:nth-child(5) > div{ background-position: calc(-16px * 10) calc(-16px * 98); }
+.tab_row:first-child .tab:nth-child(6) > div{ background-position: calc(-16px * 5) calc(-16px * 17); }
+
+.tab_row:last-child .tab:nth-child(1) > div{ background-position: calc(-16px * 24) calc(-16px * 99); }
+.tab_row:last-child .tab:nth-child(2) > div{ background-position: calc(-16px * 21) calc(-16px * 111); }
+.tab_row:last-child .tab:nth-child(3) > div{ background-position: calc(-16px * 19) calc(-16px * 113); }
+.tab_row:last-child .tab:nth-child(4) > div{ background-position: calc(-16px * 3) calc(-16px * 9); }
+.tab_row:last-child .tab:nth-child(5) > div{ background-position: calc(-16px * 19) calc(-16px * 35); }
+.tab_row:last-child .tab:nth-child(6) > div{ background-position: calc(-16px * 22) calc(-16px * 11); }
+
+
+
+
+
+
+/* CODE FROM: https://minecraft.fandom.com/ */
+#minetip-tooltip{
+    background-color: #100010;
+    background-color: rgba(16, 0, 16, 0.94);
+    padding: 0.375em;
+    font-size: 8px;
+    word-spacing: 4px;
+    white-space: nowrap;
+    line-height: 1.25em;
+    margin: 0.125em 0.25em;
+    pointer-events: none;
+    z-index: 9999;
+    visibility: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+#minetip-tooltip::before{
+    content: "";
+    border: 0.125em solid #100010;
+    border-style: none solid;
+    border-color: rgba(16, 0, 16, 0.94);
+    position: absolute;
+    top: 0.125em;
+    right: -0.125em;
+    bottom: 0.125em;
+    left: -0.125em;
+}
+
+#minetip-tooltip::after{
+    content: "";
+    border: 0.125em solid #2D0A63;
+    border-image: -webkit-linear-gradient(rgba(80, 0, 255, 0.31), rgba(40, 0, 127, 0.31)) 1;
+    border-image: linear-gradient(rgba(80, 0, 255, 0.31), rgba(40, 0, 127, 0.31)) 1;
+    position: absolute;
+    top: 0.125em;
+    right: 0;
+    bottom: 0.125em;
+    left: 0;
+}
+
+
+#minetip-title,
+#minetip-subTitle{
+    border: 0;
+    font: normal normal normal 100% inherit;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+#minetip-subTitle{
+    color: gray;
+}
