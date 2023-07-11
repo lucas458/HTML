@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+        
+
+
+        .skill{ 
+            height: 44px;
+            color: #dc3545;
+            color: #000;
+            border-radius: 16px;
+            position: absolute;
+            opacity: 0.7;
+            transform: rotate(90deg);
+        }
+        .skill_unlocked{
+            cursor: pointer;
+            color: #007bff;
+        }
+        .skill_paid{ 
+            color: #00000000;
+            cursor: default;
+        }
+
+        
+
+        #tooltip{
+            visibility: hidden;
+            padding: 8px;
+            background-color: #000;
+            border-radius: 8px;
+            border: 1px solid #fafafa;
+            color: #fafafa;
+            pointer-events: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <img src="https://wiki.renaissancekingdoms.com/wiki/images/thumb/f/f4/Work_tree.png/500px-Work_tree.png">
+
+
+    <div id="skill_list">
+
+        <div class="skill skill_unlocked" skill-name="force_1" style="left: 122px; top: 75px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+        <div class="skill" skill-name="force_2" style="left: 122px; top: 133px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+        <div class="skill" skill-name="force_3" style="left: 122px; top: 193px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+
+        <div class="skill skill_unlocked" skill-name="seed" style="left: 322px; top: 75px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+
+
+        <div class="skill skill_unlocked" skill-name="eficiency" style="left: 222px; top: 75px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+        <div class="skill" skill-name="hook" style="left: 222px; top: 133px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+        <div class="skill" skill-name="fragmentation_1" style="left: 122px; top: 252px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+        <div class="skill" skill-name="fragmentation_2" style="left: 172px; top: 298px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+        <div class="skill" skill-name="fragmentation_3" style="left: 222px; top: 252px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+
+        <div class="skill" skill-name="tower" style="left: 322px; top: 133px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+        <div class="skill" skill-name="wheat" style="left: 322px; top: 193px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+        <div class="skill" skill-name="wood" style="left: 222px; top: 357px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+        <div class="skill" skill-name="fishing" style="left: 272px; top: 403px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+        <div class="skill" skill-name="tree" style="left: 322px; top: 357px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+
+        <div class="skill" skill-name="tools" style="left: 272px; top: 478px;"><svg xmlns="http://www.w3.org/2000/svg" width="50" height="44" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg></div>
+
+
+
+    </div>
+
+
+
+    <div id="tooltip">Nome AQui</div>
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+    
+        
+
+
+
+        document.querySelectorAll(".skill").forEach(skill => {
+
+            skill.onclick = () => {
+
+                if ( skill.classList.contains("skill_unlocked") && !skill.classList.contains("skill_paid") ){
+
+                    const name = skill.getAttribute("skill-name");
+                    let skill_object = SKILLS.find(e => e.name == name);
+
+                    skill_object.paid = true;
+                    skill.classList.add("skill_paid");
+                    tooltip.style.color = '#28a745';
+
+                    if ( skill_object.nodes != null ){
+                        skill_object.nodes.forEach(node => {
+                            let skill_node_object = SKILLS.find(e => e.name == node);
+                            skill_node_object.locked = false;
+                            document.querySelector(`.skill[skill-name="${node}"]`).classList.add("skill_unlocked");
+                        });
+                    }
+
+                }
+
+            };
+
+
+
+            skill.onmouseenter = () => {
+
+                const name = skill.getAttribute("skill-name");
+                let skill_object = SKILLS.find(e => e.name == name);
+                tooltip.innerHTML = skill_object.label;
+
+                if ( skill_object.locked ){
+                    tooltip.style.color = '#dc3545';
+                }else if ( skill_object.paid ){
+                    tooltip.style.color = '#28a745';
+                }else{
+                    tooltip.style.color = '';
+                }
+                
+                tooltip.style.visibility = "visible";
+            };
+
+
+            skill.onmouseleave = skill.onblur = () => {
+                tooltip.style.visibility = "";
+            };
+
+
+        }); 
+
+
+
+        onmousemove = (event) => {
+
+
+            tooltip.style.left = (event.clientX) + "px";
+            tooltip.style.top = (event.clientY - tooltip.offsetHeight) + "px";
+
+        };
+
+
+
+
+
+
+        var SKILLS = [
+
+            {
+                "name": "force_1",
+                "label": "Força 1",
+                "locked": false,
+                "paid": false,
+                "nodes": ["force_2"]
+            },
+            {
+                "name": "force_2",
+                "label": "Força 2",
+                "locked": true,
+                "paid": false,
+                "nodes": ["force_3"]
+            },
+            {
+                "name": "force_3",
+                "label": "Força 3",
+                "locked": true,
+                "paid": false
+            },
+
+
+            {
+                "name": "eficiency",
+                "label": "Eficiência",
+                "locked": false,
+                "paid": false,
+                "nodes": ["fragmentation_1", "fragmentation_2", "fragmentation_3", "hook", "tower"]
+            },
+
+            {
+                "name": "fragmentation_1",
+                "label": "Fragmentação 1",
+                "locked": true,
+                "paid": false
+            },
+            {
+                "name": "fragmentation_2",
+                "label": "Fragmentação 2",
+                "locked": true,
+                "paid": false
+            },
+            {
+                "name": "fragmentation_3",
+                "label": "Fragmentação 3",
+                "locked": true,
+                "paid": false
+            },
+
+
+            {
+                "name": "hook",
+                "label": "Foice",
+                "locked": true,
+                "paid": false
+            },
+
+            {
+                "name": "tower",
+                "label": "Torre",
+                "locked": true,
+                "paid": false,
+                "nodes": ["wheat"]
+            },
+
+
+            {
+                "name": "wheat",
+                "label": "Agricultura",
+                "locked": true,
+                "paid": false,
+                "nodes": ["wood", "fishing", "tree"]
+            },
+
+
+            {
+                "name": "wood",
+                "label": "Madeira",
+                "locked": true,
+                "paid": false,
+                "nodes": ["tools"]
+            },
+
+            {
+                "name": "fishing",
+                "label": "Pescaria",
+                "locked": true,
+                "paid": false,
+                "nodes": ["tools"]
+            },
+
+            {
+                "name": "tree",
+                "label": "Árvore",
+                "locked": true,
+                "paid": false,
+                "nodes": ["tools"]
+            },
+
+
+            {
+                "name": "tools",
+                "label": "Ferramentas",
+                "locked": true,
+                "paid": false
+            },
+
+
+
+            {
+                "name": "seed",
+                "label": "Sementes",
+                "locked": true,
+                "paid": false
+            }, 
+
+
+        ];
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

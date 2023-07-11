@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        #skill_list{
+            padding: 16px;
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            gap: 16px;
+        }
+
+
+        .skill{
+        }
+
+
+        .skill_progress_track{ 
+            height: 5px;
+            background-color: #353535;
+            margin-bottom: 4px;
+        }
+
+        .skill_progress_fill{
+            width: 0%;
+            height: 100%;
+            background-color: orange;
+        }
+
+        .skill_icon{
+            width: 48px;
+            height: 48px;
+            background-color: darkgoldenrod;
+            cursor: pointer;
+            font-size: 1em;
+            line-height: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+    <div id="skill_list">
+
+        <!-- ITEM -->
+        <div class="skill" skill-value="0" skill-max="10">
+            <div class="skill_progress_track">
+                <div class="skill_progress_fill"></div>
+            </div>
+            <div class="skill_icon">0/10</div>
+        </div>
+
+        <!-- ITEM -->
+        <div class="skill" skill-value="0" skill-max="3">
+            <div class="skill_progress_track">
+                <div class="skill_progress_fill"></div>
+            </div>
+            <div class="skill_icon">0/3</div>
+        </div>
+
+        <!-- ITEM -->
+        <div class="skill" skill-value="0" skill-max="8">
+            <div class="skill_progress_track">
+                <div class="skill_progress_fill"></div>
+            </div>
+            <div class="skill_icon">0/8</div>
+        </div>
+
+        <!-- ITEM -->
+        <div class="skill" skill-value="0" skill-max="5">
+            <div class="skill_progress_track">
+                <div class="skill_progress_fill"></div>
+            </div>
+            <div class="skill_icon">0/5</div>
+        </div> 
+
+    </div>
+ 
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+
+
+        document.querySelectorAll(".skill").forEach(skill => {
+
+
+            skill.querySelector(".skill_icon").onclick = (event) => {
+
+                let value = parseInt(skill.getAttribute("skill-value"));
+                let max = parseInt(skill.getAttribute("skill-max"));
+
+                if ( value < max ) {
+                    value++;
+                    skill.setAttribute("skill-value", value);
+                    event.target.innerHTML = value + "/" + max;
+
+                    skill.querySelector(".skill_progress_fill").style.width = (value/max*100) + "%";
+
+                }
+
+            };
+
+        });
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
