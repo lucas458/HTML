@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Looting</title>
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+
+
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+        #content_top{
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #353535;
+            height: 100%;
+            overflow: hidden !important;
+        }
+
+        #content_bottom{
+            height: 100%;
+        }
+
+        #content_top,
+        #content_bottom{
+            padding: 8px;
+            overflow: auto;
+        }
+
+        .slot_wrapper{
+            flex: 1;
+            padding: 0 4px;
+            overflow: auto;
+        }
+
+        .slot{
+            width: 100%;
+            height: 48px;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .looting{
+            margin-bottom: 4px;
+        }
+
+        .slot,
+        .looting{
+            background-color: #353535;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        
+        .slot:hover,
+        .looting:hover{
+            background-color: #555;
+        }
+
+
+
+
+        #tempSlot{
+            width: fit-content;
+            visibility: hidden;
+            pointer-events: none;
+            border: 1px solid #fff;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        #tempSlot:has(.item){
+            visibility: visible;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body oncontextmenu="return false;">
+
+    
+    
+
+
+
+    <div id="main_screen">
+
+
+        <div id="tempSlot" class="slot"></div>
+
+        <div id="content_top">
+
+            <div class="slot_wrapper" id="loot_inventory"></div>
+
+            <div class="slot_wrapper" id="player_inventory">
+                <div class="slot"> <div class="item" item-name="potato" item-label="Batata" qty="60" pack="64">60x Batata</div> </div>
+                <div class="slot"> <div class="item" item-name="potato" item-label="Batata" qty="5" pack="64">5x Batata</div> </div>
+                <div class="slot"> <div class="item" item-name="banana" item-label="Banana" qty="2" pack="64">2x Banana</div> </div>
+                <div class="slot"> <div class="item" item-name="banana" item-label="Banana" qty="1" pack="64">1x Banana</div> </div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div> 
+            </div>
+
+        </div>
+
+
+        <div id="content_bottom">
+            <div class="looting" looting-name="car">Carro</div>
+            <div class="looting" looting-name="dumpster">Lixeira</div>
+            <div class="looting" looting-name="tonel">Tonel</div>
+            <div class="looting" looting-name="military_box">Caixa de Itens Militar</div>
+            <div class="looting" looting-name="medical_box">Caixa de Itens Médicos</div>
+        </div>
+
+
+    </div>
+
+ 
+
+
+     
+
+
+    <script>
+        
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+
+        const ITEMS = [
+
+            {
+                name: "paper",
+                label: "Papel"
+            },
+            {
+                name: "leather",
+                label: "Couro"
+            },
+            {
+                name: "dolar",
+                label: "Dolar"
+            },
+            {
+                name: "tin_can",
+                label: "Lata"
+            },
+            {
+                name: "glue",
+                label: "Cola"
+            },
+            {
+                name: "gazue",
+                label: "Curativo"
+            },
+            {
+                name: "fuel_tank",
+                label: "Tanque de Combustivel"
+            },
+            {
+                name: "revolver",
+                label: "Revolver"
+            },
+            {
+                name: "ammo_9mm",
+                label: "Munição 9mm"
+            },
+            {
+                name: "ammo_762",
+                label: "Munição 7.62"
+            },
+            {
+                name: "medkit",
+                label: "Kit Médico"
+            },
+            {
+                name: "gague_2",
+                label: "Curativo Médico"
+            }
+
+        ];
+
+
+
+        const LOOTING = [
+
+
+            {
+                loot_name: "car",
+                loot_max_count: 4,
+                loot_max_slot: 8,
+                loot_list: [
+                    {
+                        name: "paper",
+                        weight: 60,
+                        min: 1,
+                        max: 3
+                    },
+                    {
+                        name: "leather",
+                        weight: 70,
+                        min: 2,
+                        max: 4
+                    },
+                    {
+                        name: "dolar",
+                        weight: 70,
+                        min: 10,
+                        max: 30
+                    },
+                    {
+                        name: "tin_can",
+                        weight: 70,
+                        min: 3,
+                        max: 6
+                    },
+                    {
+                        name: "glue",
+                        weight: 30,
+                        min: 1,
+                        max: 5
+                    },
+                    {
+                        name: "gazue",
+                        weight: 35,
+                        min: 1,
+                        max: 6
+                    }
+                ]
+            },
+
+
+
+            {
+                loot_name: "dumpster",
+                loot_max_count: 2,
+                loot_max_slot: 5,
+                loot_list: [
+                    {
+                        name: "paper",
+                        weight: 60,
+                        min: 2,
+                        max: 8
+                    },
+                    {
+                        name: "tin_can",
+                        weight: 70,
+                        min: 3,
+                        max: 6
+                    },
+                    {
+                        name: "glue",
+                        weight: 30,
+                        min: 1,
+                        max: 5
+                    }
+                ]
+            },
+            
+
+
+            {
+                loot_name: "tonel",
+                loot_max_count: 1,
+                loot_max_slot: 3,
+                loot_list: [
+                    {
+                        name: "fuel_tank",
+                        weight: 80,
+                        min: 10,
+                        max: 32
+                    }
+                ]
+            },
+            
+
+
+            {
+                loot_name: "military_box",
+                loot_max_count: 2,
+                loot_max_slot: 4,
+                loot_list: [
+                    {
+                        name: "revolver",
+                        weight: 75,
+                        min: 1,
+                        max: 1
+                    },
+                    {
+                        name: "ammo_9mm",
+                        weight: 50,
+                        min: 1,
+                        max: 1
+                    },
+                    {
+                        name: "ammo_762",
+                        weight: 50,
+                        min: 1,
+                        max: 1
+                    }
+                ]
+            },
+            
+
+
+            {
+                loot_name: "medical_box",
+                loot_max_count: 2,
+                loot_max_slot: 4,
+                loot_list: [
+
+                    {
+                        name: "medkit",
+                        weight: 75,
+                        min: 1,
+                        max: 1
+                    },
+                    {
+                        name: "gazue",
+                        weight: 35,
+                        min: 1,
+                        max: 6
+                    },
+                    {
+                        name: "gague_2",
+                        weight: 20,
+                        min: 1,
+                        max: 2
+                    }
+
+                ]
+            }
+
+        ];
+
+
+
+
+
+
+        onmousemove = (event) => {
+            tempSlot.style.left = (event.clientX - tempSlot.offsetWidth/2) + 'px';
+            tempSlot.style.top = (event.clientY - tempSlot.offsetHeight/2) + 'px';
+        };
+
+        document.querySelectorAll(".looting").forEach(e => {
+            e.onclick = () => {
+                generateLootingByName( e.getAttribute("looting-name") );
+            };
+        });
+
+        document.querySelectorAll("#content_top .slot").forEach(slot => {
+            slot.onmousedown = (event) => {
+                mouseDownEvent(slot, event);
+            };
+        });
+
+
+        function generateLootingByName(name){
+            
+            const looting = LOOTING.find(e => e.loot_name == name);
+
+            if ( looting == null ){
+                return;
+            }
+            
+            loot_inventory.innerHTML = '';
+
+            const itemCount = (Math.random() <= 0.1)? 0 : getRandomInt(1, looting.loot_max_count+1);
+            let totalWeight = 0;
+            let generatedItemsNames = [];
+
+            if ( itemCount > 0 ){
+                looting.loot_list.forEach(e => totalWeight += e.weight);
+            }
+
+
+            for (let i = 0; i < looting.loot_max_slot; i++){
+                let slot = document.createElement("div");
+                slot.classList.add("slot");
+                loot_inventory.appendChild(slot);
+
+                slot.onmousedown = (event) => {
+                    mouseDownEvent(slot, event);
+                };
+
+                if ( i < itemCount ){    
+                    let selectedWeight = getRandomInt(1, totalWeight+1);
+
+                    for (let j = 0; j < looting.loot_list.length; j++){
+                        const itemLoot = looting.loot_list[j];
+                        selectedWeight -= itemLoot.weight;
+
+                        if ( selectedWeight <= 0 ){
+
+                            if ( generatedItemsNames.indexOf(itemLoot.name) < 0 ){
+                                generatedItemsNames.push(itemLoot.name);
+                                const qty = getRandomInt(itemLoot.min, itemLoot.max+1);
+                                const label = ITEMS.find(e => e.name == itemLoot.name).label;
+                                slot.innerHTML = `<div class="item" item-name="${itemLoot.name}" item-label="${label}" qty="${qty}" pack="64">${qty}x ${label}</div>`;
+                                break;
+                            } 
+                        }
+                    } 
+                }
+
+            }
+
+
+        }
+
+
+
+        function updateTempSlot(qty, label){
+            if ( tempSlot.firstElementChild != null ){
+                tempSlot.firstElementChild.setAttribute("qty", qty);
+                tempSlot.firstElementChild.innerHTML = `${qty}x ${label}`;
+            }
+        }
+
+
+
+        function updateSlot(slot, qty, label){
+            if ( slot.firstElementChild != null ){
+                slot.firstElementChild.setAttribute("qty", qty);
+                slot.firstElementChild.innerHTML = `${qty}x ${label}`;
+            }
+        }
+
+
+
+        function mouseDownEvent(slot, event){
+
+            let tempSlotEmpty = tempSlot.firstElementChild == null;
+            let slotEmpty     = slot.firstElementChild == null;
+            let pack          = 0;
+            let label         = '';
+            let slotQty       = 0;
+            let tempQty       = 0;
+
+            if ( !slotEmpty ){
+                pack    = parseInt( slot.firstElementChild.getAttribute("pack") );
+                label   = slot.firstElementChild.getAttribute("item-label");
+                slotQty = parseInt( slot.firstElementChild.getAttribute("qty") );
+            }
+
+            if ( !tempSlotEmpty ){
+                tempQty = parseInt( tempSlot.firstElementChild.getAttribute("qty") );
+            }
+
+
+            // LEFT CLICK
+            if ( event.button == 0 ){
+                if ( tempSlotEmpty && !slotEmpty ){
+                    tempSlot.appendChild(slot.firstElementChild);
+
+                }else if ( !tempSlotEmpty && slotEmpty ){
+                    slot.appendChild(tempSlot.firstElementChild);
+
+                }else if ( !tempSlotEmpty && !slotEmpty ){
+
+                    if ( tempSlot.firstElementChild.getAttribute("item-name") == slot.firstElementChild.getAttribute("item-name") ){
+
+                        if ( tempQty + slotQty <= 64 ){
+                            slotQty += tempQty;
+                            tempSlot.firstElementChild.remove();
+                        }else{
+                            tempQty -= pack - slotQty;
+                            slotQty = 64;
+                        }
+
+                        updateTempSlot(tempQty, label);
+                        updateSlot(slot, slotQty, label);
+                    }else{
+                        tempSlot.appendChild(slot.firstElementChild); 
+                        slot.appendChild(tempSlot.firstElementChild);
+                    }
+
+                }
+            }
+            
+
+
+            // RIGHT CLICK
+            else if ( event.button == 2 ){
+
+                if ( tempSlotEmpty && !slotEmpty ){
+
+                    if ( slotQty == 1 ){
+                        tempSlot.appendChild(slot.firstElementChild);
+
+                    }else{
+                        let currentQty = slotQty;
+                        tempSlot.appendChild(slot.firstElementChild.cloneNode(true));
+                        slotQty = parseInt(currentQty/2);
+                        tempQty = currentQty - slotQty;
+                        updateTempSlot(tempQty, label);
+                        updateSlot(slot, slotQty, label);
+                    }
+
+                }else if ( !tempSlotEmpty && slotEmpty ){
+
+                    if ( tempQty == 1 ){
+                        slot.appendChild(tempSlot.firstElementChild);
+                    }else{
+                        slot.appendChild(tempSlot.firstElementChild.cloneNode(true));
+                        label = slot.firstElementChild.getAttribute("item-label");
+                        slotQty = 1;
+                        tempQty--;
+                        updateTempSlot(tempQty, label);
+                        updateSlot(slot, slotQty, label);
+                    }
+
+                }else if ( !tempSlotEmpty && !slotEmpty ){
+
+                    if ( tempSlot.firstElementChild.getAttribute("item-name") == slot.firstElementChild.getAttribute("item-name") ){
+
+                        if ( slotQty < 64 ){
+                            slotQty++;
+                            tempQty--;
+
+                            if ( tempQty <= 0 ){
+                                tempSlot.innerHTML = '';
+                            }
+                            updateTempSlot(tempQty, label);
+                            updateSlot(slot, slotQty, label);
+                        }
+                        
+                    }else{
+                        tempSlot.appendChild(slot.firstElementChild); 
+                        slot.appendChild(tempSlot.firstElementChild);
+                    }
+                }
+            }
+
+
+            tempSlot.style.left = (event.clientX - tempSlot.offsetWidth/2) + 'px';
+            tempSlot.style.top = (event.clientY - tempSlot.offsetHeight/2) + 'px';
+
+            
+        }
+
+
+
+    </script>
+
+
+</body>
+</html>

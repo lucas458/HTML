@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+
+        }
+        #main_screen > div{
+            padding: 16px;
+        }
+
+
+
+
+        
+        #compatator_output{
+            height: 100%;
+            
+        }
+
+ 
+        .comparation{
+            display: flex;
+            justify-content: space-between;
+            background-color: #353535;
+            padding: 8px;
+        }
+
+        .comparation:nth-child(odd){
+            background-color: #212121;
+        }
+
+        .comparation_value span:last-child{
+            color: #dc3545;
+        }
+        .value_green{
+            color: #28a745 !important;
+        }
+
+
+
+
+
+
+
+        .slot{
+            margin-bottom: 8px;
+            padding: 8px;
+            background-color: #353535;
+            border: 1px solid transparent;
+        }
+        .slot:not(.slot_selected):hover{
+            border-color: #fff;
+        }
+
+        .slot_selected{
+            background-color: #007bff;
+        }
+
+        .slot_comparation{
+            background-color: #ffc107;
+            color: #212121;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body oncontextmenu="return false;">
+
+    
+    
+
+
+
+
+    <div id="main_screen">
+
+
+        <div id="compatator_output">
+            
+
+            <!-- <div class="comparation">
+                <div class="comparation_label">Nome Aqui</div>
+                <div class="comparation_value">
+                    <span>70</span>(<span class="value_green">+11</span>)
+                </div>
+            </div>
+
+            <div class="comparation">
+                <div class="comparation_label">Nome Aqui</div>
+                <div class="comparation_value">
+                    <span>70</span>(<span>+11</span>)
+                </div>
+            </div> -->
+
+
+        </div>
+        
+        <div id="inventory">
+            <div class="slot" item-type="gun" item-name="rifle">Rifle</div>
+            <div class="slot" item-type="gun" item-name="smg">SMG</div>
+            <div class="slot" item-type="food" item-name="fish">Peixe</div>
+            <div class="slot" item-type="food" item-name="cookie">Biscoito</div>
+        </div>
+
+
+    </div>
+
+    
+
+
+     
+
+
+    <script>
+
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+        
+
+
+
+        var ITEMS = [
+
+
+
+            {
+                name: "rifle",
+                label: "Rifle",
+                type: "gun",
+
+                attributes: [
+
+                    {
+                        name: "damage",
+                        label: "Dano",
+                        value: 50,
+                        lessIsGood: false
+                    },
+                    {
+                        name: "cadency",
+                        label: "Cadencia",
+                        value: 20,
+                        lessIsGood: true
+                    },
+                    {
+                        name: "weight",
+                        label: "Peso",
+                        value: 25,
+                        lessIsGood: true
+                    },
+                    {
+                        name: "range",
+                        label: "Alcançe",
+                        value: 90,
+                        lessIsGood: false
+                    },
+
+                ]
+            },
+
+
+            {
+                name: "smg",
+                label: "Smg",
+                type: "gun",
+
+                attributes: [
+
+                    {
+                        name: "damage",
+                        label: "Dano",
+                        value: 32,
+                        lessIsGood: false
+                    },
+                    {
+                        name: "cadency",
+                        label: "Cadencia",
+                        value: 27,
+                        lessIsGood: true
+                    },
+                    {
+                        name: "weight",
+                        label: "Peso",
+                        value: 12,
+                        lessIsGood: true
+                    },
+                    {
+                        name: "range",
+                        label: "Alcançe",
+                        value: 32,
+                        lessIsGood: false
+                    },
+
+                ]
+            },
+
+
+
+
+            {
+                name: "fish",
+                label: "Peixe",
+                type: "food",
+
+                attributes: [
+
+                    {
+                        name: "food",
+                        label: "Comida",
+                        value: 10,
+                        lessIsGood: false
+                    }, 
+                    {
+                        name: "health",
+                        label: "Vida",
+                        value: 12,
+                        lessIsGood: false
+                    },
+                    {
+                        name: "water",
+                        label: "Agua",
+                        value: 4,
+                        lessIsGood: false
+                    },
+
+                ]
+            },
+
+            {
+                name: "cookie",
+                label: "Biscoito",
+                type: "food",
+
+                attributes: [
+
+                    {
+                        name: "food",
+                        label: "Comida",
+                        value: 5,
+                        lessIsGood: false
+                    }, 
+                    {
+                        name: "health",
+                        label: "Vida",
+                        value: 4,
+                        lessIsGood: false
+                    },
+                    {
+                        name: "water",
+                        label: "Agua",
+                        value: -2,
+                        lessIsGood: false
+                    },
+
+                ]
+            },
+
+
+        ];
+
+
+        
+
+
+        onkeydown = (event) => {
+
+            if ( !event.repeat && event.key == ' ' ){
+                if ( document.querySelector(".slot.slot_selected") ){
+                    document.querySelector(".slot.slot_selected").classList.remove('slot_selected');
+                }
+                if ( document.querySelector(".slot.slot_comparation") ){
+                    document.querySelector(".slot.slot_comparation").classList.remove('slot_comparation');
+                }
+
+                compatator_output.innerHTML = '';
+            }
+
+        };
+
+
+
+
+        document.querySelectorAll(".slot").forEach(slot => {
+
+            slot.onmousedown = (event) => {
+
+
+                if ( event.button == 0 ){
+                    if ( !slot.classList.contains("slot_selected") && !slot.classList.contains("slot_comparation")){
+                        if ( document.querySelector(".slot.slot_selected") ){
+                            document.querySelector(".slot.slot_selected").classList.remove('slot_selected');
+                        }
+                        slot.classList.add("slot_selected");
+                    }else{
+
+                    }
+                }
+
+                else if ( event.button == 2 ){
+                    if ( !slot.classList.contains("slot_selected") && !slot.classList.contains("slot_comparation")){
+                        if ( document.querySelector(".slot.slot_comparation") ){
+                            document.querySelector(".slot.slot_comparation").classList.remove('slot_comparation');
+                        }
+                        slot.classList.add("slot_comparation");
+                    }
+                }
+
+
+                if ( document.querySelector(".slot.slot_selected") && document.querySelector(".slot.slot_comparation") ){
+
+                    const master_item_name = document.querySelector(".slot.slot_selected").getAttribute('item-name');
+                    const slave_item_name  = document.querySelector(".slot.slot_comparation").getAttribute('item-name');
+
+                    const master_item = ITEMS.find(e => e.name == master_item_name);
+                    const slave_item = ITEMS.find(e => e.name == slave_item_name);
+
+                    let tempKeys = [];
+
+                    master_item.attributes.forEach(e => {
+                        tempKeys.push(e.name);
+                    });
+
+                    slave_item.attributes.forEach(e => {
+                        if ( tempKeys.indexOf(e.name) < 0 ){
+                            tempKeys.push(e.name);
+                        }
+                    });
+
+                    compatator_output.innerHTML = '';
+
+                    tempKeys.forEach(key => {
+
+                        let founded_master_key = master_item.attributes.find(e => e.name == key);
+                        let founded_slave_key  = slave_item.attributes.find(e => e.name == key);
+
+                        if ( founded_master_key != null && founded_slave_key != null ){
+
+                            let comparation = document.createElement('div');
+                            comparation.classList.add('comparation');
+                            
+                            comparation.innerHTML = `
+                            <div class="comparation_label">${founded_master_key.label}</div>
+                            <div class="comparation_value">
+                                <span>${founded_master_key.value}</span> (<span>${founded_slave_key.value}</span>)
+                            </div>`;
+
+                            const isLess = founded_master_key.value > founded_slave_key.value;
+                            comparation.querySelector('span:last-child').classList.toggle('value_green', (founded_master_key.lessIsGood)? isLess : !isLess);
+                            compatator_output.appendChild(comparation);
+
+                        }
+
+                    });
+
+                }
+
+            };
+
+        });
+
+
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

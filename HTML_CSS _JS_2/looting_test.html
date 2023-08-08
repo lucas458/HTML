@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Looting</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        #main_screen{
+            width: 100%;
+            height: 100%; 
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+        #wrapper_top{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            height: 100%;
+            overflow: hidden;
+        }
+
+
+        #main_screen h2{
+            border-bottom: 1px solid #666;
+            margin: 0 4px;
+            text-align: center;
+        }
+
+
+        .slot_wrapper{
+            overflow: auto;
+        }
+
+
+        .slot{
+            height: 48px;
+            background-color: #353535;
+            padding: 8px;
+            margin: 4px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        .slot:hover{
+            background-color: #212121;
+        }
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+
+    <div id="main_screen">
+
+        <div id="wrapper_top">
+            <div class="slot_wrapper">
+                <h2>LOOT INVENTORY</h2>
+                <div class="slot_list" id="looting_list"></div>
+            </div>
+            
+            <div class="slot_wrapper">
+                <h2>INVENTORY</h2>
+                <div class="slot_list" id="inventory_list">
+                    <div class="slot" item-name="revolver" item-qty="1">1x revolver</div>
+                    <div class="slot" item-name="revolver" item-qty="8">8x paper</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="wrapper_bootom">
+            <h2>LOOT ITEM</h2>
+            <div class="slot_list">
+                <div class="slot" loot-name="car">Carro</div>
+                <div class="slot" loot-name="dumpster">Sacola de Lixo</div>
+                <div class="slot" loot-name="tonel">Tonel Enferrujado</div>
+                <div class="slot" loot-name="military_box">Caixa de Itens Militar</div>
+                <div class="slot" loot-name="medical_box">Caixa de Itens Médicos</div>
+            </div>
+        </div>
+
+    </div>
+
+
+ 
+
+
+     
+
+
+    <script>
+
+
+
+        
+
+
+        
+        
+ 
+
+
+
+
+        const LOOTING = [
+
+
+            {
+                loot_name: "car",
+                loot_max_count: 4,
+                loot_max_slot: 8,
+                loot_list: [
+
+                    {
+                        loot_item: "paper",
+                        loot_probability: 0.6,
+                        loot_item_min: 1,
+                        loot_item_max: 3
+                    },
+                    {
+                        loot_item: "leather",
+                        loot_probability: 0.7,
+                        loot_item_min: 2,
+                        loot_item_max: 4
+                    },
+                    {
+                        loot_item: "dolar",
+                        loot_probability: 0.7,
+                        loot_item_min: 10,
+                        loot_item_max: 30
+                    },
+                    {
+                        loot_item: "tin_can",
+                        loot_probability: 0.7,
+                        loot_item_min: 3,
+                        loot_item_max: 6
+                    },
+                    {
+                        loot_item: "glue",
+                        loot_probability: 0.3,
+                        loot_item_min: 1,
+                        loot_item_max: 5
+                    },
+                    {
+                        loot_item: "gazue",
+                        loot_probability: 0.35,
+                        loot_item_min: 1,
+                        loot_item_max: 6
+                    }
+
+                ]
+            },
+
+
+
+            {
+                loot_name: "dumpster",
+                loot_max_count: 2,
+                loot_max_slot: 5,
+                loot_list: [
+
+                    {
+                        loot_item: "paper",
+                        loot_probability: 0.6,
+                        loot_item_min: 2,
+                        loot_item_max: 8
+                    },
+                    {
+                        loot_item: "tin_can",
+                        loot_probability: 0.7,
+                        loot_item_min: 3,
+                        loot_item_max: 6
+                    },
+                    {
+                        loot_item: "glue",
+                        loot_probability: 0.3,
+                        loot_item_min: 1,
+                        loot_item_max: 5
+                    }
+
+                ]
+            },
+            
+
+
+            {
+                loot_name: "tonel",
+                loot_max_count: 1,
+                loot_max_slot: 3,
+                loot_list: [
+
+                    {
+                        loot_item: "fuel_tank",
+                        loot_probability: 0.8,
+                        loot_item_min: 10,
+                        loot_item_max: 32
+                    }
+
+                ]
+            },
+            
+
+
+            {
+                loot_name: "military_box",
+                loot_max_count: 2,
+                loot_max_slot: 4,
+                loot_list: [
+
+                    {
+                        loot_item: "revolver",
+                        loot_probability: 0.75,
+                        loot_item_min: 1,
+                        loot_item_max: 1
+                    },
+                    {
+                        loot_item: "ammo_9mm",
+                        loot_probability: 0.5,
+                        loot_item_min: 1,
+                        loot_item_max: 1
+                    },
+                    {
+                        loot_item: "ammo_762",
+                        loot_probability: 0.5,
+                        loot_item_min: 1,
+                        loot_item_max: 1
+                    }
+
+                ]
+            },
+            
+
+
+            {
+                loot_name: "medical_box",
+                loot_max_count: 2,
+                loot_max_slot: 4,
+                loot_list: [
+
+                    {
+                        loot_item: "medkit",
+                        loot_probability: 0.75,
+                        loot_item_min: 1,
+                        loot_item_max: 1
+                    },
+                    {
+                        loot_item: "gazue",
+                        loot_probability: 0.35,
+                        loot_item_min: 1,
+                        loot_item_max: 6
+                    },
+                    {
+                        loot_item: "gague_2",
+                        loot_probability: 0.2,
+                        loot_item_min: 1,
+                        loot_item_max: 2
+                    }
+
+                ]
+            }
+
+        ];
+
+        
+
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+        function genereateLootByWrapperName( name ){
+
+            const loot_wrapper = LOOTING.find(e => e.loot_name == name);
+
+            looting_list.innerHTML = '';
+            let generatedItemsName = [];
+            let maxCount = getRandomInt(0, loot_wrapper.loot_max_count+1);
+
+            while ( generatedItemsName.length < maxCount ){
+                let itemIndex = getRandomInt(0, loot_wrapper.loot_list.length);
+
+                if ( generatedItemsName.indexOf(loot_wrapper.loot_list[itemIndex].loot_item) < 0 ){
+                    generatedItemsName.push( loot_wrapper.loot_list[itemIndex].loot_item );
+                    let amount = getRandomInt(loot_wrapper.loot_list[itemIndex].loot_item_min, loot_wrapper.loot_list[itemIndex].loot_item_max);
+                    addLootInventoryItem(loot_wrapper.loot_list[itemIndex].loot_item, amount);
+                }
+            }
+
+            for (let i = 0; i < loot_wrapper.loot_max_slot - maxCount; i++){
+                addLootInventoryItem();
+            }
+
+        }
+
+
+        function addLootInventoryItem( name, qty = 1 ){
+            let slot = document.createElement('div');
+            slot.classList.add('slot');
+            if ( name != null ){
+                slot.setAttribute("item-name", name);
+                slot.setAttribute("item-qty", qty);
+                slot.innerHTML = `${qty}x ${name}`;
+            }
+            looting_list.appendChild(slot);
+        }
+
+
+        document.querySelectorAll("#wrapper_bootom .slot").forEach(e => {
+            e.onmousedown = (event) => {
+                if ( event.button == 0 ){
+                    genereateLootByWrapperName(e.getAttribute("loot-name"));
+                }
+            };
+        });
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

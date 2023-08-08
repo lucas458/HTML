@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+        
+
+
+        #content{
+            width: 154px;
+            height: 344px;
+            background-color: #000;
+            position: relative;
+
+            /* background-image: url("https://www.if.ufrgs.br/~dschulz/web/imagens/4-Stroke-Engine.gif"); */
+            /* background-image: url("https://im.ezgif.com/tmp/ffffff-ezgif-1-4114a2a681-gif-jpg/frame_00_delay-0.08s.jpg"); */
+            /* background-image: url("https://im.ezgif.com/tmp/ffffff-ezgif-1-4114a2a681-gif-jpg/frame_12_delay-0.08s.jpg"); */
+            /* background-image: url("https://im.ezgif.com/tmp/ffffff-ezgif-1-4114a2a681-gif-jpg/frame_06_delay-0.08s.jpg"); */
+
+            background-size: 100% 100%;
+        }
+
+
+
+        #pistao, #biela, #virabrequim{
+            /* opacity: 0.5; */
+            position: absolute;
+            
+        }
+
+
+        #pistao{
+            width: 64px;
+            height: 44px;
+            background-color: red;
+             
+            left: calc(50% - 32px);
+            top: 118px;
+        }
+
+        #biela{
+            
+            width: 16px;
+            height: 87px;
+            background-color: lime;
+            left: calc(50% - 8px);
+            top: 140px;
+            transform-origin: center top;
+            transform: rotate(45deg);
+        }
+
+        #virabrequim{
+            width: 38px;
+            height: 87px;
+            background-color: blue;
+            left: calc(50% - 19px);
+            top: 211px;
+
+            transform: center center;
+            transform: rotate(45deg);
+
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+
+    <div id="main_screen">
+
+
+        <input type="range" min="0" max="24" value="5" oninput="speed=parseInt(this.value)">
+
+        <div id="content">
+
+
+            <div id="pistao"></div>
+            <div id="virabrequim"></div>
+            <div id="biela"></div>
+
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+ 
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+        var pistao      = document.getElementById("pistao");
+        var biela       = document.getElementById("biela");
+        var virabrequim = document.getElementById("virabrequim");
+         
+
+
+
+        var angle = 270;
+
+        var speed = 5;
+
+        function update(){
+
+            // angle = (angle + 3) % 360;  
+            angle = (angle + speed) % 360;  
+
+
+            let angle_rad = angle * Math.PI / 180;
+
+            
+
+            pistao.style.top = (118 + 22 + Math.sin(angle_rad) * 22) + "px";
+
+
+            biela.style.top = (pistao.offsetTop + pistao.offsetHeight/2) + "px";
+            biela.style.transform = `rotate(${ Math.cos(angle_rad) * 14 }deg)`;
+
+
+            virabrequim.style.transform = `rotate(${ -angle + 90 }deg)`;
+             
+
+
+            requestAnimationFrame(update);
+        }
+
+
+        update();
+
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

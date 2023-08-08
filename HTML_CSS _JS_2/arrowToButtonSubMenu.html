@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 128px;
+            position: fixed;
+        }
+
+
+        #list_line{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            pointer-events: none;
+        }
+
+        .line{
+            width: 50px;
+            height: 1px;
+            background-color: #fff;
+            transform-origin: left center;
+            transform: rotate(0deg);
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        #subMenu_button_wrapper{
+            width: 180px;
+        }
+
+        .menu_button{
+            padding: 10px;
+            background-color: #353535;
+            margin-bottom: 8px;
+        }
+
+
+        .subMenu_button{
+            padding: 8px;
+            background-color: #212121;
+            margin-bottom: 8px;
+        }
+ 
+
+
+        .menu_button,
+        .subMenu_button{
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+
+        .menu_button:hover,
+        .subMenu_button:hover{
+            border-color: #fff !important;
+        }
+
+
+        .menu_button_active,
+        .subMenu_button_active{
+            background-color: #007bff;
+            border-color: #fff !important;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    <div id="main_screen">
+        <div id="list_line"></div>
+        <div id="menu_button_wrapper"></div>
+        <div id="subMenu_button_wrapper"></div>
+    </div>
+
+
+    <script>
+
+        const MENU = {
+
+            food: {
+                menuLabel: "Comidas", 
+                subMenu: [
+                    {
+                        name: "banana",
+                        label: "Banana"
+                    },
+                    {
+                        name: "apple",
+                        label: "Maçã"
+                    },
+                    {
+                        name: "cookie",
+                        label: "Biscoit"
+                    },
+                    {
+                        name: "cake",
+                        label: "Bolo"
+                    }
+                ],
+            },
+
+
+            weapon: {
+                menuLabel: "Armas", 
+                subMenu: [
+                    {
+                        name: "revolver",
+                        label: "Revolver"
+                    },
+                    {
+                        name: "rifle",
+                        label: "Rifle"
+                    }
+                ],
+            },
+
+
+            tool: {
+                menuLabel: "Ferramentas", 
+                subMenu: [
+                    {
+                        name: "hammer",
+                        label: "Martelo"
+                    },
+                    {
+                        name: "axe",
+                        label: "Machado"
+                    },
+                    {
+                        name: "picaxe",
+                        label: "Picareta"
+                    }
+                ],
+            },
+
+
+            other: {
+                menuLabel: "Diversos", 
+                subMenu: [
+                    {
+                        name: "stick",
+                        label: "Graveto"
+                    },
+                    {
+                        name: "gold",
+                        label: "Ouro"
+                    },
+                    {
+                        name: "iron",
+                        label: "Ferro"
+                    },
+                    {
+                        name: "sand",
+                        label: "Areia"
+                    },
+                    {
+                        name: "bone",
+                        label: "Osso"
+                    },
+                    {
+                        name: "egg",
+                        label: "Ovo"
+                    }
+                ],
+            }
+
+        };
+
+
+
+
+ 
+
+
+
+
+
+
+        function setLines( fromMenuName, toSubMenuName, color ){
+
+            list_line.innerHTML = '';
+
+            const menuButton    = document.querySelector(`.menu_button[menu-name="${fromMenuName}"]`);
+            const subMenuButton = document.querySelector(`.subMenu_button[subMenu-name="${toSubMenuName}"]`);
+
+            if ( menuButton == null || subMenuButton == null ) return;
+
+            const distance = Math.abs( (menuButton.offsetLeft + menuButton.offsetWidth) - subMenuButton.offsetLeft); 
+            const height   = (menuButton.offsetTop + menuButton.offsetHeight/2) - (subMenuButton.offsetTop + subMenuButton.offsetHeight/2);
+
+            for (let i = 0; i < 3; i++){
+                let line = document.createElement('line');
+                line.classList.add('line');
+
+                if ( i == 0 ){
+                    line.style.left = (menuButton.offsetLeft + menuButton.offsetWidth) + 'px';
+                    line.style.top  = (menuButton.offsetTop + menuButton.offsetHeight/2) + 'px';
+                    line.style.width = (distance/2) + 'px';
+
+                }else if ( i == 1 ){
+                    if ( height == 0 ) continue;
+                    line.style.left = (menuButton.offsetLeft + menuButton.offsetWidth + distance/2) + 'px';
+                    line.style.top  = (menuButton.offsetTop + menuButton.offsetHeight/2) + 'px';
+                    line.style.transform = `rotate(${ (height < 0)? 90 : -90 }deg)`;
+                    line.style.width = Math.abs(height) + 'px';
+
+                }else if ( i == 2 ){
+                    line.style.left = (subMenuButton.offsetLeft - distance/2) + 'px';
+                    line.style.top  = (subMenuButton.offsetTop + subMenuButton.offsetHeight/2) + 'px';
+                    line.style.width = (distance/2) + 'px';
+                }
+
+                line.style.backgroundColor = color;
+                list_line.appendChild(line);
+            }
+
+        }
+        
+
+
+        onload = () => {
+
+            Object.keys(MENU).forEach(menu => {
+                
+                const elmentMenu = MENU[menu];
+                console.log(elmentMenu);
+
+                let menu_button = document.createElement('div');
+                menu_button.classList.add('menu_button');
+                menu_button.setAttribute('menu-name', menu);
+                menu_button.innerHTML = elmentMenu.menuLabel;
+                menu_button_wrapper.appendChild(menu_button);
+
+
+                menu_button.onclick = () => {
+
+                    subMenu_button_wrapper.innerHTML = '';
+                    list_line.innerHTML = '';
+                    
+                    if ( !menu_button.classList.contains('menu_button_active') ){
+                        document.querySelectorAll('.menu_button_active').forEach(e => e.classList.remove('menu_button_active') );
+                        menu_button.classList.toggle('menu_button_active', true);
+                        const menuName = menu_button.getAttribute('menu-name');
+
+                        MENU[menuName].subMenu.forEach(subMenu => {
+
+                            let subMenu_button = document.createElement('div');
+                            subMenu_button.classList.add('subMenu_button');
+                            subMenu_button.innerHTML = subMenu.label;
+                            subMenu_button.setAttribute('subMenu-name', subMenu.name);
+                            subMenu_button_wrapper.appendChild(subMenu_button);
+
+                            subMenu_button.onmouseenter = () => {
+                                const subMenuActive = document.querySelector('.subMenu_button_active');
+                                setLines(menuName, subMenu.name, (subMenuActive == subMenu_button)? '#007bff' : '#fff');
+                            };
+
+                            subMenu_button.onmouseleave = () => {
+                                const subMenuActive = document.querySelector('.subMenu_button_active');
+
+                                if ( subMenuActive == null ){
+                                    list_line.innerHTML = '';
+                                    return;
+                                }
+
+                                setLines(menuName, subMenuActive.getAttribute('subMenu-name'), '#007bff');
+                            };
+
+                            subMenu_button.onclick = () => {
+                                document.querySelectorAll('.subMenu_button_active').forEach(e => e.classList.remove('subMenu_button_active') );
+                                subMenu_button.classList.add('subMenu_button_active');
+                                setLines(menuName, subMenu.name, '#007bff');
+                            };
+
+                        });
+                        
+                    }else{
+                        document.querySelectorAll('.menu_button_active').forEach(e => e.classList.remove('menu_button_active') );
+                    } 
+
+                };
+
+                
+            });
+
+        };
+
+
+    </script>
+
+</body>
+</html>
