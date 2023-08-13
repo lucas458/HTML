@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reward Cards</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+
+
+
+        #card_list{
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+
+
+        .card_wrapper{
+            width: 98px;
+            height: 98px;
+            border-radius: 10px; 
+            background-image: url("reward_cards.png");
+            background-position-x: -98px;
+            position: relative;
+        }
+
+        .card_front{
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            position: absolute;
+        }
+
+        .card_front_slice{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        } 
+        
+        .card_front_slice_completed{
+            background-image: url("reward_cards.png");
+        }
+
+        .card_front_slice:nth-child(2),
+        .card_front_slice:nth-child(4){
+            background-position-x: -49px;
+        }
+
+        .card_front_slice:nth-child(3),
+        .card_front_slice:nth-child(4){
+            background-position-y: -49px;
+        }
+
+
+
+        .card_front_slice:nth-child(1){
+            border-radius: 10px 0 0 0;
+        }
+        .card_front_slice:nth-child(2){
+            border-radius: 0 10px 0 0;
+        }
+        .card_front_slice:nth-child(3){
+            border-radius: 0 0 0 10px;
+        }
+        .card_front_slice:nth-child(4){
+            border-radius: 0 0 10px 0;
+        }
+
+
+
+        .card_front_slice_selected{
+            outline: 3px solid #ffc107;
+            z-index: 2;
+        }
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+
+        <div id="card_list">
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice card_front_slice_selected"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+            
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+            
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+            
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+            
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+            
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+            <!-- CARD -->
+            <div class="card_wrapper">
+                <div class="card_back"></div>
+                <div class="card_front">
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                    <div class="card_front_slice"></div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+        
+        var currentX = 0;
+        var currentY = 0;
+
+        const keyboardHandler = {
+
+            ArrowLeft: {
+                call: ()=> {
+                    currentX--;
+                    if ( currentX < 0 ){
+                        currentX = 9;
+                    }
+                }
+            },
+            ArrowRight: {
+                call: ()=> { currentX = (currentX + 1) % 10;}
+            },
+            ArrowUp: {
+                call: ()=> { currentY = Math.clamp(currentY-1, 0, 9); }
+            },
+            ArrowDown: {
+                call: ()=> { currentY = Math.clamp(currentY+1, 0, 9); }
+            },
+            Enter: {
+                call: () => {
+                    document.querySelector('.card_front_slice_selected').classList.toggle("card_front_slice_completed");
+                }
+            }
+
+        };
+
+
+
+        onkeydown = (event) => {
+            if ( keyboardHandler[event.key] ){
+                keyboardHandler[event.key].call();
+                selectCardSliceAt(currentX, currentY);
+            }
+        };
+
+
+        function selectCardSliceAt(x, y){
+            const index = getIndexCardByAxis(x, y);
+            document.querySelector('.card_front_slice_selected').classList.remove('card_front_slice_selected');
+            document.querySelectorAll('.card_front_slice')[index].classList.add('card_front_slice_selected'); 
+        }
+        
+
+        function getIndexCardByAxis(x = 0, y = 0){
+            const cardWrapperX = parseInt(x / 2);
+            const cardWrapperY = parseInt(y / 2);
+            const z = x % 2 + (y % 2 * 2);
+            return (5 * 4 * cardWrapperY) + (cardWrapperX * 4) + z;
+        }
+
+
+        function getAxistByCardIndex( index = 0 ){
+            const cardWrapperX = parseInt(index / 4 % 5);
+            const cardWrapperY = parseInt(index / (5 * 4));
+            const offset = (5 * 4 * cardWrapperY) + (4 * cardWrapperX);
+            const x = cardWrapperX * 2 + ((index - offset) % 2);
+            const y = cardWrapperY * 2 + ((index - offset >= 2)? 1 : 0);
+            return [x, y];
+        }
+        
+
+        document.querySelectorAll('.card_front_slice').forEach((card, index) => {
+            card.onclick = () => {
+                document.querySelector('.card_front_slice_selected').classList.remove('card_front_slice_selected');
+                card.classList.add("card_front_slice_selected");
+                const axis = getAxistByCardIndex(index);
+                currentX = axis[0];
+                currentY = axis[1];
+            };
+        });
+
+
+    </script>
+
+
+</body>
+</html>
