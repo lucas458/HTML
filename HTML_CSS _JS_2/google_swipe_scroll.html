@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            /* display: flex;
+            justify-content: center;
+            align-items: center; */
+            position: fixed;
+        }
+
+
+        #lista{
+            height: 100%;
+            overflow: auto;
+        }
+
+
+
+        .item{
+            position: relative;
+            transition: 200ms;
+            overflow: hidden;
+            height: 52px;
+        }
+
+        .item_back_left,
+        .item_back_right{
+            display: flex;
+            opacity: 0;
+        }
+
+        .item_front{
+            width: 100%;
+            height: 52px;
+            background-color: #353535;
+            transition: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            z-index: 1;
+            position: absolute;
+            left: 0;
+        }
+        .item_front_title{
+            font-weight: 500;
+        }
+        .item_front_subTitle{
+            font-size: 0.8em;
+        }
+        .item_front_option{
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+        }
+        .item_front_option::after{
+            content: '';
+            display: block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            transform: scale(0);
+            background-color: #21212180;
+            opacity: 0.8; 
+            position: absolute;
+            transition: 200ms;
+        }
+
+
+        .item_front_option:active::after{
+            transition: 50ms;
+            transform: scale(1);
+        }
+
+
+
+
+
+
+
+
+
+
+        .item_back{
+            width: 100%;
+            height: 52px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        
+
+        .item_control{
+            flex-shrink: 0;
+            width: 64px;
+            height: 52px;
+            background-color: green;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 200ms;
+            
+        }
+
+        .item_control:active{
+            transition: 100ms;
+            transform: scale(0.8);
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+        <div id="lista">
+
+            <!-- ITEM -->
+            <div class="item">
+
+                <div class="item_front">
+                    <div class="item_front_content">
+                        <div class="item_front_title">Titulo aqui</div>
+                        <div class="item_front_subTitle">Sub titulo aqui</div>
+                    </div>
+                    <div class="item_front_option">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="item_back">
+
+                    <div class="item_back_left">
+                        <div class="item_control" aria-valuetext="archive" style="background-color: #ffc107;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M12.643 15C13.979 15 15 13.845 15 12.5V5H1v7.5C1 13.845 2.021 15 3.357 15h9.286zM5.5 7h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1zM.8 1a.8.8 0 0 0-.8.8V3a.8.8 0 0 0 .8.8h14.4A.8.8 0 0 0 16 3V1.8a.8.8 0 0 0-.8-.8H.8z"/>
+                            </svg>
+                        </div>
+                        <div class="item_control" aria-valuetext="bookmark">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="item_back_right">
+                        <div class="item_control" aria-valuetext="delete" style="background-color: #dc3545;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </div> 
+ 
+
+        </div>
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+        var lista    = document.getElementById('lista');
+        var initPosX = 0;
+
+        // CLONE (DEBUG)
+        for (let i = 0; i < 16; i++){
+            lista.appendChild( lista.firstElementChild.cloneNode(true) );
+        }
+
+
+
+        lista.onscroll = () => {
+            document.querySelectorAll(".item_pressed,.item_open").forEach(e => {
+                e.classList.remove("item_pressed"); 
+                e.classList.remove("item_open");
+                e.querySelector('.item_front').style.left = 0;
+            });
+        };
+
+        
+
+
+
+
+
+        
+
+        document.querySelectorAll(".item").forEach(item => {
+
+
+            // ITEM PRESSED
+            item.querySelector('.item_front').ontouchstart = (event) => {
+
+                document.querySelectorAll(".item_pressed,.item_open").forEach(e => {
+                    if ( item != e ){
+                        e.classList.remove("item_pressed");
+                        e.classList.remove("item_open");
+                        e.querySelector('.item_front').style.left = 0;
+                    }
+                });
+
+                item.classList.add("item_pressed");
+                initPosX = event.touches[0].clientX - item.querySelector('.item_front').offsetLeft;
+            }
+
+            // IEM RELEASED
+            item.ontouchend = item.onblur = () => {
+
+                item.classList.remove("item_pressed");
+                let controlLeft  = item.querySelector('.item_back_left');
+                let controlRight = item.querySelector('.item_back_right');
+                let itemFront    = item.querySelector('.item_front');
+                const isOpen     = itemFront.offsetLeft > controlLeft.offsetWidth / 2 || itemFront.offsetLeft < -controlRight.offsetWidth / 2;
+
+                itemFront.style.transition = '200ms';
+ 
+                
+                if ( isOpen ){
+                    if ( itemFront.offsetLeft > 0 ){
+                        itemFront.style.left = controlLeft.offsetWidth + 'px';
+                    }else{
+                        itemFront.style.left = -controlRight.offsetWidth + 'px';
+                    }
+                }else{
+                    itemFront.style.left = '';
+                    
+                    setTimeout(()=>{
+                        controlLeft.style.opacity = 0;
+                        controlRight.style.opacity = 0;
+                    }, 200);
+                }
+
+                item.classList.toggle("item_open", isOpen);
+
+            }
+
+
+            
+
+            // ITEM MOVE
+            item.ontouchmove = (event) => {
+
+                if ( !item.classList.contains("item_pressed") ) return;
+
+                let controlLeft = item.querySelector('.item_back_left');
+                let controlRight = item.querySelector('.item_back_right');
+                let itemFront    = item.querySelector('.item_front');
+                let posX = event.touches[0].clientX - initPosX;
+                
+                itemFront.style.transition = '';
+                controlLeft.style.opacity  = (posX > 0)? 1 : 0;
+                controlRight.style.opacity = (posX < 0)? 1 : 0;
+
+                if ( posX > controlLeft.offsetLeft + controlLeft.offsetWidth ){
+                    posX = posX/10 + controlLeft.offsetWidth - 10;
+                }else if ( posX < -controlRight.offsetWidth ){
+                    posX = posX/10 - controlRight.offsetWidth + 10;
+                }
+
+                itemFront.style.left = `${posX}px`;
+            }
+
+
+            // CLICK ITEM
+            item.querySelector('.item_front').onclick = () => {
+                let itemFront = item.querySelector('.item_front');
+                itemFront.style.transition = '200ms';
+                itemFront.style.left = '';
+                console.log("click: item");
+            };
+
+            // CLICK ITEM OPTION
+            item.querySelector(".item_front_option").onclick = (event) => {
+                event.stopImmediatePropagation();
+                let itemFront = item.querySelector('.item_front');
+                itemFront.style.transition = '200ms';
+                itemFront.style.left = '';
+                console.log("click: opt");
+            };
+
+            // CLICK HIDDEN BUTTON
+            item.querySelectorAll(".item_control").forEach(item_control => {
+                
+                item_control.onclick = () => {
+                    let itemFront = item.querySelector('.item_front');
+                    itemFront.style.transition = '200ms';
+                    
+                    // DELETE ITEM
+                    if ( item_control.ariaValueText == "delete" ){
+                        item.style.pointerEvents = 'none';
+                        itemFront.style.left = -item.offsetWidth + 'px';
+                        itemFront.style.opacity = 0;
+                        setTimeout(()=>{ 
+                            item.style.height = 0;
+                        }, 200);
+
+                    }else{
+                        itemFront.style.left = '';
+                    }
+
+                    console.log("click control: ", item_control.ariaValueText);
+                };
+            });
+
+
+        });
+
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
