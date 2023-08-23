@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seekbar</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            padding: 0 16px;
+            position: fixed;
+        }
+         
+
+        .seekbar{
+            width: 100%;
+            height: 4px;
+            background-color: #353535;
+            margin: 24px 0;
+            border-radius: 8px;
+        }
+        .seekbar_fill{
+            width: 0;
+            height: 100%;
+            border-radius: 8px;
+            background-color: #007bff;
+        }
+        .seekbar_handler{
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #007bff;
+            box-shadow: 0 0 5px 0 #000;
+            transition: 200ms transform;
+            position: relative;
+            left: calc(100% - 8px);
+            top: calc(100% - 8px - 4px/2);
+        }
+        .seekbar_handler_pressed{
+            transform: scale(1.2);
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+        
+        <div class="seekbar" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0">
+            <div class="seekbar_fill">
+                <div class="seekbar_handler"></div>
+            </div>
+        </div>
+
+        <div class="seekbar" aria-valuemin="0" aria-valuemax="200" aria-valuenow="500">
+            <div class="seekbar_fill">
+                <div class="seekbar_handler"></div>
+            </div>
+        </div>
+        
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+
+
+
+
+        document.querySelectorAll('.seekbar').forEach(seekbar => {
+            
+            // Init
+            seekbar.ariaValueNow = (seekbar.ariaValueNow == null)? 0 : seekbar.ariaValueNow;
+            seekbar.ariaValueMin = (seekbar.ariaValueMin == null)? 0 : seekbar.ariaValueMin;
+            seekbar.ariaValueMax = (seekbar.ariaValueMax == null)? 100 : seekbar.ariaValueMax;
+            seekbar.ariaValueNow = Math.clamp(parseFloat(seekbar.ariaValueNow), parseFloat(seekbar.ariaValueMin), parseFloat(seekbar.ariaValueMax));
+            seekbar.querySelector('.seekbar_fill').style.width = map(parseFloat(seekbar.ariaValueNow), parseFloat(seekbar.ariaValueMin), parseFloat(seekbar.ariaValueMax), 0, seekbar.offsetWidth) + 'px';
+
+            // Callback - On Change
+            const callback_onchange = (value) => {
+                console.log('change', value);
+            };
+
+            // Handler Pressed
+            seekbar.querySelector('.seekbar_handler').ontouchstart = (event) => {
+                seekbar.querySelector('.seekbar_handler').classList.add('seekbar_handler_pressed');
+                seekbar.classList.add("seekbar_pressed");
+            };
+
+            // Release
+            seekbar.ontouchend = () => {
+                seekbar.querySelector('.seekbar_handler').classList.remove('seekbar_handler_pressed');
+                seekbar.classList.remove("seekbar_pressed");
+            };
+
+            // Click
+            seekbar.onclick = (event) => {
+                const currentPosX = Math.clamp(event.clientX - seekbar.offsetLeft, 0, seekbar.offsetWidth);
+                seekbar.querySelector('.seekbar_fill').style.width = (currentPosX) + 'px';
+
+                const percent = currentPosX / seekbar.offsetWidth;
+                let valueNow = parseFloat(percent * seekbar.ariaValueMax);
+                valueNow = map(percent, 0, 1, parseFloat(seekbar.ariaValueMin), parseFloat(seekbar.ariaValueMax));
+
+                if ( valueNow != parseFloat(seekbar.ariaValueNow) ){
+                    seekbar.ariaValueNow = valueNow;
+                    callback_onchange( parseInt(valueNow) );
+                }
+
+            };
+
+            // Move
+            seekbar.ontouchmove = (event) => {
+                if ( !seekbar.classList.contains("seekbar_pressed") ) return;
+
+                seekbar.querySelector('.seekbar_handler').classList.remove('seekbar_handler_pressed');
+                const currentPosX = Math.clamp(event.touches[0].clientX - seekbar.offsetLeft, 0, seekbar.offsetWidth);
+                seekbar.querySelector('.seekbar_fill').style.width = (currentPosX) + 'px';
+                
+                const percent = currentPosX / seekbar.offsetWidth;
+                let valueNow = parseFloat(percent * seekbar.ariaValueMax);
+                valueNow = map(percent, 0, 1, parseFloat(seekbar.ariaValueMin), parseFloat(seekbar.ariaValueMax));
+
+                if ( valueNow != parseFloat(seekbar.ariaValueNow) ){
+                    seekbar.ariaValueNow = valueNow;
+                    callback_onchange( parseInt(valueNow) );
+                }
+
+            };
+
+        });
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

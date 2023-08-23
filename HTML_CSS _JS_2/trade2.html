@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade 2 (Simples)</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%; 
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: fixed;
+        }
+
+
+
+        /* MONEY */
+        #money_controler{
+            width: fit-content;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        } 
+
+        .money_button{
+            background-color: #252525;
+            color: #9e9e9e;
+            padding: 8px 16px;
+        }
+
+        .money_button_active{
+            background-color: #353535;
+            color: inherit;
+        }
+
+        .money_button_active:hover{
+            background-color: #505050;
+            cursor: pointer;
+        }
+
+        #money_value{
+            width: 64px;
+            background-color: #151515;
+            text-align: center;
+            padding: 8px 0;
+        }
+
+
+
+
+
+
+        /* WEAPONS */
+
+        #weapons{ 
+            flex-shrink: 0;
+            display: flex;
+            overflow: auto; 
+            gap: 16px;
+        }
+
+        
+        .weapon{ 
+            flex-grow: 0;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid #ffc107;
+            padding: 8px;
+            border-radius: 6px;
+            align-items: center;
+            font-size: 0.8em;
+            gap: 4px;
+        }
+
+        .weapon_group{ 
+            color: #9e9e9e;
+        }
+
+        .weapon_img{
+            width: 32px;
+            height: 32px;
+            background-color: #353535;
+            font-size: 1.2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+
+
+
+
+
+        /* TRADE */
+
+        #trade_wrapper{
+            overflow: auto;
+        }
+
+
+        .trade_group{
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+            overflow: auto;
+        }
+        .trade_group:first-child{
+            margin: 0;
+        }
+
+
+        .trade_group_label{
+            border-bottom: 1px solid #353535;
+            color: #9e9e9e;
+            padding-bottom: 4px;
+        }
+
+        .trade_item_list{
+            padding-bottom: 8px;
+            display: flex;
+            gap: 24px;
+        }
+
+        .trade_item{
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #353535;
+            color: #e0e0e0;
+            padding: 8px;
+            border: 2px solid #fafafa;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .trade_item_buy{
+            border-color: #28a745;
+            cursor: default;
+        }
+
+        .trade_item_locked{
+            border-color: #dc3545;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .trade_item_img{
+            width: 64px;
+            height: 64px;
+            background-color: #212121;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+        }
+
+        .trade_item_label{
+            font-size: 0.8em;
+        }
+
+
+
+
+
+
+
+        /* MODAL */
+        
+        #modal_container{
+            width: 100%;
+            height: 100%;
+            background-color: #00000080;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+
+            display: none;
+        }
+
+
+        #modal_window{
+            width: 320px;
+            background-color: #252525;
+            padding: 8px;
+        }
+
+
+        #modal_header{
+            font-size: 1.2em;
+            font-weight: 500;
+            border-bottom: 1px solid #007bff;
+            color: #007bff;
+            padding-bottom: 4px;
+        }
+
+        #modal_content{
+            height: 64px;
+            padding: 8px 0;
+        }
+
+        #modal_footer{
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+
+        .modal_button{
+            cursor: pointer;
+            padding: 8px 16px; 
+            border: 1px solid #007bff;
+            color: #007bff;
+        }
+        .modal_button:hover{ 
+            color: #fff;
+            background-color: #007bff;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    <div id="main_screen">
+
+        <div id="money_controler">
+            <div class="money_button" onclick="moneyButtonClick(this, event)">-</div>
+            <div id="money_value">0</div>
+            <div class="money_button money_button_active" onclick="moneyButtonClick(this, event)">+</div>
+        </div>
+
+        <div id="weapons"></div>
+        <div id="trade_wrapper"></div> 
+
+    </div>
+
+    <div id="modal_container">
+        <div id="modal_window">
+            <div id="modal_header"></div>
+            <div id="modal_content"></div>
+            <div id="modal_footer">
+                <div class="modal_button" id="modal_close" onclick="closeModal()">Fechar</div>
+                <div class="modal_button" id="modal_confirm">Comprar</div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+
+
+        var TRADE = [
+
+            {
+                trade_name: "handgun",
+                trade_label: "Pistolas",
+                trade_list: [
+
+                    {
+                        name: "handgun_1",
+                        price: 0,
+                        buy: true,
+                        locked: false
+                    },
+                    {
+                        name: "handgun_2",
+                        price: 120,
+                        buy: false,
+                        locked: false
+                    },
+                    {
+                        name: "handgun_3",
+                        price: 140,
+                        buy: false,
+                        locked: true
+                    }
+
+                ]
+            },
+
+
+            {
+                trade_name: "shotgun",
+                trade_label: "Escopetas",
+                trade_list: [
+
+                    {
+                        name: "shotgun_1",
+                        price: 170,
+                        buy: false,
+                        locked: false
+                    },
+                    {
+                        name: "shotgun_2",
+                        price: 190,
+                        buy: false,
+                        locked: true
+                    },
+                    {
+                        name: "shotgun_3",
+                        price: 210,
+                        buy: false,
+                        locked: true
+                    }
+
+                ]
+            },
+
+            {
+                trade_name: "sniper",
+                trade_label: "Sniper",
+                trade_list: [
+
+                    {
+                        name: "sniper_1",
+                        price: 240,
+                        buy: false,
+                        locked: false
+                    },
+                    {
+                        name: "sniper_2",
+                        price: 260,
+                        buy: false,
+                        locked: true
+                    },
+                    {
+                        name: "sniper_3",
+                        price: 300,
+                        buy: false,
+                        locked: true
+                    }
+
+                ]
+            },
+
+            {
+                trade_name: "flame_thrower",
+                trade_label: "Lança Chamas",
+                trade_list: [
+
+                    {
+                        name: "flame_thrower_1",
+                        price: 260,
+                        buy: false,
+                        locked: false
+                    },
+                    {
+                        name: "flame_thrower_2",
+                        price: 280,
+                        buy: false,
+                        locked: true
+                    },
+                    {
+                        name: "flame_thrower_3",
+                        price: 310,
+                        buy: false,
+                        locked: true
+                    }
+
+                ]
+            },
+
+            {
+                trade_name: "rocket_laucher",
+                trade_label: "Lança Misseis",
+                trade_list: [
+
+                    {
+                        name: "rocket_laucher_1",
+                        price: 300,
+                        buy: false,
+                        locked: false
+                    },
+                    {
+                        name: "rocket_laucher_2",
+                        price: 330,
+                        buy: false,
+                        locked: true
+                    },
+                    {
+                        name: "rocket_laucher_3",
+                        price: 350,
+                        buy: false,
+                        locked: true
+                    }
+
+                ]
+            },
+
+            {
+                trade_name: "granade",
+                trade_label: "Granadas",
+                trade_list: [
+
+                    {
+                        name: "granade_1",
+                        price: 0,
+                        buy: true,
+                        locked: false
+                    },
+                    {
+                        name: "granade_2",
+                        price: 70,
+                        buy: false,
+                        locked: false
+                    },
+                    {
+                        name: "granade_3",
+                        price: 100,
+                        buy: false,
+                        locked: true
+                    }
+
+                ]
+            },
+
+            {
+                trade_name: "mines",
+                trade_label: "Minas",
+                trade_list: [
+
+                    {
+                        name: "mines_1",
+                        price: 180,
+                        buy: false,
+                        locked: false
+                    },
+                    {
+                        name: "mines_2",
+                        price: 200,
+                        buy: false,
+                        locked: true
+                    },
+                    {
+                        name: "mines_3",
+                        price: 240,
+                        buy: false,
+                        locked: true
+                    }
+
+                ]
+            },
+
+            {
+                trade_name: "sword",
+                trade_label: "Espadas",
+                trade_list: [
+
+                    {
+                        name: "sword_1",
+                        price: 100,
+                        buy: false,
+                        locked: false
+                    },
+                    {
+                        name: "sword_2",
+                        price: 150,
+                        buy: false,
+                        locked: true
+                    }
+                ]
+            }
+
+        ];
+
+
+
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+        
+
+        money_value.onwheel = (event) => {
+
+            let value = parseInt(money_value.innerHTML);
+
+            if ( event.deltaY < 0 ){
+                value += (event.shiftKey)? 10 : 1;
+            }else{
+                value -= (event.shiftKey)? 10 : 1;
+            }
+
+            updateMoney(value);
+
+        };
+
+
+
+        function moneyButtonClick( moneyButton, event ){
+            
+            let value = parseInt(money_value.innerHTML);
+            
+            if ( moneyButton.innerHTML == '+' ){
+                value += (event.shiftKey)? 10 : 1;
+            }else{
+                value -= (event.shiftKey)? 10 : 1;
+            }
+
+            updateMoney(value);
+        }
+
+
+
+        function allTradeIsCompleted(){
+
+            for (tradeGroup of TRADE){
+                for (tradeItem of tradeGroup.trade_list){
+                    if ( !tradeItem.buy ){
+                        return false
+                    }
+                }
+            }
+
+            return true;
+        }
+
+
+
+        function updateMoney( value ){
+            value = Math.clamp(value, 0, 9999);
+            document.querySelectorAll('.money_button')[0].classList.toggle('money_button_active', value > 0);
+            document.querySelectorAll('.money_button')[1].classList.toggle('money_button_active', value < 9999);
+            money_value.innerHTML = value;
+        }
+
+
+
+        function generateAllTrade(){
+
+            trade_wrapper.innerHTML = '';
+
+            TRADE.forEach(tradeGroup => {
+
+                let trade_group_element = document.createElement('div');
+                trade_group_element.classList.add("trade_group");
+                trade_group_element.setAttribute("trade-name", tradeGroup.trade_name);
+
+                const totalPrices    = getSumByGroup(tradeGroup.trade_name);
+                const totalPricesBuy = getSumBuyByGroup(tradeGroup.trade_name)
+
+                trade_group_element.innerHTML = `
+                <div class="trade_group_label">${tradeGroup.trade_label}: $${totalPrices} ($${totalPrices - totalPricesBuy})</div>
+                <div class="trade_item_list"></div>`;
+
+                tradeGroup.trade_list.forEach((tradeItem, tradeItemIndex) => {
+
+                    let trade_item_element = document.createElement('div');
+                    trade_item_element.classList.add("trade_item");
+                    trade_item_element.setAttribute("item-name", tradeItem.name);
+
+                    trade_item_element.classList.toggle('trade_item_buy', tradeItem.buy);
+                    trade_item_element.classList.toggle('trade_item_locked', tradeItem.locked);
+
+                    trade_item_element.innerHTML = `
+                    <div class="trade_item_img">${tradeItemIndex + 1}</div>
+                    <div class="trade_item_label">$ ${tradeItem.price}</div>`;
+
+                    trade_group_element.querySelector('.trade_item_list').appendChild(trade_item_element);
+                    trade_item_element.onclick = ()=> { tradeItemClick(trade_item_element); };
+
+                });
+
+                trade_wrapper.appendChild(trade_group_element);
+
+            });
+
+            generateWeapons();
+
+
+        }
+
+
+
+        function generateWeapons(){ 
+            
+            weapons.innerHTML = '';
+
+            for (tradeGroup of TRADE){
+
+                const index = tradeGroup.trade_list.findLastIndex(e => e.buy);
+
+                if ( index >= 0 ){
+                    let weapon_element = document.createElement('div');
+                    weapon_element.classList.add('weapon');
+                    weapon_element.innerHTML = `
+                    <div class="weapon_group">${tradeGroup.trade_label}</div>
+                    <div class="weapon_img">${index+1}</div>`;
+                    weapons.appendChild(weapon_element);
+                }
+
+            }
+
+        }
+
+
+
+        function getSumByGroup( tradeGroupName ){
+            let total = 0;
+            TRADE.find(e => e.trade_name == tradeGroupName).trade_list.forEach(e => total += e.price);
+            return total;
+        }
+
+
+
+        function getSumBuyByGroup( tradeGroupName ){
+            let total = 0;
+            TRADE.find(e => e.trade_name == tradeGroupName).trade_list.filter(e => e.buy).forEach(e => total += e.price);
+            return total;
+        }
+
+
+
+        function setModal(title, content, isModalConfirm = false, callback = null ){
+            modal_header.innerHTML        = title;
+            modal_content.innerHTML       = content;
+            modal_container.style.display = 'flex';
+            modal_confirm.style.display = (isModalConfirm)? 'block' : 'none';
+            modal_confirm.onclick = callback;
+        }
+
+
+
+        function closeModal(){
+            modal_container.style.display = 'none';
+        }
+
+
+
+        function tradeItemClick( trade_item ){
+
+            if ( trade_item.classList.contains("trade_item_buy") ) return;
+
+            if ( trade_item.classList.contains("trade_item_locked") ){
+                setModal('Item bloquedo!', 'O item está bloqueado. compre o item anterior para desbloquea-lo');
+                return;
+            }
+
+            const currrentMoney  = parseInt(money_value.innerHTML);
+            const tradeGroupName = trade_item.parentElement.parentElement.getAttribute("trade-name");
+            const tradeItemName  = trade_item.getAttribute("item-name");
+            let tradeGroupObject = TRADE.find(e => e.trade_name == tradeGroupName);
+            let tradeItemIndex   = tradeGroupObject.trade_list.findIndex(e => e.name == tradeItemName);
+
+            if ( currrentMoney < tradeGroupObject.trade_list[tradeItemIndex].price ){ 
+                setModal('Muito Caro!', `É necessário ter $${tradeGroupObject.trade_list[tradeItemIndex].price} <br> Você tem $${currrentMoney}`);
+                return;
+            }
+
+            setModal('Comprar?', `Deseja Comprar esse item? <br> Preço: ${tradeGroupObject.trade_list[tradeItemIndex].price}`, true, ()=>{
+                
+                money_value.innerHTML = currrentMoney - tradeGroupObject.trade_list[tradeItemIndex].price;
+    
+                tradeGroupObject.trade_list[tradeItemIndex].buy = true;
+                trade_item.classList.add("trade_item_buy");
+    
+                if ( tradeItemIndex < tradeGroupObject.trade_list.length - 1 ){
+                    tradeGroupObject.trade_list[tradeItemIndex + 1].locked = false;
+                    trade_item.parentElement.querySelector(`.trade_item[item-name="${tradeGroupObject.trade_list[tradeItemIndex + 1].name}"]`).classList.remove("trade_item_locked");
+                    closeModal();
+                }else{
+
+                    if ( allTradeIsCompleted() ){
+                        setModal('Completo!', "Parabens, você completou TODAS as categorias :)");
+                    }else{
+                        setModal('Categoria completa', `Parabens, você completou a categoria: <br>"${tradeGroupObject.trade_label}"`);
+                    }
+
+                }
+
+                generateAllTrade();
+                generateWeapons();
+
+            });
+
+        }
+
+
+
+        onload = generateAllTrade;
+
+
+    </script>
+
+</body>
+</html>
