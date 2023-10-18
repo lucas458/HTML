@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+
+        #troco_wrapper{
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .dinheiro{
+            flex-shrink: 0;
+            background-size: 100% 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+
+        }
+
+        .dinheiro > div{
+            font-size: 1.5em;
+            position: relative;
+            left: 32px;
+        }
+
+        .cedula{
+            width: 128px;
+            height: 60px; 
+        }
+
+        .moeda{
+            width: 48px;
+            height: 48px; 
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+    <div id="main_screen">
+        <div id="input_container">
+            <input type="number" min="0" id="buyValue" placeholder="Valor da compra">
+            <input type="number" min="0" id="paidValue" placeholder="Valor pago">
+            <button onclick="onClickGerar()">Gerar Troco</button>
+            <button onclick="clearDinheiro()">Limpar</button>
+        </div>
+        <div id="troco_valor">Troco: 0</div>
+
+        <div id="troco_wrapper"></div>
+
+    </div>
+
+
+
+    <script>
+
+
+        const dinheiro = [
+            // MOEDAS
+            {
+                valor: 0.05,
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Moeda_de_5_centavos_da_2%C2%AA_gera%C3%A7%C3%A3o.png/100px-Moeda_de_5_centavos_da_2%C2%AA_gera%C3%A7%C3%A3o.png"
+            },
+            {
+                valor: 0.1,
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Moeda_de_10_centavos_da_2%C2%AA_gera%C3%A7%C3%A3o.png/100px-Moeda_de_10_centavos_da_2%C2%AA_gera%C3%A7%C3%A3o.png"
+            },
+            {
+                valor: 0.25,
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Moeda_de_25_centavos_da_2%C2%AA_gera%C3%A7%C3%A3o.png/100px-Moeda_de_25_centavos_da_2%C2%AA_gera%C3%A7%C3%A3o.png"
+            },
+            {
+                valor: 0.5,
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Moeda_de_50_centavos_da_2%C2%AA_gera%C3%A7%C3%A3o.png/100px-Moeda_de_50_centavos_da_2%C2%AA_gera%C3%A7%C3%A3o.png"
+            },
+            {
+                valor: 1,
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Brasil_coin_1_real.jpg/100px-Brasil_coin_1_real.jpg"
+            },
+            // CEDULAS
+            {
+                valor: 2,
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/2_Brazil_real_Second_Reverse.jpg/170px-2_Brazil_real_Second_Reverse.jpg"
+            },
+            {
+                valor: 5,
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/5_Brazil_real_Second_Reverse.jpg/170px-5_Brazil_real_Second_Reverse.jpg"
+            },
+            {
+                valor: 10,
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/10_Brazil_real_Second_Reverse.jpg/170px-10_Brazil_real_Second_Reverse.jpg"
+            },
+            {
+                valor: 20,
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/20_Brazil_real_Second_Reverse.jpg/170px-20_Brazil_real_Second_Reverse.jpg"
+            },
+            {
+                valor: 50,
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/50_Brazil_real_Second_Reverse.jpg/170px-50_Brazil_real_Second_Reverse.jpg"
+            },
+            {
+                valor: 100,
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/100_Brazil_real_Second_Reverse.jpg/170px-100_Brazil_real_Second_Reverse.jpg"
+            },
+            {
+                valor: 200,
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/200_Brazil_real_Second_Reverse.jpg/170px-200_Brazil_real_Second_Reverse.jpg"
+            }
+        ];
+
+
+        const cedulas = [200, 100, 50, 20, 10, 5, 2, 1]; // moeda de 1 Real inclusa
+        const moedas  = [0.5, 0.25, 0.1, 0.05];
+
+
+        function clearDinheiro(){
+            troco_valor.innerHTML = 'Troco: 0';
+            troco_wrapper.innerHTML = '';
+        }
+
+
+        function gerarTroco( valorDaCompra, valorPago ){
+
+            if ( valorPago <= valorDaCompra ) return null;
+
+            const trocoInteiro    = parseInt(valorPago - valorDaCompra);
+            const trocoFracionado = parseFloat(((valorPago - valorDaCompra) - trocoInteiro).toFixed(2));
+            const trocoValor      = parseFloat((valorPago - valorDaCompra).toFixed(2));
+            let trocoValorExato   = 0;
+            let listaTroco        = [];
+            let valor             = trocoInteiro;
+            let i                 = 0;
+
+            // Troco da Parte Inteira
+            while ( valor > 0 ){
+                let quantidade = parseInt(valor / cedulas[i]);
+                if (quantidade != 0) {
+                    listaTroco.push({valor: cedulas[i], qty: quantidade});
+                    trocoValorExato += cedulas[i] * quantidade;
+                    valor %= cedulas[i];
+                }
+                i++;
+            }
+            
+            valor = Math.round(trocoFracionado * 100);
+            i = 0;
+
+            // Troco da Parte Fracionaria
+            while ( valor >= 5 ){
+                const valorMoeda = Math.round(moedas[i] * 100);
+                let quantidade = parseInt(valor / valorMoeda);
+                if (quantidade != 0) {
+                    listaTroco.push({valor: moedas[i], qty: quantidade});
+                    trocoValorExato += moedas[i] * quantidade;
+                    valor %= valorMoeda;
+                }
+                i++;
+            }
+
+            trocoValorExato = parseFloat(trocoValorExato.toFixed(2));
+
+            return [trocoInteiro, trocoFracionado, trocoValor, trocoValorExato, listaTroco];
+
+        }
+        
+
+
+        function addMoedaByValor( valor, qty ){
+
+            const moeda = dinheiro.find(e => e.valor == valor);
+
+            if ( moeda != null){
+                const isMoeda = moeda.valor <= 1;
+                let dinheiro_element = document.createElement('div');
+                dinheiro_element.classList.add('dinheiro');
+                dinheiro_element.classList.add( (isMoeda)? 'moeda' : 'cedula' );
+                dinheiro_element.ariaValueText = moeda.valor;
+                dinheiro_element.style.backgroundImage = `url("${moeda.img}")`;
+                dinheiro_element.innerHTML = `<div>${qty}x</div>`;
+                troco_wrapper.appendChild(dinheiro_element);
+            }
+
+        }
+
+        
+
+        function onClickGerar(){
+
+            const trocoObj = gerarTroco(parseFloat(buyValue.value), parseFloat(paidValue.value));
+            clearDinheiro();
+            
+            if ( trocoObj != null ){
+                troco_valor.innerHTML = 'Troco: ' + trocoObj[2];
+                trocoObj[4].forEach(e => {
+                    addMoedaByValor(e.valor, e.qty);
+                });
+            }
+
+        }
+
+
+    </script>
+
+
+</body>
+</html>

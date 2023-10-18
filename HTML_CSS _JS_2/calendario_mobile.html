@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>--/--/----</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background-color: #4578dd;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #calendar_container{
+            box-shadow: 0 0 8px 0 #000;
+            font-size: 1.2em;
+            background-color: #fff;
+            color: #000;
+            padding: 16px;
+            border-radius: 6px;
+        }
+
+
+        /* HEADER */
+        #calendar_header{
+            margin-bottom: 16px;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+
+
+        #calendar_title_container{ 
+            padding: 2px 0;
+            position: relative;
+        }
+        #calendar_title{ 
+            padding: 2px;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 6px;
+        }
+        #calendar_title::after{
+            content: ' \25BE';
+        }
+        #calendar_title:active{
+            background-color: #eee;
+        }
+
+
+        #calendar_title_container:not(.calendar_title_open) #calendar_title:active{
+            box-shadow: 0 0 5px 0 #9e9e9e;
+        }
+        .calendar_title_open #calendar_title{
+            border-color: #9e9e9e;
+            border-radius: 6px 6px 0 0;
+        }
+        .calendar_title_open #calendar_title::after{
+            content: ' \25B4';
+        }
+
+        #calendar_title_select_month_container{
+            width: 100%;
+            display: none;
+            overflow: hidden;
+            border: 1px solid #9e9e9e;
+            border-radius: 0 0 6px 6px; 
+            background-color: #fff;
+            position: absolute; 
+        }
+        .calendar_title_open #calendar_title_select_month_container{
+            display: initial !important;
+        }
+        .calendar_title_select_month{
+            padding: 4px 8px;
+        }
+        .calendar_title_select_month:active{
+            background-color: #eee;
+        }
+        .calendar_title_select_month_selected{
+            background-color: #4578dd;
+            color: #fff;
+            font-weight: 500;
+        }
+        
+
+
+
+        #calendar_control_container{
+            display: flex;
+            gap: 10px;
+        }
+        .calendar_control_button{
+            color: #000; 
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+        }
+        .calendar_control_button:active{
+            box-shadow: 0 0 5px 0 #bdbdbd;
+            background-color: #4578dd;
+            color: #fff;
+        }
+
+        
+
+        /* CONTENT */
+        #calendar_weekday_container{
+            color: #9e9e9e;
+        }
+
+        #calendar_date_container{
+            border: 1px solid #e1e1e1;
+            background-color: #e1e1e1;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        #calendar_weekday_container,
+        #calendar_date_container{
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+        }
+
+        #calendar_weekday_container .calendar_weekday:first-child,
+        #calendar_date_container .calendar_date:nth-child(7n - 6):not(.calendar_date_before):not(.calendar_date_after){
+            color: #dc3545;
+        }
+        
+        #calendar_date_container .calendar_date:nth-child(7n - 6).calendar_date_before,
+        #calendar_date_container .calendar_date:nth-child(7n - 6).calendar_date_after{
+            color: #dc354580;
+        }
+
+
+        .calendar_weekday,
+        .calendar_date{
+            width: 40px;
+            height: 40px;  
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .calendar_date{
+            padding: 2px;
+           
+        }
+
+        .calendar_date_before,
+        .calendar_date_after{
+            color: #bdbdbd;
+        }
+ 
+        .calendar_date_selected > div{
+            width: 100%;
+            height: 100%;
+            background-color: #4578dd;
+            color: #fff;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%; 
+            box-shadow: 0 0 5px 0 #bdbdbd;
+        }
+
+        .calendar_date_current > div{
+            width: 100%;
+            height: 100%; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            border: 1px solid #4578dd;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    <div id="main_screen">
+
+        <div id="calendar_container">
+
+            <div id="calendar_header">
+                
+                <div id="calendar_title_container"> 
+                    <div id="calendar_title">December 2020</div>
+                    <div id="calendar_title_select_month_container">
+                        <div class="calendar_title_select_month">JANEIRO</div>
+                        <div class="calendar_title_select_month">FEVEREIRO</div>
+                        <div class="calendar_title_select_month">MARÇO</div>
+                        <div class="calendar_title_select_month">ABRIL</div>
+                        <div class="calendar_title_select_month">MAIO</div>
+                        <div class="calendar_title_select_month">JUNHO</div>
+                        <div class="calendar_title_select_month">JULHO</div>
+                        <div class="calendar_title_select_month">AGOSTO</div>
+                        <div class="calendar_title_select_month">SETEMBRO</div>
+                        <div class="calendar_title_select_month">OUTUBRO</div>
+                        <div class="calendar_title_select_month">NOVEMBRO</div>
+                        <div class="calendar_title_select_month">DEZEMBRO</div>
+                    </div>
+                </div>
+
+                <div id="calendar_control_container">
+                    <div class="calendar_control_button" onclick="controlLeft()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+                    </div>
+                    <div class="calendar_control_button" onclick="controlRight()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                    </div>
+                </div>
+
+            </div>
+            
+
+            <div id="calendar_content">
+                <div id="calendar_weekday_container">
+                    <div class="calendar_weekday">D</div>
+                    <div class="calendar_weekday">S</div>
+                    <div class="calendar_weekday">T</div>
+                    <div class="calendar_weekday">Q</div>
+                    <div class="calendar_weekday">Q</div>
+                    <div class="calendar_weekday">S</div>
+                    <div class="calendar_weekday">S</div>
+                </div>
+                <div id="calendar_date_container"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+
+        const DATES            = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        const MONTHS           = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
+        var calendar_container = document.getElementById('calendar_container');
+        var calendarView       = [1, 0]; 
+        var calendarSelected   = null; 
+        
+        
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+        
+        // OPEN/CLOSE -- DROPDOWN
+        calendar_title_container.onclick = () => {
+            calendar_title_container.classList.toggle('calendar_title_open');
+        };
+
+        // SELECT ITEM -- DROPDOWN
+        document.querySelectorAll('.calendar_title_select_month').forEach((e, i) => {
+            e.onclick = () => {
+                const month = i + 1;
+                calendarView[0] = month; 
+                generateCalendar(calendarView[0], calendarView[1]);
+            };
+        });
+
+        // CONTROL: LEFT
+        function controlLeft(){ 
+            generateCalendar(calendarView[0], --calendarView[1]);
+        }
+        
+        // CONTROL: RIGHT
+        function controlRight(){ 
+            generateCalendar(calendarView[0], ++calendarView[1]);
+
+        }
+        
+
+
+        function generateCalendar(month, year){
+
+            if ( document.querySelector('.calendar_title_select_month_selected') ){
+                document.querySelector('.calendar_title_select_month_selected').classList.remove('calendar_title_select_month_selected');
+            }
+            
+            const offset         = new Date(year, month-1, 1).getDay();
+            const maxMonth       = (month == 2 && leapYear(year))? 29 : DATES[month - 1];
+            const remains        = 42 - (offset + maxMonth);
+            const calendar       = new Date();
+            let maxDateLastMonth = 0;
+
+            calendar_date_container.innerHTML = '';
+            calendar_title_select_month_container.children[month - 1].classList.add('calendar_title_select_month_selected');
+            document.title = calendar.toLocaleDateString();
+            calendar_title.innerHTML = `${MONTHS[month-1]} ${year}`;
+
+            if ( month - 1 < 1 ){
+                maxDateLastMonth = DATES[11];
+            }else{ 
+                maxDateLastMonth = (month-1 == 2 && leapYear(year))? 29 : DATES[(month-1) - 1];
+            }
+
+            if ( calendarSelected == null ){
+                calendarSelected = [calendar.getDate(), calendar.getMonth()+1, calendar.getFullYear()];
+            }
+
+
+            // MONTH BEFORE
+            for (let i = 0; i < offset; i++){
+                let calendar_date = document.createElement('div');
+                calendar_date.classList.add('calendar_date', 'calendar_date_before');
+                calendar_date.innerHTML = `<div>${maxDateLastMonth - offset + 1 + i}</div>`;
+                calendar_date_container.appendChild(calendar_date);
+            }
+
+
+            // CURRENT MONTH
+            for (let date = 1; date <= maxMonth; date++){
+                let calendar_date = document.createElement('div');
+                calendar_date.classList.add('calendar_date');
+                calendar_date.innerHTML = `<div>${date}</div>`;
+                calendar_date_container.appendChild(calendar_date);
+
+                if ( calendar.toLocaleDateString() == new Date(year, month - 1, date).toLocaleDateString() ){
+                    calendar_date.classList.add('calendar_date_current');
+                }
+
+                if ( [date, month, year].toString() === calendarSelected.toString() ){
+                    calendar_date.classList.add('calendar_date_selected');
+                }
+
+            }
+
+
+            // MONTH AFTER
+            for (let i = 1; i <= remains; i++){
+                let calendar_date = document.createElement('div');
+                calendar_date.classList.add('calendar_date', 'calendar_date_after');
+                calendar_date.innerHTML = `<div>${i}</div>`;
+                calendar_date_container.appendChild(calendar_date);
+            }
+
+            clickDateEvent();
+
+        }
+        
+
+
+        function clickDateEvent(){
+
+            document.querySelectorAll('.calendar_date').forEach(e => {
+    
+                e.onclick = () => {
+                    const date = parseInt(e.firstChild.innerHTML);
+                    let month  = calendarView[0];
+                    let year   = calendarView[1];
+                    
+                    if ( e.classList.contains('calendar_date_before') ){
+                        if ( --month < 1 ){
+                            month = 12;
+                            year--;
+                        }
+                    }else if ( e.classList.contains('calendar_date_after') ){
+                        if ( ++month > 12 ){
+                            month = 1;
+                            year++;
+                        }
+                    }
+
+                    calendarView     = [month, year];
+                    calendarSelected = [date, month, year];
+                    generateCalendar(calendarView[0], calendarView[1]);
+                };
+    
+            });
+        }
+
+
+        onload = () => {
+            let calendar = new Date();
+            calendarSelected = [calendar.getDate(), calendar.getMonth() + 1, calendar.getFullYear()];
+            calendarView     = [calendarSelected[1], calendarSelected[2]]; 
+            generateCalendar(calendarView[0], calendarView[1]);
+
+            setInterval(()=>{
+                const calendarNew = new Date();
+                if ( calendar.getDate() != calendarNew.getDate() ){
+                    calendar = calendarNew;
+                    generateCalendar(calendarView[0], calendarView[1]);
+                    console.warn('update');
+                }
+            }, 1000);
+        };
+        
+
+    </script>
+
+</body>
+</html>

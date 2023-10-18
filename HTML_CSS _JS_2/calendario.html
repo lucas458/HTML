@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>--/--/----</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif; 
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed; 
+        }
+        
+        #calendar_container{
+            background-color: #3e3e3e;
+            border: 1px solid #3e3e3e;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+        }
+
+
+        .month_container{
+            background-color: #fff;
+            padding: 4px;
+        }
+
+        .month_name_container{
+            text-align: center; 
+            font-weight: 500;
+            font-size: 1.2em;
+            display: flex;
+            justify-content: center;
+        }
+        .month_name{
+            width: 70%;
+            height: 100%;
+            font-size: 0.8em;
+            padding: 2px 0;
+            background-color: #2c4390;
+            border-radius: 4px;
+        }
+         
+
+        .month_weekday_container{
+            border-bottom: 1px solid #3e3e3e;
+            margin-bottom: 8px;
+        }
+
+        .month_weekday_container,
+        .month_days_container{
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            justify-items: center;
+            gap: 4px;
+        }
+
+
+        .month_weekday_container .month_weekday:first-child,
+        .month_days_container .month_day:nth-child(7n - 6){
+            color: #a00f19;
+        }
+
+        .month_weekday,
+        .month_day{
+            width: 20px;
+            height: 20px;
+            color: #3e3e3e;
+            font-size: 0.8em;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+
+        }
+
+        .month_day:not(:empty):hover{
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #e0e0e0;
+        }
+        
+        .day_current{
+            background-color: #b3b3b3 !important;
+            color: #fff !important;
+            border-radius: 8px;
+        }
+
+        .day_selected{
+            background-color: #2c4390 !important;
+            color: #fff !important;
+            border-radius: 8px;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+    <div id="main_screen">
+        <div id="calendar_container"></div>
+    </div>
+
+
+    <script>
+        
+        const DATES = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        const MONTHS = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
+        var calendar_container = document.getElementById('calendar_container');
+        let date = new Date();
+
+
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+
+        function leadZero(value = 0){
+            return (value < 10)? '0' + value : value;
+        }
+
+
+        function onClickDay(e){
+            const dayNumber   = parseInt( e.target.innerHTML );
+            const monthNumber = parseInt( e.target.parentElement.parentElement.parentElement.getAttribute('monthNumber') );
+            selectionarData(dayNumber, monthNumber);
+        }
+
+
+        function gerarCalendario( ano ){
+            calendar_container.innerHTML = '';
+            for (let mes = 0; mes < 12; mes++){ 
+                gerarMes(mes, ano, new Date(ano, mes, 1).getDay());
+            }
+            document.querySelectorAll('.month_day:not(.month_day_dummy)').forEach(e => e.onclick = onClickDay);
+        }
+
+
+        function selectionarData(dia, mes){
+            let month_day = document.querySelectorAll('.month_container')[mes - 1].querySelectorAll('.month_day:not(.month_day_dummy)')[dia - 1];
+            if ( month_day != null ){
+                document.querySelectorAll('.day_selected').forEach(e => e.classList.remove('day_selected'));
+                month_day.classList.add('day_selected');
+            }
+        }
+
+
+        function selecionarDataAtual(dia, mes){
+            let month_day = document.querySelectorAll('.month_container')[mes - 1].querySelectorAll('.month_day:not(.month_day_dummy)')[dia - 1];
+            if ( month_day != null ){
+                document.querySelectorAll('.day_current').forEach(e => e.classList.remove('day_current'));
+                month_day.classList.add('day_current');
+            }
+        }
+        
+
+        function gerarMes( mes, ano, offset = 0 ){
+            const maxDays = (mes == 1 && leapYear(ano))? 29 : DATES[mes];
+
+            let month_container = document.createElement('div');
+            month_container.classList.add('month_container');
+            month_container.setAttribute('monthNumber', mes + 1);
+
+            month_container.innerHTML = `
+            <div class="month_name_container">
+                <div class="month_name">${MONTHS[mes]}</div>
+            </div>
+            <div class="month_content">
+                <div class="month_weekday_container">
+                    <div class="month_weekday">D</div>
+                    <div class="month_weekday">S</div>
+                    <div class="month_weekday">T</div>
+                    <div class="month_weekday">Q</div>
+                    <div class="month_weekday">Q</div>
+                    <div class="month_weekday">S</div>
+                    <div class="month_weekday">S</div>
+                </div>
+                <div class="month_days_container"></div>
+            </div>
+            `;
+
+
+            for (let i = 0; i < offset; i++){
+                let month_day = document.createElement('div');
+                month_day.classList.add('month_day', 'month_day_dummy');
+                month_container.querySelector('.month_days_container').appendChild(month_day);
+            }
+            
+            for (let i = 1; i <= maxDays; i++){
+                let month_day = document.createElement('div');
+                month_day.classList.add('month_day');
+                month_day.innerHTML = leadZero(i);
+                month_container.querySelector('.month_days_container').appendChild(month_day);
+            }
+            
+            calendar_container.appendChild(month_container);
+
+        }
+        
+
+        onload = () => {
+            gerarCalendario( date.getFullYear() );
+            selecionarDataAtual(date.getDate(), date.getMonth() + 1);
+            selectionarData(date.getDate(), date.getMonth() + 1);
+            document.title = date.toLocaleDateString();
+
+            setInterval(()=>{
+                let tempDate = new Date();
+
+                if ( date.getFullYear() != tempDate.getFullYear() ){
+                    date = tempDate;
+                    gerarCalendario( date.getFullYear() );
+                    selecionarDataAtual(date.getDate(), date.getMonth() + 1);
+                }else if ( date.getDate() != tempDate.getDate() ){
+                    date = tempDate;
+                    selecionarDataAtual(date.getDate(), date.getMonth() + 1);
+                }
+                document.title = tempDate.toLocaleDateString();
+
+            }, 1000);
+
+        };
+        
+    </script>
+
+</body>
+</html>

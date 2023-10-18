@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arranjo e Conjuto Simples</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+        #main_screen > div{
+            padding: 10px;
+        }
+
+
+
+        /* HEADER */
+        #main_header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .input_numero{
+            display: block;
+            width: 100%;
+            padding: 8px 10px;
+            outline: none;
+            background-color: inherit;
+            color: #fafafa;
+            border: 1px solid #9e9e9e;
+            border-radius: 8px;
+            transition: 200ms;
+        }
+        .input_numero:focus{
+            border-color: #007bff;
+        }
+
+
+
+        /* CONTENT */
+        #main_content{
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            justify-items: center;
+        }
+
+        .tela_container{
+            width: 100%;
+        }
+
+        .tela_container:first-child{
+            border-right: 1px solid #353535;
+            padding-right: 8px;
+        }
+        .tela_container:last-child{
+            border-left: 1px solid #353535;
+            padding-left: 8px;
+        }
+
+        .formula_nome{
+            color: #888;
+            margin-bottom: 16px;
+            padding-bottom: 4px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 500;
+            border-bottom: 1px solid #353535;
+        }
+
+        .formula{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 16px;
+        } 
+
+        .formula_hidden{
+            visibility: hidden;
+        }
+
+        .formula_linha{
+            width: 100%;
+            height: 2px;
+            background-color: #fff;
+        }
+        .formula_saida{
+            width: 100%;
+            text-align: center;
+            font-weight: 500;
+            border-radius: 8px;
+            border: 1px solid #fff;
+            padding: 8px;
+        }
+
+        
+
+        /* FOOTER */
+        #main_footer{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .botao_footer{
+            padding: 8px 10px;
+            flex: 1;
+            text-align: center;
+            background-color: #353535;
+            color: #bdbdbd;
+            border-radius: 4px;
+        }
+        .botao_footer:active{
+            background-color: #007bff;
+            color: #fafafa;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+    <div id="main_screen">
+        
+        <div id="main_header">
+            <input type="number" class="input_numero" id="input_n" placeholder="Valor: n">
+            <input type="number" class="input_numero" id="input_p" placeholder="Valor: p">
+        </div>
+
+        <div id="main_content">
+            
+            <!-- ARRANJO -->
+            <div class="tela_container">
+                <div class="formula_nome">ARRANJO</div>
+                <div class="formula formula_base">
+                    <div class="formula_dividendo">n!</div>
+                    <div class="formula_linha"></div>
+                    <div class="formula_divisor">(n - p)!</div>
+                </div>
+                <div class="formula formula_hidden">
+                    <div class="formula_dividendo">8!</div>
+                    <div class="formula_linha"></div>
+                    <div class="formula_divisor">(8 - 3)!</div>
+                </div>
+                <div class="formula formula_hidden">
+                    <div class="formula_dividendo">8•7•6•5...2•1</div>
+                    <div class="formula_linha"></div>
+                    <div class="formula_divisor">5•4•3•2•1</div>
+                </div>
+                <div class="formula formula_hidden">
+                    <div class="formula_dividendo">40320</div>
+                    <div class="formula_linha"></div>
+                    <div class="formula_divisor">120</div>
+                </div>
+                <div class="formula_saida formula_hidden">336</div>
+            </div>
+
+            <!-- COMBINAÇÃO -->
+            <div class="tela_container">
+                <div class="formula_nome">COMBINAÇÃO</div>
+                <div class="formula formula_base">
+                    <div class="formula_dividendo">n!</div>
+                    <div class="formula_linha"></div>
+                    <div class="formula_divisor">p!(n - p)!</div>
+                </div>
+                <div class="formula formula_hidden">
+                    <div class="formula_dividendo">8!</div>
+                    <div class="formula_linha"></div>
+                    <div class="formula_divisor">3!(8 - 3)!</div>
+                </div>
+                <div class="formula formula_hidden">
+                    <div class="formula_dividendo">8•7•6•5...2•1</div>
+                    <div class="formula_linha"></div>
+                    <div class="formula_divisor">3•2•1•(5•4•3•2•1)</div>
+                </div>
+                <div class="formula formula_hidden">
+                    <div class="formula_dividendo">40320</div>
+                    <div class="formula_linha"></div>
+                    <div class="formula_divisor">720</div>
+                </div>
+                <div class="formula_saida formula_hidden">56</div>
+            </div>
+
+        </div>
+
+        <div id="main_footer">
+            <div class="botao_footer" onclick="limpar()">Limpar</div>
+            <div class="botao_footer" onclick="calcular()">Calcular</div>
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+        
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+
+        function getArranjo(n, p){
+            return fatorial(n) / fatorial(n - p);
+        }
+        
+        function getCombinacao(n, p){
+            return fatorial(n) / (fatorial(p) * fatorial(n - p));
+        }
+
+        function valorValido(valor){
+            return valor > 0 && !isNaN(valor); 
+        }
+
+        function getFatorialString(n){
+
+            let result = '';
+
+            for (let i = 0; i < n; i++){
+                result += ( i < n-1 )? (n - i + '•') : (n - i);
+                if ( n > 5 && i >= 2 ){
+                    return result + '...2•1';
+                }
+            }
+
+            return result;
+
+        }
+
+        function limpar(){
+            document.querySelectorAll('.formula_saida').forEach(e => {
+                e.classList.add('formula_hidden');
+                e.innerHTML = '';
+            });
+            document.querySelectorAll('.formula:not(.formula_base)').forEach(e => e.classList.add('formula_hidden'));
+            document.querySelectorAll('.formula:not(.formula_base) > div:not(.formula_linha)').forEach(e => e.innerHTML = '');
+        }
+        
+
+        function calcular(){
+            const n = parseFloat(input_n.value);
+            const p = parseFloat(input_p.value);
+
+            if ( !(valorValido(n) && valorValido(p)) ) return;
+
+            document.querySelectorAll('.tela_container').forEach((tela, tela_idx) => {
+
+                tela.querySelectorAll('.formula:not(.formula_base)').forEach((e, i) => {
+
+                    switch (i) {
+                        case 0:
+                            e.querySelector('.formula_dividendo').innerHTML = n + '!';
+                            e.querySelector('.formula_divisor').innerHTML = (tela_idx == 0)? `(${n} - ${p})!` : `${p}!(${n} - ${p})!`;
+                            break;
+                        case 1:
+                            e.querySelector('.formula_dividendo').innerHTML = getFatorialString(n);
+                            e.querySelector('.formula_divisor').innerHTML = (tela_idx == 0)? getFatorialString(n - p) : `${getFatorialString(p)}(${getFatorialString(n - p)})`;
+                            break;
+                        case 2:
+                            e.querySelector('.formula_dividendo').innerHTML = fatorial(n);
+                            e.querySelector('.formula_divisor').innerHTML = (tela_idx == 0)? fatorial(n - p): ( fatorial(p) * fatorial(n - p) );
+                            break;
+                    }
+
+                    e.classList.remove('formula_hidden');
+
+                });
+
+            });
+ 
+            document.querySelectorAll('.tela_container')[0].querySelector('.formula_saida').innerHTML = getArranjo(n, p);
+            document.querySelectorAll('.tela_container')[1].querySelector('.formula_saida').innerHTML = getCombinacao(n, p);
+            document.querySelectorAll('.formula_saida').forEach(e => e.classList.remove('formula_hidden'));
+
+        }
+        
+
+        document.querySelectorAll('.input_numero').forEach((input_numero, index) => {
+
+            input_numero.oninput = (event) => {
+                input_numero.value = parseInt(Math.abs(input_numero.value));
+
+                if ( input_numero.value == 0 ){
+                    input_numero.value = '';
+
+                    if ( index == 1 ){
+                        input_numero.previousElementSibling.focus();
+                    }
+                }
+            };
+
+            input_numero.onkeydown = (event) => {
+
+                if ( event.key == 'Enter' ){
+
+                    if ( index == 0 ){
+                        input_numero.nextElementSibling.focus();
+                    }else{
+                        calcular();
+                    }
+                }
+
+            };
+
+        });
+
+    </script>
+
+</body>
+</html>

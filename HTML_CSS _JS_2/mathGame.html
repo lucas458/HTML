@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Game</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+        /* HEADER */
+        #main_header{
+            width: 100%;
+            height: 58px;
+            box-shadow: 0 0 5px 0 #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* SCORE */
+        #score_wrapper{
+            padding: 0 8px;
+            width: fit-content;
+            height: 100%;
+            font-size: 1.2em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+
+        /* INICAIR/GERAR */
+        #gerar_wrapper{
+            padding: 0 8px;
+            display: flex;
+            gap: 10px;
+        }
+        #gerar_botao{
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #353535; 
+        }
+        #gerar_botao:active{
+            background-color: #9e9e9e;
+            color: #222;
+        }
+         
+
+
+
+        /* CONTENT */
+        #main_content{
+            height: 100%;
+            padding: 8px; 
+            display: flex;
+        }
+
+
+        /* TIMER */
+        #timer_wrapper{
+            flex-shrink: 0;
+            width: 64px;
+            height: 100%; 
+            border: 2px solid #fff;
+            position: relative;
+        }
+        #timer_fill{
+            width: 100%;
+            height: 100%;
+            background-color: rgb(30, 167, 0);
+            border-top: 2px solid #ffffff80;
+            position: absolute;
+            bottom: 0;
+        }
+
+        /* JOGO */
+        #main_game{
+            width: 100%;
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* FORMULA */
+        #formula{
+            font-size: 1.5em;
+            text-align: right;
+            display: flex;
+            align-items: center;
+        }
+        #sinal{
+            font-size: 1.2em;
+        }
+        #valores{
+            width: 100%;
+        }
+        #linha{
+            width: 100%;
+            height: 1px;
+            background-color: #fff;
+        }
+
+
+        /* ALTERNATIVAS */
+        #resposta_lista{
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .resposta_botao{
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: 1px solid #fff;
+        }
+        .resposta_botao:active{
+            background-color: #9e9e9e;
+            color: #222;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+
+    <div id="main_screen">
+
+        <!-- HEADER -->
+        <div id="main_header">
+            <div id="score_wrapper">
+                <div id="score_label">Pontos:</div>
+                <div id="score_valor">0</div>
+            </div>
+            
+            <div id="gerar_wrapper">
+                <div id="gerar_botao">&circlearrowleft;</div> 
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div id="main_content">
+            <div id="timer_wrapper">
+                <div id="timer_fill"></div>
+            </div>
+
+            <div id="main_game" style="visibility: hidden;">
+                <div id="formula">
+                    <div id="sinal">+</div>
+                    <div id="valores">
+                        <div id="valor_A"></div>
+                        <div id="valor_B"></div>
+                        <div id="linha"></div>
+                    </div>
+                </div>
+
+                <div id="resposta_lista">
+                    <div class="resposta_botao"></div>
+                    <div class="resposta_botao"></div>
+                    <div class="resposta_botao"></div>
+                    <div class="resposta_botao"></div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+
+        var PONTOS = 0;
+        var TIMER = 100;
+        var subTimer = 0;
+        var RUNNING = false;
+
+
+        function setPontos(n){
+            PONTOS = n;
+            score_valor.innerHTML = PONTOS.toLocaleString();
+        }
+
+
+        function gerarNumeros(){
+            const max  = (Math.random() <= 0.5)? 1000 : 100;
+            let valorA = getRandomInt(1, max);
+            let valorB = getRandomInt(1, 100);
+            while ( valorA + valorB >= max ){
+                valorA = getRandomInt(1, max);
+                valorB = getRandomInt(1, 100);
+            }
+            if ( valorA < valorB ){
+                return [valorB, valorA];
+            }
+            return [valorA, valorB];
+        }
+
+
+        function gerarAlternativas(){
+            let temp = [];
+            const base = gerarNumeros();
+            temp.push(base[0] + base[1]);
+
+            while ( temp.length < 4 ){
+                const valor = getRandomInt(1, 1000);
+                if ( temp.indexOf(valor) < 0 ){
+                    temp.push(valor);
+                }
+            }
+
+            shuffleArray(temp);
+
+            valor_A.innerHTML = base[0];
+            valor_B.innerHTML = base[1];
+
+            document.querySelectorAll('.resposta_botao_correct').forEach(e => e.classList.remove('resposta_botao_correct'));
+
+            document.querySelectorAll('.resposta_botao').forEach((e, i) => {
+                e.innerHTML = temp[i];
+                if ( temp[i] == base[0] + base[1]){
+                    console.warn('correto: ', i);
+                    e.classList.add('resposta_botao_correct');
+                }
+            });
+            main_game.style.visibility = '';
+            setTimer(100); 
+            RUNNING = true;
+
+        }
+
+        
+         
+        gerar_botao.onclick = gerarAlternativas;
+         
+
+
+        document.querySelectorAll('.resposta_botao').forEach(resposta_botao => {
+            resposta_botao.onclick = () => {
+                const valor = parseInt(valor_A.innerHTML) + parseInt(valor_B.innerHTML);
+                if ( parseInt(resposta_botao.innerHTML) == valor ){
+                    console.log('pass');
+                    PONTOS += 10;
+                }else{
+                    console.log('fail');
+                    PONTOS -= 15;
+                }
+                setPontos(PONTOS);
+                gerarAlternativas();
+            };
+        });
+
+
+        function setTimer(n){
+            TIMER = Math.clamp(n, 0, 100);
+            timer_fill.style.height = TIMER + '%';
+        }
+
+
+        function update(){
+            requestAnimationFrame(update);
+
+            if ( !RUNNING ) return;
+
+            if ( subTimer++ > 4 ){
+                subTimer = 0;
+                setTimer(TIMER - 1);
+                if (TIMER <= 0){
+                    console.warn('timeout');
+                    gerarAlternativas();
+                    setPontos(PONTOS - 15);
+                }
+            }
+
+            let r = 255 - Math.sin(TIMER / 100) * 255 - 10;
+            let g = 255 - Math.cos(TIMER / 100) * 255 + 50;
+            timer_fill.style.backgroundColor = `rgb(${r},${g}, 0)`;
+        }
+
+
+        onload = update;
+        
+
+    </script>
+
+
+</body>
+</html>

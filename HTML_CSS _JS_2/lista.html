@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+
+        #lista{
+            padding: 8px;
+        }
+
+        .item{
+            padding: 8px;
+            background-color: #353535; 
+        }
+
+
+ 
+
+        #lista:has(.item_selecionado) .item:not(.item_selecionado){
+            opacity: 0.5;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+        <div id="lista">
+
+            <div class="item">batata</div>
+            <div class="item">uva</div>
+            <div class="item">leite</div>
+            <div class="item">iogurte</div>
+            <div class="item">macarrão</div>
+            <div class="item">laranja</div>
+            <div class="item">maçã</div>
+            <div class="item">sorvete</div>
+            <div class="item">biscoito</div>
+            <div class="item">sabão</div>
+            <div class="item">sabonete</div>
+            <div class="item">detergente</div>
+
+        </div>
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+
+
+
+
+        document.querySelectorAll('.item').forEach(item => {
+
+            item.onmousemove = item.onmouseleave = (event) => {
+                const mouseEnter = event.type == 'mousemove';
+                item.classList.toggle('item_selecionado', mouseEnter); 
+            };
+
+        });
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

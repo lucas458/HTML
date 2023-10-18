@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #fff;
+            color: #000;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+        
+
+
+        /**** MAIN HEADER ****/
+        #main_header{
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        /* LABEL LEFT */
+        #main_header_label{
+            color: #9eaaaa;
+            font-size: 2.5em;
+            font-weight: bold;
+            line-height: 1.2em;
+        }
+        #main_header_subLabel{
+            font-size: 0.8em;
+            white-space: pre;
+        }
+
+
+        /* CONTROLS RIGHT */
+        #main_header_controls{
+            font-weight: 500;
+            color: #41afbe;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .main_header_control_button{
+            height: 32px;
+            padding: 2px 4px;
+            border-radius: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+        }
+        .main_header_control_button:active{
+            background-color: #eee;
+        }
+        
+
+
+        /**** MAIN CONTENT ****/
+        #main_content{
+            position: relative;
+            height: 100%;
+        }
+        .screen_active{
+            display: block !important;
+        }
+        .screen{
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+        .screen_content{
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- CALENDAR VIEW --- */
+        #calendar_grid_list{
+            display: grid;
+            grid-template-columns: repeat(3, 100%);
+            position: relative;
+            left: -100%;
+        }
+        .calendar_grid{
+            width: 100%;
+            height: 100%;
+            padding: 4px;
+            padding-top: 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .calendar_month_container{
+            font-weight: 500;
+            color: #272727;
+        }
+        .calendar_month{
+            padding: 0 4px;
+            font-size: 1em;
+        }
+        .calendar_weekday{
+            color: #9eaaaa;
+        }
+        
+        .calendar_weekday,
+        .calendar_date{
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-size: 0.7em;
+        }
+        .calendar_date{
+            grid-template-rows: repeat(6, 1fr);
+            gap: 2px; 
+        }
+        .calendar_weekday_slot:last-child,
+        .calendar_date_slot:nth-child(7n){
+            color: #dc3545;
+        }
+        .calendar_current{
+            color: #41afbe !important;
+        }
+
+
+        /* --- MONTH VIEW --- */
+        #month_weekdays_container{
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); 
+            text-align: center;
+            font-size: 0.8em;
+            padding: 0 20px;
+            padding-top: 4px;
+        }
+        #month_weekdays_container::before{
+            content: '';
+            display: block;
+            width: calc(100% - 40px);
+            height: 1px;
+            background-color: #41afbe;
+            position: absolute;
+        }
+        .month_weekday{
+            margin-top: 4px;
+        }
+        .month_weekday:last-child{
+            color: #dc3545;
+        }
+
+        #month_grid_list{ 
+            display: grid;
+            grid-template-columns: repeat(3, 100%); 
+            position: relative;
+            left: -100%;
+        }
+
+        .month_grid{
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            text-align: center;
+        }
+        .month_date_slot{
+            padding: 4px;
+            border: 1px solid transparent;
+            font-weight: 500;
+            color: #252525;
+        }
+        .month_date_slot:nth-child(7n){
+            color: #dc3545;
+        }
+        .month_date_slot_selected{
+            border-color: #41afbe;
+        }
+        .month_date_slot_current{
+            color: #41afbe !important;
+        }
+        .month_date_slot::after{
+            content: '';
+            display: block;
+            width: 100%;
+            height: 2px;
+        }
+        .month_date_slot_event::after{ 
+            background-color: #41afbe;
+        }
+        .month_date_slot_before,
+        .month_date_slot_after{
+            opacity: 0.5;
+        }   
+
+
+        /* MONTH EVENT */
+        #month_event_list{
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .month_event{
+            font-weight: 500;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+        .month_event::before{
+            content: '';
+            display: block;
+            width: 6px;
+            height: 6px;
+            background-color: #16a764; 
+            flex-shrink: 0; 
+            margin-right: 10px;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+    <div id="main_screen">
+
+        <div id="main_header">
+            <div id="main_header_content">
+                <div id="main_header_label"></div>
+                <div id="main_header_subLabel"></div>
+            </div>
+
+            <div id="main_header_controls">
+                <div class="main_header_control_button" onclick="onClickToday()">HOJE</div>
+            </div>
+        </div>
+
+
+        <div id="main_content">
+            
+            <!-- CALENDAR VIEW -->
+            <div class="screen">
+                <div class="screen_content">
+                    <div id="calendar_grid_list">
+                        <div class="calendar_grid"></div>
+                        <div class="calendar_grid"></div>
+                        <div class="calendar_grid"></div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <!-- MONTH VIEW -->
+            <div class="screen screen_active">
+                <div class="screen_content">
+                    <div id="month_weekdays_container">
+                        <div class="month_weekday">SEG</div>
+                        <div class="month_weekday">TER</div>
+                        <div class="month_weekday">QUA</div>
+                        <div class="month_weekday">QUI</div>
+                        <div class="month_weekday">SEX</div>
+                        <div class="month_weekday">SÁB</div>
+                        <div class="month_weekday">DOM</div>
+                    </div>
+
+                    <div id="month_grid_list">
+                        <div class="month_grid"></div>
+                        <div class="month_grid"></div>
+                        <div class="month_grid"></div>
+                    </div>
+                    
+                    <div id="month_event_list"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+        
+
+        const MONTHS = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
+
+
+        const EVENTS = [
+
+            // JANEIRO
+            {
+                1: ["Ano Novo"]
+            },
+            //FEVEREIRO
+            {
+                12: ["Cinzas"]
+            },
+            //MARÇO
+            {},
+            //ABRIL
+            {
+                7: ["Paixão de Cristo"],
+                21: ["Tiradentes"]
+            },
+            //MAIO
+            {
+                1: ["Dia do Trabalho"]
+            },
+            //JUNHO
+            {
+                7: ["Dia Nacional da Liberdade de Imprensa"],
+                12: ["Dia dos Namorados"]
+            },
+            //JULHO
+            {},
+            //AGOSTO
+            {},
+            //SETEMBRO
+            {
+                7: ["Independência"]
+            },
+            //OUTUBRO
+            {
+                12: ["Nossa Senhora de Aparecida", "Dia das Crianças"],
+                15: ["Dia do Prefessor"],
+                28: ["Dia do Servidor Público"]
+            },
+            //NOVEMBRO
+            {
+                2: ["Finados"],
+                15: ["Proclamação da República"],
+                20: ["Dia da Consciência Negra"]
+            },
+            //DEZEMBRO
+            {
+                24: ["Véspera de Natal"],
+                25: ["Natal"],
+                31: ["Véspera de Ano Novo"]
+            }
+
+        ];
+
+        
+        var tocuh_init    = {x: 0, y: 0};
+        var tocuh_canMove = false;
+        
+        var currentDateObject   = new Date();
+        var currentYearView     = currentDateObject.getFullYear();
+        var currentMonthView    = currentDateObject.getMonth() + 1;
+        var currentDateView     = currentDateObject.getDate();
+        
+
+
+        function onTouchStartByReference( element ){
+            element.ontouchstart = (event) => {
+                tocuh_init.x = event.touches[0].clientX - element.offsetLeft;
+                tocuh_init.y = event.touches[0].clientY - element.offsetTop;
+            };
+        }
+
+        onTouchStartByReference(calendar_grid_list);
+        onTouchStartByReference(month_grid_list);
+        
+
+
+        function onTouchEndByReference( element, callback ){
+
+            element.ontouchend = () => {
+                tocuh_canMove = false;
+                const indexScreen = Math.round(-element.offsetLeft / element.offsetWidth);
+                element.style.transition = '200ms';
+                element.style.left = (-360 * indexScreen) + 'px';
+
+                setTimeout(()=>{
+                    if ( indexScreen != 1 ){
+                        element.insertBefore(element.lastElementChild, element.children[ (indexScreen + 2) % 3 ]); 
+                        element.style.transition = '';
+                        element.style.left = (-element.offsetWidth) + 'px';
+                    }
+                    callback(indexScreen);
+                }, 200);
+            };
+
+        }
+
+
+        onTouchEndByReference(calendar_grid_list, (indexScreen)=>{
+            if ( indexScreen == 0 ){
+                currentYearView--;
+            }else if ( indexScreen == 2 ){
+                currentYearView++;
+            }
+
+            if ( indexScreen != 1 ){
+                generateCalendarGridList(currentYearView);
+            }
+        });
+
+
+        onTouchEndByReference(month_grid_list, (indexScreen)=>{
+            if ( indexScreen == 0 ){
+                if ( --currentMonthView < 1 ){
+                    currentMonthView = 12;
+                    currentYearView--;
+                }
+            }else if ( indexScreen == 2 ){
+                if ( ++currentMonthView > 12 ){
+                    currentMonthView = 1;
+                    currentYearView++;
+                }
+            }
+            
+            if ( indexScreen != 1 ){ 
+                generateMonthGridList(0, currentMonthView, currentYearView, true);
+            }
+        });
+        
+
+
+        function onTouchMoveByReference( element ){
+            element.ontouchmove = (event) => {
+
+                const touch_diff = {
+                    x: event.touches[0].clientX - tocuh_init.x,
+                    y: event.touches[0].clientY - tocuh_init.y
+                };
+                
+                if  ( Math.abs(touch_diff.x) > 10 || tocuh_canMove ){
+                    tocuh_canMove = true;
+                    const posX = Math.clamp(touch_diff.x, -element.offsetWidth * (element.children.length - 1), 0);
+                    element.style.transition = '';
+                    element.style.left = (posX) + 'px';
+                }
+    
+            };
+        }
+
+        onTouchMoveByReference(calendar_grid_list);
+        onTouchMoveByReference(month_grid_list);
+        
+
+
+        function onClickToday(){
+            // current year
+            if ( main_content.children[0] == document.querySelector('.screen_active') ){ 
+                currentYearView = currentDateObject.getFullYear();
+                generateCalendarGridList(currentYearView);
+                return;
+            }
+            
+            currentDateView  = currentDateObject.getDate();
+            currentMonthView = currentDateObject.getMonth() + 1;
+            currentYearView  = currentDateObject.getFullYear();
+            generateMonthGridList(currentDateView, currentMonthView, currentYearView, true);
+        }
+
+
+        function onMonthClick( month ){ 
+            const year = parseInt(main_header_label.innerHTML); 
+            console.log('month clicked', month, year);
+            currentDateView = 1;
+            currentMonthView = month;
+            currentYearView = year;
+            generateMonthGridList(0, currentMonthView, currentYearView, true);
+            setActiveScreenByIndex(1);
+        }
+
+
+        function showEventsByMonthDate( date, month ){
+            month_event_list.innerHTML = '';
+            if ( EVENTS[month-1][date] != null ){
+                EVENTS[month-1][date].forEach(e => {
+                    let month_event = document.createElement('div');
+                    month_event.classList.add('month_event');
+                    month_event.innerHTML = e;
+                    month_event_list.appendChild(month_event);
+                });
+            }
+        }
+
+
+        function onDateClick(element){
+            currentDateView = parseInt( element.innerHTML ); 
+            document.querySelectorAll('.month_date_slot_selected').forEach(e => e.classList.remove('month_date_slot_selected'));
+            generateMonthGridList(currentDateView, currentMonthView, currentYearView, true); 
+        }
+
+
+        function setActiveScreenByIndex( index = 1 ){
+            document.querySelector('.screen_active').classList.remove('screen_active');
+            document.querySelectorAll('.screen')[index].classList.add('screen_active');
+        }
+        
+
+        main_header_label.onclick = () => {
+            // month text click
+            if ( isNaN(main_header_label.innerHTML) ){
+                console.log('show by year');
+                generateCalendarGridList( currentYearView );
+                setActiveScreenByIndex(0);
+            }
+        };
+
+
+        function generateCalendarByYear( year, index = 1 ){
+            const dateCurrent = new Date();
+            calendar_grid_list.children[index].innerHTML = '';
+
+            for (let month = 1; month <= 12; month++){
+                const dayStart = new Date(year, month - 1, 1).getDay();
+
+                let calendar_month_container = document.createElement('div');
+                calendar_month_container.classList.add('calendar_month_container');
+                calendar_month_container.onclick = () => { onMonthClick(month); };
+
+                calendar_month_container.innerHTML = `
+                <div class="calendar_month">${MONTHS[month-1].toLowerCase()}</div>
+                <div class="calendar_weekday">
+                    <div class="calendar_weekday_slot">S</div>
+                    <div class="calendar_weekday_slot">T</div>
+                    <div class="calendar_weekday_slot">Q</div>
+                    <div class="calendar_weekday_slot">Q</div>
+                    <div class="calendar_weekday_slot">S</div>
+                    <div class="calendar_weekday_slot">S</div>
+                    <div class="calendar_weekday_slot">D</div>    
+                </div>
+                <div class="calendar_date"></div>`;
+                
+
+                for (let i = 0; i < (dayStart + 6) % 7; i++){
+                    let calendar_date_slot = document.createElement('div');
+                    calendar_date_slot.classList.add('calendar_date_slot');
+                    calendar_month_container.querySelector('.calendar_date').appendChild(calendar_date_slot);
+                }
+
+                for (let i = 1; i <= new Date(year, month, 0).getDate(); i++){
+                    let calendar_date_slot = document.createElement('div');
+                    calendar_date_slot.classList.add('calendar_date_slot');
+                    calendar_date_slot.innerHTML = i;
+                    calendar_month_container.querySelector('.calendar_date').appendChild(calendar_date_slot);
+
+                    if ( (i == dateCurrent.getDate()) && (month == dateCurrent.getMonth() + 1) && (year == dateCurrent.getFullYear()) ){
+                        calendar_date_slot.classList.add("calendar_current");
+                        calendar_month_container.querySelector('.calendar_month').classList.add('calendar_current');
+                    }
+
+                }
+
+                calendar_grid_list.children[index].appendChild(calendar_month_container);
+
+            }
+
+        }
+
+
+        function generateCalendarGridList( yearToView ){
+            generateCalendarByYear(yearToView - 1, 0);
+            generateCalendarByYear(yearToView, 1);
+            generateCalendarByYear(yearToView + 1, 2);
+            main_header_label.innerHTML = yearToView;
+            main_header_subLabel.innerHTML = ' ';
+        }
+        
+
+        function generateMonth( day, month, year, index = 1, forceSelection = false ){
+            
+            if ( month > 12 ){
+                month = 1;
+                year++;
+            }else if ( month < 1 ){
+                month = 12;
+                year--;
+            }
+            
+            month_grid_list.children[index].innerHTML = '';
+            const dayStart       = (new Date(year, month - 1, 1).getDay() + 6) % 7;
+            const maxMonth       = new Date(year, month, 0).getDate();
+            const dateBefore     = new Date(year, month - 1, 0);
+            const maxMonthBefore = new Date(year, month - 1, 0).getDate();
+            
+
+            // days before
+            for (let i = 0; i < dayStart; i++){
+                let month_date_slot = document.createElement('div');
+                month_date_slot.classList.add('month_date_slot', 'month_date_slot_before');
+                month_date_slot.innerHTML = maxMonthBefore - dayStart + 1 + i;
+                month_grid_list.children[index].appendChild(month_date_slot);
+                
+                try{
+                    month_date_slot.classList.toggle('month_date_slot_event', EVENTS[month == 12? 0 : month - 2][month_date_slot.innerHTML] != null);
+                }catch(e){}
+
+                month_date_slot.onclick = () => { 
+                    currentDateView = parseInt(month_date_slot.innerHTML);
+                    currentMonthView = dateBefore.getMonth() + 1;
+                    currentYearView = dateBefore.getFullYear();
+                    generateMonthGridList(currentDateView, currentMonthView, currentYearView, true);
+                };
+            }
+             
+
+            // month days
+            for (let date = 1; date <= maxMonth; date++){
+                let month_date_slot = document.createElement('div');
+                month_date_slot.classList.add('month_date_slot');
+                month_date_slot.classList.toggle('month_date_slot_event', EVENTS[month - 1][date] != null);
+                month_date_slot.innerHTML = date;
+                month_grid_list.children[index].appendChild(month_date_slot);
+                month_date_slot.onclick = () => { onDateClick(month_date_slot); };
+            }
+
+            
+            // days after
+            for (let i = 1; i <= 42 - (maxMonth + dayStart); i++){
+                let month_date_slot = document.createElement('div');
+                month_date_slot.classList.add('month_date_slot', 'month_date_slot_after');
+                month_date_slot.innerHTML = i;
+                month_grid_list.children[index].appendChild(month_date_slot);
+                month_date_slot.classList.toggle('month_date_slot_event', EVENTS[month % 12][i] != null);
+                
+                month_date_slot.onclick = () => {
+                    currentDateView = i;
+                    if ( ++currentMonthView > 12 ){
+                        currentMonthView = 1;
+                        currentYearView++;
+                    }
+                    generateMonthGridList(currentDateView, currentMonthView, currentYearView, true);
+                };
+            }
+
+
+            if ( (month == (currentDateObject.getMonth() + 1)) && (year == currentDateObject.getFullYear()) ){
+                month_grid_list.children[index].querySelectorAll('div:not(.month_date_slot_before)')[currentDateObject.getDate() - 1].classList.add('month_date_slot_current');
+                if ( forceSelection && day == 0 ){
+                    month_grid_list.children[index].querySelectorAll('div:not(.month_date_slot_before)')[currentDateObject.getDate() - 1].classList.add('month_date_slot_selected');
+                    forceSelection = false; 
+                }
+            }
+
+            if ( forceSelection ){
+                if ( day == 0 ){
+                    currentDateView = 1;
+                }
+                month_grid_list.children[index].querySelectorAll('div:not(.month_date_slot_before)')[day == 0? 0 : day - 1].classList.add('month_date_slot_selected');
+            }
+            
+            showEventsByMonthDate(currentDateView, currentMonthView); 
+        }
+
+
+        function generateMonthGridList( day, month, year, forceSelection = false ){
+            generateMonth(1, month-1, year, 0);
+            generateMonth(day, month, year, 1, forceSelection);
+            generateMonth(1, month+1, year, 2);
+            main_header_label.innerHTML = MONTHS[month - 1 ].substr(0,3);
+            main_header_subLabel.innerHTML = year;
+        }
+        
+
+
+        onload = () => {
+            generateMonthGridList(currentDateView, currentMonthView, currentYearView, true);
+            setInterval(()=>{
+                const tempDate = new Date();
+                if ( currentDateObject.getDate() != tempDate.getDate() ){
+                    currentDateObject = tempDate;
+                    if ( !isNaN(main_header_label.innerHTML) ){
+                        generateCalendarGridList( currentYearView );
+                    }
+                }
+            }, 1000);
+            
+        };
+        
+    </script>
+
+</body>
+</html>

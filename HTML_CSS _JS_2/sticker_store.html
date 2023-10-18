@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticker Store</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #fff;
+            color: #000;
+			user-select: none;
+        }
+
+
+
+        .screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        } 
+
+        .screen > div{
+            padding: 8px;
+        }
+
+        .screen_header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center; 
+        }
+        .screen_header_label{
+            flex-grow: 1;
+            padding: 0 8px; 
+        }
+        
+        .screen_header{
+            background-color: #36897f;
+            color: #fff;
+        }
+
+        .screen_header_button{
+            position: relative;
+        }
+
+        .screen_header_button:active{
+            opacity: .8;
+            background-color: #205c54;
+            border-radius: 8px;
+        }
+
+        .screen_header_badge{
+            font-size: .6em;
+            padding: 0 4px;
+            background-color: #dc3545;
+            border-radius: 5px;
+            position: absolute;
+            right: 0;
+            top: 0;   
+        }
+        .screen_header_badge:empty{
+            display: none;
+        }
+
+
+        .screen_content{
+            height: 100%;
+            overflow: auto;
+            background-color: #205c54;
+        }
+
+
+        .screen_header,
+        .screen_footer{
+            flex-shrink: 0;
+        }
+        
+        .icon{
+            width: 32px;
+            height: 32px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+
+        
+
+        /* ITEM STORE: ITEM */
+
+        .item_store{
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px; 
+            background-color: #36897f80;
+            border-radius: 8px;
+            padding: 8px;
+        } 
+ 
+        
+
+        .item_store_img{
+            width: 48px;
+            height: 48px; 
+            background-size: 100%;
+        }
+
+        .item_store_content{
+            padding: 0 8px;
+            flex: 1;
+        }
+
+        .item_store_title{
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .item_store_subTitle{
+            color: #e0e0e0;
+        }
+
+         
+
+        .item_sticker_button{
+            width: 40px;
+            height: 40px;
+            background-color: #36897f;
+            color: #fff;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        } 
+
+
+
+
+
+
+        /* ITEM STORE: GROUP */
+
+        .item_store_pack{
+            display: flex;
+            flex-direction: column;
+            align-items: normal;
+            gap: 8px;
+        }
+
+        .item_store_header{
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+ 
+
+        .item_store_group{
+            overflow: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .item_store_group_item{
+            width: 96px; 
+            background-color: #205c5480;
+            color: #fff;
+            padding: 8px;
+            flex-shrink: 0;
+            border-radius: 8px;
+        }
+
+        .item_store_group_item_more{
+            width: fit-content;
+            aspect-ratio: 1/1;
+            background-color: #205c5480;
+            color: #e0e0e0;
+            border-radius: 16px;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 8px;
+        }
+
+        .item_store_group_item_img{
+            width: 100%;
+            aspect-ratio: 1 / 1; 
+            background-size: 100%;
+        }
+
+
+        .item_store_group_item_title{
+            text-align: center;
+            margin-top: 8px;
+            line-clamp: 1;
+
+        }
+
+
+
+
+
+
+        /* MODAL STICKERS */
+
+        #modal_sticker{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            background-color: #00000080;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #modal_window{
+            width: 85%;
+            color: #fff;
+            box-shadow: 0 0 5px 0 #000;
+        }
+        #modal_window > div{
+            padding: 8px;
+        }
+
+        #modal_header{
+            background-color: #36897f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #modal_title{
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+        #modal_subTitle{
+            font-size: .8em;
+            color: #e0e0e0;
+        }
+
+        #modal_close{
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #dc3545;
+            border-radius: 50%;
+        }
+
+
+        #modal_content{
+            overflow: hidden auto;
+            height: 320px;
+            display: grid;
+            gap: 16px 4px;
+            grid-template-columns: repeat(4, 1fr);
+            background-color: #205c54;
+        }
+
+         
+        
+        .modal_img{
+            width: 100%; 
+            height: max-content;
+            aspect-ratio: 1/1;
+            background-size: 100%;
+        }
+        .modal_title{
+            text-align: center;
+        }
+
+
+        #modal_header,
+        #modal_footer{
+            flex-shrink: 0;
+        }
+
+
+
+        #modal_footer{
+            display: flex;
+            justify-content: flex-end;
+            background-color: #205c54;
+        }
+
+        #modal_button{
+            padding: 4px 8px;
+            background-color: #36897f;
+            border-radius: 4px;
+            width: fit-content;
+            display: flex; 
+        }
+
+        #modal_button > span{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 2px;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    <!-- MAIN SCREEN -->
+    <div class="screen" id="main_screen">
+
+
+        <div class="screen_header">
+
+            <div class="screen_header_button icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                </svg>
+            </div>
+
+            <div class="screen_header_label">Sticker Store</div>
+
+            <div class="screen_header_button icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+                <div class="screen_header_badge">1</div>
+            </div>
+
+        </div>
+
+
+
+
+        <div class="screen_content">
+            
+
+            <!-- ITEM -->
+            <div class="item_store item_store_sticker">
+
+                <div class="item_store_img"></div>
+
+                <div class="item_store_content">
+                    <div class="item_store_title">Nome do sticker</div>
+                    <div class="item_store_subTitle">R$ 0,50 &bull; criador aqui</div>
+                </div>
+
+                <div class="item_sticker_button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9V5.5z"/>
+                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+
+
+            
+            <!-- ITEM GROUP -->
+            <div class="item_store item_store_pack">
+                
+                <div class="item_store_header">
+
+                    <div class="item_store_content">
+                        <div class="item_store_title">Nome do grupo (50)</div>
+                        <div class="item_store_subTitle">R$ 1,50 &bull; criador aqui</div> 
+                    </div>
+
+                    <div class="item_sticker_button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9V5.5z"/>
+                            <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                        </svg>
+                    </div>
+
+                </div>
+
+                <div class="item_store_group">
+
+                    <div class="item_store_group_item">
+                        <div class="item_store_group_item_img"></div>
+                        <div class="item_store_group_item_title">Nome do sticker</div>
+                    </div>
+
+                    <div class="item_store_group_item">
+                        <div class="item_store_group_item_img"></div>
+                        <div class="item_store_group_item_title">Nome do sticker</div>
+                    </div>
+
+                    <div class="item_store_group_item item_store_group_item_more">Mostar</div>
+
+                </div>
+
+            </div>
+
+        </div> 
+
+
+
+    </div>
+
+
+
+
+
+
+    <div id="modal_sticker" style="display: none;">
+
+        <div id="modal_window">
+
+            <div id="modal_header">
+                <div id="modal_content_header">
+                    <div id="modal_title">titulo (8)</div>
+                    <div id="modal_subTitle">autor</div>
+                </div>
+                <div id="modal_close" onclick="setVisibilityStickerGridModal(false)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                    </svg>
+                </div>
+            </div>
+    
+            <div id="modal_content">
+                <div class="modal_item">
+                    <div class="modal_img"></div>
+                    <div class="modal_title">nome aqui</div>
+                </div>
+                <div class="modal_item">
+                    <div class="modal_img"></div>
+                    <div class="modal_title">nome aqui</div>
+                </div>
+            </div>
+
+            <div id="modal_footer">
+                <div id="modal_button">
+                    <span>Adicionar</span>
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9V5.5z"></path>
+                            <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"></path>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+        
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+
+
+
+
+
+
+        const STICKER_DATABASE = [
+
+            {
+                "type": "sticker",
+                "name": "Estrela Sorridende",
+                "autor": "NajmunNahar",
+                "img": "https://cdn-icons-png.flaticon.com/128/11144/11144254.png",
+                "price": 0.5
+            },
+
+            {
+                "type": "container",
+                "name": "Musicos",
+                "autor": "Freepik",
+                "price": 1.5,
+                "items": [
+
+                    {
+                        "name": "Pianista",
+                        "img": "https://cdn-icons-png.flaticon.com/128/11941/11941162.png"
+                    },
+                    {
+                        "name": "Pianista",
+                        "img": "https://cdn-icons-png.flaticon.com/128/11941/11941170.png"
+                    },
+                    {
+                        "name": "Bateriasta",
+                        "img": "https://cdn-icons-png.flaticon.com/128/11941/11941178.png"
+                    },
+                    {
+                        "name": "Bateriasta",
+                        "img": "https://cdn-icons-png.flaticon.com/128/11941/11941186.png"
+                    },
+                    {
+                        "name": "Bateriasta",
+                        "img": "https://cdn-icons-png.flaticon.com/128/11941/11941196.png"
+                    },
+                    {
+                        "name": "Banda Marcial",
+                        "img": "https://cdn-icons-png.flaticon.com/128/11941/11941205.png"
+                    },
+                    {
+                        "name": "Banda Marcial",
+                        "img": "https://cdn-icons-png.flaticon.com/128/11941/11941214.png"
+                    },
+                    {
+                        "name": "Banda Marcial",
+                        "img": "https://cdn-icons-png.flaticon.com/128/11941/11941221.png"
+                    }
+                ]
+            },
+
+            {
+                "type": "sticker",
+                "name": "Caranqueijo",
+                "autor": "Freepik",
+                "img": "https://cdn-icons-png.flaticon.com/128/11899/11899230.png",
+                "price": 0.5
+            },
+
+            
+            {
+                "type": "sticker",
+                "name": "Pinguim",
+                "autor": "Freepik",
+                "img": "https://cdn-icons-png.flaticon.com/128/11899/11899202.png",
+                "price": 0.5
+            },
+
+
+            {
+                "type": "container",
+                "name": "Materias de Construção e Ferramentas",
+                "autor": "Freepik",
+                "price": 1.0,
+                "items": [
+                    {
+                        "name": "Martelo",
+                        "img": "https://cdn-icons-png.flaticon.com/128/11161/11161472.png"
+                    },
+                    {
+                        "name": "Furadeira",
+                        "img": "https://cdn-icons-png.flaticon.com/128/11161/11161505.png"
+                    },
+                    {
+                        "name": "Capacete",
+                        "img": "https://cdn-icons-png.flaticon.com/128/11161/11161518.png"
+                    }, 
+                    {
+                        "name": "Chave Inglesa",
+                        "img": "https://cdn-icons-png.flaticon.com/128/11161/11161495.png"
+                    }, 
+                ]
+            },
+
+
+
+        ];
+
+
+
+
+        
+        var main_screen = document.getElementById("main_screen");
+
+
+
+        function createStoreItem( obj ){
+
+            let item = document.createElement('div');
+            item.classList.add("item_store");
+            item.classList.add("item_store_sticker");
+
+            item.innerHTML = `
+            <div class="item_store_img" style="background-image: url('${obj.img}')"></div>
+            <div class="item_store_content">
+                <div class="item_store_title">${obj.name}</div>
+                <div class="item_store_subTitle">${new Intl.NumberFormat('pt', { style: 'currency', currency: 'BRL' }).format(obj.price)} &bull; ${obj.autor}</div>
+            </div>
+            <div class="item_sticker_button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9V5.5z"/>
+                    <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                </svg>
+            </div>`;
+
+            main_screen.querySelector(".screen_content").appendChild(item);
+
+        }
+
+
+
+
+        function createStoreGroup( obj ){
+
+            let item = document.createElement('div');
+            item.classList.add("item_store");
+            item.classList.add("item_store_pack");
+
+            item.innerHTML = `
+            <div class="item_store_header">
+                <div class="item_store_content">
+                    <div class="item_store_title">${obj.name} (${obj.items.length})</div>
+                    <div class="item_store_subTitle">${new Intl.NumberFormat('pt', { style: 'currency', currency: 'BRL' }).format(obj.price)} &bull; ${obj.autor}</div>
+                </div>
+                <div class="item_sticker_button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9V5.5z"/>
+                        <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="item_store_group"></div>`;
+
+            for (let i = 0; i < obj.items.length; i++){
+                
+                if ( i >= 5 ){
+
+                    let item_store_group_item_more = document.createElement('div');
+                    item_store_group_item_more.classList.add('item_store_group_item');
+                    item_store_group_item_more.classList.add('item_store_group_item_more');
+                    item_store_group_item_more.innerHTML = 'Mostar';
+
+                    item_store_group_item_more.onclick = () => {
+                        generateStickerGridModal(obj);
+                    };
+
+                    item.querySelector(".item_store_group").appendChild(item_store_group_item_more);
+                    break;
+                }
+
+                let grupoItem = document.createElement('div');
+                grupoItem.classList.add('item_store_group_item');
+                grupoItem.innerHTML = `
+                <div class="item_store_group_item_img" style="background-image: url('${obj.items[i].img}')"></div>
+                <div class="item_store_group_item_title">${obj.items[i].name}</div>`;
+
+                item.querySelector(".item_store_group").appendChild(grupoItem);
+
+            }
+            
+            main_screen.querySelector(".screen_content").appendChild(item);
+
+        }
+
+
+
+        function generateContent(){
+
+            main_screen.querySelector(".screen_content").innerHTML = '';
+
+            STICKER_DATABASE.forEach(e => {
+                if ( e.type == "sticker" ){
+                    createStoreItem(e);
+                }else{
+                    createStoreGroup(e);
+                }
+            });
+
+        }
+
+
+        function setVisibilityStickerGridModal( state = false ){
+            modal_sticker.style.display = (state)? 'flex' : 'none';
+        }
+
+
+        function generateStickerGridModal( obj ){
+            console.log('pass', obj);
+
+            modal_content.innerHTML = '';
+
+            modal_title.innerHTML = `${obj.name} (${obj.items.length})`;
+            modal_subTitle.innerHTML = `${new Intl.NumberFormat('pt', { style: 'currency', currency: 'BRL' }).format(obj.price)} &bull; ${obj.autor}`
+
+            obj.items.forEach(e => {
+
+                let item = document.createElement('div');
+                item.classList.add("modal_item");
+                item.innerHTML = `
+                <div class="modal_img" style="background-image: url('${e.img}')"></div>
+                <div class="modal_title">${e.name}</div>`;
+
+                modal_content.appendChild(item);
+
+            });
+
+
+            setVisibilityStickerGridModal(true);
+        }
+
+
+
+
+        onload = generateContent;
+
+
+    </script>
+
+
+</body>
+</html>
