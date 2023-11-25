@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; 
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+        
+        #grid_cards{
+            width: 128px;
+            margin-top: 130px;
+            flex-shrink: 0; 
+            padding: 4px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            position: relative;
+        }
+        
+
+        .card_wrapper{
+            width: 128px;
+            height: 82px;
+            position: absolute;
+            bottom: 4px;
+            cursor: pointer; 
+        }
+
+
+        .card{
+            width: 128px;
+            height: 82px;
+            background-image: url('tape-min.png');
+            background-size: 100% 100%;
+            transform-origin: center center; 
+        }
+
+
+         
+        .card_wrapper:hover::after{
+            content: '';
+            display: block;
+            width: 128px;
+            height: 82px;  
+            background-image: url('tape-min.png');
+            background-size: 100% 100%;  
+            position: absolute;
+            top: 20px;
+        }
+
+        .card_wrapper:hover > .card{
+            transform: translateY(-200%) scale(3);
+            animation: 1s pulse infinite; 
+        }
+
+        
+        .card_wrapper_selected:not(:hover){
+            bottom: -16px;
+        }
+
+ 
+        .card_content{
+            width: 91px;
+            height: 8px;
+            color: #000;
+            font-size: 3px;
+            word-wrap: break-word;
+            font-weight: 500;
+            position: absolute; 
+            left: 19px;
+            top: 8px;
+        }
+
+
+        @keyframes pulse{
+            0% { transform: translateY(-200%) scale(3); }
+            50% { transform: translateY(-200%) scale(2.9); }
+            100% { transform: translateY(-200%) scale(3); }
+            
+        }
+
+
+         
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+        <div id="grid_cards"></div>
+    </div>
+
+
+     
+
+
+    <script>
+
+        var audio_manager = new Audio();
+        
+
+        // must be modified
+        const SONGS = [
+			
+            {
+                title: "Song name 1",
+                url: "song1.mp3" 
+            },
+            {
+                title: "Song name 2",
+                url: "song2.mp3" 
+            },
+            {
+                title: "Song name 3",
+                url: "song3.mp3" 
+            }
+		
+		];
+
+
+        function closeTapes(){
+            document.querySelectorAll('.card_wrapper_selected').forEach(e => e.classList.remove('card_wrapper_selected'));
+        }
+
+
+        function play( src ){
+            audio_manager.src = src;
+            audio_manager.play().then().catch(()=>{
+                console.warn('error');
+                closeTapes();
+            });
+        }
+
+
+        function next(){
+            const currentIndex = Array.from(grid_cards.children).indexOf( document.querySelector('.card_wrapper_selected') );
+            closeTapes();
+            if ( grid_cards.children[currentIndex + 1] != null ){
+                grid_cards.children[currentIndex + 1].classList.add('card_wrapper_selected');
+                play(SONGS[currentIndex + 1].url);
+            }
+        }
+
+
+        audio_manager.onended = next;
+
+
+        document.querySelectorAll('.card_wrapper').forEach((card_wrapper, index) => {
+
+            card_wrapper.onclick = () => {
+                const flag = card_wrapper.classList.contains('card_wrapper_selected');
+                closeTapes();
+                card_wrapper.classList.toggle('card_wrapper_selected', !flag);
+                if ( !flag ){
+                    play(SONGS[index].url);
+                }
+            };
+
+        });
+
+
+
+        onload = () => {
+            grid_cards.innerHTML = '';
+            SONGS.forEach((e, i) => {
+                const card_wrapper = document.createElement('div');
+                card_wrapper.classList.add('card_wrapper');
+                card_wrapper.style.left = (i * 32) + 'px';
+                card_wrapper.innerHTML = `<div class="card"><div class="card_content">${e.title}</div></div>`;
+                grid_cards.appendChild(card_wrapper);
+            });
+        };
+
+
+
+    </script>
+
+
+</body>
+</html>
