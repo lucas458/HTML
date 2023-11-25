@@ -1,0 +1,2162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartwatch</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+        html, body{
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+
+
+        #main_wrapper{
+            width: 240px;
+            height: 240px;
+            overflow: hidden;
+            background-color: #000;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+
+        #main_content_screen_list{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            position: relative;
+            left: 0;
+            top: 0;
+        }
+
+        .screen{
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+
+
+
+
+        /****** MAIN ******/
+        #screen_main{
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #screen_main_clock_amPm{
+            font-size: 0.7em;
+            position: absolute;
+            top: calc( 50% - 26px );
+            color: #424242;
+            font-weight: 500;
+        }
+
+        #screen_main_clock_date{
+            font-size: 0.8em;
+            color: #009ff6;
+            font-weight: 500;
+            position: absolute;
+            top: calc( 50% + 48px );
+        }
+
+
+        /* ICONS */
+        #screen_main_header_icon_list{
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: auto;
+            position: absolute;
+            top: 64px;
+        }
+
+        .screen_main_header_icon{
+            width: 16px;
+            height: 16px;
+            display: none;
+        }
+
+        .screen_main_header_icon_visible{
+            display: flex !important;
+        }
+
+
+        .screen_main_clock_type_wrapper_visible{
+            visibility: visible !important;
+        }
+
+
+        /* CLOCK DIGITAL */
+        .screen_main_clock_type_wrapper{
+            display: flex;
+            justify-content: center;
+            visibility: hidden;
+            position: absolute;
+        }
+
+        .screen_main_clock_digital_digit{
+            width: 35px;
+            font-size: 4em;
+        }
+
+        .screen_main_clock_type_wrapper div:not(.screen_main_clock_digital_digit){
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #clock_digital.screen_main_clock_type_wrapper #screen_main_clock_digital_ball div{
+            width: 10px;
+            height: 10px;
+            background-color: #009ff6;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+
+        #screen_main_clock_amPm:has(~#clock_digital:not(.screen_main_clock_type_wrapper_visible)),
+        #screen_main_clock_date:has(~#clock_digital:not(.screen_main_clock_type_wrapper_visible)){
+            visibility: hidden;
+        }
+        #clock_digital{
+            gap: 6px;
+        }
+        
+        
+
+        /* ANALOG CLOCK */
+        .screen_main_clock_type_wrapper:last-child{
+            top: 50% !important;
+        }
+
+        
+        .screen_main_clock_analog_pointer{
+            transform-origin: left center;
+            transform: rotate(0deg);
+            position: absolute;
+            left: 100%;
+        }
+
+        #analog_pointer_min{
+            width: 80px;
+            height: 4px;
+            border-radius: 25px;
+            background-color: #fff;
+            top: -2px;
+        }
+
+        #analog_pointer_hour{
+            width: 60px;
+            height: 6px;
+            border-radius: 25px;
+            background-color: red;
+            top: -3px;
+        }
+
+        #analog_pointer_hour div{
+            width: 16px;
+            height: 16px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: relative;
+            left: -50%;
+        }
+
+
+        #analog_pointer_sec{
+            width: 80px;
+            height: 2px;
+            background-color: #007bff;
+            top: -1px;
+        }
+
+        #analog_pointer_sec > div{
+            width: 10px;
+            height: 10px;
+            background-color: #007bff;
+            border-radius: 50%;
+            position: relative;
+            left: -50%;
+        }
+        
+        #analog_pointer_sec > div div{
+            width: 6px;
+            height: 6px;
+            border: 1px solid #000;
+            z-index: 1;
+            background-color: #007bff;
+            border-radius: 50%;
+        }
+
+
+        #analog_pointer_sec > div::before{
+            content: '';
+            display: block;
+            width: 32px;
+            height: 2px;
+            position: absolute;
+            background-color: #007bff;
+            left: -200%;
+        }
+
+
+        /* MARKS */
+        #screen_main_clock_analog_mark_list{
+            pointer-events: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+        #screen_main_clock_analog_mark_list > div{
+            width: 120px;
+            padding-right: 8px;
+            height: 2px;
+            transform: rotate(0deg);
+            transform-origin: left center;
+            display: flex;
+            justify-content: flex-end;
+            position: absolute;
+            top: -1px;
+            left: 50%;
+        }
+        #screen_main_clock_analog_mark_list > div div{
+            width: 24px;
+            height: 2px;
+            background-color: #424242;
+            border-radius: 25px;
+        }
+
+         
+
+
+
+
+
+        /* DOT MARK */
+        #screen_main_clock_digital_mark_list{
+            pointer-events: none;
+            position: absolute; 
+            top: 50%;
+            left: 50%;
+        }
+
+        #screen_main_clock_digital_mark_list > div{
+            width: 120px;
+            height: 2px;
+            padding-right: 8px;
+            transform: rotate(0deg);
+            transform-origin: left center;
+            display: flex;
+            justify-content: flex-end;
+            position: absolute;
+            top: -1px;
+            left: 50%;
+        }
+
+        #screen_main_clock_digital_mark_list > div div{
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #353535;
+        }
+
+        .mark_active div{
+            background-color: #007bff !important;
+        }
+
+
+
+        #screen_main_clock_battery{
+            width: 24px;
+            height: 24px;
+            color: #757575;
+            position: absolute;
+            top: 32px;
+            left: calc(50% - 24px / 2);
+        }
+
+
+
+
+
+
+
+
+
+        /****** MENU ******/
+
+        #menu_item_list{
+            padding-left: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            top: calc(50% - 32px / 2 );
+        }
+
+        .menu_item{
+            width: 240px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            opacity: 0.5;
+            position: relative; 
+            left: 0;
+        }
+        
+        .menu_item_mainView{  
+            opacity: 1;
+        }
+
+        .menu_item_icon{
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+        #menu_item_list_selector{
+            width: 240px;
+            height: 32px;
+            z-index: 1;
+            border-radius: 25px 0 0 25px;
+            border: 1px solid #353535;
+            pointer-events: none;
+            position: absolute;
+            top: calc(50% - 32px / 2 );
+            left: 4px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /****** APP SCREEN -- HEART RATE ******/
+        .heartRate_wrapper_wrapper{
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            color: #ff2d6e;
+        }
+
+        .heartRate_wrapper_icon{
+            width: 64px;
+            height: 64px;
+            background-color: #ff2d6e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center; 
+            animation: 1s heartbeat infinite;
+        }
+        
+        .heartRate_value{
+            font-size: 2em;
+            font-weight: 500;
+            white-space: pre;
+        }
+
+        @keyframes heartbeat{
+            0%{transform: scale(.85);}
+            20%{transform: scale( 1 );}
+            40%{transform: scale( .85 );}
+            60%{transform: scale( 1 );}
+            80%{transform: scale( .85 );}
+            100%{transform: scale( .85 );}
+        }
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+        /****** APP SCREEN -- STOPWATCH ******/
+        .stopwatch_wrapper{
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 8px;
+        }
+
+        .stopwatch_icon{
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        
+        .stopwatch_content_wrapper, .stopwatch_controls{
+            display: flex;
+        }
+
+        .stopwatch_content_wrapper{
+            align-items: baseline; 
+        }
+
+        .stopwatch_digit_big{
+            font-size: 2.5em;
+        }
+        .stopwatch_digit_tiny{
+            font-size: 1.2em;
+            margin-left: 2px;
+        }
+
+        .stopwatch_digit_big{
+            width: 56px;
+            letter-spacing: 2px;
+        }
+
+
+        .stopwatch_controls{
+            height: 100%; 
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stopwatch_button{
+            overflow: hidden;
+            width: 72px;
+            height: 72px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #009ff6;
+            border: 1px solid #009ff6;
+            color: #000;
+            box-shadow: 0 20px 25px -5px #000, 0 8px 10px -6px #000;
+            transition: 200ms;
+            border-radius: 50%;
+        }
+        
+        .stopwatch_button:active{
+            transform: scale(.95);
+            transition: 1ms;
+            box-shadow: 0 0 0 0 #000;
+        }
+
+        .stopwatch_button:last-child{
+            background-color: transparent;
+            color: #009ff6;
+        }
+
+
+
+
+
+
+
+
+        /****** APP SCREEN -- COMPASS ******/
+        .compass_line_mark_list{
+            pointer-events: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+        .compass_line_mark_list > div{
+            width: 120px;
+            padding-right: 8px;
+            height: 2px;
+            transform: rotate(0deg);
+            transform-origin: left center;
+            display: flex;
+            justify-content: flex-end;
+            position: absolute;
+            top: -1px;
+            left: 50%;
+        }
+
+        .compass_line_mark_list > div div{
+            width: 24px;
+            height: 2px;
+            background-color: #424242;
+            border-radius: 25px;
+        }
+
+
+
+        .compass_content_wrapper{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+        }
+
+        .compass_content{
+            color: #e0e0e0;
+            font-size: 1.2em;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        .compass_content:first-child{
+            width: 100%;
+            padding: 0 40px;
+            position: absolute;
+        }
+
+        .compass_content:last-child{
+            height: 100%;
+            padding: 32px 0;
+            flex-direction: column;
+            position: absolute;
+        }
+
+
+        .compass_needle_wrapper{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+        .compass_needle{ 
+            transform: rotate(0deg); 
+            transition: all 400ms cubic-bezier(.47,1.64,.41,.8);
+            position: absolute;
+            
+        }
+
+        .compass_needle div{
+            border: 10px solid #00000000;
+            border-top-width: 48px;
+            border-bottom-width: 48px;
+        }
+        
+        .compass_needle div:first-child{
+            border-bottom-color: #f00;
+        }
+        .compass_needle div:last-child{
+            border-top-color: #fff;
+        }
+
+
+
+
+
+
+
+        /****** APP SCREEN -- MUSIC ******/
+        .music_wrapper{
+            height: 100%;
+            padding: 40px 0 16px;
+            /* background-color: blue; */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+
+
+        .music_content{
+            text-align: center;
+        }
+
+        .music_title{
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .music_subTitle{
+            font-size: 0.8em; 
+            color: #969696;
+        }
+
+
+
+        .music_progress{
+            width: 100%;
+            height: 4px;
+            padding: 0 16px;
+        }
+
+        .music_progress_track{
+            width: 100%;
+            height: 100%;
+            background-color: #181818;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .music_progress_fill{
+            width: 0;
+            height: 100%;
+            background-color: #fff;
+        }
+
+
+        .music_controls{
+            display: flex;
+            gap: 16px;
+        }
+
+
+        .music_content + .music_controls .music_button{
+            width: 48px;
+            height: 48px;
+        }
+
+        .music_button{
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .music_button:active{
+            background-color: #0A0A0A;
+        }
+
+
+
+
+
+
+
+        /****** APP SCREEN -- CAMERA ******/
+        .camera_wrapper{
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .camera_button{
+            width: 64px;
+            height: 64px;
+            background-color: #00b4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 100ms;
+        }
+
+        .camera_button:active{
+            transform: scale(0.95);
+            transition: 50ms;
+        }
+
+
+
+
+
+
+
+
+
+
+        /****** APP SCREEN -- DIAL ******/
+        .dial_wrapper{
+            height: 100%;
+        }
+
+        .dial_keypad{
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            justify-items: center;
+            align-content: center;
+            gap: 2px;
+        }
+
+        .dial_lcd{
+            grid-column: span 3;
+            padding: 2px;
+            font-size: 1.2em;
+            font-weight: 500;
+            white-space: pre;
+        }
+        
+        .dial_key{
+            width: 100%;
+            height: 32px;
+            background-color: #101010;
+            font-weight: 500;
+            padding: 2px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dial_key:active{
+            background-color: #0A0A0A;
+        }
+
+        .dial_keypad > .dial_key:nth-child(3n - 1){
+            border-radius: 0 8px 8px 0;
+        }
+        .dial_keypad > .dial_key:nth-child(3n - 2){
+            border-radius: 8px 0 0 8px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /****** APP SCREEN -- CALCULATOR ******/
+
+        /* calculator_extendedMode */
+        .calculator_wrapper{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            flex-direction: column; 
+        }
+
+        .calculator_lcd{
+            margin: 24px 8px 8px;
+            height: 32px;
+        }
+
+        .calculator_keypad{
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            font-size: 1.1em;
+            font-weight: 500;
+            height: 100%;
+            width: 100%;
+            text-align: center;
+            padding: 0 24px 0;
+            border-top: 1px solid #353535;
+            
+        }
+
+        .calculator_key{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: pre;
+        }
+
+        .calculator_key:not(:empty):active{
+            background-color: #0A0A0A !important;
+        }
+
+
+
+        .calculator_wrapper:not(.calculator_extendedMode) .calculator_key:nth-child(5n - 1){
+            background-color: #101010;
+        }
+        
+        .calculator_wrapper:not(.calculator_extendedMode) .calculator_key:nth-child(5){
+            color: #dc3545;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="main_wrapper">
+
+            <div id="main_content_screen_list">
+
+                <!-- MAIN -->
+                <div class="screen" id="screen_main">
+
+                    <!-- EXTRA INFO -->
+                    <div id="screen_main_clock_amPm"></div>
+                    <div id="screen_main_clock_date"></div>
+
+                    <div id="screen_main_clock_battery">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-battery-full" viewBox="0 0 16 16">
+                            <path d="M2 6h10v4H2V6z"/>
+                            <path d="M2 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H2zm10 1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h10zm4 3a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8z"/>
+                        </svg>
+                    </div>
+
+                    <!-- ICONS -->
+                    <div id="screen_main_header_icon_list">  
+                        <div class="screen_main_header_icon"  id="mute_alertIcon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#fdb602" viewBox="0 0 16 16"><path d="M5.164 14H15c-1.5-1-2-5.902-2-7 0-.264-.02-.523-.06-.776L5.164 14zm6.288-10.617A4.988 4.988 0 0 0 8.995 2.1a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 7c0 .898-.335 4.342-1.278 6.113l9.73-9.73zM10 15a2 2 0 1 1-4 0h4zm-9.375.625a.53.53 0 0 0 .75.75l14.75-14.75a.53.53 0 0 0-.75-.75L.625 15.625z"></path></svg>
+                        </div>
+
+                        <!-- <div class="screen_main_header_icon"  id="missingCall_alertIcon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#ff534e" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"></path></svg>
+                        </div>
+
+                        <div class="screen_main_header_icon"  id="message_alertIcon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#099eff" viewBox="0 0 16 16"><path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9.06 9.06 0 0 0 8 15z"></path></svg>
+                        </div> -->
+
+                        <div class="screen_main_header_icon" id="stopwatch_alertIcon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#576dff" viewBox="0 0 16 16"><path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.001 7.001 0 0 0 8 16a7 7 0 0 0 5.29-11.584.531.531 0 0 0 .013-.012l.354-.354.353.354a.5.5 0 1 0 .707-.707l-1.414-1.415a.5.5 0 1 0-.707.707l.354.354-.354.354a.717.717 0 0 0-.012.012A6.973 6.973 0 0 0 9 2.071V1h.5a.5.5 0 0 0 0-1h-3zm2 5.6V9a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1 0-1h3V5.6a.5.5 0 1 1 1 0z"></path></svg>
+                        </div>
+
+                    </div>
+
+                    <!-- DIGITAL CLOCK -->
+                    <div class="screen_main_clock_type_wrapper screen_main_clock_type_wrapper_visible" id="clock_digital">
+                        <!-- MINUTES -->
+                        <div class="screen_main_clock_digital_digit"></div>
+                        <div class="screen_main_clock_digital_digit"></div>
+                        <!-- CENTER BALL -->
+                        <div id="screen_main_clock_digital_ball"> <div></div> </div>
+                        <!-- SECONDS -->
+                        <div class="screen_main_clock_digital_digit"></div>
+                        <div class="screen_main_clock_digital_digit"></div>
+                        <!-- DOT MARK | 'mark_active' to children -->
+                        <div id="screen_main_clock_digital_mark_list"></div>
+                    </div>
+
+                    <!-- ANALOG CLOCK -->
+                    <div class="screen_main_clock_type_wrapper ">
+                        <div class="screen_main_clock_analog_pointer" id="analog_pointer_min"></div>
+                        <div class="screen_main_clock_analog_pointer" id="analog_pointer_hour"> <div></div> </div>
+                        <div class="screen_main_clock_analog_pointer" id="analog_pointer_sec"> <div> <div></div> </div> </div>
+
+                        <!-- LINE MARK -->
+                        <div id="screen_main_clock_analog_mark_list">
+                            <div style="transform: rotate(0deg);"><div></div></div>
+                            <div style="transform: rotate(30deg);"><div></div></div>
+                            <div style="transform: rotate(60deg);"><div></div></div>
+                            <div style="transform: rotate(90deg);"><div></div></div>
+                            <div style="transform: rotate(120deg);"><div></div></div>
+                            <div style="transform: rotate(150deg);"><div></div></div>
+                            <div style="transform: rotate(180deg);"><div></div></div>
+                            <div style="transform: rotate(210deg);"><div></div></div>
+                            <div style="transform: rotate(240deg);"><div></div></div>
+                            <div style="transform: rotate(270deg);"><div></div></div>
+                            <div style="transform: rotate(300deg);"><div></div></div>
+                            <div style="transform: rotate(330deg);"><div></div></div>
+                        </div>
+
+                    </div>
+                    
+                </div>
+
+
+
+
+                <!-- MENU -->
+                <div class="screen">
+
+                    <div id="menu_item_list_selector"></div>
+                    
+                    <div id="menu_item_list">
+                        <!-- <div class="menu_item menu_item_mainView" aria-valuetext="weather">
+                            <div class="menu_item_icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#dfc72f" viewBox="0 0 16 16"><path d="M11.473 11a4.5 4.5 0 0 0-8.72-.99A3 3 0 0 0 3 16h8.5a2.5 2.5 0 0 0 0-5h-.027z"/><path d="M10.5 1.5a.5.5 0 0 0-1 0v1a.5.5 0 0 0 1 0v-1zm3.743 1.964a.5.5 0 1 0-.707-.707l-.708.707a.5.5 0 0 0 .708.708l.707-.708zm-7.779-.707a.5.5 0 0 0-.707.707l.707.708a.5.5 0 1 0 .708-.708l-.708-.707zm1.734 3.374a2 2 0 1 1 3.296 2.198c.199.281.372.582.516.898a3 3 0 1 0-4.84-3.225c.352.011.696.055 1.028.129zm4.484 4.074c.6.215 1.125.59 1.522 1.072a.5.5 0 0 0 .039-.742l-.707-.707a.5.5 0 0 0-.854.377zM14.5 6.5a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/></svg>
+                            </div>
+                            <div>Clima</div>
+                        </div> -->
+                
+                        <div class="menu_item menu_item_mainView" aria-valuetext="heartRate">
+                            <div class="menu_item_icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#ff2d6e" viewBox="0 0 16 16"><path d="M1.475 9C2.702 10.84 4.779 12.871 8 15c3.221-2.129 5.298-4.16 6.525-6H12a.5.5 0 0 1-.464-.314l-1.457-3.642-1.598 5.593a.5.5 0 0 1-.945.049L5.889 6.568l-1.473 2.21A.5.5 0 0 1 4 9H1.475Z"/><path d="M.88 8C-2.427 1.68 4.41-2 7.823 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C11.59-2 18.426 1.68 15.12 8h-2.783l-1.874-4.686a.5.5 0 0 0-.945.049L7.921 8.956 6.464 5.314a.5.5 0 0 0-.88-.091L3.732 8H.88Z"/></svg>
+                            </div>
+                            <div>Batimento</div>
+                        </div>
+                
+                        <div class="menu_item" aria-valuetext="stopwatch">
+                            <div class="menu_item_icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#576dff" viewBox="0 0 16 16"><path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.001 7.001 0 0 0 8 16a7 7 0 0 0 5.29-11.584.531.531 0 0 0 .013-.012l.354-.354.353.354a.5.5 0 1 0 .707-.707l-1.414-1.415a.5.5 0 1 0-.707.707l.354.354-.354.354a.717.717 0 0 0-.012.012A6.973 6.973 0 0 0 9 2.071V1h.5a.5.5 0 0 0 0-1h-3zm2 5.6V9a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1 0-1h3V5.6a.5.5 0 1 1 1 0z"/></svg>
+                            </div>
+                            <div>Cronômetro</div>
+                        </div>
+                
+                        <div class="menu_item" aria-valuetext="compass">
+                            <div class="menu_item_icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#2eddb2" viewBox="0 0 16 16"><path d="M15.5 8.516a7.5 7.5 0 1 1-9.462-7.24A1 1 0 0 1 7 0h2a1 1 0 0 1 .962 1.276 7.503 7.503 0 0 1 5.538 7.24zm-3.61-3.905L6.94 7.439 4.11 12.39l4.95-2.828 2.828-4.95z"/></svg>
+                            </div>
+                            <div>Bússola</div>
+                        </div>
+                
+                        <div class="menu_item" aria-valuetext="muteToggle">
+                            <div class="menu_item_icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#ffb119" viewBox="0 0 16 16"><path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/></svg>
+                            </div>
+                            <div>Mudo</div>
+                        </div>
+                
+                        <!-- <div class="menu_item" aria-valuetext="activity">
+                            <div class="menu_item_icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#8fbf1b" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2Z"/></svg>
+                            </div>
+                            <div>Atividade</div>
+                        </div> -->
+                
+                        <div class="menu_item" aria-valuetext="music">
+                            <div class="menu_item_icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#b92fff" viewBox="0 0 16 16"><path d="M8 3a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a6 6 0 1 1 12 0v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1V8a5 5 0 0 0-5-5z"/></svg>
+                            </div>
+                            <div>Música</div>
+                        </div>
+                
+                        <div class="menu_item" aria-valuetext="camera">
+                            <div class="menu_item_icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#00b4ff" viewBox="0 0 16 16"><path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/></svg>
+                            </div>
+                            <div>Câmera</div>
+                        </div> 
+                        
+                        <div class="menu_item" aria-valuetext="dial">
+                            <div class="menu_item_icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#ff534d" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/></svg>
+                            </div>
+                            <div>Discar</div>
+                        </div> 
+                        
+                        <div class="menu_item" aria-valuetext="calculator">
+                            <div class="menu_item_icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#7665f1" viewBox="0 0 16 16"><path d="M12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h8zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4z"/><path d="M4 2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-2zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm0 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-4z"/></svg>
+                            </div>
+                            <div>Calculadora</div>
+                        </div>
+                    </div>
+
+                </div> 
+                
+                <!-- DELETEABLE SCREN -->
+                <!-- <div class="screen screen_deletable"></div> -->
+
+
+            </div>
+
+        </div>
+
+
+
+ 
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+        
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+        const DATES = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        const MONTHS = [
+            "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"
+        ];
+
+        const DAYS = [
+            "DOMINGO", "SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO"
+        ];
+
+
+
+        
+        function getOffsetByDistance( D, d ){
+            return (D - Math.sqrt((D/2)**2 - d**2) * 2) / 2;
+        }
+
+
+
+        const calculator_keyMap = [
+
+            {
+                0: '7',
+                1: '8',
+                2: '9',
+                3: '/',
+                4: 'C',
+                5: '4',
+                6: '5',
+                7: '6',
+                8: '*',
+                9: '=',
+                10: '1',
+                11: '2',
+                12: '3',
+                13: '-',
+                14: 'A',
+                16: '0',
+                17: '.',
+                18: '+',
+            },
+
+            {
+                0: 'π',
+                1: 'sin',
+                2: 'cos',
+                3: 'tan',
+                4: 'e',
+                6: 'log',
+                7: '!',
+                8: '(',
+                9: ')',
+                11: '^',
+                12: '√',
+                14: 'A'
+            }
+
+        ];
+
+
+
+
+
+        const SCREEN_BASE = {
+
+            'heartRate': `
+                <div class="heartRate_wrapper_wrapper">
+                    <div class="heartRate_wrapper_icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#fff" viewBox="0 0 16 16"><path d="M1.475 9C2.702 10.84 4.779 12.871 8 15c3.221-2.129 5.298-4.16 6.525-6H12a.5.5 0 0 1-.464-.314l-1.457-3.642-1.598 5.593a.5.5 0 0 1-.945.049L5.889 6.568l-1.473 2.21A.5.5 0 0 1 4 9H1.475Z"></path><path d="M.88 8C-2.427 1.68 4.41-2 7.823 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C11.59-2 18.426 1.68 15.12 8h-2.783l-1.874-4.686a.5.5 0 0 0-.945.049L7.921 8.956 6.464 5.314a.5.5 0 0 0-.88-.091L3.732 8H.88Z"></path></svg>
+                    </div>
+                    <div class="heartRate_value"> </div>
+                </div>
+            `,
+
+
+
+
+
+            'stopwatch': `
+                <div class="stopwatch_wrapper" paused="true">
+                    
+                    <div class="stopwatch_icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#576dff" viewBox="0 0 16 16"><path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07A7.001 7.001 0 0 0 8 16a7 7 0 0 0 5.29-11.584.531.531 0 0 0 .013-.012l.354-.354.353.354a.5.5 0 1 0 .707-.707l-1.414-1.415a.5.5 0 1 0-.707.707l.354.354-.354.354a.717.717 0 0 0-.012.012A6.973 6.973 0 0 0 9 2.071V1h.5a.5.5 0 0 0 0-1h-3zm2 5.6V9a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1 0-1h3V5.6a.5.5 0 1 1 1 0z"></path></svg>
+                    </div>
+
+                    <div class="stopwatch_content_wrapper">
+                        <div class="stopwatch_digit_big">00:</div>
+                        <div class="stopwatch_digit_big">00:</div>    
+                        <div class="stopwatch_digit_tiny">00</div>   
+                    </div>
+
+                    <div class="stopwatch_controls">
+                        <div class="stopwatch_button" id="stopwatch_startStop" onclick="stopwatchStartStop(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>    
+                        </div>
+                        <div class="stopwatch_button" id="stopwatch_reset" onclick="stopwatchReset()" style="width: 0" >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/></svg>   
+                        </div>
+                    </div>
+
+                </div>
+            `,
+
+
+
+
+
+            'compass': `
+                <div class="compass_wrapper">
+                    
+                    <div class="compass_line_mark_list">
+                        <div style="transform: rotate(0deg);"><div></div></div>
+                        <div style="transform: rotate(30deg);"><div></div></div>
+                        <div style="transform: rotate(60deg);"><div></div></div>
+                        <div style="transform: rotate(90deg);"><div></div></div>
+                        <div style="transform: rotate(120deg);"><div></div></div>
+                        <div style="transform: rotate(150deg);"><div></div></div>
+                        <div style="transform: rotate(180deg);"><div></div></div>
+                        <div style="transform: rotate(210deg);"><div></div></div>
+                        <div style="transform: rotate(240deg);"><div></div></div>
+                        <div style="transform: rotate(270deg);"><div></div></div>
+                        <div style="transform: rotate(300deg);"><div></div></div>
+                        <div style="transform: rotate(330deg);"><div></div></div>
+                    </div>
+
+                    <div class="compass_content_wrapper">
+                        <div class="compass_content">
+                            <div>O</div>
+                            <div>L</div>
+                        </div>
+                        <div class="compass_content">
+                            <div>N</div>
+                            <div>S</div>
+                        </div>
+                    </div>
+
+                    <div class="compass_needle_wrapper">
+                        <div class="compass_needle">
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+
+                </div>
+            `,
+
+
+
+
+
+            'music': `
+                <div class="music_wrapper">
+
+                    <div class="music_content">
+                        <div class="music_title"></div>
+                        <div class="music_subTitle"></div>    
+                    </div>
+
+                    <div class="music_progress">
+                        <div class="music_progress_track" onclick="musicTrackClick(this, event)">
+                            <div class="music_progress_fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="music_controls">
+                        <div class="music_button" onclick="musicBack()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+                        </div>
+                        <div class="music_button" id="music_playPause" onclick="musicPlayPause()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>
+                        </div>
+                        <div class="music_button" onclick="musicNext()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                        </div>
+                    </div>
+                    
+                    <div class="music_controls">
+                        <div class="music_button" onclick="musicVolumeDown()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12V4zm3.025 4a4.486 4.486 0 0 1-1.318 3.182L10 10.475A3.489 3.489 0 0 0 11.025 8 3.49 3.49 0 0 0 10 5.525l.707-.707A4.486 4.486 0 0 1 12.025 8z"/></svg>
+                        </div> 
+                        <div class="music_button" onclick="musicVolumeUp()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/><path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z"/><path d="M8.707 11.182A4.486 4.486 0 0 0 10.025 8a4.486 4.486 0 0 0-1.318-3.182L8 5.525A3.489 3.489 0 0 1 9.025 8 3.49 3.49 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="music_progress" style="padding: 0 64px; height: 2px">
+                        <div class="music_progress_track">
+                            <div class="music_progress_fill music_progress_volumeFill"></div>
+                        </div>
+                    </div>
+
+                </div>
+            `,
+
+
+
+
+
+            'camera': `
+                <div class="camera_wrapper">
+                    <div class="camera_button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#fff" viewBox="0 0 16 16"><path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"></path><path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"></path></svg>    
+                    </div>
+                </div>
+            `,
+            
+
+
+
+
+            'dial': `
+                <div class="dial_wrapper">
+                    <div class="dial_keypad">
+                        <div class="dial_lcd"> </div>
+                        <div class="dial_key">1</div>
+                        <div class="dial_key">2</div>
+                        <div class="dial_key">3</div>
+                        <div class="dial_key">4</div>
+                        <div class="dial_key">5</div>
+                        <div class="dial_key">6</div>
+                        <div class="dial_key">7</div>
+                        <div class="dial_key">8</div>
+                        <div class="dial_key">9</div>
+
+                        <div class="dial_key dial_key_call">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#28a745" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/></svg>
+                        </div>
+
+                        <div class="dial_key">0</div>
+
+                        <div class="dial_key dial_key_backspace">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15.683 3a2 2 0 0 0-2-2h-7.08a2 2 0 0 0-1.519.698L.241 7.35a1 1 0 0 0 0 1.302l4.843 5.65A2 2 0 0 0 6.603 15h7.08a2 2 0 0 0 2-2V3zM5.829 5.854a.5.5 0 1 1 .707-.708l2.147 2.147 2.146-2.147a.5.5 0 1 1 .707.708L9.39 8l2.146 2.146a.5.5 0 0 1-.707.708L8.683 8.707l-2.147 2.147a.5.5 0 0 1-.707-.708L7.976 8 5.829 5.854z"/></svg>
+                        </div>
+                    </div>
+                </div>
+            `,
+
+
+
+
+
+            'calculator': `
+                <div class="calculator_wrapper ">
+                    <div class="calculator_lcd"></div>
+                    <div class="calculator_keypad">
+                        <div class="calculator_key">7</div>
+                        <div class="calculator_key">8</div>
+                        <div class="calculator_key">9</div>
+                        <div class="calculator_key">/</div>
+                        <div class="calculator_key">C</div>
+                        <div class="calculator_key">4</div>
+                        <div class="calculator_key">5</div>
+                        <div class="calculator_key">6</div>
+                        <div class="calculator_key">*</div>
+                        <div class="calculator_key">=</div>
+                        <div class="calculator_key">1</div>
+                        <div class="calculator_key">2</div>
+                        <div class="calculator_key">3</div>
+                        <div class="calculator_key">-</div>
+                        <div class="calculator_key">A</div>
+                        <div class="calculator_key"></div>
+                        <div class="calculator_key">0</div>
+                        <div class="calculator_key">.</div>
+                        <div class="calculator_key">+</div>
+                    </div>
+                </div>
+            `
+
+
+        };
+
+
+
+
+
+
+
+
+        var main_content_screen_list = document.getElementById('main_content_screen_list');
+        var mainContentScreenTouchInit = {x: 0, y: 0};
+        var thresholdAxis = {x: false, y: false};
+        var touchInitAbsolute = {x: 0, y: 0};
+        
+
+        main_content_screen_list.ontouchstart = (event) => {
+            mainContentScreenTouchInit.x = event.touches[0].clientX - main_content_screen_list.offsetLeft;
+        };
+        
+
+        main_content_screen_list.ontouchmove = (event) => {
+            let posX = event.touches[0].clientX - main_content_screen_list.parentElement.offsetLeft - mainContentScreenTouchInit.x;
+            if  ( thresholdAxis.x ){
+                posX = Math.clamp(posX, -main_content_screen_list.offsetWidth * (main_content_screen_list.children.length - 1), 0);
+                main_content_screen_list.style.transition = '';
+                main_content_screen_list.style.left = posX + 'px';
+            }
+        };
+        
+
+        main_content_screen_list.ontouchend = () => {
+            const indexScreen = Math.abs( Math.round((main_content_screen_list.offsetLeft - main_content_screen_list.parentElement.offsetLeft) / main_content_screen_list.offsetWidth) );
+            main_content_screen_list.style.transition = '100ms';
+            main_content_screen_list.style.left = -(indexScreen * main_content_screen_list.offsetWidth) + 'px';
+
+            if ( indexScreen < 2 ){
+                document.querySelectorAll('.screen_deletable').forEach(e => e.remove());
+            }
+
+        };
+        
+
+        var menu_item_list = document.getElementById('menu_item_list');
+        var menuItemListTouchInit = 0;
+        var indexItem = 0;
+        
+
+
+        function menuAjust( delay = '' ){
+            for (let i = 0; i < menu_item_list.children.length; i++){
+                const d = menu_item_list.offsetTop - 104 + menu_item_list.children[i].offsetTop; 
+                const offset = getOffsetByDistance(240, d);
+                menu_item_list.children[i].style.transition = delay;
+                menu_item_list.children[i].style.left = offset + 'px'; 
+            }
+        }
+
+
+        function menuItemMoveByIndex( indexItem = 0 ){
+            const heightWithOffset = (main_content_screen_list.offsetHeight/2 - menu_item_list.firstElementChild.offsetHeight/2);
+            menu_item_list.style.top = (heightWithOffset + indexItem * (-menu_item_list.firstElementChild.offsetHeight - 8)) + 'px';
+            menuItemMainViewByIndex(indexItem);
+            menuAjust(); // delay opcioanl 100ms
+        }
+
+
+        function menuItemMainViewByIndex( indexItem = 0 ){
+            document.querySelectorAll('.menu_item_mainView').forEach(e => e.classList.remove('menu_item_mainView'));
+            menu_item_list.children[indexItem].classList.add('menu_item_mainView');
+        }
+
+
+        menu_item_list.ontouchstart = (event) => {
+            menuItemListTouchInit = event.touches[0].clientY - menu_item_list.offsetTop;
+        };
+
+
+        menu_item_list.ontouchmove = (event) => {
+            if ( thresholdAxis.y ){
+                let posY = event.touches[0].clientY - menuItemListTouchInit;
+                const heightWithOffset = (main_content_screen_list.offsetHeight/2 - menu_item_list.firstElementChild.offsetHeight/2);
+                posY = Math.clamp(posY, heightWithOffset- menu_item_list.offsetHeight + menu_item_list.firstElementChild.offsetHeight, heightWithOffset );
+                menu_item_list.style.transition = '';
+                menu_item_list.style.top = (posY) + 'px';
+                indexItem = Math.abs( Math.round((posY - heightWithOffset) / (menu_item_list.firstElementChild.offsetHeight + 8)) );
+                menuItemMainViewByIndex(indexItem);
+                menuAjust();
+            }
+        };
+
+
+        menu_item_list.ontouchend = () => {
+            const heightWithOffset = (main_content_screen_list.offsetHeight/2 - menu_item_list.firstElementChild.offsetHeight/2);
+            indexItem = Math.abs( Math.round((menu_item_list.offsetTop - heightWithOffset) / (menu_item_list.firstElementChild.offsetHeight + 8)) );
+            menuItemMoveByIndex(indexItem);
+        };
+        
+
+        document.querySelectorAll('.menu_item').forEach((e, i) => {
+            e.onclick = () => {
+                if ( e.classList.contains('menu_item_mainView') ){
+                    console.log('click:', e.lastElementChild.innerHTML );
+                    generateScrennByApp(e.ariaValueText);
+                }
+                menuItemMoveByIndex(i);
+            };
+        });
+
+         
+        
+        
+
+
+
+        
+
+        ontouchstart = (event) => {
+            touchInitAbsolute = {
+                x: event.touches[0].clientX,
+                y: event.touches[0].clientY
+            };
+        };
+
+
+        ontouchmove = (event) => {
+            if ( Math.abs(event.touches[0].clientX - touchInitAbsolute.x) > 10 && !thresholdAxis.y ){
+                thresholdAxis.x = true;
+            }else if ( Math.abs(event.touches[0].clientY - touchInitAbsolute.y) > 10 && !thresholdAxis.x ){
+                thresholdAxis.y = true;
+            }
+        };
+
+
+        ontouchend = () => {
+            touchInitAbsolute = {x: 0, y: 0};
+            thresholdAxis = {x: false, y: false};
+        };
+
+
+
+
+
+
+
+
+
+        // TOGGLE CLOCK MODE: DIGITAL / ANALOG
+        screen_main.onclick = () => {
+            const flag = clock_digital.classList.contains('screen_main_clock_type_wrapper_visible');
+            document.querySelector('.screen_main_clock_type_wrapper_visible').classList.remove('screen_main_clock_type_wrapper_visible');
+            document.querySelectorAll('.screen_main_clock_type_wrapper')[flag? 1 : 0].classList.add('screen_main_clock_type_wrapper_visible')
+        };
+        
+
+        function generateDotMark(){
+            screen_main_clock_digital_mark_list.innerHTML = '';
+            for (let i = 0; i < 60; i++){
+                let dot = document.createElement('div');
+                dot.innerHTML = '<div></div>';
+                dot.style.transform = `rotate(${i * 6 - 90}deg)`;
+                screen_main_clock_digital_mark_list.appendChild(dot);
+            }
+        }
+
+
+        function setDotMarkValue( value = 0 ){
+            for (let i = 0; i < screen_main_clock_digital_mark_list.children.length; i++){
+                screen_main_clock_digital_mark_list.children[i].classList.toggle('mark_active', i <= value);
+            }
+        }
+
+
+
+
+
+        var muteState = false;
+
+        function generateScrennByApp( name ){
+
+            // CLOSE
+            document.querySelectorAll('.screen_deletable').forEach(e => e.remove());
+
+            if ( name == 'muteToggle' ){
+                muteState = !muteState;
+                return;
+            }
+
+            // CREATE SCREEN
+            let screenElement = document.createElement('div');
+            screenElement.classList.add('screen', 'screen_deletable');
+            screenElement.ariaValueText = name; 
+            main_content_screen_list.appendChild(screenElement);
+
+            // SET CONTENT
+            screenElement.innerHTML = SCREEN_BASE[name];
+            
+            // ANIMATION MOVE
+            main_content_screen_list.style.left = (-main_content_screen_list.offsetWidth * 2) + 'px';
+            
+            switch (name) {
+                case 'calculator':
+                    generateCalulatorKeypad(false);
+                    break;
+                case 'dial':
+                    document.querySelectorAll('.dial_key').forEach(e => {
+                        e.onclick = () => {
+                            const dial_lcd = document.querySelector('.dial_lcd');
+                            if ( e.classList.contains('dial_key_backspace') ){
+                                dial_lcd.innerHTML = dial_lcd.innerHTML.substring(0, dial_lcd.innerHTML.length - 1);
+                                if ( dial_lcd.innerHTML.length == 0 ){
+                                    dial_lcd.innerHTML = ' ';
+                                }
+                                return;
+                            }
+                            if ( e.classList.contains('dial_key_call') ){
+                                dial_lcd.innerHTML = ' ';
+                                return;
+                            }
+                            dial_lcd.innerHTML = String(dial_lcd.innerHTML).replaceAll(' ', '');
+                            dial_lcd.innerHTML += e.innerHTML;
+                            dial_lcd.innerHTML = dial_lcd.innerHTML.substring(0, 16);
+                        };
+                    });
+                    break;
+            
+                default:
+                    break;
+            }
+
+
+        }
+
+
+        
+
+
+        /****** APP HEART RATE ******/
+        function updateHeartRate( value = 0 ){
+            if ( document.querySelector('.heartRate_value') == null ) return;
+            document.querySelector('.heartRate_value').innerHTML = value + ' bpm';
+
+        }
+        
+
+
+
+
+        /****** APP STOPWATCH ******/
+        var startTime;
+        var elapsedPausedTime = 0;
+        var stopwatch_paused = true;
+        var stopwatch_reseted = true;
+
+        function startStopwatch(){
+            startTime = new Date().getTime() - elapsedPausedTime;
+            stopwatch_reseted = false;
+        }
+
+        function stopStopwatch(){
+            elapsedPausedTime = new Date().getTime() - startTime;
+            stopwatch_reseted = false;
+        }
+
+        function resetStopwatch(){
+            stopStopwatch();
+            elapsedPausedTime = 0;
+            stopwatch_reseted = true;
+        }
+
+        function updateStopwatch(){
+            var currentTime = new Date().getTime();
+            var elapsedTime = currentTime - startTime;
+            return isNaN(elapsedTime) ? 0 : elapsedTime;
+        }
+
+        function pad(number){
+            return (number < 10 ? "0" : "") + number;
+        }
+
+        
+        function stopwatchStartStop(e){
+
+            if ( stopwatch_paused ){
+                startStopwatch();  
+                stopwatch_paused = false;
+                e.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/></svg>`;
+                return;
+            }
+
+            stopStopwatch();
+            e.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>`;
+            stopwatch_paused = true; 
+            
+        }
+
+
+        function stopwatchReset(){
+            resetStopwatch(); 
+            document.querySelector('.stopwatch_wrapper').setAttribute('paused', 'true');
+            let digits = document.querySelector('.stopwatch_content_wrapper').children;
+            digits[0].innerHTML = '00:';
+            digits[1].innerHTML = '00:';
+            digits[2].innerHTML = '00'; 
+        }
+        
+
+
+
+
+
+        function update(){ 
+
+            const date = new Date();
+            let timeArray = date.toLocaleTimeString().split(':');
+
+            // DIGITAL CLOCK
+            if ( timeArray[0] > 12 ){
+                timeArray[0] -= 12;
+                timeArray[0] = timeArray[0].toString();
+            }
+            
+            if ( timeArray[0] < 10 ){
+                timeArray[0] = ' ' + parseInt(timeArray[0]);
+            }
+
+            if ( parseInt(timeArray[0]) == 0 ){
+                timeArray[0] = '12';
+            } 
+
+            document.querySelectorAll('.screen_main_clock_digital_digit')[0].innerHTML = timeArray[0][0];
+            document.querySelectorAll('.screen_main_clock_digital_digit')[1].innerHTML = timeArray[0][1];
+            document.querySelectorAll('.screen_main_clock_digital_digit')[2].innerHTML = timeArray[1][0];
+            document.querySelectorAll('.screen_main_clock_digital_digit')[3].innerHTML = timeArray[1][1];
+            screen_main_clock_amPm.innerHTML = date.getHours() >= 12 ? 'PM' : 'AM';
+            screen_main_clock_date.innerHTML = DAYS[ date.getDay() ].substr(0, 3) + ' ' + (date.getDate());
+            setDotMarkValue( date.getSeconds() );
+
+            // ANALOG CLOCK
+            analog_pointer_hour.style.transform = `rotate(${ date.getHours() * 30 - 90 }deg)`;
+            analog_pointer_min.style.transform = `rotate(${ date.getMinutes() * 6 - 90 }deg)`;
+            analog_pointer_sec.style.transform = `rotate(${ date.getSeconds() * 6 - 90 }deg)`;
+            
+
+            //// APP STOPWATCH
+            if ( document.querySelector('.stopwatch_wrapper') ){
+                
+                if ( !stopwatch_reseted ){ 
+                    let digits = document.querySelector('.stopwatch_content_wrapper').children;
+                    const value = (!stopwatch_paused) ? updateStopwatch() : elapsedPausedTime;
+                    const sec = parseInt(value / 1000 % 60);
+                    const ms  = parseInt(value / 10 % 100);
+                    const min = parseInt(sec / 60 % 60);
+
+                    digits[0].innerHTML = pad(min) + ':';
+                    digits[1].innerHTML = pad(sec) + ':';
+                    digits[2].innerHTML = pad(ms);
+                    
+                    if ( stopwatch_paused ){
+                        stopwatch_startStop.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>`;
+                    }else{
+                        stopwatch_startStop.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/></svg>`;
+                    } 
+
+                }
+
+                const showReset = !stopwatch_reseted && stopwatch_paused;
+                stopwatch_reset.style.borderColor = (showReset)? '': 'transparent';
+                stopwatch_reset.style.width = (showReset)? '': '0';
+                stopwatch_reset.style.transform = (showReset)? '': 'scale(0)'; 
+            }
+            
+
+
+            //// APP MUSIC
+            if ( document.querySelector('.music_wrapper') ){
+                musicUpdateInfo();
+            }
+            
+
+            /****** MAIN HEADER ICONS ******/
+            stopwatch_alertIcon.classList.toggle('screen_main_header_icon_visible', !stopwatch_reseted);
+            mute_alertIcon.classList.toggle('screen_main_header_icon_visible', muteState);
+
+        }
+
+
+        
+        
+        setInterval(()=>{
+            upadteCompass( getRandomInt(0, 360) );
+            updateHeartRate( getRandomInt(60, 65) );
+        }, 1000);
+
+
+
+
+
+        /****** APP COMPASS ******/
+        function upadteCompass(angle){
+            let compass_wrapper = document.querySelector('.compass_wrapper');
+            if ( compass_wrapper == null ) return;
+            compass_wrapper.querySelector('.compass_needle').style.transform = `rotate(${angle}deg)`;
+        }
+
+        
+        
+        // SENSOR START
+        // let magSensor = new Magnetometer({ frequency: 10 });
+
+        // magSensor.addEventListener("reading", (e) => {
+        //     console.log(`Magnetic field along the X-axis ${magSensor.x}`);
+        //     console.log(`Magnetic field along the Y-axis ${magSensor.y}`);
+        //     console.log(`Magnetic field along the Z-axis ${magSensor.z}`);
+        //     console.log(magSensor);
+        // });
+        // magSensor.start();
+
+        // SENSOR END
+        
+
+
+
+        /****** APP CALCULATOR ******/
+
+        function generateCalulatorKeypad( extended = false ){
+
+            let calculator_wrapper = document.querySelector('.calculator_wrapper');
+            if ( calculator_wrapper == null ) return;
+
+            calculator_wrapper.classList.toggle('calculator_extendedMode', extended);
+
+            document.querySelectorAll('.calculator_key').forEach((e, i) => {
+                const keypadIndex = extended ? 1 : 0;
+                const hasKey = calculator_keyMap[keypadIndex][i] != null;
+                e.innerHTML = hasKey ? calculator_keyMap[keypadIndex][i] : 'x';
+                e.style.visibility = hasKey ? '' : 'hidden';
+
+                e.onclick = () => {
+                    const key = calculator_keyMap[keypadIndex][i];
+                    const lcd = document.querySelector('.calculator_lcd'); 
+                    
+                    if ( lcd.innerHTML == Infinity || lcd.innerHTML == 'Error' ){
+                        lcd.innerHTML = '';
+                        return;
+                    }
+
+
+                    // Toggle Keypad Mode
+                    if ( key == 'A' ){
+                        toggleCalulatorKeypadMode();
+                    }
+                    
+                    // Clear
+                    else if ( key == 'C' ){
+                        lcd.innerHTML = '';
+                    }
+                    
+                    // Calculate
+                    else if ( key == '=' ){
+
+                        try{
+                            let dataInput = lcd.innerHTML;
+                            dataInput = dataInput.replaceAll('sin', 'Math.sin');
+                            dataInput = dataInput.replaceAll('cos', 'Math.cos');
+                            dataInput = dataInput.replaceAll('tan', 'Math.tan');
+                            dataInput = dataInput.replaceAll('log', 'Math.log');
+                            dataInput = dataInput.replaceAll('π', 'Math.PI');
+                            dataInput = dataInput.replaceAll('e', 'Math.E');
+                            dataInput = dataInput.replaceAll('√', 'Math.sqrt');
+                            dataInput = dataInput.replaceAll('^', '**');
+                            dataInput = dataInput.replaceAll('!', 'fatorial');
+
+                            const openCount  = dataInput.split('(').length - 1;
+                            const closeCount = dataInput.split(')').length - 1;
+                            const remains    = openCount - closeCount;
+
+                            if ( remains > 0 ){
+                                dataInput += ')'.repeat(remains);
+                            }
+
+                            out = +parseFloat(eval(dataInput)).toFixed(10);
+                            out = +parseFloat(out).toPrecision(8);
+
+                            if ( out != undefined && !isNaN(out) ){
+                                lcd.innerHTML = out;
+                            }
+
+                        } catch (e){
+                            lcd.innerHTML = 'Error';
+                        }
+
+                    }
+                    
+                    // Dot
+                    else if ( key == '.' ){
+                        if ( lcd.innerHTML.length == 0 ){
+                            lcd.innerHTML += '0';
+                        }
+                        lcd.innerHTML += key;
+                    }
+                    
+                    // Numeric
+                    else if ( !isNaN(parseInt(key)) ){
+                        const lastContent = lcd.innerHTML[ lcd.innerHTML.length - 1 ];
+                        if ( lcd.innerHTML.length < 16 ){
+                            lcd.innerHTML += key;
+                            lcd.innerHTML = lcd.innerHTML.substr(0, lcd.innerHTML.length - 1);
+                            lcd.innerHTML += key;
+                        }
+                    }
+                    
+                    // Operator
+                    else if ( key == '+' || key == '-' || key == '*' || key == '/' ){
+                        const lastContent = lcd.innerHTML[ lcd.innerHTML.length - 1 ];
+                        const lastContentIsOperator = lastContent == '+' || lastContent == '-' || lastContent == '*' || lastContent == '/';
+                        if ( lcd.innerHTML.length > 0 || key == '-' ){
+                            if ( lcd.innerHTML.length != 1 || !isNaN(parseInt(lastContent)) ){
+                                if ( lastContentIsOperator ){
+                                    lcd.innerHTML = lcd.innerHTML.substr(0, lcd.innerHTML.length - 1);
+                                }
+                                lcd.innerHTML += key;
+                            }
+                        }
+
+                    }
+
+
+                    // Extended Keys
+                    else{
+                        const lastContent = lcd.innerHTML[ lcd.innerHTML.length - 1 ];
+                        if ( !isNaN(parseInt(lastContent)) ){
+                            if ( key != ')' && key != '^' ){
+                                lcd.innerHTML += '*';
+                            }
+                        }
+
+                        if ( key != '(' && key != ')' && key != 'e' && key != 'π' ){
+                            lcd.innerHTML += key + '(';
+                        }else{   
+                            lcd.innerHTML += key;
+                        }
+
+                    }
+
+
+                };
+
+            });
+
+        }
+
+        function toggleCalulatorKeypadMode(){
+            let calculator_wrapper = document.querySelector('.calculator_wrapper');
+            if ( calculator_wrapper == null ) return;
+            const extended = calculator_wrapper.classList.contains('calculator_extendedMode');
+            generateCalulatorKeypad(!extended);
+        }
+
+
+
+
+
+
+
+
+
+        /****** APP MUSIC ******/
+
+        var audio_manager = new Audio();
+        var SONG_INDEX = 0;
+
+        const SONGS = [
+
+            {
+                title: 'Art School Wannabe',
+                artist: 'Sorority Noise',
+                album: 'Joy, Departed',
+                artwork: 'https://f4.bcbits.com/img/a1445726047_16.jpg',
+                src: 'url here'
+            },
+
+            {
+                title: 'Smoke Me Out',
+                artist: 'American Secrets',
+                album: "Wasn't Our Season EP",
+                artwork: 'https://f4.bcbits.com/img/a0188121758_16.jpg',
+                src: 'url here'
+            },
+
+            {
+                title: 'Change the World',
+                artist: 'Scott Sellers',
+                album: 'Power Hungry',
+                artwork: 'https://f4.bcbits.com/img/a1767863702_16.jpg',
+                src: 'url here'
+            }
+
+        ];
+
+
+        function musicUpdateInfo(){
+
+            let music_wrapper = document.querySelector('.music_wrapper');
+            if ( music_wrapper == null ) return;
+
+            music_wrapper.querySelector('.music_title').innerHTML = SONGS[SONG_INDEX].title;
+            music_wrapper.querySelector('.music_subTitle').innerHTML = SONGS[SONG_INDEX].artist;
+
+            if ( audio_manager.paused ){
+                document.querySelector('#music_playPause').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"></path></svg>`
+            }else{
+                document.querySelector('#music_playPause').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/></svg>`;
+            }
+            
+            music_wrapper.querySelector('.music_progress_fill').style.width = (audio_manager.currentTime / audio_manager.duration * 100)+ '%';
+            music_wrapper.querySelector('.music_progress_volumeFill').style.width = (audio_manager.volume * 100) + '%';
+            
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: SONGS[SONG_INDEX].title,
+                artist:  SONGS[SONG_INDEX].artist,
+                album: SONGS[SONG_INDEX].album,
+                artwork: [{src: SONGS[SONG_INDEX].artwork}]
+            });
+
+            navigator.mediaSession.setActionHandler("previoustrack", SONG_INDEX == 0? null : musicBack);
+            navigator.mediaSession.setActionHandler("nexttrack", SONG_INDEX >= SONGS.length - 1? null : musicNext);
+
+        }
+
+        
+
+        function musicLoadPlay(){
+            audio_manager.src = SONGS[SONG_INDEX].src;
+            audio_manager.play().then(()=>{
+                musicUpdateInfo();
+            }).catch(()=>{});
+        }
+
+        function musicPlayPause(){
+            if ( audio_manager.paused ){
+
+                if ( audio_manager.src == '' ){
+                    audio_manager.src = SONGS[SONG_INDEX].src;
+                }
+                audio_manager.play().then(()=>{
+                    musicUpdateInfo();
+                }).catch(()=>{});
+
+            }else{
+                audio_manager.pause();
+            }
+        }
+
+        function musicNext(){
+            if ( SONG_INDEX + 1 >= SONGS.length ) {
+                if ( document.querySelector('.music_progress_fill') ){
+                    document.querySelector('.music_progress_fill').style.width = '0';
+                    SONG_INDEX = 0;
+                    audio_manager.src = SONGS[SONG_INDEX].src;
+                }
+                return;
+            };
+            SONG_INDEX = Math.clamp(SONG_INDEX + 1, 0, SONGS.length - 1)
+            musicLoadPlay();
+        }
+
+        function musicBack(){
+            if ( SONG_INDEX == 0 ) return;
+            SONG_INDEX = Math.clamp(SONG_INDEX - 1, 0, SONGS.length - 1)
+            musicLoadPlay();
+        }
+
+         
+        function musicVolumeUp(){
+            audio_manager.volume = Math.clamp(audio_manager.volume + 0.1, 0, 1);
+        }
+        
+        function musicVolumeDown(){
+            audio_manager.volume = Math.clamp(audio_manager.volume - 0.1, 0, 1);
+        }
+
+
+        audio_manager.onended = musicNext;
+
+
+
+        navigator.mediaSession.setActionHandler("play", () => {
+            if ( audio_manager.src == '' ){
+                audio_manager.src = SONGS[SONG_INDEX].src;
+            }
+            audio_manager.play().then(()=>{
+                musicUpdateInfo(); 
+            }).catch(()=>{});
+        });
+
+
+        navigator.mediaSession.setActionHandler("pause", () => {
+            audio_manager.pause();
+        });
+
+
+
+        function musicTrackClick( music_progress_track, event ){
+            event.stopImmediatePropagation();
+            const totalTrack = music_progress_track.offsetWidth;
+            const atualFill = event.clientX - main_wrapper.offsetLeft - music_progress_track.offsetLeft;
+            const percent = atualFill / totalTrack;
+            
+            if ( audio_manager.src != '' ){
+                audio_manager.currentTime = percent * audio_manager.duration;
+            }
+        }
+        
+
+
+
+        onload = () => {
+            menuAjust();
+            generateDotMark();
+            update();
+            setInterval(update, 20);
+        };
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //////////////////// BATTERY
+
+        navigator.getBattery().then((battery) => {
+            function updateAllBatteryInfo() {
+                updateChargeInfo();
+                updateLevelInfo();
+                updateChargingInfo();
+                updateDischargingInfo();
+            }
+            updateAllBatteryInfo();
+
+            battery.addEventListener("chargingchange", () => {
+                updateChargeInfo();
+            });
+            function updateChargeInfo(){
+                setBatteryIconCharging(battery.charging);
+                updateLevelInfo();
+            }
+
+            battery.addEventListener("levelchange", () => {
+                updateLevelInfo();
+            });
+            function updateLevelInfo() {
+                if ( !battery.charging ){
+                    setBateryLevel( battery.level * 10 );
+                }
+            }
+
+            
+            battery.addEventListener("chargingtimechange", () => {
+                updateChargingInfo();
+            });
+            function updateChargingInfo() {}
+
+            battery.addEventListener("dischargingtimechange", () => {
+                updateDischargingInfo();
+            });
+            function updateDischargingInfo() {}
+
+        });
+
+
+
+        function setBateryLevel( level = 0 ){
+            if ( screen_main_clock_battery.querySelectorAll('path').length > 2 ) return;
+            level = Math.clamp(level, 0, 10);
+            screen_main_clock_battery.querySelector('path').setAttribute('d', `M2 6h${level}v4H2V6z`);
+        }
+
+        function setBatteryIconCharging( isCharging = false ){
+            
+            if ( isCharging ){
+                screen_main_clock_battery.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M9.585 2.568a.5.5 0 0 1 .226.58L8.677 6.832h1.99a.5.5 0 0 1 .364.843l-5.334 5.667a.5.5 0 0 1-.842-.49L5.99 9.167H4a.5.5 0 0 1-.364-.843l5.333-5.667a.5.5 0 0 1 .616-.09z"/>
+                    <path d="M2 4h4.332l-.94 1H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2.38l-.308 1H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+                    <path d="M2 6h2.45L2.908 7.639A1.5 1.5 0 0 0 3.313 10H2V6zm8.595-2-.308 1H12a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H9.276l-.942 1H12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.405z"/>
+                    <path d="M12 10h-1.783l1.542-1.639c.097-.103.178-.218.241-.34V10zm0-3.354V6h-.646a1.5 1.5 0 0 1 .646.646zM16 8a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8z"/>
+                </svg>
+                `;
+                return;
+            }
+
+            screen_main_clock_battery.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M2 6h10v4H2V6z"/>
+                <path d="M2 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H2zm10 1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h10zm4 3a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8z"/>
+            </svg>`
+
+        }
+
+
+        ////////////////////
+
+
+
+    </script>
+
+
+</body>
+</html>
