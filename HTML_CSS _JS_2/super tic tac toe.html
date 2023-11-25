@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Tic Tac Toe</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        } 
+
+
+
+        #main_header{
+            height: 70px; 
+            flex-shrink: 0;
+            background-color: #212121;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+        }
+
+        .player{
+            width: 48px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .playerBox{
+            width: 48px;
+            height: 32px;
+            border: 2px solid #9e9e9e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .playerActive .playerBox{
+            border-color: #28a745;
+        }
+
+
+        #resetGame{
+            padding: 8px 10px;
+            border-radius: 6px;
+            background-color: #dc3545; 
+            font-weight: 500;
+        }
+
+
+
+
+
+
+
+
+
+        #main_content{
+            height: 100%;
+            display: grid;
+            gap: 2px;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            background-color: #fff;
+        }
+ 
+        
+        .subGridWrapper{ 
+            background-color: #000;
+            padding: 4px;
+            position: relative;
+        }
+
+        .subGrid{
+            width: 100%;
+            height: 100%;
+            background-color: #161616;
+            display: grid;
+            gap: 2px;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+        }
+
+        .subGridSlot{
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+
+        
+        .subGridWinner{
+            width: 100%;
+            height: 100%;  
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.1;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .subGridWinnerActive{
+            opacity: 1 !important;
+            animation: 1s pulse infinite;
+        }
+
+
+        @keyframes pulse {
+            0%{transform: scale(0.6);}
+            50%{transform: scale(1);}
+            100%{transform: scale(0.6);}
+        }
+
+
+
+
+
+        #game_screen{
+            width: 100%;
+            height: 100%; 
+            overflow: hidden; 
+            padding-top: 70px;
+            position: absolute;
+            transition: 200ms;
+            left: -100%;
+        }
+
+        .gameScreenOpen{
+            left: 0 !important;
+        }
+
+
+        #game_grid{
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            display: grid;
+            gap: 2px;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+        }
+        
+        .gameSlot{
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gameSlotWinner{
+            background-color: #28a745 !important;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+        
+
+        <div id="main_header">
+
+            <div class="player playerActive">
+                <div class="playerBox">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#55f" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/></svg>
+                </div>
+                <div class="playerWins">0/0</div>
+            </div>
+
+            <div id="resetGame" onclick="onReset()">Resetar</div>
+
+            <div class="player">
+                <div class="playerBox">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#f55" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/></svg>
+                </div>
+                <div class="playerWins">0/0</div>
+            </div>
+
+        </div>
+
+
+        <div id="main_content">
+
+
+            <div class="subGridWrapper" pattern="0">
+                <div class="subGrid">
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                </div>
+                <div class="subGridWinner"></div>
+            </div>
+            
+            <div class="subGridWrapper" pattern="0">
+                <div class="subGrid">
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                </div>
+                <div class="subGridWinner"></div>
+            </div>
+            
+            <div class="subGridWrapper" pattern="0">
+                <div class="subGrid">
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                </div>
+                <div class="subGridWinner"></div>
+            </div>
+            
+            <div class="subGridWrapper" pattern="0">
+                <div class="subGrid">
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                </div>
+                <div class="subGridWinner"></div>
+            </div>
+            
+            <div class="subGridWrapper" pattern="0">
+                <div class="subGrid">
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                </div>
+                <div class="subGridWinner"></div>
+            </div>
+            
+            <div class="subGridWrapper" pattern="0">
+                <div class="subGrid">
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                </div>
+                <div class="subGridWinner"></div>
+            </div>
+            
+            <div class="subGridWrapper" pattern="0">
+                <div class="subGrid">
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                </div>
+                <div class="subGridWinner"></div>
+            </div>
+            
+            <div class="subGridWrapper" pattern="0">
+                <div class="subGrid">
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                </div>
+                <div class="subGridWinner"></div>
+            </div>
+            
+            <div class="subGridWrapper" pattern="0">
+                <div class="subGrid">
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                    <div class="subGridSlot"></div>
+                </div>
+                <div class="subGridWinner"></div>
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+
+        
+    
+
+
+
+    <!-- gameScreenOpen -->
+    <div id="game_screen">
+        <div id="game_grid">
+            <div class="gameSlot"></div>
+            <div class="gameSlot"></div>
+            <div class="gameSlot"></div>
+            <div class="gameSlot"></div>
+            <div class="gameSlot"></div>
+            <div class="gameSlot"></div>
+            <div class="gameSlot"></div>
+            <div class="gameSlot"></div>
+            <div class="gameSlot"></div>
+        </div>
+    </div>
+
+
+
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+
+        const WINCONDITION = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        
+		
+		 
+        var GAME = {
+
+            winsCounter: [0, 0],
+            winsMainCounter: [0, 0],
+            currentPlayerIsX: true,
+            currentMapIndex: -1,
+            gameInteractionLocked: false,
+            
+            gameMapList: [
+                {
+                    winPattern: [],
+                    gameMap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    winner: 0
+                },
+                {
+                    winPattern: [],
+                    gameMap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    winner: 0
+                },
+                {
+                    winPattern: [],
+                    gameMap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    winner: 0
+                },
+                {
+                    winPattern: [],
+                    gameMap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    winner: 0
+                },
+                {
+                    winPattern: [],
+                    gameMap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    winner: 0
+                },
+                {
+                    winPattern: [],
+                    gameMap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    winner: 0
+                },
+                {
+                    winPattern: [],
+                    gameMap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    winner: 0
+                },
+                {
+                    winPattern: [],
+                    gameMap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    winner: 0
+                },
+                {
+                    winPattern: [],
+                    gameMap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    winner: 0
+                }
+            ]
+
+
+        };
+
+
+
+
+
+        function getIconX( size = 24 ){
+            return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" fill="#55f" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/></svg>`;
+        }
+
+        function getIconO( size = 24 ){
+            return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" fill="#f55" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/></svg>`;
+        }
+
+
+
+        function updateGameScreen(){
+            
+            GAME.gameMapList.forEach( (item, index) => {
+                const subGridWinner = main_content.children[index].querySelector('.subGridWinner');
+                const subGridSlot   = main_content.children[index].querySelectorAll('.subGridSlot');
+                const subGridLine   = main_content.children[index].querySelector('.subGridLine');
+
+                // WINNER COVER
+                if ( item.winner == 0 ){
+                    subGridWinner.innerHTML = '';  
+                }else{
+                    subGridWinner.innerHTML = item.winner == 1? getIconX(64) : getIconO(64);
+                }
+
+                // SUB MAP
+                item.gameMap.forEach((mapItem, idx) => {
+                    if ( mapItem == 0 ){
+                        subGridSlot[idx].innerHTML = '';
+                    }else{
+                        subGridSlot[idx].innerHTML = mapItem == 1? getIconX() : getIconO(); 
+                        subGridSlot[idx].firstElementChild.style.opacity = item.winPattern.indexOf(idx) < 0 ? 0.3 : 1;
+                    }
+                });
+
+            });
+
+
+
+
+            document.querySelectorAll('.player .playerWins')[0].innerHTML = GAME.winsMainCounter[0].toLocaleString() + '/' + GAME.winsCounter[0].toLocaleString();
+            document.querySelectorAll('.player .playerWins')[1].innerHTML = GAME.winsMainCounter[1].toLocaleString() + '/' + GAME.winsCounter[1].toLocaleString();
+
+
+        }
+
+        updateGameScreen();
+        
+
+
+        
+
+
+
+        document.querySelectorAll('.subGridWrapper').forEach((subGridWrapper, subGridWrapperIndex) => {
+
+            subGridWrapper.onclick = () => {
+                if( subGridWrapper.classList.contains('subGridWrapperLocked') || GAME.gameInteractionLocked ) return;
+                GAME.currentMapIndex = subGridWrapperIndex;
+                console.log('load map: ', subGridWrapperIndex);
+                toggleGameScreen(true);
+            };
+
+        });
+
+
+
+
+
+
+
+
+
+        document.querySelectorAll('.gameSlot').forEach((gameSlot, gameSlotIndex) => {
+
+            gameSlot.onclick = () => {
+                if ( gameSlot.classList.contains('gameSlotUsed') || GAME.gameInteractionLocked ) return;
+
+
+                gameSlot.innerHTML = GAME.currentPlayerIsX? getIconX(64) : getIconO(64);
+                gameSlot.classList.add('gameSlotUsed');
+                gameSlot.classList.toggle('gameSlotUsedIsX', GAME.currentPlayerIsX);
+                const winnerIndex = gameCheck();
+
+                if ( winnerIndex == -1 && document.querySelectorAll('.gameSlotUsed').length < 9 ){
+                    setPlayerActive(!GAME.currentPlayerIsX);
+                    return;
+                } 
+
+                GAME.gameInteractionLocked = true;
+                console.warn('win:', winnerIndex);
+                const isDraw = winnerIndex == -1 && document.querySelectorAll('.gameSlotUsed').length >= 9;
+
+                if ( isDraw ){
+                    GAME.gameMapList[GAME.currentMapIndex].winner = 0;
+                    main_content.children[GAME.currentMapIndex].setAttribute('pattern', 0);
+                    // main_content.children[GAME.currentMapIndex].classList.toggle('subGridWrapperDraw', GAME.currentPlayerIsX);
+                }else{
+                    GAME.gameMapList[GAME.currentMapIndex].winner = GAME.currentPlayerIsX ? 1 : 2;
+                    GAME.winsCounter[ GAME.currentPlayerIsX ? 0 : 1 ]++;
+                    main_content.children[GAME.currentMapIndex].setAttribute('pattern', GAME.currentPlayerIsX ? 1 : 2);
+                    // main_content.children[GAME.currentMapIndex].classList.toggle('subGridWrapperIsX', GAME.currentPlayerIsX);
+                } 
+
+
+                let cureentWinnerIndex = 0;
+
+                document.querySelectorAll('.gameSlot').forEach((e, i) => {
+                    const isUsed = e.classList.contains('gameSlotUsed');
+                    const isUsedIsX = e.classList.contains('gameSlotUsedIsX');
+                    const isWinner = e.classList.contains('gameSlotWinner'); 
+
+                    if( isUsed ){
+                        GAME.gameMapList[GAME.currentMapIndex].gameMap[i] = isUsedIsX ? 1 : 2;
+                    }
+
+                    if ( isWinner ){
+                        GAME.gameMapList[GAME.currentMapIndex].winPattern[cureentWinnerIndex++] = i;
+                    }
+
+                });
+
+
+                main_content.children[GAME.currentMapIndex].classList.add('subGridWrapperLocked');
+                
+                // updateGameScreen();
+                
+                setTimeout(()=>{
+                    toggleGameScreen(false);
+                    gameCheckMain();
+                    updateGameScreen();
+                }, 1500); 
+
+            };
+
+        });
+
+
+
+
+
+
+
+
+
+        function gameCheck(){
+            const list = document.querySelectorAll('.gameSlot');
+
+            for (let i = 0; i < WINCONDITION.length; i++){
+                const a = WINCONDITION[i][0];
+                const b = WINCONDITION[i][1];
+                const c = WINCONDITION[i][2];
+                
+                if ( list[a].firstElementChild == null || list[b].firstElementChild == null || list[c].firstElementChild == null ){ 
+                    continue;
+                }
+
+                if ( list[a].innerHTML == list[b].innerHTML && list[b].innerHTML == list[c].innerHTML ){
+                    list[a].classList.add('gameSlotWinner');
+                    list[b].classList.add('gameSlotWinner');
+                    list[c].classList.add('gameSlotWinner');
+                    return GAME.currentPlayerIsX | 0;
+                }
+
+            } 
+
+            return -1;
+        }
+
+
+        function gameCheckMain(){
+
+            const list = document.querySelectorAll('.subGridWrapper');
+
+            for (let i = 0; i < WINCONDITION.length; i++){
+                const a = WINCONDITION[i][0];
+                const b = WINCONDITION[i][1];
+                const c = WINCONDITION[i][2];
+
+                const ax = list[a].getAttribute('pattern');
+                const bx = list[b].getAttribute('pattern');
+                const cx = list[c].getAttribute('pattern'); 
+
+                if ( ax == '0' || bx == '0' || cx == '0' ){ 
+                    continue;
+                }
+
+                if ( ax == bx && bx == cx ){
+                    GAME.gameInteractionLocked = true;
+                    console.log('MAIN WIINER:', GAME.currentPlayerIsX? 'X' : 'O');
+                    GAME.winsMainCounter[GAME.currentPlayerIsX? 0 : 1]++;
+
+                    list[a].querySelector('.subGridWinner').classList.add('subGridWinnerActive');
+                    list[b].querySelector('.subGridWinner').classList.add('subGridWinnerActive');
+                    list[c].querySelector('.subGridWinner').classList.add('subGridWinnerActive');
+                    return;
+                }
+                
+            }
+
+        }
+
+
+        function setPlayerActive( isX ){
+            document.querySelector('.playerActive').classList.remove('playerActive');
+            document.querySelectorAll('.player')[ isX? 0 : 1 ].classList.add('playerActive');
+            GAME.currentPlayerIsX = isX;
+        }
+        
+
+        function toggleGameScreen( state = false ){
+
+            document.querySelectorAll('.gameSlot').forEach(e => {
+                e.classList.remove('gameSlotUsed', 'gameSlotUsedIsX', 'gameSlotWinner');
+                e.style.backgroundColor = '';
+                e.innerHTML = '';
+            });
+
+            resetGame.style.visibility = state? 'hidden' : '';
+            game_screen.classList.toggle('gameScreenOpen', state);
+            
+            if ( !state ){
+                GAME.currentMapIndex = -1;
+            }
+            
+            GAME.gameInteractionLocked = false;
+
+        }
+
+
+
+
+
+        function onReset(){
+
+            if ( document.querySelectorAll('.subGridWrapperLocked').length == 9 || GAME.gameInteractionLocked ){
+                document.querySelectorAll('.subGridWrapper').forEach(e => e.classList = 'subGridWrapper');
+                document.querySelectorAll('.subGridSlot:has(*)').forEach(e => e.innerHTML = ''); 
+
+                document.querySelectorAll('.subGridWinner:has(*)').forEach(e => {
+                    e.classList = 'subGridWinner';
+                    e.innerHTML = '';
+                });
+
+                document.querySelectorAll('.subGridWrapper').forEach(e => e.setAttribute('pattern', 0));
+
+                GAME.gameMapList.forEach(e => {
+                    e.winPattern = [];
+                    e.gameMap = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+                    e.winner = 0;
+                });
+
+                GAME.gameInteractionLocked = false;
+            }
+
+        }
+
+
+
+
+    </script>
+
+
+</body>
+</html>

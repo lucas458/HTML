@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 48px;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+
+
+
+
+
+        .input_wrapper{
+            width: 256px;
+            height: 48px;
+            background-color: #353535;
+            border-radius: 8px;
+            position: relative;
+        }
+
+
+        .input_needle_container{ 
+            width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        .input_needle_container:nth-child(2){
+            top: -23px; 
+        }
+ 
+
+
+        .input_needle{
+            width: 1px;
+            height: 48px;
+            background-color: #fff;
+            pointer-events: none;
+        }
+
+
+        .input_needle_arrow{
+            width: 13px;
+            white-space: nowrap;
+        }
+
+
+
+        .input_track{
+            overflow: hidden; 
+            background: linear-gradient(90deg, #00f,#00000080,#f00 150px);
+        }
+
+        .input_fill{
+            width: 256px;
+            height: 48px;  
+            outline: 1px solid #fff;
+            border-right: 1px solid #fff;
+            transform: translateX(-100%); 
+            background-color: #00000080;
+            display: flex; 
+            align-items: center;
+            position: relative;
+        }
+
+
+        .input_value{
+            position: absolute;
+            left: 100%;
+            margin: 0 4px;
+            left: 0;
+            top: 0;
+        }
+
+
+
+
+
+        #fan{
+            display: flex;
+            transform-origin: center center;
+            transform: rotate(0deg);
+        }
+
+
+
+
+
+        #bargraph{
+            display: flex;
+            gap: 8px;
+        }
+        
+
+        .led{
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            background-color: rebeccapurple;
+            border-radius: 50%;
+            opacity: 0.2;
+        }
+        .led_active{
+            opacity: 1;
+        }
+
+        .led_green{
+            background-color: #5f5;
+        }
+
+        .led_yellow{
+            background-color: #ff5;
+        }
+
+        .led_red{
+            background-color: #f55;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+        
+        <div class="input_wrapper">
+            
+            <div class="pressed_interaction input_needle_container" pressed="false" name="temperature_min" value="-55.0">
+                <div class="input_needle"></div>
+                <div class="input_needle_arrow">&blacktriangle;min -55.0°C</div>
+            </div>
+            
+            <div class="pressed_interaction input_needle_container" pressed="false" name="temperature_max" value="-55.0">
+                <div class="input_needle_arrow">&blacktriangledown;max -55.0°C</div>
+                <div class="input_needle"></div>
+            </div>
+            
+            <div class="pressed_interaction input_track" pressed="false" name="temperature_current" value="-55.0">
+                <div class="input_fill"></div>
+                <div class="input_value">-55.0°C</div>
+            </div>
+
+        </div>
+        
+
+        <div id="fan">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M10 3c0 1.313-.304 2.508-.8 3.4a1.991 1.991 0 0 0-1.484-.38c-.28-.982-.91-2.04-1.838-2.969a8.368 8.368 0 0 0-.491-.454A5.976 5.976 0 0 1 8 2c.691 0 1.355.117 1.973.332.018.219.027.442.027.668Zm0 5c0 .073-.004.146-.012.217 1.018-.019 2.2-.353 3.331-1.006a8.39 8.39 0 0 0 .57-.361 6.004 6.004 0 0 0-2.53-3.823 9.02 9.02 0 0 1-.145.64c-.34 1.269-.944 2.346-1.656 3.079.277.343.442.78.442 1.254Zm-.137.728a2.007 2.007 0 0 1-1.07 1.109c.525.87 1.405 1.725 2.535 2.377.2.116.402.222.605.317a5.986 5.986 0 0 0 2.053-4.111c-.208.073-.421.14-.641.199-1.264.339-2.493.356-3.482.11ZM8 10c-.45 0-.866-.149-1.2-.4-.494.89-.796 2.082-.796 3.391 0 .23.01.457.027.678A5.99 5.99 0 0 0 8 14c.94 0 1.83-.216 2.623-.602a8.359 8.359 0 0 1-.497-.458c-.925-.926-1.555-1.981-1.836-2.96-.094.013-.191.02-.29.02ZM6 8c0-.08.005-.16.014-.239-1.02.017-2.205.351-3.34 1.007a8.366 8.366 0 0 0-.568.359 6.003 6.003 0 0 0 2.525 3.839 8.37 8.37 0 0 1 .148-.653c.34-1.267.94-2.342 1.65-3.075A1.988 1.988 0 0 1 6 8Zm-3.347-.632c1.267-.34 2.498-.355 3.488-.107.196-.494.583-.89 1.07-1.1-.524-.874-1.406-1.733-2.541-2.388a8.363 8.363 0 0 0-.594-.312 5.987 5.987 0 0 0-2.06 4.106c.206-.074.418-.14.637-.199ZM8 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"/>
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14Zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16Z"/>
+            </svg>
+        </div>
+
+
+        <div id="bargraph">
+            <div class="led led_green"></div>
+            <div class="led led_green"></div>
+            <div class="led led_green"></div>
+            <div class="led led_green"></div>
+            <div class="led led_green"></div>
+            <div class="led led_yellow"></div>
+            <div class="led led_yellow"></div>
+            <div class="led led_yellow"></div>
+            <div class="led led_red"></div>
+            <div class="led led_red"></div>
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+        
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+        
+        var angle = 0;
+        var state = false;
+        const fan = document.getElementById('fan');
+        const input_wrapper = document.querySelector('.input_wrapper');
+
+        const element_min = document.querySelector('.input_wrapper > div[name="temperature_min"]');
+        const element_max = document.querySelector('.input_wrapper > div[name="temperature_max"]');
+        const element_current = document.querySelector('.input_wrapper > div[name="temperature_current"]');
+
+        const bargraph = document.getElementById('bargraph');
+
+
+        document.querySelectorAll('.pressed_interaction').forEach(e => {
+            e.onmousedown = () => {
+                e.setAttribute('pressed', true);
+            };
+        });
+
+
+
+
+
+
+        onmouseup = onblur = () => {
+            document.querySelectorAll('.input_wrapper > div').forEach(e => e.setAttribute('pressed', false) );
+        };
+
+        
+
+        onmousemove = (event) => {
+            const element = document.querySelector('.input_wrapper > div[pressed="true"]');
+            if ( element == null ) return;
+
+            const posX = Math.clamp(event.clientX - input_wrapper.offsetLeft, 0, input_wrapper.offsetWidth);
+            const percent = posX / input_wrapper.offsetWidth * 100;
+            const name = element.getAttribute('name');
+            const value = Math.clamp(posX, 0, input_wrapper.offsetWidth);
+            
+            
+            
+            const min =     parseFloat(parseFloat( element_min.getAttribute('value') ).toFixed(1));
+            const max =     parseFloat(parseFloat( element_max.getAttribute('value') ).toFixed(1));
+            const current = parseFloat(parseFloat( element_current.getAttribute('value') ).toFixed(1));
+
+            if ( name == 'temperature_min' || name == 'temperature_max' ){
+                let newPosX = 0;
+
+                if ( name == 'temperature_max' ){ 
+                    newPosX = Math.clamp(value, element_min.offsetLeft, input_wrapper.offsetWidth);
+                    element.firstElementChild.innerHTML = `&blacktriangledown;max ${max}°C`;
+                }else{
+                    newPosX = Math.clamp(value, 0, element_max.offsetLeft);
+                    element.lastElementChild.innerHTML = `&blacktriangle;min ${min}°C`;
+                }
+
+                element.setAttribute('value', map(newPosX, 0, 256, -55, 150));
+                element.style.left = newPosX + 'px';
+
+            }else{
+                element.setAttribute('value', map(value, 0, 256, -55, 150));
+                element.firstElementChild.style.transform = `translateX(-${100 - value / input_wrapper.offsetWidth * 100}%)`;
+                element.querySelector('.input_value').innerHTML = `${current}°C`;
+            }
+
+            
+            if ( current - max > 0 ){
+                state = true;
+            }else if ( current - min < 0 ){
+                state = false;
+            }
+
+
+            setBargraph(current, min, max);
+
+        };
+
+
+
+
+
+        function setBargraph(value, min, max){ 
+            const maxLeds = map(value, min, max, 0, bargraph.children.length); 
+            bargraph.querySelectorAll('.led').forEach((led, index) => { 
+                led.classList.toggle('led_active', index < maxLeds); 
+            }); 
+        }
+        
+        
+        function update(){
+            angle = (angle + (state? 1 : 0.3) * 10) % 360;
+            fan.style.transform = `rotate(${angle}deg)`;
+            requestAnimationFrame(update);
+        }
+        
+        onload = update;
+        
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting</title>
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+        
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            padding: 16px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+        #vottingAverage, #votingTotal{ 
+            font-size: 2em;
+            margin-bottom: 2px;
+            text-align: left;
+        }
+
+        #vottingAverage::before{
+            content: 'Média: ';
+        }
+
+        #votingTotal::before{
+            content: 'Total: ';
+        }
+
+
+
+        .starRating{
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: space-between; 
+            color: #ffc107;
+        }
+
+        .starWrapper{
+            position: relative;
+        }
+
+        .starFill{
+            width: 0;
+            overflow: hidden; 
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+
+
+        .voting{
+            margin: 24px 0;
+        }
+
+        .voting:first-child{ margin-top: 0; }
+        .voting:last-child{ margin-bottom: 0; }
+
+        .voting_progress{
+            width: 320px;
+            height: 5px;
+            background-color: #555;
+        }
+
+        .voting_fill{
+            width: 0;
+            height: 100%; 
+        }
+
+        .voting:nth-child(1) .voting_fill, .voting:nth-child(1) .voting_button{ background-color: #f44336; }
+        .voting:nth-child(2) .voting_fill, .voting:nth-child(2) .voting_button{ background-color: #28a745; }
+        .voting:nth-child(3) .voting_fill, .voting:nth-child(3) .voting_button{ background-color: #007bff; }
+        .voting:nth-child(4) .voting_fill, .voting:nth-child(4) .voting_button{ background-color: #ffc107; color: #222; }
+        .voting:nth-child(5) .voting_fill, .voting:nth-child(5) .voting_button{ background-color: #009688; }
+
+
+
+        .voting_control{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+        }
+
+        .voting_button{
+            padding: 4px 6px;
+            border-radius: 4px;
+            background-color: #353535;
+            cursor: pointer;
+        }
+
+        .voting_button:hover{
+            opacity: 0.5;
+        }
+        
+
+
+        #votingReset{
+            padding: 8px 16px;
+            background-color: #dc3545;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #votingReset:hover{
+            opacity: 0.5;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="vottingAverage">0,0</div>
+
+        <div class="starRating" id="starRatingElement">
+            
+            <div class="star">
+                <div class="starWrapper">
+                    <div class="starFrame">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/></svg>
+                    </div>
+                    <div class="starFill">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="star">
+                <div class="starWrapper">
+                    <div class="starFrame">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/></svg>
+                    </div>
+                    <div class="starFill">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="star">
+                <div class="starWrapper">
+                    <div class="starFrame">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/></svg>
+                    </div>
+                    <div class="starFill">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="star">
+                <div class="starWrapper">
+                    <div class="starFrame">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/></svg>
+                    </div>
+                    <div class="starFill">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="star">
+                <div class="starWrapper">
+                    <div class="starFrame">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/></svg>
+                    </div>
+                    <div class="starFill">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div id="voting_wrapper">
+
+            <div class="voting">
+                <div class="voting_progress">
+                    <div class="voting_fill"></div>
+                </div>
+                <div class="voting_control">
+                    <div class="voting_value">0</div>
+                    <div class="voting_button">Votar (5)</div>
+                </div>
+            </div>
+
+            <div class="voting">
+                <div class="voting_progress">
+                    <div class="voting_fill"></div>
+                </div>
+                <div class="voting_control">
+                    <div class="voting_value">0</div>
+                    <div class="voting_button">Votar (4)</div>
+                </div>
+            </div>
+
+            <div class="voting">
+                <div class="voting_progress">
+                    <div class="voting_fill"></div>
+                </div>
+                <div class="voting_control">
+                    <div class="voting_value">0</div>
+                    <div class="voting_button">Votar (3)</div>
+                </div>
+            </div>
+
+            <div class="voting">
+                <div class="voting_progress">
+                    <div class="voting_fill"></div>
+                </div>
+                <div class="voting_control">
+                    <div class="voting_value">0</div>
+                    <div class="voting_button">Votar (2)</div>
+                </div>
+            </div>
+
+            <div class="voting">
+                <div class="voting_progress">
+                    <div class="voting_fill"></div>
+                </div>
+                <div class="voting_control">
+                    <div class="voting_value">0</div>
+                    <div class="voting_button">Votar (1)</div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div id="votingTotal">0</div>
+        <div id="votingReset">Resetar</div>
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+        var votingList = [0, 0, 0, 0, 0];
+
+        function setStarRatting( value = 0 ){
+            value = Math.abs(Math.clamp(value, 0, 5));
+            const starRatingElement = document.getElementById('starRatingElement');
+            let flagClear = false;
+            
+            for (let i = 0; i < starRatingElement.children.length; i++){
+                const fillIndex = Math.trunc(value);
+                
+                if ( i < fillIndex ){
+                    starRatingElement.children[i].querySelector('.starFill').style.width = '100%';
+                    continue;
+                }
+
+                if ( !flagClear ){
+                    flagClear = true;
+                    const c = parseFloat('0.' + String(value - fillIndex).split('.')[1]) * 100;
+                    starRatingElement.children[i].querySelector('.starFill').style.width = c + '%';
+                    continue;
+                }
+                
+                starRatingElement.children[i].querySelector('.starFill').style.width = '0';
+                
+            }
+
+        }
+
+        
+        function getVottingTotal(){
+            let s = 0;
+            votingList.forEach(e => s += e);
+            return s;
+        }
+
+
+        function getVottingAverage(){ 
+            let avg = 0;
+            votingList.forEach((e, i) => avg += e * (votingList.length - i) );
+            avg /= getVottingTotal();
+            if ( isNaN(avg) ){
+                avg = 0;
+            }
+            return avg;
+        }
+
+
+        document.querySelectorAll('.voting').forEach((e, i) => {
+            e.querySelector('.voting_button').onclick = () => {
+                votingList[i]++;
+                update();
+            };
+        });
+
+
+        votingReset.onclick = () => {
+            votingList = [0, 0, 0, 0, 0];
+            document.querySelectorAll('.voting').forEach((el, idx) => el.querySelector('.voting_value').innerHTML = 0 );
+            update();
+        };
+        
+
+        function update(){
+            document.querySelectorAll('.voting').forEach((el, idx) => {
+                const percent = votingList[idx] / getVottingTotal() * 100;
+                el.querySelector('.voting_fill').style.width = (isNaN(percent) ? 0 : percent) + '%';
+                el.querySelector('.voting_value').innerHTML = votingList[idx].toLocaleString();
+            });
+            const avg = getVottingAverage();
+            setStarRatting(avg);
+            vottingAverage.innerHTML = avg.toFixed(2);
+            votingTotal.innerHTML = getVottingTotal().toLocaleString();
+        }
+
+
+        update();
+        
+    </script>
+
+
+</body>
+</html>
