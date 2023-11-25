@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+
+
+
+
+
+
+        #screen_list{
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, 100%);
+            position: relative;
+            left: 0;
+        }
+
+        .screen_container{
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(5, 1fr); 
+        }
+
+
+
+        .slot_container{ 
+            background-color: rebeccapurple;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+
+
+        .item{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; 
+            
+        }
+
+        .item_content{
+            width: 48px;
+            height: 48px; 
+            background-color: royalblue;
+            border-radius: 8px;
+            background-size: 100% 100%;
+        }
+
+        .item_label{
+            overflow: hidden;
+        }
+
+
+
+
+        .folder .item_content{
+            background-color: #353535;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr); 
+            padding: 5px;
+            gap: 4px;
+        }
+
+        .item_folder{
+            border-radius: 4px;
+            background-color: gold;
+            background-size: 100% 100%;
+        }
+
+
+
+
+
+        #fixed_item_list{
+            height: calc(100% / 5);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body oncontextmenu="return false;">
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+        <div id="screen_list">
+
+            <div class="screen_container" style="background: red;">
+
+                <div class="slot_container">
+                    <div class="item app">
+                        <div class="item_content"></div>
+                        <div class="item_label">nome aqui</div>
+                    </div>
+                </div>
+
+                <div class="slot_container">
+                    <div class="item folder">
+                        <div class="item_content">
+                            <div class="item_folder"></div>
+                            <div class="item_folder"></div>
+                            <div class="item_folder"></div>
+                            <div class="item_folder"></div>
+                            <div class="item_folder"></div>
+                            <div class="item_folder"></div>
+                            <div class="item_folder"></div>
+                            <div class="item_folder"></div>
+                            <div class="item_folder"></div>
+                        </div>
+                        <div class="item_label">nome aqui</div>
+                    </div>
+                </div>
+
+                <div class="slot_container">
+                    <div class="item app">
+                        <div class="item_content"></div>
+                        <div class="item_label">nome aqui</div>
+                    </div>
+                </div>
+
+                <div class="slot_container">
+                    <div class="item app">
+                        <div class="item_content"></div>
+                        <div class="item_label">nome aqui</div>
+                    </div>
+                </div>
+
+                <div class="slot_container">
+                    <div class="item app">
+                        <div class="item_content"></div>
+                        <div class="item_label">nome aqui</div>
+                    </div>
+                </div>
+
+                <div class="slot_container">
+                    <div class="item app">
+                        <div class="item_content"></div>
+                        <div class="item_label">nome aqui</div>
+                    </div>
+                </div>
+                
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+            </div>
+
+            <div class="screen_container" style="background: green;">
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+            </div>
+
+            <div class="screen_container" style="background: blue;">
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+                <div class="slot_container"></div>
+            </div>
+
+        </div>
+
+
+        <div id="fixed_item_list">
+            batata
+        </div>
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+
+
+
+
+
+
+        var screen_list = document.getElementById('screen_list');
+        var main_screen = document.getElementById('main_screen');
+
+
+        var screenContainerInitX         = 0;
+        var screenContainerAbsoluteInitX = 0;
+        var screenContainerCanMove       = true;
+
+        var itemMoveReference = null;
+        var slotContainer     = null;
+
+        var longPressTimer = null;
+
+
+
+
+
+
+
+        const APPS = [
+
+            {
+                name: "com.calculator",
+                label: "Calculadora",
+                icon: "https://cdn2.iconfinder.com/data/icons/ios7-inspired-mac-icon-set/512/Calculator_512.png"
+            },
+            {
+                name: "com.caller",
+                label: "Telefone",
+                icon: "https://icon-library.com/images/caller-icon/caller-icon-0.jpg"
+            },
+            {
+                name: "com.contacts",
+                label: "Contatos",
+                icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Google_Contacts_icon.svg/2048px-Google_Contacts_icon.svg.png"
+            },
+            {
+                name: "com.sms",
+                label: "Mensagens",
+                icon: "https://cdn-icons-png.flaticon.com/512/733/733533.png"
+            },
+            {
+                name: "com.music",
+                label: "Músicas",
+                icon: "https://cdn-icons-png.flaticon.com/512/9973/9973495.png"
+            },
+            {
+                name: "com.camera",
+                label: "Câmera",
+                icon: "https://cdn-icons-png.flaticon.com/512/3687/3687416.png"
+            },
+            {
+                name: "com.files",
+                label: "Arquivos",
+                icon: "https://cdn-icons-png.flaticon.com/512/3767/3767084.png"
+            },
+            {
+                name: "com.internet",
+                label: "Navegador",
+                icon: "https://imagepng.org/wp-content/uploads/2019/08/google-chrome-icon-4.png"
+            },
+
+        ];
+
+
+
+
+        var SCREEN = [
+
+            {
+                content: [
+
+                    {
+                        type: "app",
+                        name: "com.calculator",
+                        index: 0
+                    },
+                    {
+                        type: "app",
+                        name: "com.files",
+                        index: 1
+                    },
+                    {
+                        type: "folder",
+                        label: "Pasta",
+                        index: 2,
+                        items: ["com.internet", "com.sms", "com.camera"]
+                    },
+                    {
+                        type: "app",
+                        name: "com.music",
+                        index: 3
+                    },
+
+                ]
+            },
+
+
+        ]; 
+
+
+
+        
+
+
+
+        function getSlotContainerAt(x, y){
+            const index = (y * 4) + x;
+            return document.querySelectorAll('.slot_container')[index];
+        }
+
+
+
+
+        screen_list.ontouchstart = (event) => {
+            screenContainerInitX = event.touches[0].clientX - screen_list.offsetLeft;
+            screenContainerAbsoluteInitX = event.touches[0].clientX;
+        };
+
+
+        screen_list.ontouchend = () => {
+            const screenIndex = Math.abs( Math.round(screen_list.offsetLeft / main_screen.offsetWidth) ); 
+            screen_list.style.transition = '200ms';
+            screen_list.style.left = (-main_screen.offsetWidth * screenIndex) + 'px';
+        };
+        
+        
+        screen_list.ontouchmove = (event) => {
+            
+            let screenContainerAbsoluteDiff = event.touches[0].clientX - screenContainerAbsoluteInitX;
+            let screenContainerDiff         = event.touches[0].clientX - screenContainerInitX;
+
+            if ( !screenContainerCanMove ){
+                return;
+            }
+            
+            if ( Math.abs(screenContainerAbsoluteDiff) < 10 ){
+                return;
+            }
+
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
+            
+            if ( Math.abs(screenContainerAbsoluteDiff) > main_screen.offsetWidth ){
+                const screenIndex = Math.abs( Math.round(screen_list.offsetLeft / main_screen.offsetWidth) );
+                screenContainerDiff = -main_screen.offsetWidth * screenIndex;
+            }
+            
+            screenContainerDiff = Math.clamp(screenContainerDiff, -main_screen.offsetWidth * (screen_list.children.length - 1), 0);
+
+            screen_list.style.transition = '';
+            screen_list.style.left = (screenContainerDiff) + 'px';
+
+        };
+
+
+
+
+
+        function itemOnTouchStart(item){
+
+        }
+
+
+        
+
+
+
+
+
+
+        ontouchend = () => {
+
+            if ( itemMoveReference != null ){
+                
+
+
+                const itemIndex = Array.from(document.querySelectorAll('.slot_container')).indexOf(itemMoveReference.parentElement);
+                const itemPressedInitGrid = {
+                    x: itemIndex % 4,
+                    y: itemIndex / 4 | 0
+                };
+
+                itemMoveReference.parentElement.style.transition = '200ms';
+
+                if ( slotContainer.firstElementChild != null ){
+                    
+                    if ( itemMoveReference == slotContainer.firstElementChild ){
+                        console.log('used same');
+                        itemMoveReference.parentElement.style.left = 0;
+                        itemMoveReference.parentElement.style.top  = 0;
+                    }else{
+                        
+                        const isHoldingFolder = itemMoveReference.classList.contains("folder");
+                        const isStaticFolder  = slotContainer.firstElementChild.classList.contains("folder");
+
+                        // APP to FOLDER
+                        if ( !isHoldingFolder && isStaticFolder ){
+                            console.log('app to folder');
+                        }
+                        // APP to APP -- CREATE FOLDER
+                        else if ( !isHoldingFolder && !isStaticFolder ){
+                            console.log('app to app');
+                        }else{
+                            itemMoveReference.parentElement.style.left = 0;
+                            itemMoveReference.parentElement.style.top  = 0;
+                        }
+
+                    }
+
+                    itemMoveReference = null;
+                    slotContainer     = null;
+                    screenContainerCanMove = true;
+
+
+                }else{
+                    console.log('free'); 
+                    itemMoveReference.parentElement.style.left = (slotContainer.offsetLeft - itemPressedInitGrid.x * slotContainer.offsetWidth) + 'px';
+                    itemMoveReference.parentElement.style.top  = (slotContainer.offsetTop - itemPressedInitGrid.y * slotContainer.offsetHeight) + 'px';
+
+                    setTimeout(()=>{
+                        console.log('swap');
+                        
+                        itemMoveReference.parentElement.style.zIndex = '';
+                        itemMoveReference.parentElement.style.left = '';
+                        itemMoveReference.parentElement.style.top  = '';
+                        
+                        slotContainer.appendChild(itemMoveReference);
+
+
+                        itemMoveReference = null;
+                        slotContainer     = null;
+                        screenContainerCanMove = true;
+                    }, 250);
+
+
+
+                }
+
+            }
+
+            
+        };
+
+
+        ontouchmove = (event) => {
+
+
+            if ( itemMoveReference != null ){
+                
+                const itemIndex = Array.from(document.querySelectorAll('.slot_container')).indexOf(itemMoveReference.parentElement);
+
+                const itemPressedInitGrid = {
+                    x: itemIndex % 4,
+                    y: itemIndex / 4 | 0
+                };
+
+
+                var currentGridX = Math.round((event.touches[0].clientX - itemMoveReference.parentElement.offsetWidth/2) / (360 / 4));
+                currentGridX     = Math.abs(Math.clamp(currentGridX, 0, 4 - 1));
+
+                var currentGridY = Math.round((event.touches[0].clientY - itemMoveReference.parentElement.offsetHeight/2) / (640 / 5));
+                currentGridY     = Math.abs(Math.clamp(currentGridY, 0, 5 - 1));
+
+                console.log( currentGridX, currentGridY );
+                
+
+                slotContainer = getSlotContainerAt(currentGridX, currentGridY);
+
+                
+
+                itemMoveReference.parentElement.style.transition = '';
+                // itemMoveReference.parentElement.style.backgroundColor = '#007bff';
+                itemMoveReference.parentElement.style.zIndex = 1;
+                itemMoveReference.parentElement.style.left   = (event.touches[0].clientX - (itemPressedInitGrid.x * itemMoveReference.parentElement.offsetWidth) - itemMoveReference.parentElement.offsetWidth/2) + 'px';
+                itemMoveReference.parentElement.style.top    = (event.touches[0].clientY - (itemPressedInitGrid.y * itemMoveReference.parentElement.offsetHeight) - itemMoveReference.parentElement.offsetHeight/2) + 'px';
+
+            }
+
+
+        };
+
+
+
+
+
+        function getAppObjectByName( name ){
+            return APPS.find(e => e.name == name);
+        }
+
+
+        onload = () => {
+
+
+            document.querySelectorAll(".slot_container .item").forEach(e => {
+                e.remove();
+            });
+
+
+            SCREEN.forEach((screenWrapper, screenIndex) => {
+                
+
+                screenWrapper.content.forEach(item => {
+
+                    let appObject = null;
+
+                    let itemElement = document.createElement('div');
+                    itemElement.classList.add("item");
+                    itemElement.classList.add( item.type );
+
+                    if ( item.type == 'app' ){
+                        appObject = getAppObjectByName(item.name); 
+                    }
+
+                    
+                    
+                    itemElement.innerHTML = `
+                    <div class="item_content"></div>
+                    <div class="item_label">${(item.type == 'app')? appObject.label : item.label}</div>`;
+
+                    
+                    if ( item.type == 'folder' ){
+
+                        for (let i = 0; i < Math.clamp(item.items.length, 0, 6); i++){ 
+                            let itemFolder = document.createElement('div');
+                            itemFolder.classList.add('item_folder');
+                            itemFolder.style.backgroundImage = `url("${getAppObjectByName(item.items[i]).icon}")`;
+                            itemElement.querySelector('.item_content').appendChild(itemFolder);
+                        }
+
+                    }else{
+                        itemElement.querySelector('.item_content').style.backgroundImage = `url("${appObject.icon}")`;
+                    }
+
+                    screen_list.children[screenIndex].children[item.index].appendChild(itemElement);
+
+                });
+
+
+            });
+
+
+
+            // TOUCH
+            document.querySelectorAll('.slot_container .item').forEach(item => {
+
+                item.ontouchstart = () => {
+
+                    if ( longPressTimer == null ){
+                        longPressTimer = setTimeout(()=>{
+                            longPressTimer = null;
+                            screenContainerCanMove = false;
+                            itemMoveReference = item;
+                            console.log('long press');
+                        }, 500);
+                    }
+
+                };
+
+                item.onclick = () => {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                    console.log('click');
+                };
+
+            });
+
+
+        };
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
