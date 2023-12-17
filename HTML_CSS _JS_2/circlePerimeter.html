@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+        
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+        
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+        #circle{
+            width: 50px;
+            height: 50px;
+            background: conic-gradient(#424242 45deg, #000 0);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8em;
+            position: absolute;
+            z-index: 1;
+        }
+
+        #circlePerimeterContainer{
+            width: 70px;
+            height: 70px;
+            background-color: blue;
+            border-radius: 50%; 
+            background: conic-gradient(#0f0 45deg, #f00 0);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        #circlePerimeterContainer > div{
+            width: calc(100% - 2px);
+            height: calc(100% - 2px);
+            background-color: #181818;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        #circlePerimeterContainer > div div{
+            width: 8px;
+            height: 1px;
+            background-color: #fff;
+            left: 50%;
+            top: calc(50% - 1px);
+            transform-origin: left center;
+            transform: rotate(0deg) translateX(27px); 
+            position: absolute; 
+        }
+
+        #circlePerimeterContainer > div div:first-child{
+            transform: rotate(270deg) translateX(27px); 
+        }
+        #circlePerimeterContainer > div div:last-child{
+            transform: rotate(0deg) translateX(27px);
+        }
+
+        
+ 
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        
+        <div id="circle">999.99</div>
+        
+        
+        <div id="circlePerimeterContainer">
+            <div>
+                <div></div>
+                <div id="lineMark"></div>
+            </div>
+        </div>
+        
+        
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        }; 
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+        function pad( v = 0 ){
+            if ( v < 10 ) return '0' + v;
+            return v.toString();
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+        
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+        const DATES = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        const MONTHS = [
+            "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"
+        ];
+
+
+
+
+
+
+
+        onmousemove = (event) => {
+
+            const angle = 360 - (Math.atan2(event.clientX - main_screen.offsetWidth/2, event.clientY - main_screen.offsetHeight/2) * 180 / Math.PI + 180);
+            
+            const perimeter = 2 * Math.PI * (circle.offsetWidth/2) * (angle / 360);
+
+            circle.style.background = `conic-gradient(#424242 ${angle}deg, #000 0)`;
+            circlePerimeterContainer.style.background = `conic-gradient(#fff ${angle}deg, #181818 0)`;
+            lineMark.style.transform = `rotate(${angle - 90}deg) translateX(27px)`;
+            circle.innerHTML = perimeter.toFixed(2);
+        }; 
+
+
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

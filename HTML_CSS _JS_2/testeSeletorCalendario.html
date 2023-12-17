@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+        html, body{
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #calendario{
+            padding: 4px 0;
+            background-color: #212121;
+            border-radius: 8px;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+        #calendario_mes{
+            display: flex;
+            justify-content: center;
+            padding: 4px 0;
+        }
+
+        #calendario_mes_label{
+            padding: 4px 8px;
+            background-color: royalblue;
+            color: #f9f9f9;
+            border-radius: 4px;
+            width: fit-content;
+        }
+
+
+
+        #calendario_diaSenama{
+            margin-bottom: 1px;
+            border-bottom: 1px solid #fff;
+        }
+
+
+        #calendario_diaSenama,
+        #calendario_datas{    
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            justify-items: center;
+        }
+
+
+        #calendario_diaSenama div{
+            width: 40px;
+            height: 24px;
+        }
+        #calendario_diaSenama div:first-child,
+        #calendario_datas .data:nth-child(7n - 6){
+            color: #dc3545;
+        }
+
+        #calendario_datas .data.dataBefore:nth-child(1){
+            color: #dc354580;
+        }
+
+
+        .data{
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        } 
+
+
+        .dataBefore,
+        .dataAfter{
+            color: #555;
+        }
+
+
+
+        .dataSelected{
+            background-color: #424242;
+        }
+
+        .dataHead,
+        .dataTail{
+            background-color: #007bff;
+            border-radius: 50px;
+        } 
+
+        .roundLeft{
+            border-radius: 50px 0 0 50px;
+        }
+        .roundRight{
+            border-radius: 0 50px 50px 0;
+        }
+
+
+
+
+        .dataCurrent{
+            position: relative;
+        }
+        .dataCurrent:not(.dataHead):not(.dataTail)::after{
+            content: '';
+            display: block;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #007bff;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body oncontextmenu="return false;">
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="calendario">
+            <div id="calendario_mes">
+                <div id="calendario_mes_label"></div>
+            </div>
+
+            <div id="calendario_diaSenama">
+                <div>D</div>
+                <div>S</div>
+                <div>T</div>
+                <div>Q</div>
+                <div>Q</div>
+                <div>S</div>
+                <div>S</div>
+            </div>
+            
+            <div id="calendario_datas"></div>
+        </div>
+        
+    </div>
+
+
+     
+
+
+    <script>
+        
+        const MONTHS = [
+            "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"
+        ];
+        
+
+        function pad( v = 0 ){
+            if ( v < 10 ) return '0' + v;
+            return v.toString();
+        }
+
+
+        function onTouchStart( data ){
+            data.ontouchstart = () => {
+                document.querySelectorAll('.dataHead').forEach(e => e.classList.remove('dataHead'));
+                resetClasses();
+                data.classList.add('dataSelected', 'dataHead');
+            };
+        }
+        
+
+        function resetClasses(){
+            document.querySelectorAll('.dataSelected').forEach(e => e.classList.remove('dataSelected'));
+            document.querySelectorAll('.roundLeft, .roundRight').forEach(e => e.classList.remove('roundLeft', 'roundRight'));
+            document.querySelectorAll('.dataTail').forEach(e => e.classList.remove('dataTail'));
+        }
+
+
+        function generateCalendar( dateTime ){
+            const maxBeforeMonthDate = new Date(dateTime.getFullYear(), dateTime.getMonth(), 0).getDate();
+            const maxMonthDate       = new Date(dateTime.getFullYear(), dateTime.getMonth()+1, 0).getDate();
+            const starDay            = new Date(dateTime.getFullYear(), dateTime.getMonth(), 1).getDay();
+            const currentDateTime    = new Date();
+            
+            calendario_mes_label.innerHTML = MONTHS[ dateTime.getMonth() ]; 
+            calendario_datas.innerHTML = '';
+
+            for (let i = 0; i < 7*5; i++){
+                const data = document.createElement('div'); 
+
+                if ( i < starDay ){
+                    data.classList.add('data', 'dataBefore');
+                    data.innerHTML = pad( maxBeforeMonthDate - starDay + i + 1 );
+                }else if ( i - starDay >= maxMonthDate ){
+                    data.classList.add('data', 'dataAfter');
+                    data.innerHTML = pad(i - maxMonthDate - starDay + 1);
+                }else{
+                    data.classList.add('data');
+                    data.innerHTML = pad(i - starDay + 1);
+
+                    if ( i - starDay + 1 == currentDateTime.getDate() && dateTime.getMonth() == currentDateTime.getMonth() && dateTime.getFullYear() == currentDateTime.getFullYear() ){
+                        data.classList.add('dataCurrent');
+                    }
+                }
+
+                calendario_datas.appendChild(data);
+                onTouchStart(data);
+
+            }
+            
+        }
+
+
+
+        ontouchmove = (event) => {
+
+            const touchPositon = {
+                x: event.touches[0].clientX,
+                y: event.touches[0].clientY
+            };
+            
+            const dataList = Array.from(document.querySelectorAll('.data'));
+            const headIndex  = dataList.indexOf( document.querySelector('.dataHead') );
+            let tailIndex  = headIndex;
+            if ( headIndex < 0 ) return;
+            
+            resetClasses();
+
+            dataList.every((data, index) => {
+                if ( touchPositon.x >= data.offsetLeft && touchPositon.x <= data.offsetLeft + data.offsetWidth && touchPositon.y >= data.offsetTop && touchPositon.y <= data.offsetTop + data.offsetHeight ){
+                    tailIndex = index;
+                    return false;
+                }
+                return true;
+            });
+            
+            const diff   = headIndex - tailIndex;
+            const amount = Math.abs(diff) + 1;
+            
+            for (let i = Math.min(headIndex, tailIndex); i <= Math.max(headIndex, tailIndex); i++){
+                dataList[i].classList.add('dataSelected'); 
+
+                if ( diff != 0 ){ 
+                    dataList[headIndex].classList.add( (diff > 0)? 'roundRight' : 'roundLeft' );
+                    dataList[tailIndex].classList.add( (diff > 0)? 'roundLeft' : 'roundRight' ); 
+                    dataList[tailIndex].classList.add('dataTail'); 
+                }
+                
+            }
+
+        };
+
+
+
+        onclick = (event) => {
+            event.stopImmediatePropagation();
+            if ( event.target.id == 'main_screen' ){
+                document.querySelectorAll('.dataHead').forEach(e => e.classList.remove('dataHead'));
+                resetClasses();
+            }
+
+        };
+        
+
+
+        onload = () => {
+            generateCalendar( new Date() );
+        };
+        
+
+    </script>
+
+
+</body>
+</html>
