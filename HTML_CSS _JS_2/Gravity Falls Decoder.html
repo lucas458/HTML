@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gravity Falls Decoder</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+        
+
+
+
+        #main_header,
+        #main_footer{
+            height: 56px;
+            background-color: #181818;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+        }
+
+        #header_label{
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+        
+
+
+
+        #main_content{
+            height: 100%;
+            background-color: #212121;
+            padding: 8px;
+            display: grid;
+            grid-template-rows: 1fr 64px 1fr;
+        }
+
+
+        .textBox{
+            width: 100%;
+            height: 100%; 
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        textarea{
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            padding: 8px;
+            background-color: #181818;
+            color: #fff;
+            caret-color: red;
+            font-size: 1.2em;
+        }
+
+
+
+
+        #radioGroup{
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 8px 0;
+        }
+
+        .radio{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+        
+        .radio input{
+            display: none;
+        }
+
+
+        .radio > div{
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            border: 1px solid #757575;
+            border-radius: 50%;
+            padding: 4px;
+        }
+
+        .radio > div div{
+            width: 100%;
+            height: 100%;
+            background-color: #007bff;
+            border-radius: 50%;
+            transition: 200ms;
+            transform: scale(0);
+        }
+
+        .radio input:checked ~ div{
+            border-color: #fff;
+        }
+        .radio input:checked ~ div div{
+            transform: scale(1);
+        }
+        
+
+
+
+        #main_footer{
+            padding: 8px;
+            gap: 8px;
+        }
+        .footerButton{
+            background-color: #dc3545;
+            height: 100%;
+            flex: 1;
+            font-size: 1.2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 6px;
+            box-shadow: 0 0 5px 0 #000;
+            transition: 200ms;
+        }
+        .footerButton:last-child{
+            background-color: #007bff;
+        }
+
+        .footerButton:active{
+            box-shadow: 0 0 0px 0 #000;
+            opacity: 0.8;
+            transition: 1ms;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+    <div id="main_screen">
+
+        <div id="main_header">
+            <div id="header_label">Gravity Falls Decoder</div> 
+        </div>
+
+        <div id="main_content">
+            
+            <div class="textBox">
+                <textarea id="textareaInput" cols="30" rows="10" placeholder="INPUT: 2-21-20 23-8-15 19-20-15-12-5 20-8-5 3-1-16-5-18-19?" spellcheck="false"></textarea>
+            </div>
+
+            <div id="radioGroup">
+                <label class="radio">
+                    <input type="radio" name="type" onchange="onSelectType(0)" checked>
+                    <div><div></div></div>
+                    <span>Decode Numbers</span>
+                </label>
+    
+                <label class="radio">
+                    <input type="radio" name="type" onchange="onSelectType(1)">
+                    <div><div></div></div>
+                    <span>Decode Words</span>
+                </label>
+            </div>
+
+            <div class="textBox">
+                <textarea id="textareaOutput" cols="30" rows="10" spellcheck="false" placeholder="OUTPUT: BUT WHO STOLE THE CAPERS?" readonly></textarea>
+            </div>
+        </div>
+
+        <div id="main_footer">
+            <div class="footerButton" onclick="clearAll()">Clear</div>
+            <div class="footerButton" onclick="executeDecode()">Decode</div>
+        </div>
+
+    </div>
+
+    
+    <script>
+        
+
+        function removeSpaces( str = '' ){
+            return (str.replace(/  +/g, ' ')).trim();
+        }
+        
+
+        function decodeNumberToString( input = '' ){
+            input = removeSpaces(input);
+            if ( input == '' ) return '';
+            let str = '';
+            const list = input.split('-');
+            list.forEach(e => {
+                if ( e.indexOf(' ') < 0 ){
+                    str += String.fromCharCode(64 + parseInt(e));
+                }else{
+                    str += String.fromCharCode(64 + parseInt(e.split(' ')[0]));
+                    str += ' ';
+                    str += String.fromCharCode(64 + parseInt(e.split(' ')[1]));
+                } 
+            });
+            return str;
+        }
+        
+
+        function decodeLetter( letter = '' ){
+            const code = letter.charCodeAt(0);
+            if ( code >= 65 && code <= 90 ){
+                return String.fromCharCode( (code + 10) % 26 + 65 );
+            }
+            if ( code >= 97 && code <= 122 ) {
+                return String.fromCharCode( (code + 4) % 26 + 97 );
+            }
+            return letter;
+        }
+
+
+        function decodeString( input = '' ){
+            input = removeSpaces(input);
+            let str = '';
+            Array.from(input).forEach((e, i) => {
+                str = str.concat( decodeLetter(e) ); 
+            });
+            return str;
+        }
+        
+
+        function getDecodeType(){
+            return Array.from(document.querySelectorAll('.radio input')).indexOf(document.querySelector('.radio input:checked'));
+        }
+
+
+        function executeDecode(){
+            const type = getDecodeType();
+            textareaOutput.value = type == 0? decodeNumberToString(textareaInput.value) : decodeString(textareaInput.value);
+            textareaInput.focus(); 
+        }
+
+
+        function onSelectType( type ){
+            textareaInput.placeholder = (type == 0)? "INPUT: 2-21-20 23-8-15 19-20-15-12-5 20-8-5 3-1-16-5-18-19?" : "INPUT: QHAW ZHHN: UHWXUQ WR EXWW LVODQG";
+            textareaOutput.placeholder = (type == 0)? "OUTPUT: BUT WHO STOLE THE CAPERS?" : "OUTPUT: NEXT WEEK: RETURN TO BUTT ISLAND";
+            executeDecode();
+        }
+
+
+        function clearAll(){ 
+            textareaInput.value = textareaOutput.value = '';
+            textareaInput.focus();
+        }
+
+    </script>
+
+</body>
+</html>
