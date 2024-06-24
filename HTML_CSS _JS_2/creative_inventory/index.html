@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Minecraft</title>
+</head>
+
+
+
+<body oncontextmenu="return false">
+    
+    <div id="main">
+
+
+        <div id="tempSlot"></div>
+
+        
+        <div id="minetip-tooltip">
+            <div id="minetip-title"></div>
+            <div id="minetip-subTitle"></div>
+        </div>
+
+
+        <div id="interface">
+
+
+            <!-- interface_active, search_mode -->
+            <div id="blocks_interface" class="interface_active">
+
+                <div id="inputTextWrapper">
+                    <input type="text" maxlength="15" spellcheck="false" id="inputText">
+                </div>
+
+                <div id="scroll_track">
+                    <div class="scroll_thumb scroll_enabled"></div>
+                </div>
+
+                <div class="slot_list">
+    
+                    <div class="slot_grid" id="slot_all">
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                        <div class="slot"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- interface_active -->
+            <div id="survival_interface">
+
+                <div id="slot_delete" class="slot"></div>
+
+                <div id="slot_armor"> 
+                    <div class="slot" armor="helmet"></div>
+                    <div class="slot" armor="chestplate"></div>
+                    <div class="slot" armor="leggings"></div>
+                    <div class="slot" armor="boots"></div>
+                </div>
+    
+                <div class="slot_grid" id="slot_inventory">
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div>
+
+            </div>
+
+
+
+            <div id="hand">
+
+                <div class="slot_grid" id="slot_hand">
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div>
+
+            </div>
+
+
+
+
+            <div id="tabs">
+
+                <div class="tab_row">
+                    <div class="tab tab_active" label="Blocos de Construção" group="construction"><div></div></div>
+                    <div class="tab" label="Blocos Decorativos" group="decorative"><div></div></div>
+                    <div class="tab" label="Redstone" group="redstone"><div></div></div>
+                    <div class="tab" label="Transportes" group="transport"><div></div></div>
+                    <div class="tab" label="Miscelânea" group="miscellany"><div></div></div>
+                    <div class="tab" label="Buscar Itens" group="all"><div></div></div>
+                </div>
+
+                <div class="tab_row">
+                    <div class="tab" label="Alimentação" group="food"><div></div></div>
+                    <div class="tab" label="Ferramentas" group="tool"><div></div></div>
+                    <div class="tab" label="Combate" group="combat"><div></div></div>
+                    <div class="tab" label="Poções" group="potions"><div></div></div>
+                    <div class="tab" label="Materiais" group="materials"><div></div></div>
+                    <div class="tab" label="Inventário do Modo Sobrevivência" group="survival"><div></div></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+    <script src="items.js"></script>
+    <script src="script.js"></script>
+
+
+</body>
+</html>
