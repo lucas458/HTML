@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+        #main_header{
+            padding: 8px;
+            display: flex;
+            height: fit-content;
+            gap: 8px;
+        }
+
+        .control_button{
+            padding: 8px 16px;
+            background-color: #353535;
+            color: #9e9e9e;
+        }
+
+        .control_button:hover{
+            background-color: #007bff;
+            color: #fff;
+        }
+
+
+
+        #main_content{
+            height: 100%;
+            padding: 8px;
+            overflow: auto;
+        }
+
+
+        .item{
+            display: flex; 
+            gap: 16px;
+            background-color: #212121;
+            padding: 8px;
+            margin-bottom: 2px;
+        }
+        .item:last-child{
+            margin: 0;
+        }
+
+        .item:hover{
+            background-color: #424242;
+        }
+
+        .item_selected{
+            background-color: #007bff !important; 
+        }
+        .item_selected div{
+            color: #fff;
+        }
+
+        .item_img{
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            background-size: 100% 100%;
+        }
+
+
+        .item_title{
+            font-weight: 500;
+            color: #ececec;
+        }
+
+        .item_subTitle{
+            font-size: 0.8em;
+            line-height: 8px;
+            color: #9e9e9e;
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div id="main_screen">
+
+        <div id="main_header">
+            <div class="control_button" onclick="selectAll()">SELECIONAR TUDO</div>
+            <div class="control_button" onclick="unselectAll()">DESELECIONAR TUDO</div>
+            <div class="control_button" onclick="invertSelection()">INVERTER SELEÇÃO</div>
+            <div class="control_button" onclick="removeSelected()">DELETAR</div>
+        </div>
+
+        <div id="main_content">
+
+            <!-- ITEM -->
+            <div class="item">
+                <div class="item_img" style="background-image: url('https://cdn-icons-png.flaticon.com/512/1652/1652077.png');"></div>
+                <div class="item_content">
+                    <div class="item_title">8x Batata</div>
+                    <div class="item_subTitle">comestivel</div>
+                </div>
+            </div>
+
+            <!-- ITEM -->
+            <div class="item">
+                <div class="item_img" style="background-image: url('https://cdn-icons-png.flaticon.com/512/1514/1514935.png');"></div>
+                <div class="item_content">
+                    <div class="item_title">5x Cenoura</div>
+                    <div class="item_subTitle">comestivel</div>
+                </div>
+            </div>
+
+            <!-- ITEM -->
+            <div class="item">
+                <div class="item_img" style="background-image: url('https://cdn-icons-png.flaticon.com/512/415/415682.png');"></div>
+                <div class="item_content">
+                    <div class="item_title">16x Maçã</div>
+                    <div class="item_subTitle">comestivel</div>
+                </div>
+            </div>
+
+            <!-- ITEM -->
+            <div class="item">
+                <div class="item_img" style="background-image: url('https://cdn-icons-png.flaticon.com/512/2619/2619464.png');"></div>
+                <div class="item_content">
+                    <div class="item_title">1x Banana</div>
+                    <div class="item_subTitle">comestivel</div>
+                </div>
+            </div>
+
+            <!-- ITEM -->
+            <div class="item">
+                <div class="item_img" style="background-image: url('https://cdn-icons-png.flaticon.com/512/135/135620.png');"></div>
+                <div class="item_content">
+                    <div class="item_title">9x Laranja</div>
+                    <div class="item_subTitle">comestivel</div>
+                </div>
+            </div>
+
+            <!-- ITEM -->
+            <div class="item">
+                <div class="item_img" style="background-image: url('https://cdn-icons-png.flaticon.com/512/2836/2836932.png');"></div>
+                <div class="item_content">
+                    <div class="item_title">10x Uva</div>
+                    <div class="item_subTitle">comestivel</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+
+        function selectAll(){
+            document.querySelectorAll('.item:not(.item_selected)').forEach(e => e.classList.add("item_selected"));
+        }
+
+        function unselectAll(){
+            document.querySelectorAll('.item_selected').forEach(e => e.classList.remove('item_selected'));
+        }
+
+        function invertSelection(){
+            document.querySelectorAll('.item').forEach(e => e.classList.toggle('item_selected'));
+        }
+
+        function removeSelected(){
+            document.querySelectorAll('.item_selected').forEach(e => e.remove());
+        }
+
+
+        var indexStart = 0;
+
+        document.querySelectorAll(".item").forEach((item, index) =>{
+
+            item.onclick = (event)=>{
+
+                event.stopImmediatePropagation();
+
+                if ( event.shiftKey ){
+                    unselectAll();
+                    for (let i = Math.min(indexStart, index); i <= Math.max(indexStart, index); i++){
+                        document.querySelectorAll(".item")[i].classList.add('item_selected');
+                    }
+                    return;
+                }
+
+                if ( !event.ctrlKey ){
+                    unselectAll();
+                }
+
+                indexStart = index;
+                item.classList.toggle('item_selected');
+
+            };
+
+        });
+
+
+        main_content.onclick = () => {
+            unselectAll();
+        };
+
+    </script>
+
+
+</body>
+</html>

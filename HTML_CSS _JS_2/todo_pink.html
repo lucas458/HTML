@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO List</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #fff;
+            color: #000;
+
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+
+            user-select: none;
+        }
+
+
+        html, body{
+            height: 100%;
+        }
+
+
+
+
+
+
+
+        /* CONTAINER */
+        #todo-container{
+            width: 70%;
+            max-width: 480px;
+            z-index: 3;
+            margin-top: 48px;
+        }
+
+
+
+
+
+
+        /* ADD BAR */
+
+        #todo-add-bar{
+            padding: 16px;
+            background-color: #fff;
+            width: 100%;
+            border-radius: 4px;
+            box-shadow: 0 0 10px 0px #9e9e9e;
+        }
+
+        #todo-header{
+            font-weight: bold;
+            color: #575859;
+        }
+
+
+
+
+        #todo-content-add{
+            display: flex;
+            height: 32px;
+            margin-top: 8px;
+             
+        }
+
+        .inputText{
+            display: block;
+            width: 100%;
+            border: 1px solid #9e9e9e;
+            border-radius: 4px;
+            height: 32px;
+            outline: none;
+            padding: 0 8px;
+        }
+
+
+        #add-button,
+        .save-button{
+            width: fit-content;
+            height: 100%;
+            background-color: #ff33ae;
+            color: #fff;
+            border-radius: 4px;
+            margin-left: 16px;
+            padding: 8px 20px;
+        }
+
+
+        #add-button:hover{
+            opacity: .8;
+        }
+
+
+        .save-button{
+            background-color: #fff;
+            color: #ff33ae;
+            border: 1px solid #ff33ae;
+            padding: 8px 10px;
+            font-weight: bold;
+        }
+
+        .save-button:hover{
+            background-color: #ff33ae;
+            color: #fff;
+        }
+
+
+
+
+
+
+
+
+        #todo-list{ 
+            background-color: #fff;
+            width: 100%;
+            border-radius: 4px;
+            margin-top: 32px;
+            border: 1px solid #9e9e9e;
+            max-height: 320px;
+            overflow: auto;
+        }
+
+
+        .item{
+            padding: 16px;
+            border-bottom: 1px solid  #9e9e9e;
+        }
+
+        .item:last-child{
+            border: none;
+        }
+
+
+
+
+
+
+        .item .item-content{
+            display: flex;
+            align-items: center;
+        }
+
+
+        .item-checker{
+            display: flex; 
+        }
+
+        .item-label{
+            flex: 1;
+            margin-left: 16px;
+            color: #575859;
+        }
+
+        .item .item-icon{
+            color: #ff33ae;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+        }
+
+        .item .item-icon:first-child{
+            margin-left: 16px;
+        }
+
+
+        .item .item-icon:hover{
+            background-color: #e0e0e0;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .item-content > div:first-child{
+            margin-right: 10px;
+            color: #575859;
+        }
+
+
+
+        .edit-mode > div:first-child{
+            display: none !important;
+        }
+        .edit-mode > div:last-child{
+            display: flex !important;
+        }
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    <header style="position: fixed;height: 92px;width: 100%;background-color: #ff33ae;top: 0;"></header>
+
+
+
+    <div id="todo-container">
+
+
+        <!-- ADD -->
+        <div id="todo-add-bar">
+
+            <div id="todo-header">New Todo:</div>
+
+            
+            <div id="todo-content-add">
+
+                <input type="text" class="inputText" id="main-inputText" maxlength="32">
+
+                <div id="add-button">Add</div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- LISTA -->
+
+
+
+        <div id="todo-list" style="display: none;">
+
+            <!-- ITEM -->
+            <!-- <div class="item">
+
+                <div class="item-content">
+                    <input type="checkbox" class="item-checker">
+                    <div class="item-label">Vaccum the carpet</div>
+
+                    <div class="item-edit">
+                        <div class="item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>
+                        </div>
+                    </div>
+
+                    <div class="item-delete">
+                        <div class="item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item-content" style="display: none;">
+                    <div>Edit:</div>
+                    <input type="text" class="inputText" maxlength="32">
+                    <div class="save-button">Save</div>
+                </div>
+
+            </div> -->
+
+
+
+             
+            
+        </div>
+
+
+
+
+    </div>
+
+
+    
+     
+
+
+    <script>
+
+
+
+
+        var todo_list = document.getElementById('todo-list');
+
+
+        function addItem( label ){
+
+
+            todo_list.style.display = 'block';
+
+
+            let item = document.createElement('div');
+            item.classList.add('item');
+
+
+            item.innerHTML = `
+            <div class="item-content">
+                <input type="checkbox" class="item-checker">
+                <div class="item-label">${label}</div>
+
+                <div class="item-edit">
+                    <div class="item-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>
+                    </div>
+                </div>
+
+                <div class="item-delete">
+                    <div class="item-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-content" style="display: none;">
+                <div>Edit:</div>
+                <input type="text" class="inputText inputText-edit" maxlength="32">
+                <div class="save-button">Save</div>
+            </div>
+            `;
+
+
+            // CHECK
+            item.querySelector('.item-checker').addEventListener('change', (evt)=>{
+                item.style.backgroundColor = (evt.target.checked)? '#e0e0e0' : '#fff';
+                item.querySelector('.item-label').style.textDecoration = (evt.target.checked)? 'line-through': 'none';
+            });
+
+
+            // DELETE
+            item.querySelector('.item-delete div').addEventListener('click', ()=>{
+                if ( todo_list.children.length-1 <= 0 ){
+                    todo_list.style.display = 'none';
+                }
+                item.remove();
+            });
+
+
+
+            // EDIT
+            item.querySelector('.item-edit div').addEventListener('click', ()=>{
+                console.log('edit');
+
+
+                let isEditingBefore = isEditing();
+
+                // EDITANDO
+                if ( isEditingBefore >= 0 ){
+                    exitEditModeAll();
+                    
+                }
+                let actual_label = item.querySelector('.item-label').innerText;
+                item.querySelector('.inputText-edit').value = actual_label;
+                item.classList.add('edit-mode');
+                item.querySelector('.inputText-edit').focus();
+
+            });
+
+
+            // SAVE
+            item.querySelector('.save-button').addEventListener('click', ()=>{
+                console.log('save');
+
+                let new_label = item.querySelector('.inputText-edit').value;
+                if ( new_label.length > 0 ){
+                    item.querySelector('.item-label').innerText = new_label;
+                    exitEditModeAll();
+                }
+
+            });
+
+
+            item.querySelector('.inputText-edit').addEventListener('keydown', (evt)=>{
+
+                let new_label = item.querySelector('.inputText-edit').value;
+                if ( evt.keyCode == 13 && new_label.length > 0 ){
+                    item.querySelector('.item-label').innerText = new_label;
+                    exitEditModeAll();
+                }
+
+            });
+
+
+
+
+            todo_list.appendChild(item);
+
+        }
+
+
+
+
+
+
+
+        var main_inputText = document.getElementById('main-inputText');
+
+
+        document.getElementById('add-button').addEventListener('click', ()=>{
+
+            if ( main_inputText.value.length > 0 ){
+                addItem( main_inputText.value );
+                main_inputText.value = '';
+                
+            }
+            
+            main_inputText.focus();
+
+        });
+
+
+        main_inputText.addEventListener('keydown', (evt)=>{
+
+            if ( evt.keyCode == 13 && main_inputText.value.length > 0 ){
+
+                
+                addItem( main_inputText.value );
+                main_inputText.value = '';
+            }
+
+        });
+        
+
+
+
+
+
+
+        function isEditing(){
+
+            for (let i = 0; i < todo_list.children.length; i++){
+                if ( todo_list.children[i].classList.contains('edit-mode') ){
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+
+
+        function exitEditModeAll(){
+            for (let i = 0; i < todo_list.children.length; i++){
+                todo_list.children[i].classList.remove('edit-mode');
+            }
+        }
+
+
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        
+
+
+        #main_screen{
+            width: 914px;
+            height: 635px;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        #main_screen img{
+            width: 100%;
+            height: 100%;
+        }
+
+
+
+
+        .skill{
+            width: 32px;
+            height: 32px;
+            background-color: #353535;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1;
+            transition: 200ms;
+            position: absolute;
+            background-color: #f55;
+            cursor: not-allowed;
+            left: 0;
+            top: 0;
+        } 
+        .skill_unlocked{
+            background-color: #55f;
+            cursor: pointer;
+        }
+        .skill_paid{
+            background-color: #5f5;
+        }
+        .skill:hover{
+           transform: scale(1.5);
+        }
+
+
+
+
+
+        .line{
+            width: 96px;
+            transform-origin: left center;
+            border-top: 2px dashed #555; 
+
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .line_active{
+            border-color: #fff;
+        }
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+ 
+    <div id="main_screen">
+        
+        <!-- <img src="https://clan.akamai.steamstatic.com/images/40369939/fb17d8bcaa023d0befd4e7fed4ab01bd6ef38d67.png"> -->
+
+
+        <div id="skill_list">
+
+            <div class="skill" skill-name="speed" style="left: 88px; top: 250px;"></div>
+            <div class="skill" skill-name="damage" style="left: 88px; top: 408px;"></div>
+
+            <div class="skill skill_unlocked" skill-name="health" style="left: 164px; top: 329px;"></div>
+
+            <div class="skill" skill-name="dragon_breath" style="left: 277px; top: 329px;"></div>
+            <div class="skill" skill-name="hardened_scale" style="left: 372px; top: 329px;"></div>
+            <div class="skill" skill-name="mana_increase" style="left: 483px; top: 329px;"></div>
+            <div class="skill" skill-name="experience_increase" style="left: 587px; top: 329px;"></div>
+
+            <div class="skill" skill-name="blue_flame" style="left: 212px; top: 229px;"></div>
+            <div class="skill" skill-name="plasma_blast" style="left: 257px; top: 161px;"></div>
+            <div class="skill" skill-name="bashing_tail" style="left: 360px; top: 238px;"></div>
+            <div class="skill" skill-name="shock_tail" style="left: 360px; top: 145px;"></div>
+            <div class="skill" skill-name="dodge_ability" style="left: 490px; top: 165px;"></div>
+            <div class="skill" skill-name="dragon_force" style="left: 617px; top: 222px;"></div>
+            <div class="skill" skill-name="fly_ability" style="left: 770px; top: 168px;"></div>
+
+            <div class="skill" skill-name="red_flame" style="left: 212px; top: 427px;"></div>
+            <div class="skill" skill-name="explosive_blast" style="left: 257px; top: 494px;"></div>
+            <div class="skill" skill-name="spike_tail" style="left: 360px; top: 418px;"></div>
+            <div class="skill" skill-name="fire_tail" style="left: 360px; top: 510px;"></div>
+            <div class="skill" skill-name="block_ability" style="left: 490px; top: 490px;"></div>
+            <div class="skill" skill-name="dragon_might" style="left: 617px; top: 433px;"></div>
+            <div class="skill" skill-name="super_nova" style="left: 770px; top: 488px;"></div>
+            
+        </div>
+
+
+
+
+        <div id="line_list"> 
+
+            <div class="line" skill-name="speed" style="transform: rotate(45deg); left: 110px; top: 274px;"></div>
+            <div class="line" skill-name="damage" style="transform: rotate(-45deg); left: 105px; top: 424px;"></div>
+            
+            <div class="line" skill-name="dragon_breath" style="left: 180px; top: 346px;"></div>
+            <div class="line" skill-name="hardened_scale" style="left: 300px; top: 346px;"></div>
+            <div class="line" skill-name="mana_increase" style="left: 400px; top: 346px;"></div>
+            <div class="line" skill-name="experience_increase" style="left: 500px; top: 346px;"></div>
+
+            <div class="line" skill-name="blue_flame" style="transform: rotate(-62deg); left: 185px; top: 334px;"></div>
+            <div class="line" skill-name="plasma_blast" style="transform: rotate(-55deg); left: 225px; top: 249px;"></div>
+            <div class="line" skill-name="bashing_tail" style="width: 140px; transform: rotate(3deg); left: 225px; top: 249px;"></div>
+            <div class="line" skill-name="shock_tail" style="transform: rotate(-91deg); left: 377px; top: 249px;"></div>
+            <div class="line" skill-name="dodge_ability" style="width: 140px; transform: rotate(-32deg); left: 379px; top: 259px;"></div>
+            <div class="line" skill-name="dragon_force" style="width: 140px; transform: rotate(27deg); left: 515px; top: 183px;"></div>
+            <div class="line" skill-name="fly_ability"  style="width: 140px; transform: rotate(-23deg); left: 648px; top: 241px;"></div>
+
+            <div class="line" skill-name="red_flame" style="transform: rotate(64deg); left: 179px; top: 345px;"></div>
+            <div class="line" skill-name="explosive_blast" style="transform: rotate(55deg); left: 225px; top: 444px;"></div>
+            <div class="line" skill-name="spike_tail" style="width: 140px; transform: rotate(-2deg); left: 225px; top: 441px;"></div>
+            <div class="line" skill-name="fire_tail" style="transform: rotate(91deg); left: 377px; top: 440px;"></div>
+            <div class="line" skill-name="block_ability" style="width: 140px; transform: rotate(32deg); left: 379px; top: 433px;"></div>
+            <div class="line" skill-name="dragon_might" style="width: 140px; transform: rotate(-27deg); left: 515px; top: 508px;"></div> 
+            <div class="line" skill-name="super_nova" style="width: 140px; transform: rotate(23deg); left: 648px; top: 441px;"></div>
+
+        </div>
+
+
+
+
+    </div>
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+
+        var SKILL_TREE = {
+
+
+            "root": {
+                "node_name": "health",
+                "paid": false,
+                "locked": false,
+                "nodes": [
+                    {
+                        "node_name": "speed",
+                        "paid": false,
+                        "locked": true
+                    },
+
+
+
+                    {
+                        "node_name": "damage",
+                        "paid": false,
+                        "locked": true
+                    },
+
+
+
+                    {
+                        "node_name": "dragon_breath",
+                        "paid": false,
+                        "locked": true,
+                        "nodes": [
+                            {
+                                "node_name": "hardened_scale",
+                                "paid": false,
+                                "locked": true,
+                                "nodes": [
+                                    {
+                                        "node_name": "mana_increase",
+                                        "paid": false,
+                                        "locked": true,
+                                        "nodes": [
+                                            {
+                                                "node_name": "experience_increase",
+                                                "paid": false,
+                                                "locked": true
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+
+
+
+                    {
+                        "node_name": "blue_flame",
+                        "paid": false,
+                        "locked": true,
+                        "nodes": [
+                            {
+                                "node_name": "plasma_blast",
+                                "paid": false,
+                                "locked": true
+                            },
+                            {
+                                "node_name": "bashing_tail",
+                                "paid": false,
+                                "locked": true,
+                                "nodes": [
+                                    {
+                                        "node_name": "shock_tail",
+                                        "paid": false,
+                                        "locked": true
+                                    },
+                                    {
+                                        "node_name": "dodge_ability",
+                                        "paid": false,
+                                        "locked": true,
+                                        "nodes": [
+                                            {
+                                                "node_name": "dragon_force",
+                                                "paid": false,
+                                                "locked": true,
+                                                "nodes": [
+                                                    {
+                                                        "node_name": "fly_ability",
+                                                        "paid": false,
+                                                        "locked": true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+
+
+
+                    {
+                        "node_name": "red_flame",
+                        "paid": false,
+                        "locked": true,
+                        "nodes": [
+                            {
+                                "node_name": "explosive_blast",
+                                "paid": false,
+                                "locked": true
+                            },
+                            {
+                                "node_name": "spike_tail",
+                                "paid": false,
+                                "locked": true,
+                                "nodes": [
+                                    {
+                                        "node_name": "fire_tail",
+                                        "paid": false,
+                                        "locked": true
+                                    },
+                                    {
+                                        "node_name": "block_ability",
+                                        "paid": false,
+                                        "locked": true,
+                                        "nodes": [
+                                            {
+                                                "node_name": "dragon_might",
+                                                "paid": false,
+                                                "locked": true,
+                                                "nodes": [
+                                                    {
+                                                        "node_name": "super_nova",
+                                                        "paid": false,
+                                                        "locked": true
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+
+
+                ]
+
+
+            }
+
+
+        };
+
+
+
+
+
+        function getNodeByName( nodeName ){
+
+            if ( SKILL_TREE.root.node_name == nodeName ){
+                return SKILL_TREE.root;
+            }
+
+            return getSubNodeByName(nodeName, SKILL_TREE.root.nodes);
+
+        }
+
+
+        function getSubNodeByName( nodeName, nodeReference ){
+            
+            if ( nodeReference != null ){
+
+                for (let i = 0; i < nodeReference.length; i++){
+                    
+                    if ( nodeName == nodeReference[i].node_name ){
+                        return nodeReference[i];
+                    }
+
+                    if ( nodeReference[i].nodes != null ){
+                        let tempNode = getSubNodeByName(nodeName, nodeReference[i].nodes);
+                        if ( tempNode != null ){
+                            return tempNode;
+                        }
+                    }
+
+                }
+
+            } 
+
+            return null;
+            
+        }
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+        document.querySelectorAll(".skill").forEach(skill => {
+
+            skill.onclick = () => {
+ 
+                if ( skill.classList.contains("skill_unlocked") && !skill.classList.contains("skill_paid") ){
+                    
+                    const node_name = skill.getAttribute("skill-name"); 
+                    skill.classList.add("skill_paid");
+
+
+                    let skillFound = getNodeByName(node_name);
+
+                    skillFound.locked   = false;
+                    skillFound.paid     = true;
+
+                    if ( skillFound.nodes != null ){
+                        skillFound.nodes.forEach(nodes => {
+                            document.querySelector(`.skill[skill-name=${nodes.node_name}]`).classList.add("skill_unlocked");
+                            document.querySelector(`.line[skill-name=${nodes.node_name}]`).classList.add("line_active");
+                        });
+                    }
+                    
+                } 
+
+            };
+
+        });
+
+
+
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

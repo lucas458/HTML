@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+            overflow: hidden;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #main_left,
+        #main_right{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+        .tableContainer{
+            border: 1px solid #353535;
+            padding: 8px;
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            grid-template-rows: repeat(9, 1fr);
+            gap: 8px;
+        }
+
+        .tableItem{
+            width: 32px;
+            height: 32px;
+            position: relative;
+            background-color: #212121;
+            color: #000;
+            box-shadow: inset 0 0 5px 0 #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .itemSlot{
+            position: absolute;
+        }
+        .item{
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .itemLabel{
+            color: #9e9e9e;
+        }
+
+        .itemSlot:not(:empty) ~ .itemLabel{
+            visibility: hidden;
+        }
+ 
+
+
+        #tempItem{
+            pointer-events: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        #tempItem{
+            visibility: hidden;
+        }
+
+        #tempItem:has(.item){
+            visibility: visible !important;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+    <div id="main_screen">
+        <div id="main_left">
+            <div class="tableContainer" id="tableForSlot"></div>
+        </div>
+        <div id="main_right">
+            <div class="tableContainer" id="tableForItem"></div>
+        </div>
+    </div>
+
+    <div id="tempItem" class="tableItem"></div>
+
+     
+
+
+    <script>
+        
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+        
+        const COLORS = [
+            "darkred",
+            "darkorange",
+            "yellow",
+            "darkgoldenrod",
+            "yellowgreen",
+            "green",
+            "royalblue",
+            "plum",
+            "purple"
+        ];
+
+
+        const tempItem = document.getElementById("tempItem");
+        let randomTable = [];
+
+        
+        function generateTable( tableContainerElement, hasItem = false ){
+
+            tableContainerElement.innerHTML = "";
+
+            if ( hasItem ){
+                let couter = 1;
+                randomTable = new Array(9*9).fill(0).map(e => couter++);
+                shuffleArray(randomTable); 
+            }
+
+            for (let i = 0; i < 9*9; i++){
+
+                const row = parseInt(i / 9 + 1);
+                const col = i % 9 + 1;
+
+                const tableItem = document.createElement("div");
+                tableItem.classList.add("tableItem");
+
+                if ( hasItem ){
+
+                    const value = randomTable[i] - 1;
+                    const axis = [
+                        parseInt(value / 9 + 1),
+                        value % 9 + 1
+                    ];
+
+                    const color = COLORS[ axis[1] - 1 ];
+
+                    tableItem.innerHTML = `
+                    <div class="itemSlot"> <div class="item" value="${axis[0] * axis[1]}" style="background-color: ${color}">${axis[1]}x${axis[0]}</div> </div>`;
+                }else{
+                    tableItem.innerHTML = `
+                    <div class="itemSlot"></div>
+                    <div class="itemLabel">${col * row}</div>`;
+                }
+
+                tableItem.onclick = () => {
+                    tableItemClick(tableContainerElement, tableItem, i);
+                };
+
+                tableContainerElement.appendChild(tableItem);
+
+            }
+
+        }
+
+
+        generateTable(tableForSlot, false);
+        generateTable(tableForItem, true);
+
+
+
+        onmousemove = (event) => {
+            tempItem.style.left = (event.clientX - tempItem.offsetWidth/2) + 'px';
+            tempItem.style.top = (event.clientY - tempItem.offsetHeight/2) + 'px';
+        };
+
+
+
+        function tableItemClick( parentTable, itemTable, indexItem ){ 
+
+            if ( tempItem.firstElementChild == null ){
+                console.log('pick');
+                if ( itemTable.querySelector(".item") == null ){
+                    return;
+                }
+                const savedColor = getComputedStyle(itemTable.firstElementChild.firstElementChild).backgroundColor;
+                tempItem.appendChild(itemTable.firstElementChild.firstElementChild);
+                tempItem.firstElementChild.style.backgroundColor = savedColor;
+                return;
+            }
+
+            console.log('put'); 
+            if ( itemTable.firstElementChild.firstElementChild == null ){
+
+                if ( parentTable.id == "tableForSlot" ){ 
+                    if ( tempItem.firstElementChild.getAttribute("value") != itemTable.querySelector(".itemLabel").innerHTML ){
+                        return;
+                    } 
+                }
+
+                itemTable.firstElementChild.appendChild(tempItem.firstElementChild);
+
+                if ( tableForSlot.querySelectorAll(".item").length == 9*9 ){
+                    console.warn('win');
+                    navigator.vibrate(200);
+                }
+
+            }
+
+        }
+
+
+
+
+    </script>
+
+
+</body>
+</html>

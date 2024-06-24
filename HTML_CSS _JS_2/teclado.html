@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teclado 3x4</title>
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+        #container{
+            width: fit-content;
+            background-color: #333333;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+
+        #tela{
+            width: 100%;
+            height: 32px;
+            background-color: #111111;  
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            letter-spacing: 4px; 
+            font-size: 1.5em;
+        }
+
+        #teclado{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            justify-items: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+
+        .key{
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #111111;
+            cursor: pointer;
+            font-size: 2em;
+            box-shadow: 0 0 5px 0 #353535;
+            font-weight: 500; 
+            border-radius: 50%;
+            transition: 100ms ;
+        }
+        .key:hover{
+            opacity: 0.8;
+            box-shadow: 0 0 0 0 #212121;
+        }
+
+        .keyCancel{
+            background-color: #dc3545;
+            border-radius: 8px;
+        }
+        .keyOk{
+            background-color: #28a745;
+            border-radius: 8px;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="container" class="containerAberto" maxDigit="4">
+
+            <div id="tela"></div>
+
+            <div id="teclado">
+                <div class="key">1</div>
+                <div class="key">2</div>
+                <div class="key">3</div>
+                <div class="key">4</div>
+                <div class="key">5</div>
+                <div class="key">6</div>
+                <div class="key">7</div>
+                <div class="key">8</div>
+                <div class="key">9</div>
+                <div class="key keyCancel">&CircleTimes;</div>
+                <div class="key">0</div>
+                <div class="key keyOk">&check;</div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+        
+
+        function onOk(){
+            tela.innerHTML = '';
+            console.warn("ok");
+        }
+
+        function okCancel(){
+            tela.innerHTML = '';
+            console.warn("cancel");
+        }
+
+        function onChange( value ){
+            console.log('changed', value);
+        }
+
+
+        document.querySelectorAll(".key").forEach(key => {
+            key.onclick = () => {
+
+                if ( key.classList.contains("keyCancel") ){
+                    if ( tela.innerHTML.length == 0 ) return;
+                    okCancel();
+                    return;
+                }
+
+                if ( key.classList.contains("keyOk") ){
+                    if ( tela.innerHTML.length == 0 ) return;
+                    onOk();
+                    return;
+                }
+                
+                if ( tela.innerHTML.length < parseInt(container.getAttribute('maxDigit')) ){
+                    tela.innerHTML = String(tela.innerHTML).concat(key.innerHTML);
+                    onChange(key.innerHTML);
+                }
+
+            };
+        });
+
+
+
+
+        onkeydown = (event) => {
+            
+            if ( container.classList.contains("containerAberto") && !event.repeat ){
+                
+                if ( event.key >= '0' && event.key <= '9' ){
+                    if ( tela.innerHTML.length < parseInt(container.getAttribute('maxDigit')) ){
+                        tela.innerHTML = String(tela.innerHTML).concat(event.key);
+                        onChange(event.key);
+                    }
+                    return;
+                }
+
+                if ( tela.innerHTML.length == 0 ){
+                    return;
+                }
+
+                if ( event.key == 'Escape' ){ 
+                    okCancel();
+                    return;
+                }
+
+                if ( event.key == 'Enter' ){ 
+                    onOk();
+                }
+
+            }
+
+        };
+        
+
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+        
+        #main_header{
+            padding: 8px;
+            box-shadow: 0 0 5px 0 #000;
+            background-color: #212121;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1;
+        }
+
+
+        .player_container{
+            text-align: center;
+            width: fit-content;
+        }
+        .player_icon{
+            width: 64px;
+            height: 64px;
+            display: flex;
+            font-size: 2em;
+            font-weight: 500;
+            justify-content: center;
+            align-items: center; 
+            border: 2px solid #fff;
+            border-radius: 16px;
+        }
+        .player_active .player_icon{
+            border-color: #007bff !important;
+        }
+
+        #reset{
+            padding: 8px 16px;
+            background-color: #dc3545;
+            border-radius: 25px;
+        }
+        #reset:active{
+            background-color: #dc354580;
+        } 
+
+        #main_content{
+            height: 100%;
+            background-color: #fff;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 2px;
+            position: relative;
+        }
+        .slot{
+            background-color: #181818;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 5em;
+            font-weight: 500; 
+        }
+
+        .slot:empty:active{
+            background-color: #353535;
+        }
+        .slot:not(:empty):active{
+            background-color: #dc3545;
+        }
+
+        #line{
+            width: 0;
+            height: 1px; 
+            transform: rotate(45deg);
+            transform-origin: left center; 
+            transition: 200ms width;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        #line div{
+            width: 100%;
+            height: 10px;
+            border-radius: 25px;
+            background-color: #28a745;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    <div id="main_screen">
+        <div id="main_header">
+            <div class="player_container player_active">
+                <div class="player_icon">X</div>
+                <div class="player_counter">0</div>
+            </div>
+            <div id="reset" onclick="onReset()">Reset</div>
+            <div class="player_container">
+                <div class="player_icon">O</div>
+                <div class="player_counter">0</div>
+            </div>
+        </div>
+        <div id="main_content">
+            <div id="line"><div></div></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+        </div>
+    </div>
+
+
+    <script>
+
+        var CURRENT_PLAYER = true;
+        var LOCKED = true;
+        var PLAYER_A = 0;
+        var PLAYER_B = 0;
+
+        const WIN = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];
+        
+
+        function setLineAtBlock(indexA, indexB){
+            line.style.transition = '';
+            line.style.width = '';
+            setTimeout(()=>{
+                const slotA = main_content.children[indexA + 1];
+                const slotB = main_content.children[indexB + 1];
+                const slotPositionA = {
+                    x: slotA.offsetLeft + slotA.offsetWidth / 2,
+                    y: slotA.offsetTop + slotA.offsetHeight / 2
+                };
+                const slotPositionB = {
+                    x: slotB.offsetLeft + slotB.offsetWidth / 2,
+                    y: slotB.offsetTop + slotB.offsetHeight / 2
+                };
+                const dist = Math.hypot(slotPositionA.x - slotPositionB.x, slotPositionA.y - slotPositionB.y);
+                const angle = -Math.atan2(slotPositionA.x - slotPositionB.x, slotPositionA.y - slotPositionB.y) * 180 / Math.PI + 270;
+                line.style.left = (slotPositionA.x) + 'px';
+                line.style.top = (slotPositionA.y) + 'px';
+                line.style.width = dist + 'px';
+                line.style.transform = `rotate(${angle}deg)`;
+            }, 100);
+        }
+        
+
+        function startGame(){
+            line.style.width = '';
+            line.style.transition = '0ms';
+            document.querySelectorAll('.slot').forEach(e => e.innerHTML = '');
+            LOCKED = false;
+            updatePlayer();
+        }
+        
+
+        function checkGame(){
+            for (let i = 0; i < WIN.length; i++){
+                const a = main_content.children[ WIN[i][0] + 1].innerHTML;
+                const b = main_content.children[ WIN[i][1] + 1].innerHTML;
+                const c = main_content.children[ WIN[i][2] + 1].innerHTML;
+                if ( a == '' || b == '' || c == '' ){
+                    continue;
+                }
+                if ( a == b && b == c ){
+                    CURRENT_PLAYER = !CURRENT_PLAYER;
+                    LOCKED = true;
+                    if ( CURRENT_PLAYER ){
+                        PLAYER_A++;
+                    }else{
+                        PLAYER_B++;
+                    }
+                    setLineAtBlock(WIN[i][0], WIN[i][2]);
+                    setTimeout(startGame, 1000);
+                    break;
+                }
+            }
+        }
+
+
+        function updatePlayer(){
+            document.querySelectorAll('.player_container')[0].classList.toggle('player_active', CURRENT_PLAYER);
+            document.querySelectorAll('.player_container')[1].classList.toggle('player_active', !CURRENT_PLAYER);
+            document.querySelectorAll('.player_container')[0].querySelector('.player_counter').innerHTML = PLAYER_A.toLocaleString();
+            document.querySelectorAll('.player_container')[1].querySelector('.player_counter').innerHTML = PLAYER_B.toLocaleString();
+        }
+
+
+        function onReset(){
+            PLAYER_A = PLAYER_B = 0;
+            CURRENT_PLAYER = true;
+            startGame();
+            updatePlayer();
+        }
+
+
+        document.querySelectorAll('.slot').forEach(e => {
+            e.onclick = () => { 
+                if ( e.innerHTML == '' && !LOCKED ){
+                    e.innerHTML =  (CURRENT_PLAYER)? 'X' : 'O';
+                    CURRENT_PLAYER = !CURRENT_PLAYER;
+                    updatePlayer();
+                    checkGame();
+                }
+            };
+        });
+
+        
+        onload = startGame;
+
+    </script>
+
+</body>
+</html>

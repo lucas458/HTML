@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #333333;
+            color: #fff;
+			user-select: none;
+
+            overflow: hidden;
+            scroll-behavior: none;
+        }
+
+
+
+        #container{
+            padding: 10px;
+        }
+
+
+
+        .switch{
+            margin: 40px 30px;
+        }
+        
+         
+ 
+        .switch_track{
+            width: 64px;
+            height: 28px;
+            background-color: #717171;
+            border-radius: 50px;
+        }
+
+        .switch_handle{
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #bdbdbd;
+            box-shadow: 0 0 5px #272727;
+            transition: 200ms;
+            position: relative;
+            left: -6px;
+            top: -6px;
+        }
+
+
+        
+
+        .switch_handle::after{
+            content: '';
+            display: block;
+            width: 96px;
+            height: 96px;
+            background-color: #717171;
+            border-radius: 50%;
+            opacity: 0.2;
+            transform: scale(0);
+            transition: 200ms;
+            z-index: -1;
+            position: absolute;
+            left: -28px;
+            top: -28px;
+        }
+
+
+        .switch_on .switch_handle::after{
+            background-color: #80cbc4;
+        }
+
+        .switch_press .switch_handle::after{
+            transition: 100ms;
+            transform: scale(1) !important;
+        }
+
+
+
+        .switch_on .switch_track{
+            background-color: #5a7f7c;
+        }
+
+        .switch_on .switch_handle{
+            background-color: #80cbc4; 
+        }
+
+
+        
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+ 
+    <div id="container">
+
+        <div class="switch">
+            <div class="switch_track">
+                <div class="switch_handle"></div>
+            </div>
+        </div>
+
+        <div class="switch">
+            <div class="switch_track">
+                <div class="switch_handle"></div>
+            </div>
+        </div> 
+
+    </div>
+
+    
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+
+
+        var switch_touch_start = 0;
+        var switch_touch_pos = 0;
+
+        document.querySelectorAll('.switch').forEach(e => {
+
+            e.onclick = () => {
+                e.classList.toggle('switch_on');
+                console.log('click');
+                e.querySelector('.switch_handle').style.left = (e.classList.contains('switch_on'))? (e.firstElementChild.offsetWidth-30) + 'px' : '-6px';
+            };
+
+
+            e.querySelector('.switch_handle').addEventListener('touchstart', (evt) => { 
+                console.log('press');
+                e.classList.add('switch_press');
+            });
+
+
+
+            e.querySelector('.switch_handle').addEventListener('touchend', (evt) => {
+                evt.target.style.transition = '200ms';
+                evt.target.style.left = (e.classList.contains('switch_on'))? (e.firstElementChild.offsetWidth-30) + 'px' : '-6px';
+                console.log('release');
+                e.classList.remove('switch_press');
+            });
+
+
+            e.querySelector('.switch_handle').addEventListener('touchmove', (evt) => {
+                evt.target.style.transition = 'none';
+                switch_touch_pos = Math.clamp(evt.touches[0].clientX - e.offsetLeft - evt.target.offsetWidth/2, -6, e.firstElementChild.offsetWidth-30);
+
+                let state = e.classList.contains('switch_on');
+
+                if ( switch_touch_pos+20 > 32 && !state || !(switch_touch_pos+20 > 32) && e.classList.contains('switch_on') ){
+                    state = !state;
+                    console.log('change', state);
+                }
+
+                e.classList.toggle('switch_on', state);
+                evt.target.style.left = (switch_touch_pos) + 'px';
+            });
+
+
+
+        }); 
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

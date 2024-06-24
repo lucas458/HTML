@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{ 
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        img{
+            width: 900px;
+        }
+
+
+
+
+        .spinner_container{
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .spinner_label{
+            margin-left: 8px;
+            font-size: 1.2em;
+            line-height: 0;
+        }
+
+        .spinner{
+            width: fit-content;
+            display: flex;
+            align-items: center; 
+            border: 1px solid #9e9e9e;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .spinner_button{
+            padding: 10px 16px;
+            background-color: #212121;
+            cursor: pointer;
+        }
+
+        .spinner_value{
+            width: 64px;
+            padding: 0 16px;
+            text-align: center;
+        }
+
+
+
+
+
+        .skill{
+            width: 43px;
+            height: 43px;
+            border-radius: 50%;
+            background-color: red;
+            opacity: 0.7;
+            transition: 200ms;
+            cursor: pointer;
+            position: absolute;
+            left: 0;
+            top: 0; 
+        }
+
+        .skill:hover{
+            opacity: 0.3;
+        }
+
+        .skill_root{
+            border-radius: 0;
+        }
+
+
+        .skill_unlocked{
+            background-color: #007bff; 
+            opacity: 0.5;
+        }
+
+        .skill_paid{
+            background-color: #5f5;  
+        }
+        
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+    <img src="https://www.switchmaven.com/images/careers/skill-tree.png">
+
+
+    <div class="spinner_container">
+        <div class="spinner">
+            <div class="spinner_button">-</div>
+            <div class="spinner_value" id="point_value">1</div>
+            <div class="spinner_button">+</div>
+        </div>
+        <div class="spinner_label">POINTS</div>
+    </div>
+
+
+    <div class="spinner_container">
+        <div class="spinner">
+            <div class="spinner_button">-</div>
+            <div class="spinner_value" id="level_value">0</div>
+            <div class="spinner_button">+</div>
+        </div>
+        <div class="spinner_label">LEVEL</div>
+    </div>
+
+    
+
+
+    <div id="skill_list">
+
+        <!--  -->
+        <div class="skill skill_root" skill-name="R1_1" style="left: 159px; top: 45px;"></div>
+        <div class="skill" skill-name="R1_2" style="left: 430px; top: 45px;"></div>
+
+        <!--  -->
+        <div class="skill skill_root" skill-name="R2_1" style="left: 69px; top: 117px;"></div>
+        <div class="skill" skill-name="R2_2" style="left: 249px; top: 117px;"></div>
+        <div class="skill" skill-name="R2_3" style="left: 339px; top: 81px;"></div>
+        <div class="skill" skill-name="R2_4" style="left: 339px; top: 153px;"></div>
+        <div class="skill" skill-name="R2_5" style="left: 520px; top: 117px;"></div>
+        <div class="skill" skill-name="R2_6" style="left: 790px; top: 117px;"></div>
+
+        <!--  -->
+        <div class="skill skill_root" skill-name="R3_1" style="left: 159px; top: 189px;"></div>
+        <div class="skill" skill-name="R3_2" style="left: 249px; top: 226px;"></div>
+        <div class="skill" skill-name="R3_3" style="left: 430px; top: 189px;"></div>
+        <div class="skill" skill-name="R3_4" style="left: 700px; top: 189px;"></div>
+
+        <!--  -->
+        <div class="skill skill_root" skill-name="R4_1" style="left: 69px; top: 261px;"></div>
+        <div class="skill" skill-name="R4_2" style="left: 159px; top: 297px;"></div>
+        <div class="skill" skill-name="R4_3" style="left: 339px; top: 261px;"></div>
+
+        <!--  -->
+        <div class="skill skill_root" skill-name="R5_1" style="left: 430px; top: 261px;"></div>
+        <div class="skill" skill-name="R5_2" style="left: 520px; top: 226px;"></div>
+        <div class="skill" skill-name="R5_3" style="left: 700px; top: 261px;"></div>
+
+        <!--  -->
+        <div class="skill skill_root" skill-name="R6_1" style="left: 610px; top: 333px;"></div>
+        <div class="skill" skill-name="R6_2" style="left: 790px; top: 333px;"></div>
+
+        <!--  -->
+        <div class="skill skill_root" skill-name="R7_1" style="left: 69px; top: 405px;"></div>
+        <div class="skill" skill-name="R7_2" style="left: 249px; top: 405px;"></div>
+
+        <!--  -->
+        <div class="skill skill_root" skill-name="R8_1" style="left: 339px; top: 405px;"></div>
+        <div class="skill" skill-name="R8_2" style="left: 430px; top: 370px;"></div>
+        <div class="skill" skill-name="R8_3" style="left: 520px; top: 405px;"></div>
+        <div class="skill" skill-name="R8_4" style="left: 700px; top: 405px;"></div>
+
+        <!--  -->
+        <div class="skill skill_root" skill-name="R9_1" style="left: 249px; top: 478px;"></div>
+        <div class="skill" skill-name="R9_2" style="left: 430px; top: 478px;"></div> 
+
+        <!--  -->
+        <div class="skill skill_root" skill-name="R10_1" style="left: 520px; top: 478px;"></div>
+        <div class="skill" skill-name="R10_2" style="left: 610px; top: 478px;"></div> 
+        <div class="skill" skill-name="R10_3" style="left: 790px; top: 478px;"></div> 
+
+
+    </div>
+
+
+
+    <script>
+
+
+        var point_value = document.getElementById("point_value");
+        var level_value = document.getElementById("level_value");
+
+
+
+        function getNodeByName( name ){
+            return SKILLS.find(e => e.name == name);
+        }
+
+
+        function getParentNodeByName( name ){
+            for (let i = 0; i < SKILLS.length; i++){
+                if ( SKILLS[i].nodes != null ){
+                    if ( SKILLS[i].nodes.indexOf(name) >= 0 ){
+                        return SKILLS[i];
+                    }
+                }
+            }
+            return null;
+        }
+        
+
+        function checkSkill(){
+
+            const point = parseInt(point_value.innerHTML);
+            const level = parseInt(level_value.innerHTML);
+
+            SKILLS.filter(e => !e.paid).forEach(e => {
+                
+                if ( !e.paid ){
+
+                    e.locked   = !(level >= e.level && point > 0);
+                    let parent = getParentNodeByName(e.name);
+                    
+                    if ( parent != null ){
+                        if ( !parent.paid ){
+                            e.locked = true;
+                        }
+                    }
+
+                    document.querySelector(`.skill[skill-name="${e.name}"]`).classList.toggle("skill_unlocked", !e.locked);
+
+                }
+            });
+
+        }
+
+
+        
+
+
+
+        document.querySelectorAll(".spinner").forEach(e => {
+
+            e.firstElementChild.onclick = (event) => {
+                let value = parseInt(e.querySelector(".spinner_value").innerHTML) - ((event.shiftKey)? 10 : 1);
+                if ( value < 0 ) value = 0;
+                e.querySelector(".spinner_value").innerHTML = value;
+                checkSkill();
+            };
+
+
+            e.lastElementChild.onclick = (event) => {
+                let value = parseInt(e.querySelector(".spinner_value").innerHTML) +  ((event.shiftKey)? 10 : 1);
+                if ( value > 50 ) value = 50;
+                e.querySelector(".spinner_value").innerHTML = value;
+                checkSkill();
+            };
+
+        });
+
+
+
+
+
+
+        document.querySelectorAll(".skill").forEach(skill => {
+
+            skill.onclick = () => {
+
+                let point = parseInt(point_value.innerHTML);
+                
+                if ( skill.classList.contains("skill_unlocked") && !skill.classList.contains("skill_paid") && point - 1 >= 0 ){
+                    const name        = skill.getAttribute("skill-name");
+                    let skill_object  = getNodeByName(name);
+                    skill_object.paid = true;
+                    skill.classList.add("skill_paid"); 
+                    point_value.innerHTML = --point;
+                    checkSkill();
+                }
+
+            };
+
+        });
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        var SKILLS = [
+
+
+            {
+                "name": "R1_1",
+                "locked": true,
+                "paid": false,
+                "level": 5,
+                "nodes": ["R1_2"]
+            },
+            {
+                "name": "R1_2",
+                "locked": true,
+                "paid": false,
+                "level": 20
+            },
+
+            
+
+            {
+                "name": "R2_1",
+                "locked": true,
+                "paid": false,
+                "level": 1,
+                "nodes": ["R2_2",]
+            },
+            {
+                "name": "R2_2",
+                "locked": true,
+                "paid": false,
+                "level": 10,
+                "nodes": ["R2_3", "R2_4", "R2_5"]
+            },
+            {
+                "name": "R2_3",
+                "locked": true,
+                "paid": false,
+                "level": 15
+            },
+            {
+                "name": "R2_4",
+                "locked": true,
+                "paid": false,
+                "level": 15
+            },
+            {
+                "name": "R2_5",
+                "locked": true,
+                "paid": false,
+                "level": 25,
+                "nodes": ["R2_6"]
+            },
+            {
+                "name": "R2_6",
+                "locked": true,
+                "paid": false,
+                "level": 50
+            },
+
+
+
+            {
+                "name": "R3_1",
+                "locked": true,
+                "paid": false,
+                "level": 5,
+                "nodes": ["R3_2", "R3_3"]
+            },
+            {
+                "name": "R3_2",
+                "locked": true,
+                "paid": false,
+                "level": 10
+            },
+            {
+                "name": "R3_3",
+                "locked": true,
+                "paid": false,
+                "level": 20,
+                "nodes": ["R3_4"]
+            },
+            {
+                "name": "R3_4",
+                "locked": true,
+                "paid": false,
+                "level": 40
+            },
+
+
+
+            {
+                "name": "R4_1",
+                "locked": true,
+                "paid": false,
+                "level": 1,
+                "nodes": ["R4_2", "R4_3"]
+            },
+            {
+                "name": "R4_2",
+                "locked": true,
+                "paid": false,
+                "level": 5
+            },
+            {
+                "name": "R4_3",
+                "locked": true,
+                "paid": false,
+                "level": 15
+            },
+
+
+
+            {
+                "name": "R5_1",
+                "locked": true,
+                "paid": false,
+                "level": 20,
+                "nodes": ["R5_2", "R5_3"]
+            },
+            {
+                "name": "R5_2",
+                "locked": true,
+                "paid": false,
+                "level": 25
+            },
+            {
+                "name": "R5_3",
+                "locked": true,
+                "paid": false,
+                "level": 40
+            },
+
+
+
+            {
+                "name": "R6_1",
+                "locked": true,
+                "paid": false,
+                "level": 32,
+                "nodes": ["R6_2"]
+            },
+            {
+                "name": "R6_2",
+                "locked": true,
+                "paid": false,
+                "level": 50
+            },
+
+
+
+            {
+                "name": "R7_1",
+                "locked": true,
+                "paid": false,
+                "level": 1,
+                "nodes": ["R7_2"]
+            },
+            {
+                "name": "R7_2",
+                "locked": true,
+                "paid": false,
+                "level": 10
+            },
+
+
+
+            {
+                "name": "R8_1",
+                "locked": true,
+                "paid": false,
+                "level": 15,
+                "nodes": ["R8_2", "R8_3"]
+            },
+            {
+                "name": "R8_2",
+                "locked": true,
+                "paid": false,
+                "level": 20
+            },
+            {
+                "name": "R8_3",
+                "locked": true,
+                "paid": false,
+                "level": 25,
+                "nodes": ["R8_4"]
+            },
+            {
+                "name": "R8_4",
+                "locked": true,
+                "paid": false,
+                "level": 40
+            },
+            
+
+
+
+            {
+                "name": "R9_1",
+                "locked": true,
+                "paid": false,
+                "level": 10,
+                "nodes": ["R9_2"]
+            },
+            {
+                "name": "R9_2",
+                "locked": true,
+                "paid": false,
+                "level": 20
+            },
+
+
+
+            {
+                "name": "R10_1",
+                "locked": true,
+                "paid": false,
+                "level": 25,
+                "nodes": ["R10_2"]
+            },
+            {
+                "name": "R10_2",
+                "locked": true,
+                "paid": false,
+                "level": 32,
+                "nodes": ["R10_3"]
+            },
+            {
+                "name": "R10_3",
+                "locked": true,
+                "paid": false,
+                "level": 50
+            }
+
+
+        ];
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

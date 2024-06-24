@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Código UPC-A</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+        #inputContainer{
+            height: 32px; 
+            position: absolute;
+            top: 16px;
+        }
+
+        #inputContainer *{
+            outline: none;
+        }
+        
+        #inputContainer input{
+            border: none;
+            height: 100%;
+            padding: 0 4px;
+        }
+
+        #inputContainer button{
+           height: 100%;
+           padding: 0 4px;
+        }
+
+
+
+
+        #barcode_container{
+            transform: scale(3);
+            visibility: hidden;
+        }
+        #barcode_container:has(#barcode *) {
+            visibility: visible;
+        }
+
+        #barcode{
+            display: flex;
+            padding: 8px;
+            background-color: #fff;
+            
+        }
+
+        .bar{
+            width: 1px;
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        .barLong{
+            height: 80px;
+        }
+
+        .space{
+            background-color: #fff;
+        }
+        .dark{
+            background-color: #000;
+        }
+        
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="inputContainer">
+            <input type="search" enterkeyhint="enter" inputmode="numeric" maxlength="11" placeholder="Codigo Ex.: 01234567890" id="inputCode">
+            <button onclick="onClickGerar()">Gerar</button>
+            <button onclick="onClickGerarAleatorio()">Aleatório</button>
+            <button onclick="barcode.innerHTML=''">Limpar</button>
+        </div>
+
+        <div id="barcode_container">
+            <div id="barcode"></div>
+            <div id="barcode_number"></div>
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+        
+        // TYPE: A/C
+        const NUMBER_SET = [
+            0x90, 0x54, 0x45, 0x30, 0x09, 0x18, 0x03, 0x21, 0x12, 0x81
+        ];
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+        function generateBarcodeUPCA( code ){
+            const checkDigit = getCheckNumber(code);
+            const finalCode = code.concat(checkDigit);
+            let bitmap = [];
+            bitmap.push([1,0,1]); // START
+            for (let i = 0; i < finalCode.length; i++){
+                let tempSet = [];
+                if ( i == 6 ){
+                    bitmap.push([0,1,0,1,0]); // MIDDDLE
+                }
+                tempSet = getNumberSetByBinary(NUMBER_SET[ finalCode[i] ]);
+                bitmap.push( convertNumberSetToBitmap(tempSet, i < 6) );
+            }
+            bitmap.push([1,0,1]); // STOP
+            return bitmap;
+        }
+        
+
+        function createModule(isDark, isLong){
+            const bar = document.createElement("div");
+            bar.classList.add("bar");
+            bar.classList.toggle("barLong", isLong);
+            bar.classList.add( isDark? "dark" : "space" );
+            barcode.appendChild(bar);
+        }
+
+
+        function createBarcode( code ){
+            const checkDigit = getCheckNumber(code);
+            const bitmap = generateBarcodeUPCA(code);
+            barcode.innerHTML = '';
+            bitmap.forEach((e, i) => {
+                const isLongBar = i == 0 || i == 7 || i == 14;
+                e.forEach(el => {
+                    createModule(el == 1, isLongBar);
+                });
+            });
+            barcode_number.innerHTML = `<small>${code[0]}</small> ${code.substr(1, 5)} ${code.substr(6, 5)} <small>${checkDigit}</small>`;
+        }
+
+
+        function convertNumberSetToBitmap( numberSet = [], isTypeA ){
+            let bin = [];
+            for (let i = 0; i < numberSet.length; i++){
+                const isOdd = i%2 == 0;
+                const isDark = (isTypeA && !isOdd) || (!isTypeA && isOdd);
+                bin.push( new Array(numberSet[i]).fill( Math.trunc(isDark) ) );
+            }
+            return bin.flatMap(e => e);
+        }
+
+
+        function getNumberSetByBinary( value = 0 ){
+            let list = new Array(4).fill(0);
+            for (let i = 0; i < list.length; i++){
+                list[i] = (value >> ((list.length-i-1)*2) & 0x03) + 1;
+            }
+            return list;
+        }
+        
+
+        function getCheckNumber( code ){
+            let sum = 0;
+            for (let i = 0; i < 11; i++){
+                if ( i % 2 == 0 ){
+                    sum += parseInt(code[i]) * 3;
+                }else{
+                    sum += parseInt(code[i]);
+                }
+            }
+            return ((parseInt(sum/10) * 10 + 10) - sum) % 10;
+        }
+        
+
+
+        function generateRandomCode(){
+            let str = '';
+            for (let i = 0; i < 11; i++){
+                const code = getRandomInt(0x30, 0x39+1)
+                str = str.concat( String.fromCharCode(code) );
+            }
+            return str;
+        }
+        
+
+        function onClickGerar(){
+            const code = inputCode.value;
+            const isNumbers = (/^\d+$/).test(code);
+            if ( code.length < 11 || !isNumbers ){
+                barcode.innerHTML = '';
+                return;
+            }
+            createBarcode(code);
+        }
+
+
+        function onClickGerarAleatorio(){
+            const code = generateRandomCode();
+            inputCode.value = code;
+            createBarcode(code);
+        }
+
+
+    </script>
+
+
+</body>
+</html>

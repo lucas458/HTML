@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO-DO</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #25232a;
+            color: #fff;
+			user-select: none;
+            overflow: hidden;
+            scroll-behavior: none;
+        }
+        
+
+
+        .screen{
+            width: 100%;
+            height: 100%;
+            background-color: inherit;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+        .screen_header{
+            height: 64px; 
+        }
+
+        .screen_content{
+            height: 100%; 
+        }
+
+
+
+
+
+
+        /* TEXT FIELD */
+        .textfield_wrapper{
+            height: 56px;
+            padding: 16px 12px;
+            padding-left: 0;
+            border-radius: 8px;
+            border: 1px solid #938f99;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 200ms;
+        }
+        .textfield_icon{
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #cac4d0;
+        }
+        .textfield_icon:last-child{
+            visibility: hidden;
+        }
+        .textfield_input{
+            height: 24px;
+            margin: 0 16px;
+            border: none;
+            outline: none;
+            background-color: #00000000; 
+            color: #e6e1e5;
+            caret-color: #d0bcff;
+        }
+        .textfield_wrapper:focus-within{
+            border-color: #d0bcff;
+        }
+        .textfield_wrapper input:not(:placeholder-shown) ~ .textfield_icon{ 
+            visibility: visible;
+        }
+        .textfield_wrapper input::placeholder-shown ~ .textfield_icon{
+            visibility: hidden;
+        }
+  
+
+
+
+
+
+
+
+        #screen_main .screen_header{
+            padding: 0 8px;
+            box-shadow: 0 0 5px 0 #000;
+            display: flex;
+            align-items: center;
+        }
+
+
+
+        /* CHIP */
+
+        .chip_label input{
+            display: none;
+        }
+
+        
+
+        .chip{
+            height: 32px;
+            background-color: transparent;
+            padding: 0 16px;
+            background-color: #25232a;
+            box-shadow: 0 0 5px 0 #000;
+            color: #e6e1e5;
+            border-radius: 8px;
+            border: 1px solid #00000000;
+            display: flex;
+            align-items: center;
+            margin-right: 16px;
+        } 
+
+        .chip_label input:checked ~ .chip{
+            /* background-color: rebeccapurple; */
+            border-color: #938f99;
+            box-shadow: none;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        #screen_main .screen_content{
+            position: relative;
+            padding-bottom: calc(56px + 16px + 8px);
+        }
+
+
+        #list .item{
+            width: 100%;
+            height: 56px;
+            overflow: hidden;
+            /* padding: 8px 24px 8px 16px; */
+            background-color: #141218;
+            border-bottom: 1px solid #444746;
+            position: relative;
+        }
+        #list .item:last-child{
+            border: none;
+        }
+
+        .item_action_wrapper{
+            width: 100%;
+            height: 100%; 
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+
+        .item_action{ 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #dc3545;
+            padding: 0 8px;
+        }
+        .item_action_wrapper div:first-child .item_action{
+            background-color: #3f51b5;
+        }
+        
+
+        .item_content{
+            width: 100%;
+            height: 100%;
+            padding: 8px 24px 8px 16px;
+            background-color: #1c1b1f;
+            z-index: 2;
+            position: relative;
+            left: 0px;
+        }
+
+
+        .item .item_action:first-child div::after{
+            content: 'Marcar' !important; 
+        }
+        .item_marked .item_action:first-child div::after{
+            content: 'Desmarcar' !important; 
+        }
+
+        .item:not(.item_marked) .item_action:first-child svg:last-child{
+            display: none;
+        }
+        .item_marked .item_action:first-child svg:first-child{
+            display: none;
+        }
+
+
+        .item_marked .item_content{
+            background-color: #386a1f;
+        }
+
+
+ 
+
+
+
+        
+        #fab{
+            width: 56px;
+            height: 56px;
+            margin: 16px;
+            border-radius: 16px;
+            background-color: #4f378b;
+            color: #eaddff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 5px 0 #000;
+            transition: 200ms;
+            z-index: 5;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+        }
+
+        #fab:active{
+            background-color: #eaddff80;
+            transform: scale(1.1);
+        }
+
+
+
+
+
+
+        #screen_main .screen_content{
+            overflow: hidden auto;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        .modal{
+            display: none;
+            width: 100%;
+            height: 100%;
+            /* background-color: rebeccapurple; */
+            position: fixed;
+        }
+        
+        .modal_wrapper{
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal_blur{
+            width: 100%;
+            height: 100%;
+            background-color: #00000080;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+
+        .modal_window{
+            width: fit-content;
+            min-width: 280px;
+            max-width: 560px;
+            z-index: 1;
+            padding: 24px;
+            border-radius: 28px;
+            background-color: #2b2930;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0);
+            transition: 200ms;
+            position: relative;
+        }
+ 
+
+
+        .modal_header{
+            font-size: 24px;
+            font-weight: 500;
+            color: #e6e1e5;
+        }
+
+        .modal_content{
+            margin-top: 16px;
+            margin-bottom: 24px;
+            color: #cac4d0;
+        }
+
+
+        .modal_footer{
+            display: flex;
+            justify-content: flex-end; 
+        }
+
+        .modal_button{
+            margin: 8px;
+            padding: 4px;
+            font-size: 16px;
+            color: #d0bcff;
+        }
+
+        .modal_button:active{
+            background-color: #3e3b46;
+   
+        }
+
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div class="screen" id="screen_main">
+        <div class="screen_header">
+            
+            <label class="chip_label">
+                <input type="radio" name="filter" mode="all" checked>
+                <div class="chip">Todos</div>
+            </label>
+
+            <label class="chip_label">
+                <input type="radio" name="filter" mode="checked">
+                <div class="chip">Completos</div>
+            </label>
+
+            <label class="chip_label">
+                <input type="radio" name="filter" mode="unchecked">
+                <div class="chip">Incompletos</div>
+            </label>
+        </div>
+
+        <div class="screen_content">
+            <div id="list"></div>
+
+            <div id="fab" onclick="openAddEditScreen()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></svg>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <div class="modal" id="modal_addEdit">
+        <div class="modal_wrapper">
+            <div class="modal_blur" onclick="toggleModalById(this.parentNode.parentNode.id)"></div>
+            <div class="modal_window">
+                <div class="modal_header">ADICIONAR</div>
+                <div class="modal_content">
+                    <div class="textfield">
+                        <div class="textfield_wrapper">
+                            <input type="text" class="textfield_input" spellcheck="false" placeholder=" " id="addEdit_input">
+                            <div class="textfield_icon" id="clear_input">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal_footer">
+                    <div class="modal_button" onclick="toggleModalById(this.parentNode.parentNode.parentNode.parentNode.id)">Cancelar</div>
+                    <div class="modal_button" onclick="onClickSaveButton()">Salvar</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    
+
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        var list = document.getElementById("list");
+        var posXInit = 0;
+        var posYInit = 0;
+        var canSwipe = false;
+        var canScroll = false;
+
+        var editIndex = -1;
+        var addEdit_input = document.getElementById("addEdit_input");
+
+
+        function toggleModalById( id, state = false ){
+            let modal = document.getElementById(id);
+            if ( state ){
+                closeOpenedItem();
+                modal.style.display = 'block';
+                setTimeout(()=>modal.querySelector(".modal_window").style.transform = 'scale(1)', 200);
+            }else{
+                editIndex = -1;
+                modal.querySelector(".modal_window").style.transform = '';
+                setTimeout(()=>modal.style.display = 'none', 200);
+            }
+        }
+
+        function openAddEditScreen(title = "ADICIONAR", value = ''){
+            addEdit_input.value = value;
+            document.querySelector("#modal_addEdit .modal_header").innerHTML = title;
+            toggleModalById('modal_addEdit', true);
+            addEdit_input.focus();
+        }
+
+        function onClickSaveButton(){
+            let str = addEdit_input.value.trim();
+            if ( str.length > 0 ){
+                if ( editIndex < 0 ){
+                    addItem(str);
+                }else{
+                    list.children[editIndex].querySelector('.item_content').innerHTML = str;
+                    editIndex = -1;
+                }
+                toggleModalById('modal_addEdit', false);
+            }
+        }
+        
+        document.querySelector(".textfield_icon").onclick = () => {
+            addEdit_input.value = '';
+            addEdit_input.focus();
+        };
+
+
+        function closeOpenedItem(){
+            list.querySelectorAll(".item_opened").forEach(el => {
+                el.querySelector('.item_content').style.transition = '200ms';
+                el.querySelector('.item_content').style.left = '0px';
+                el.classList.remove('item_opened');
+            });
+        }
+
+
+        addEdit_input.onkeydown = (event) => {
+            if ( event.keyCode == 13 ){
+                onClickSaveButton();
+            }
+        };
+        
+
+
+        function filterItems( mode ){
+            closeOpenedItem();
+            document.querySelectorAll('.item').forEach(e => e.style.display = (mode == 'all' || mode == 'checked' && e.classList.contains("item_marked") || mode != 'checked' && !e.classList.contains("item_marked"))? 'block' : 'none');
+        }
+
+
+        document.querySelectorAll("input[name='filter']").forEach(e => {
+            e.onchange = () => filterItems(e.getAttribute('mode'));
+        });
+
+
+        
+
+        function addItem( value ){
+            if ( value != null ){
+                let e = document.createElement("div");
+                e.classList.add("item");
+
+                if ( document.querySelector("input[name='filter']:checked").getAttribute('mode') == 'checked' ){
+                    e.style.display = 'none';
+                }
+
+
+                e.innerHTML = `
+                <div class="item_action_wrapper">
+                    <div style="display: flex;">
+                        <div class="item_action">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/><path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.235.235 0 0 1 .02-.022z"/></svg>
+                            </span>
+                            <div></div>
+                        </div>
+                        <div class="item_action">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>
+                            <div>Editar</div>
+                        </div>
+                    </div>
+                    <div class="item_action">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>
+                        <div>Remover</div>
+                    </div>
+                </div>
+                <div class="item_content">${value}</div>`;
+
+
+                list.appendChild(e);
+
+                e.ontouchstart = (event) => {
+                    posXInit = event.touches[0].clientX - e.querySelector('.item_content').offsetLeft;
+                    posYInit = event.touches[0].clientY;
+                    list.querySelectorAll(".item_opened").forEach(el => {
+                        if ( el != e ){
+                            el.querySelector('.item_content').style.left = '0px';
+                            el.classList.remove('item_opened');
+                        }
+                    });
+                };
+
+                
+                e.ontouchmove = (event) => { 
+                    e.querySelector('.item_content').style.transition = '';
+                    let posX = event.touches[0].clientX - posXInit;
+                    let posY = event.touches[0].clientY - posYInit;
+                    let actions = e.querySelectorAll('.item_action');
+
+                    console.log( posX, posY );
+
+                    if ( Math.abs(posX) > 10 && !canScroll || canSwipe ){
+                        canSwipe = true;
+                        canScroll = false;
+
+                        if ( posX >= actions[1].offsetLeft + actions[1].offsetWidth ){ 
+                            posX = actions[1].offsetLeft + actions[1].offsetWidth + posX/10;
+                        }
+                        else if ( posX < -actions[2].offsetWidth ){
+                            posX = -actions[2].offsetWidth + posX/10;
+                        }
+                        e.querySelector('.item_content').style.left = posX + 'px';
+                    }
+                    if ( Math.abs(posY) > 10 && !canSwipe ){
+                        canScroll = true;
+                        canSwipe = false;
+                    }
+                     
+
+
+                    
+                };
+
+
+
+                e.ontouchend = () => {
+                    canSwipe = false;
+                    canScroll = false;
+                    let relaesePostion = e.querySelector('.item_content').offsetLeft;
+                    let actions = e.querySelectorAll('.item_action');
+                    e.querySelector('.item_content').style.transition = '200ms';
+                    if ( relaesePostion >= (actions[1].offsetLeft + actions[1].offsetWidth)/2 ){
+                        e.querySelector('.item_content').style.left = (actions[1].offsetLeft + actions[1].offsetWidth) + 'px';
+                        e.classList.add("item_opened");
+                    }else if ( -relaesePostion >= actions[1].offsetWidth/2 ){
+                        e.querySelector('.item_content').style.left = -actions[2].offsetWidth + 'px';
+                        e.classList.add("item_opened");
+                    }else{
+                        e.querySelector('.item_content').style.left = '0px';
+                        e.classList.remove("item_opened");
+                    }
+                };
+
+
+
+                e.querySelectorAll('.item_action').forEach((el,idx) => {
+
+                    el.onclick = () => {
+                        
+                        if ( idx == 0 ){
+                            e.querySelector('.item_content').style.transition = '200ms';
+                            e.querySelector('.item_content').style.left = '0px';
+                            //setTimeout(()=>{
+                                e.classList.toggle("item_marked");
+                                filterItems( document.querySelector("input[name='filter']:checked").getAttribute('mode') );
+                            //}, 150);
+                            
+                        }
+                        else if ( idx == 1 ){ 
+                            
+                            for (let i = 0; i < list.children.length; i++){
+                                if ( list.children[i] == e ){
+                                    editIndex = i;
+                                    break;
+                                }
+                            }
+                            e.querySelector('.item_content').style.transition = '200ms';
+                            e.querySelector('.item_content').style.left = '0px';
+                            openAddEditScreen("EDITAR", e.querySelector('.item_content').innerHTML);
+                        }
+                        else{ 
+                            e.style.transition = '200ms';
+                            e.style.height = '0px';
+                            e.style.opacity = '0';
+                            setTimeout(()=> e.remove(), 80);
+                        }
+                    };
+
+                });
+
+                
+
+
+
+            }
+        }
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

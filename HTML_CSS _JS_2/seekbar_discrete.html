@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{ 
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #fff;
+            color: #252525;
+			user-select: none;
+            overflow: hidden;
+            scroll-behavior: none;
+        }
+
+
+        #seekbar_wrapper{
+            background-color: #f6f6f6; 
+            margin: 16px;
+            border-radius: 25px;
+            cursor: pointer; 
+            position: relative;
+        }
+
+
+
+        #seekbar_mark{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: calc(50% - 7px/2);
+        }
+        .seekbar_dot{
+            height: 7px;
+            width: 7px;
+            border-radius: 50%;
+            background-color: #717171;
+            z-index: 1;
+        }
+
+
+
+
+        #seekbat_fill{
+            width: 0%;
+            min-width: 3px;
+            max-width: calc(100% - 4px);
+            height: 5px;
+            background-color: #19ddca;
+            border-radius: 25px; 
+            position: relative;
+        }
+
+        #seekbar_thumb{
+            width: 15px;
+            height: 15px;
+            background-color: #19ddca;
+            border-radius: 50%;
+            position: absolute;
+            left: calc(100% - 15px/2);
+            top: calc(50% - 15px/2);
+        }
+
+
+        #output *{
+            padding: 4px;
+            background-color: #9e9e9e;
+            color: #fff;
+            width: fit-content;
+            margin: 4px;
+            margin-top: 16px;
+        }
+
+        #remove_button{
+            background-color: #dc3545;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="seekbar_wrapper" seek-pressed="false" seek-index="0">
+
+        <div id="seekbar_mark">
+            <div class="seekbar_dot" seek-dot="5"></div>
+            <div class="seekbar_dot" seek-dot="10"></div>
+            <div class="seekbar_dot" seek-dot="15"></div>
+            <div class="seekbar_dot" seek-dot="35"></div>
+            <div class="seekbar_dot" seek-dot="90"></div>
+            <div class="seekbar_dot" seek-dot="120"></div>
+            <div class="seekbar_dot" seek-dot="200"></div>
+            <div class="seekbar_dot" seek-dot="350"></div>
+            <div class="seekbar_dot" seek-dot="510"></div>
+        </div>
+
+        <div id="seekbat_fill">
+            <div id="seekbar_thumb"></div>
+        </div>
+
+    </div>
+
+
+
+
+    <div id="output">
+        <div id="output_index">index: 0</div>
+        <div id="output_seek">value: 5</div>
+        <div id="remove_button">Remover 1 tick</div>
+    </div>
+
+     
+
+
+    <script>
+
+
+        var seekbar_wrapper = document.getElementById("seekbar_wrapper");
+
+
+        ["mousedown" ,"touchstart"].forEach(e => {
+            seekbar_wrapper.addEventListener(e, (evt)=>{
+                seekbar_wrapper.setAttribute("seek-pressed", "true");
+                onMove(evt);
+            });
+        });
+
+
+        ["mousemove", "touchmove"].forEach(e => {
+            seekbar_wrapper.addEventListener(e, (evt)=>{
+                onMove(evt);
+            });
+        });
+        
+        
+        ["mouseup", "touchend"].forEach(e => {
+            seekbar_wrapper.addEventListener(e, ()=>{
+                seekbar_wrapper.setAttribute("seek-pressed", "false");
+            });
+        });
+
+
+
+        function onMove( evt ){
+            if ( seekbar_wrapper.getAttribute("seek-pressed") === "true" && seekbar_wrapper.querySelectorAll(".seekbar_dot").length > 0 ){
+                let clientX = (evt.clientX)? evt.clientX : evt.touches[0].clientX;
+                let dot_qty = seekbar_wrapper.querySelectorAll(".seekbar_dot").length;
+                let posX = Math.clamp(clientX - seekbar_wrapper.offsetLeft, 0, seekbar_wrapper.offsetWidth);
+                let dot_index = Math.round(posX / (seekbar_wrapper.offsetWidth / (dot_qty-1)));
+                seekbar_wrapper.querySelector("#seekbat_fill").style.width = (seekbar_wrapper.querySelectorAll(".seekbar_dot")[dot_index].offsetLeft + 3) + 'px';
+
+                if ( seekbar_wrapper.getAttribute("seek-index") != dot_index ){
+                    seekbar_wrapper.setAttribute("seek-index", dot_index);
+                    console.log("change", dot_index, seekbar_wrapper.querySelectorAll(".seekbar_dot")[dot_index].getAttribute("seek-dot"));
+                    document.getElementById("output_index").innerHTML = "index: " + dot_index;
+                    document.getElementById("output_seek").innerHTML = "value: " + seekbar_wrapper.querySelectorAll(".seekbar_dot")[dot_index].getAttribute("seek-dot");
+                }
+            }
+        }
+
+
+
+        document.getElementById("remove_button").onclick = () => {
+            
+            if ( document.getElementById("seekbar_mark").children.length > 0 ){
+                
+                seekbar_wrapper.querySelector("#seekbat_fill").style.width = 0;
+                seekbar_wrapper.setAttribute("seek-index", 0);
+                document.getElementById("output_index").innerHTML = "index: 0";
+                document.getElementById("output_seek").innerHTML = "value: " + seekbar_wrapper.querySelectorAll(".seekbar_dot")[0].getAttribute("seek-dot");
+                document.getElementById("seekbar_mark").lastElementChild.remove();
+
+                if ( document.getElementById("seekbar_mark").children.length == 1 ){
+                    document.getElementById("seekbar_mark").innerHTML = '';
+                }
+
+            }
+
+        };
+        
+        
+
+
+        Math.clamp = (value, min, max) => {
+            if ( value > max ) return max;
+            if ( value < min ) return min;
+            return value;
+        };
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

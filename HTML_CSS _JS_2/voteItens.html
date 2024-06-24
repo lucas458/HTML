@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enquete</title>
+
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            display: flex;
+        }
+
+
+
+
+        .details-wrapper{
+            padding: 8px;
+            margin: 8px;
+            background-color: #212121;
+            box-shadow: 0 0 5px 0 #000;
+            border-radius: 8px;
+            width: 100%;
+        }
+ 
+
+
+        .details-content{
+            max-height: 320px;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+
+
+
+        #addItemWrapper {
+            margin-top: 16px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+        #addItemWrapper>* {
+            height: 32px;
+            border: none;
+        }
+
+        #addItemInput {
+            border-radius: 8px 0 0 8px;
+            padding: 4px;
+            display: block;
+            flex: 1;
+            outline: none; 
+            background-color: #2c2c2c;
+            color: #fff;
+            width: 64px;
+        }
+
+        #maxInputValue {
+            background-color: #2c2c2c;
+            color: #9e9e9e;
+            display: flex;
+            align-items: center;
+            padding-right: 4px;
+        }
+
+
+
+        #addItemButton{
+            color: #fff;
+            background-color: #28a745;
+            padding: 4px 8px;
+            border-radius: 0 8px 8px 0;
+        }
+        #addItemButton:disabled{
+            background-color: #424242;
+        }
+         
+
+
+
+
+
+        #itemListNames {
+            margin-top: 16px;
+            margin-bottom: 8px;
+            overflow: hidden auto;
+        }
+
+        #itemListNames:empty{
+            margin: 0;
+        }
+
+
+        .itemNameWrapper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            transition: 250ms;
+        }
+
+
+        .itemLabel {
+            background-color: #353535;
+            width: 100%;
+            display: flex;
+            line-height: 32px;
+            border-radius: 8px 0 0 8px;
+            padding: 0 8px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .itemDelete {
+            width: 32px;
+            height: 32px;
+            text-align: center;
+            line-height: 32px;
+            background-color: #dc3545;
+            border-radius: 0 8px 8px 0;
+
+        }
+
+
+
+        #clearListButton {
+            width: 100%;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            background-color: #dc3545;
+            margin-top: 24px;
+            border-radius: 8px;
+            background-color: #616161;
+        }
+
+
+
+
+
+
+
+
+        .voteItem{
+            margin-top: 24px;
+            border-bottom: 2px solid #616161;
+            transition: 250ms;
+        }
+
+
+        .voteProgessWrapper{
+            height: fit-content;
+            background-color: #424242;
+            text-align: center;
+        }
+        .voteProgressFill{
+            background-color: #2196f3;
+            height: 100%;
+            padding: 4px 0;
+            width: 0%;
+        }
+
+
+
+        .voteQtyWrapper{
+            font-size: .8em;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 4px 0;
+        }
+
+
+
+
+        .voteQtyValue, .voteButton{
+            padding: 2px;
+            background-color: #607d8b;
+            margin-left: 8px;
+            border-radius: 8px;
+            min-width: calc( 16px * 2 );
+            text-align: center;
+        }
+
+        .voteButton{
+            margin-left: 0;
+            padding: 4px 8px;
+            background-color: #28a745;
+        }
+
+
+
+
+
+        #totalVotesWraper{
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+
+            display: none;
+        }
+
+
+        #totalVotesQty{
+            padding: 4px 8px;
+            margin-left: 6px;
+            background-color: #607d8b;
+            border-radius: 8px;
+        }
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+
+    <!-- ITEMS -->
+    <div class="details-wrapper">
+
+        <summary>Lista de items para votar (<span id="totalToVote">0</span>)</summary>
+
+        <div class="details-content">
+
+
+            <div id="addItemWrapper">
+                <input type="text" id="addItemInput" placeholder="Digite Aqui" maxlength="50">
+                <div id="maxInputValue">0/50</div>
+                <button id="addItemButton" disabled>ADD</button>
+            </div>
+
+
+            <!-- <div id="itemListNames">
+                <div class="itemNameWrapper">
+                    <div class="itemLabel">asd</div>
+                    <div class="itemDelete">X</div>
+                </div>
+                <div class="itemNameWrapper">
+                    <div class="itemLabel">asd</div>
+                    <div class="itemDelete">X</div>
+                </div>
+            </div> -->
+
+            <div id="itemListNames"></div>
+
+            <div id="clearListButton">Limpar Tudo</div>
+
+
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+    <!-- GRAFICO -->
+
+    <div class="details-wrapper">
+
+        <summary>Votar</summary>
+
+
+        <div class="details-content">
+
+            <div id="voteList"></div>
+
+            <!-- ITEM -->
+            <!-- <div class="voteItem" item-votes="0">
+                <div class="voteLabel">teste de label</div>
+                <div class="voteProgessWrapper">
+                    <div class="voteProgressFill">0%</div>
+                </div>
+                <div class="voteQtyWrapper"> <div class="voteButton">Votar</div> <div class="voteQtyValue">0</div> </div>
+            </div> -->
+            
+
+            <div id="totalVotesWraper">Total <div id="totalVotesQty">0</div> </div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+
+
+
+
+
+        var totalToVote = document.getElementById('totalToVote');
+
+        var addItemInput = document.getElementById('addItemInput');
+        var maxInputValue = document.getElementById('maxInputValue');
+        var addItemButton = document.getElementById('addItemButton');
+        var clearListButton = document.getElementById('clearListButton');
+
+
+        var itemListNames = document.getElementById('itemListNames');
+
+
+        var voteList = document.getElementById('voteList');
+
+
+
+
+        // input text
+        addItemInput.addEventListener('input', (evt) => {
+            maxInputValue.innerHTML = (evt.target.value.length) + '/50';
+            addItemButton.disabled = (evt.target.value.length <= 0);
+        });
+
+
+        // input text : enter
+        addItemInput.addEventListener('keydown', (evt) => {
+            
+            if ( evt.keyCode == 13 ){
+                console.log('enter');
+                addItemButtonClick();
+            }
+            
+        });
+
+        
+
+        // add item
+        addItemButton.addEventListener('click', () => {
+            addItemButtonClick();
+        });
+
+
+
+        // clear all
+        clearListButton.addEventListener('click', ()=>{
+            for (let i = 0; i < itemListNames.children.length; i++){
+                setTimeout(()=>{deleteItem(0);}, i*250);
+            }
+
+
+            totalToVote.innerText = itemListNames.children.length;
+            clearListButton.style.backgroundColor = (itemListNames.children.length)? '#dc3545' : '#616161';
+            
+            document.getElementById('totalVotesWraper').style.display = 'none';
+        });
+
+
+
+
+
+        function deleteItem( index ){
+
+            deleteVoteItemByName( itemListNames.children[0].querySelector('.itemLabel').innerText );
+
+            itemListNames.children[index].style.transform = 'translateX(-100%)';
+            setTimeout(()=>{
+                itemListNames.children[index].remove();
+                totalToVote.innerText = itemListNames.children.length;
+                clearListButton.style.backgroundColor = (itemListNames.children.length)? '#dc3545' : '#616161';
+            }, 150);
+        }
+
+
+
+
+
+
+
+        function addItemButtonClick(){
+            if (addItemInput.value.length > 0) {
+                console.log('asd');
+
+                let str = addItemInput.value.trim();
+                let idx_exist = indexOfItem( str );
+
+                if ( idx_exist < 0 ){
+                    addItem(str);
+                    addVoteItem(str);
+                     
+                }
+
+                addItemInput.value = '';
+                maxInputValue.innerHTML = '0/50';
+                addItemButton.disabled = true;
+                
+            }
+        }
+
+
+
+
+
+        function addItem( value ){
+
+            let item = document.createElement('div');
+            item.classList.add('itemNameWrapper');
+
+            item.innerHTML = `
+            <div class="itemLabel">${value}</div>
+            <div class="itemDelete">X</div>
+            `;
+
+            // DELETE
+            item.querySelector('.itemDelete').addEventListener('click', ()=>{
+                deleteVoteItemByName( item.querySelector('.itemLabel').innerText  );
+                item.style.transform = 'translateX(-100%)';
+                setTimeout(()=>{
+                    item.remove();
+                    totalToVote.innerText = itemListNames.children.length;
+                    clearListButton.style.backgroundColor = (itemListNames.children.length)? '#dc3545' : '#616161';
+                    document.getElementById('totalVotesWraper').style.display =  (itemListNames.children.length)? 'flex' : 'none';
+                }, 150);
+            });
+
+
+            itemListNames.appendChild(item);
+
+
+            totalToVote.innerText = itemListNames.children.length;
+            
+            clearListButton.style.backgroundColor = (itemListNames.children.length)? '#dc3545' : '#616161';
+
+            document.getElementById('totalVotesWraper').style.display = 'flex';
+        }
+
+
+
+
+
+
+        function indexOfItem( value ){
+
+            for (let i = 0; i < itemListNames.children.length; i++){
+                let getValue = itemListNames.children[i].querySelector('.itemLabel').innerText;
+
+                if ( value == getValue ){
+                    return i;
+                }
+
+            }
+
+
+            return -1;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        function addVoteItem( label ){
+
+            
+            let item = document.createElement('div');
+
+            item.classList.add('voteItem');
+            item.setAttribute('item-votes', 0);
+
+            item.innerHTML = `
+            <div class="voteLabel">${label}</div>
+                <div class="voteProgessWrapper">
+                    <div class="voteProgressFill">0.0%</div>
+                </div>
+                <div class="voteQtyWrapper"> <div class="voteButton">Votar</div> <div class="voteQtyValue">0</div> </div>
+            `;
+
+            // VOTAR CLICK
+            item.querySelector('.voteButton').addEventListener('click', ()=>{
+
+                console.log('votou');
+
+                let temp_votes = item.getAttribute('item-votes');
+                temp_votes = Math.trunc(temp_votes) + 1;
+
+                item.setAttribute('item-votes', temp_votes);
+                item.querySelector('.voteQtyValue').innerHTML = Intl.NumberFormat('pt').format(temp_votes);
+                
+
+                calculateVotes();
+            });
+
+
+            voteList.appendChild(item);
+
+        }
+
+
+
+
+
+
+
+
+        function deleteVoteItemByName( name ){
+
+            for (let i = 0; i < voteList.children.length; i++){
+                if ( voteList.children[i].querySelector('.voteLabel').innerText == name ){
+                    
+
+                    voteList.children[i].style.transform = 'translateX(-100%)';
+                    setTimeout(()=>{
+                        voteList.children[i].remove();
+                        calculateVotes();
+                    }, 150);
+
+                    return;
+                }
+            }
+
+            
+
+        }
+
+
+
+
+
+
+
+
+        function calculateVotes(){
+
+            
+            let tempTotal = 0;
+
+            for (let i = 0; i < voteList.children.length; i++){
+                let val = voteList.children[i].getAttribute('item-votes');
+                val = Math.trunc(val);
+                tempTotal += val;
+            }
+
+
+            document.getElementById('totalVotesQty').innerText = Intl.NumberFormat('pt').format(tempTotal);
+
+
+            for (let i = 0; i < voteList.children.length; i++){
+                let val = voteList.children[i].getAttribute('item-votes');
+                let percent = val / tempTotal * 100;
+
+                if ( isNaN(percent) ){
+                    percent = 0;
+                }
+
+                voteList.children[i].querySelector('.voteProgressFill').innerText = percent.toFixed(1) + '%';
+                voteList.children[i].querySelector('.voteProgressFill').style.width = (percent) + '%';
+
+            }
+
+
+            
+
+            return tempTotal;
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>

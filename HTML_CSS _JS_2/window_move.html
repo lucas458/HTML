@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{ 
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+            overflow: hidden;
+            scroll-behavior: none;
+        }
+
+        html, body{
+            width: 100%;
+            height: 100%;
+        }
+
+
+
+        .window_contaner{
+            min-width: 320px;
+            max-width: 100%;
+            min-height: 320px;
+            max-height: 100%;
+            width: fit-content;
+            height: 320px;
+            background-color: #353535;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .window_header{ 
+            background-color: #212121;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8px;
+            padding-left: 8px;
+        }
+
+        .window_header_title{
+            display: flex;
+            align-items: center;
+        }
+        .window_header_title svg{
+            display: flex;
+        }
+
+        .window_header_title_label{
+            margin-left: 16px;
+            padding-right: 8px;
+            white-space: nowrap;
+            overflow: hidden; 
+        }
+
+
+
+        .window_header_controls{
+            display: flex;
+            align-items: center; 
+        }
+
+        .window_header_control_button{
+            padding: 8px 16px;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .window_header_control_button:hover{
+            background-color: #353535;
+        }
+
+        .window_header_control_button_red:hover{
+            background-color: #dc3545 !important;
+        }
+
+
+
+
+
+        .window_content{
+            padding: 8px;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+
+
+
+
+
+    <div class="window_contaner" window-moving="false" window-sx="0" window-sy="0">
+
+
+
+        <div class="window_header">
+
+            <div class="window_header_title">
+                <div class="window_header_logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M7.462 0H0v7.19h7.462V0zM16 0H8.538v7.19H16V0zM7.462 8.211H0V16h7.462V8.211zm8.538 0H8.538V16H16V8.211z"/>
+                    </svg>
+                </div>
+
+                <div class="window_header_title_label">Nome do progama aqui!</div>
+            </div>
+
+
+            <div class="window_header_controls">
+
+                <div class="window_header_control_button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z"/>
+                    </svg>
+                </div>
+
+                <div class="window_header_control_button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                    </svg>
+                </div>
+
+                <div class="window_header_control_button window_header_control_button_red">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                    </svg>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="window_content">
+
+            <div>texto</div>
+
+            <input type="text" placeholder="Digite algo" maxlength="16">
+            <input type="range" min="0" max="100">
+            
+            <div>
+                <input type="email" placeholder="E-mail">
+                <input type="password" placeholder="Senha">
+            </div>
+
+            <div>
+                <input type="tel" placeholder="Telefone">
+                <input type="number" min="-5" max="10" placeholder="numero">
+            </div>
+
+            <input type="date">
+            <input type="time"> 
+            <input type="datetime-local">
+
+            <div></div>
+            <input type="color" name="" id=""> 
+            
+            <input type="month">
+            <input type="week">
+            
+            <div>
+                <label for="disk_c">Disk usage C:</label>
+                <meter value="0.2" max="1" min="0.1" optimum="0.1" high="0.7" low="0.2"></meter>
+                <div></div>
+                <label for="disk_d">Disk usage D:</label>
+                <meter value="0.6" max="1" min="0.1" optimum="0.1" high="0.7" low="0.2"></meter>
+            </div> 
+
+            <div><input type="checkbox"><span>teste</span></div> 
+
+            <div>
+                <input type="radio" name="rad" checked>
+                <span>azul</span>
+            </div>
+
+            <div>
+                <input type="radio" name="rad">
+                <span>vermelho</span>
+            </div> 
+            
+            <button>botao</button> 
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+    <script>
+
+
+        let window_contaner_list = document.querySelectorAll(".window_contaner");
+
+
+        window_contaner_list.forEach(el => {
+
+            el.querySelector(".window_header").onmousedown = (evt) => {  
+                el.setAttribute("window-sx", evt.clientX - el.offsetLeft);
+                el.setAttribute("window-sy", evt.clientY - el.offsetTop); 
+                el.setAttribute("window-moving", "true");
+            };
+
+            window.onmouseup = () => { 
+                el.setAttribute("window-moving", "false");
+                if ( el.offsetTop < 0 ){
+                    el.style.top = 0;
+                }
+            };
+
+            window.onmousemove = (evt) => {
+                if ( el.getAttribute("window-moving") === "true" ){
+                    let posX = evt.clientX - parseInt(el.getAttribute("window-sx"));
+                    let posY = evt.clientY - parseInt(el.getAttribute("window-sy"));
+                    el.style.left = posX + 'px';
+                    el.style.top = posY + 'px';
+                }
+            };
+
+        });
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

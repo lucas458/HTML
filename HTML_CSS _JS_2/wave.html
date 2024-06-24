@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+        #lineCursor{
+            display: none;
+            position: fixed;
+            height: 100%;
+            width: 1px;
+            background-color: #fff;
+            left: 0;
+            top: 0;
+        }
+
+
+
+
+
+        .channel{
+            padding: 4px 0;
+            border: 1px solid #9e9e9e;
+        }
+
+
+        #channel-list{
+            overflow: auto;
+        }
+        
+
+
+
+        .label{
+            padding: 4px 8px;
+            min-width: 100px;
+            text-overflow: clip;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .wave, .channel{
+            display: flex;
+            align-items: center;
+        }
+
+        .channel{
+            width: max-content;
+        }
+
+
+
+        .wave > .square:first-child{
+            border-left-color: red;
+        }
+
+        .square{
+            width: 32px;
+            height: 32px;
+            background-color: #353535;
+            border: 1px solid transparent;
+             
+        }
+
+        .level-high{
+            border-top-color: #fff; 
+        }
+
+        .level-low{
+            border-bottom-color: #fff;
+        }
+
+
+    </style>
+
+</head>
+
+
+
+<body>
+    
+
+    <div id="lineCursor"></div>
+
+
+
+  
+
+
+
+
+
+    <div id="channel-list">
+
+        <!-- CHANNEL -->
+        <div class="channel">
+            <div class="label">CS</div>
+            <div class="wave">
+                <!-- <div class="square level-low"></div>
+                <div class="square level-high"></div>
+                <div class="square level-low"></div> -->
+            </div>
+        </div>
+
+        <!-- CHANNEL -->
+        <div class="channel">
+            <div class="label">MOSI</div>
+            <div class="wave">
+                
+            </div>
+        </div>
+
+        <!-- CHANNEL -->
+        <div class="channel">
+            <div class="label">MISO</div>
+            <div class="wave">
+                
+            </div>
+        </div>
+
+        <!-- CHANNEL -->
+        <div class="channel">
+            <div class="label">SCK</div>
+            <div class="wave">
+                
+            </div>
+        </div>
+
+        
+
+
+
+    </div>
+  
+ 
+
+
+
+
+
+
+    <script>
+
+
+
+       
+
+        function spi_send( buffer = [], length = 0 ){
+
+            if ( length > buffer.length){
+                length = buffer.length;
+            }
+
+
+
+
+            // CHIP SELECT -- ACTIVE
+            let chipSelect;
+            chipSelect = document.createElement("div");
+            chipSelect.classList.add("square", "level-high");
+            document.querySelectorAll(".channel")[0].children[1].appendChild(chipSelect);
+ 
+
+            chipSelect = document.createElement("div");
+            chipSelect.classList.add("square", "level-low");
+            document.querySelectorAll(".channel")[0].children[1].appendChild(chipSelect);
+
+            // SCK HIGH
+            let sck_pulse = document.createElement("div");
+                    sck_pulse.classList.add("square", "level-low");
+                    document.querySelectorAll(".channel")[3].children[1].appendChild(sck_pulse);
+
+
+            let dataOut;
+
+                    dataOut = document.createElement("div");
+                    if ( buffer[0] & 1 << (7-0) ){dataOut.classList.add("square", "level-high");}
+                    else{dataOut.classList.add("square", "level-low");}
+                    document.querySelectorAll(".channel")[1].children[1].appendChild(dataOut);
+
+            for (i = 0; i < length; i++){
+
+                console.log(buffer[i]);
+
+
+
+                for (bit = 0; bit < 8; bit++){
+
+
+                    chipSelect = document.createElement("div");
+                    chipSelect.classList.add("square", "level-low");
+                    document.querySelectorAll(".channel")[0].children[1].appendChild(chipSelect);
+
+                    chipSelect = document.createElement("div");
+                    chipSelect.classList.add("square", "level-low");
+                    document.querySelectorAll(".channel")[0].children[1].appendChild(chipSelect);
+
+                    // SCK HIGH
+                    let sck_pulse = document.createElement("div");
+                    sck_pulse.classList.add("square", "level-high");
+                    document.querySelectorAll(".channel")[3].children[1].appendChild(sck_pulse);
+
+
+                    let dataOut;
+
+                    dataOut = document.createElement("div");
+                    if ( buffer[i] & 1 << (7-bit) ){dataOut.classList.add("square", "level-high");}
+                    else{dataOut.classList.add("square", "level-low");}
+                    document.querySelectorAll(".channel")[1].children[1].appendChild(dataOut);
+
+                    dataOut = document.createElement("div");
+                    if ( buffer[i] & 1 << (7-bit) ){dataOut.classList.add("square", "level-high");}
+                    else{dataOut.classList.add("square", "level-low");}
+                    document.querySelectorAll(".channel")[1].children[1].appendChild(dataOut);
+
+
+
+                    // SCK LOW
+                    sck_pulse = document.createElement("div");
+                    sck_pulse.classList.add("square", "level-low");
+                    document.querySelectorAll(".channel")[3].children[1].appendChild(sck_pulse);
+                    
+                            
+                }
+
+
+                
+            }
+
+
+            chipSelect = document.createElement("div");
+            chipSelect.classList.add("square", "level-low");
+            document.querySelectorAll(".channel")[0].children[1].appendChild(chipSelect);
+
+
+            chipSelect = document.createElement("div");
+            chipSelect.classList.add("square", "level-high");
+            document.querySelectorAll(".channel")[0].children[1].appendChild(chipSelect);
+
+
+        }
+
+
+        spi_send([0xA3,0x07], 2);
+
+
+
+
+
+
+
+
+
+
+        window.addEventListener("mousemove", (e)=>{
+            document.getElementById("lineCursor").style.left = (e.clientX) + 'px';
+        });
+
+        window.addEventListener("click", ()=>{
+
+            
+
+            if ( window.getComputedStyle(document.getElementById("lineCursor")).display == "none" ){
+                document.getElementById("lineCursor").style.display = 'block';
+            }
+            else{
+                document.getElementById("lineCursor").style.display = 'none';
+            }
+
+
+        });
+
+
+
+    </script>
+
+
+    
+</body>
+</html>

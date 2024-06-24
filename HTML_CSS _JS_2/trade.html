@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade</title>
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+        #main_screen{
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+        
+
+
+
+        #control_container{
+            width: 100%;
+            padding: 8px;
+
+        }
+        
+        #xp_label_wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px;
+        }
+        #xp_wrapper{
+            height: 16px;
+            background-color: #353535;
+        }
+        #xp_fill{
+            width: 0%;
+            height: 100%;
+            background-color: #007bff;
+        }
+        
+        #control_widget_container{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #control_button_list{
+            display: flex;
+            margin-top: 8px;
+        }
+        .control_button{
+            height: fit-content;
+            border-radius: 4px;
+            border: 1px solid #007bff;
+            color: #fafafa;
+            padding: 8px 16px;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        .control_button:hover{
+            background-color: #007bff;
+        }
+        .control_button:last-child{
+            margin: 0; 
+        }
+        
+
+        #control_radio_list{
+            margin-bottom: 8px;
+        }
+        .control_radio_container{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+        .control_radio_label{
+            margin-right: 8px;
+        }
+        .control_radio input{
+            display: none;
+        }
+        .control_radio > div{
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid #353535;
+            padding: 4px;
+        }
+        .control_radio > div > div{
+            width: 100%;
+            height: 100%;
+            background-color: #007bff;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 200ms;
+        }
+        .control_radio input:checked ~ div{
+            border-color: #007bff;
+        }
+        .control_radio input:checked ~ div > div{
+            transform: scale(1);
+        }
+        
+
+        .control_output{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0; 
+        }
+        .control_output_value{
+            padding: 2px 16px;
+            background-color: #252525;
+            border-radius: 8px;
+        }
+        
+        
+
+
+
+        #separator{
+            width: 2px;
+            background: #424242;
+            border-radius: 8px;
+        }
+        
+
+
+
+        #store_container{
+            height: 100%;
+            padding: 8px;
+            display: flex;
+            border-top: 2px solid #353535; 
+        }
+        
+
+        #product_list{ 
+            padding: 8px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            row-gap: 8px;
+            column-gap: 8px; 
+        }
+
+        .product_wrapper{
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            border: 2px solid #007bff;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        .product_icon{
+            width: 56px;
+            height: 56px;
+            pointer-events: none;
+            margin: auto;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .product_lock_screen{ 
+            position: relative;
+            z-index: 1;
+        }
+        .product_lock_screen_content_list{
+            padding: 2px;
+        }
+        .product_lock_screen_content{
+            font-size: 0.7em;
+            font-weight: bold;
+            display: none;
+            text-align: center;
+            background-color: #212121b0;
+            border-radius: 4px;
+        }
+        .product_lock_screen_content span{
+            color: #fff;
+            font-weight: initial;
+        }
+        .product_lock_screen_content:nth-child(1){
+            color: #ff5;
+        }
+        .product_lock_screen_content:nth-child(2),
+        .product_lock_screen_content:nth-child(3){
+            color: #007bff;
+        }
+        .product_lock_screen_content:nth-child(3){
+            width: 56px;
+            height: 56px; 
+            vertical-align: middle;
+        }
+
+        .product_selected{
+            border-color: darkorange;
+        }
+        .product_locked_money .product_lock_screen_content_list div:nth-child(1),
+        .product_locked_xp .product_lock_screen_content_list div:nth-child(2){
+            display: block;
+        }
+        .product_locked_max .product_lock_screen_content_list div:nth-child(3){
+            display: table-cell;
+        }
+        
+        
+
+
+
+        #product_info{
+            max-width: 480px;
+            min-width: 320px;
+            padding: 8px; 
+            flex: 1; 
+            display: none;
+        }
+        .product_info_open{
+            display: initial !important;
+        }
+
+        #product_info_title{
+            font-size: 1.7em;
+            font-weight: 500;
+            color: orange;
+            text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000,
+            1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+        }
+
+        #product_info_iconAndLevel{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 8px 0;
+        }
+        #product_info_icon{
+            width: 56px;
+            height: 56px;
+            pointer-events: none;
+        }
+        #product_info_level_wrapper{
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .product_info_level_star{
+            font-size: 1.7em;
+            line-height: 0;
+            color: #353535;
+            margin-left: 8px;
+        }
+        .product_info_level_marked{
+            color: #ff5 !important;
+        }
+
+        #product_info_level{
+            color: #007bff;
+            visibility: hidden;
+            text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+        }
+        .product_info_level_visible{
+            visibility: visible !important;
+        }
+
+        #product_info_level_value,
+        #product_info_level,
+        #product_info_price{
+            font-weight: 500;
+            font-size: 1.2em;
+        }
+
+        #product_info_level span:first-child{
+            margin-right: 4px;
+            font-size: 2em;
+            transform: rotate(340deg) translate(-6px, 0px);
+            display: inline-block;
+            line-height: 16px;
+            text-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff, 1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff;
+        }
+        #product_info_price{
+            margin-top: 8px;
+            font-size: 1.2em;
+            text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000
+        }
+        #product_info_price_value{
+            color: #ffc107; 
+        }
+
+        #product_info_buy_wrapper{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 8px;
+        }
+        #product_info_buy{
+            padding: 8px;
+            margin: auto;
+            border-radius: 4px;
+            background-color: #ff5555F0; 
+        }
+        .product_info_buy_active{
+            cursor: pointer;
+            background-color: #55ff55A0 !important;
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div id="main_screen">
+
+        <div id="control_container">
+    
+            <div id="xp_label_wrapper">
+                <div id="xp_label_current">0</div>
+                <div id="xp_label_total">500</div>
+            </div>
+    
+            <div id="xp_wrapper">
+                <div id="xp_fill"></div>
+            </div>
+
+            <div id="control_widget_container">
+                <div id="control_button_list">
+                    <div class="control_button">5</div>
+                    <div class="control_button">10</div>
+                    <div class="control_button">50</div>
+                    <div class="control_button">250</div>
+                    <div class="control_button">600</div>
+                </div>
+
+                <div id="control_radio_list">
+                    <label class="control_radio_container">
+                        <div class="control_radio_label">Dinheiro</div>
+                        <div class="control_radio">
+                            <input type="radio" name="type" checked>
+                            <div><div></div></div>
+                        </div>
+                    </label>
+
+                    <label class="control_radio_container">
+                        <div class="control_radio_label">Xp</div>
+                        <div class="control_radio">
+                            <input type="radio" name="type">
+                            <div><div></div></div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="control_output">
+                <div class="control_output_icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#ff5" viewBox="0 0 16 16">
+                        <path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9H5.5zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518l.087.02z"/>
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11zm0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"/>
+                    </svg>
+                </div>
+                <div class="control_output_value" id="money_value">0</div>
+            </div>
+
+            <div class="control_output">
+                <div class="control_output_icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#007bff" class="bi bi-star-fill" viewBox="0 0 16 16">
+                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                    </svg>
+                </div>
+                <div class="control_output_value" id="xp_level_value">0</div>
+            </div>
+
+        </div>
+
+
+    
+        <div id="store_container">
+
+            <div id="product_list">
+                
+                <div class="product_wrapper" item-name="engine">
+                    <img class="product_icon" src="https://i.pinimg.com/originals/3a/81/2b/3a812b4076e87db26e0c68673cce302c.png">
+                    <div class="product_lock_screen">
+                        <div class="product_lock_screen_content_list">
+                            <div class="product_lock_screen_content"><span>Requerido:</span><br>Mais<br>Dinheiro</div>
+                            <div class="product_lock_screen_content"><span>Requerido:</span><br>Nível<br>Alto</div>
+                            <div class="product_lock_screen_content">MÁX.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product_wrapper" item-name="gearbox">
+                    <img class="product_icon" src="https://cdn-icons-png.flaticon.com/512/2061/2061916.png">
+                    <div class="product_lock_screen">
+                        <div class="product_lock_screen_content_list">
+                            <div class="product_lock_screen_content"><span>Requerido:</span><br>Mais<br>Dinheiro</div>
+                            <div class="product_lock_screen_content"><span>Requerido:</span><br>Nível<br>Alto</div>
+                            <div class="product_lock_screen_content">MÁX.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product_wrapper" item-name="tires">
+                    <img class="product_icon" src="https://cdn-icons-png.flaticon.com/512/7952/7952069.png">
+                    <div class="product_lock_screen">
+                        <div class="product_lock_screen_content_list">
+                            <div class="product_lock_screen_content"><span>Requerido:</span><br>Mais<br>Dinheiro</div>
+                            <div class="product_lock_screen_content"><span>Requerido:</span><br>Nível<br>Alto</div>
+                            <div class="product_lock_screen_content">MÁX.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product_wrapper" item-name="fuel">
+                    <img class="product_icon" src="https://cdn-icons-png.flaticon.com/128/4230/4230978.png">
+                    <div class="product_lock_screen">
+                        <div class="product_lock_screen_content_list">
+                            <div class="product_lock_screen_content"><span>Requerido:</span><br>Mais<br>Dinheiro</div>
+                            <div class="product_lock_screen_content"><span>Requerido:</span><br>Nível<br>Alto</div>
+                            <div class="product_lock_screen_content">MÁX.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product_wrapper" item-name="weight">
+                    <img class="product_icon" src="https://images.vexels.com/media/users/3/153426/isolated/preview/658a096f9695611df2b22a52c37368ec-weight-plate-icon.png">
+                    <div class="product_lock_screen">
+                        <div class="product_lock_screen_content_list">
+                            <div class="product_lock_screen_content"><span>Requerido:</span><br>Mais<br>Dinheiro</div>
+                            <div class="product_lock_screen_content"><span>Requerido:</span><br>Nível<br>Alto</div>
+                            <div class="product_lock_screen_content">MÁX.</div>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+            
+
+
+            <div id="separator"></div>
+            
+
+
+            <div id="product_info">
+                
+                <div id="product_info_title">Motor</div>
+    
+                <div id="product_info_iconAndLevel">
+                    <img id="product_info_icon" src="https://i.pinimg.com/originals/3a/81/2b/3a812b4076e87db26e0c68673cce302c.png">
+                    <div id="product_info_level_wrapper"></div>
+                </div>
+                
+                <div id="product_info_level">
+                    <span>LVL</span>:
+                    <span id="product_info_level_value"></span>
+                </div>
+    
+                <div id="product_info_price">
+                    <span>Preço:</span>
+                    <span id="product_info_price_value"></span>
+                </div>
+    
+                <div id="product_info_buy_wrapper">
+                    <div id="product_info_buy">COMPRAR</div>
+                </div>
+    
+            </div>
+    
+            
+        </div>
+
+    </div>
+    
+
+
+    <script>
+        
+        var CURRENT_CASH  = 0;
+        var CURRENT_LEVEL = 0;
+        var CURRENT_XP    = 0;
+        const LEVEL_LIST  = [500, 1200, 3600, 4500, 6600, 7500];
+
+
+        var STORE_LIST = [
+
+            {
+                "label": "Motor",
+                "name": "engine",
+                "current_level": 0,
+                "items": [
+                    {
+                        "value": 20
+                    },
+                    {
+                        "value": 80,
+                        "level": 2
+                    },
+                    {
+                        "value": 100
+                    },
+                    {
+                        "value": 150
+                    },
+                    {
+                        "value": 250,
+                        "level": 4
+                    }
+                ]
+            },
+
+            {
+                "label": "Transmissão",
+                "name": "gearbox",
+                "current_level": 0,
+                "items": [
+                    {
+                        "value": 20
+                    },
+                    {
+                        "value": 80,
+                        "level": 2
+                    },
+                    {
+                        "value": 100
+                    },
+                    {
+                        "value": 150
+                    },
+                    {
+                        "value": 250,
+                        "level": 4
+                    }
+                ]
+            },
+
+
+            {  
+                "label": "Pneus",
+                "name": "tires",
+                "current_level": 0,
+                "items": [
+                    {
+                        "value": 20
+                    },
+                    {
+                        "value": 80,
+                        "level": 2
+                    }, 
+                    {
+                        "value": 150
+                    },
+                    {
+                        "value": 250,
+                        "level": 4
+                    }
+                ]
+            },
+
+
+            {
+                "label": "Combustível",
+                "name": "fuel",
+                "current_level": 0,
+                "items": [
+                    {
+                        "value": 20
+                    },
+                    {
+                        "value": 80,
+                        "level": 2
+                    },
+                    {
+                        "value": 100
+                    },
+                    {
+                        "value": 150
+                    },
+                    {
+                        "value": 150,
+                        "level": 3
+                    },
+                    {
+                        "value": 250,
+                        "level": 4
+                    }
+                ]
+            },
+
+
+            {
+                "label": "Peso",
+                "name": "weight",
+                "current_level": 0,
+                "items": [
+                    {
+                        "value": 20
+                    },
+                    {
+                        "value": 80,
+                        "level": 2
+                    },
+                    {
+                        "value": 250,
+                        "level": 4
+                    }
+                ]
+            }
+
+        ];
+        
+
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+
+        function levelUp(){
+            if ( CURRENT_LEVEL < LEVEL_LIST.length - 1 ){
+                CURRENT_LEVEL++;
+                document.getElementById("xp_level_value").innerHTML = CURRENT_LEVEL;
+                return true;
+            }
+            CURRENT_XP = LEVEL_LIST[CURRENT_LEVEL];
+            return false;
+        }
+        
+
+
+        function addXp( value ){
+            while (value > 0){
+                const need_xp = LEVEL_LIST[CURRENT_LEVEL] - CURRENT_XP;
+                if ( CURRENT_XP + value > LEVEL_LIST[CURRENT_LEVEL] ){
+                    if ( !levelUp() ){
+                        break;
+                    }
+                    value -= need_xp;
+                    CURRENT_XP = 0;
+                }else{
+                    CURRENT_XP += value;
+                    if (CURRENT_XP == LEVEL_LIST[CURRENT_LEVEL]){
+                        CURRENT_XP = 0;
+                        levelUp();
+                    }
+                    break;
+                }
+
+            }
+            setProressBar(CURRENT_XP/LEVEL_LIST[CURRENT_LEVEL]*100);
+            document.getElementById("xp_label_current").innerHTML = parseInt(CURRENT_XP).toLocaleString(); 
+            document.getElementById("xp_label_total").innerHTML   = parseInt(LEVEL_LIST[CURRENT_LEVEL]).toLocaleString();
+        }
+
+
+
+        function addCash( value ){
+            if (value < 0) return;
+            setCash(CURRENT_CASH + value);
+        }
+
+
+
+        function setCash( value ){
+            if (value < 0) return;
+            CURRENT_CASH = value;
+            document.getElementById("money_value").innerHTML = parseInt(value).toLocaleString();
+            checkAllProducts();
+        }
+        
+
+
+        function setProressBar( percent = 0 ){
+            document.getElementById("xp_fill").style.width = Math.clamp(percent, 0, 100) + "%";
+        }
+
+
+
+        function setBuyButtonActive(state = false){
+            document.getElementById("product_info_buy").classList.toggle("product_info_buy_active", state);
+        }
+
+
+
+        function checkProductByName( name, needLevel, needMoney ){
+            let product        = document.querySelector(`.product_wrapper[item-name="${name}"]`);
+            let product_object = STORE_LIST.find(e => e.name == name);
+            setBuyButtonActive(false);
+            product.classList.remove("product_locked_xp", "product_locked_money", "product_locked_max");
+            if ( product_object.current_level >= product_object.items.length ){
+                product.classList.add("product_locked_max");
+                return;
+            }
+            if ( CURRENT_LEVEL < needLevel ){
+                product.classList.add("product_locked_xp");
+                return;
+            }
+            if ( CURRENT_CASH < needMoney ){
+                product.classList.add("product_locked_money");
+                return;
+            }
+            setBuyButtonActive(true);
+        }
+
+
+
+        function openProductByName( name ){
+            let product_object = STORE_LIST.find(e => e.name == name);
+            if ( product_object != null ){
+                const productIndex = Math.clamp(product_object.current_level, 0, product_object.items.length-1);
+                const needLevel = product_object.items[productIndex].level;
+                let product = document.querySelector(`.product_wrapper[item-name="${name}"]`);
+                product_info_title.innerHTML       = product_object.label;
+                product_info_level_value.innerHTML = (needLevel)? needLevel : 0;
+                product_info_price_value.innerHTML = product_object.items[productIndex].value.toLocaleString();
+                document.getElementById("product_info_icon").src = product.querySelector(`img`).src;
+                setProductInfoLevelVisible( product_object.items[productIndex].level != null );
+                generateProductLevelStars(product_object.items.length, product_object.current_level);
+                checkProductByName(name, needLevel, product_object.items[productIndex].value);
+            }
+        }
+
+        
+
+        function generateProductLevelStars( starCount = 1, currenetLevel = 0){
+            product_info_level_wrapper.innerHTML = '';
+            for (let i = 0; i < starCount; i++){
+                let star = document.createElement("div");
+                star.classList.add("product_info_level_star");
+                star.classList.toggle("product_info_level_marked", i < currenetLevel);
+                star.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>`;
+                product_info_level_wrapper.appendChild(star);
+            }
+        }
+
+
+
+        function setProductInfoScreenVisible( state = false ){ 
+            document.getElementById("product_info").classList.toggle("product_info_open", state);
+        }
+
+
+
+        function setProductInfoLevelVisible( state = false ){
+            document.getElementById("product_info_level").classList.toggle("product_info_level_visible", state);
+        }
+
+
+
+        function checkAllProducts(){
+            STORE_LIST.forEach(e => {
+                const productIndex = Math.clamp(e.current_level, 0, e.items.length-1);
+                checkProductByName(e.name, e.items[productIndex].level, e.items[productIndex].value);
+            });
+            let product = document.querySelector(".product_selected");
+            if ( product ){
+                const name         = product.getAttribute("item-name");
+                let product_object = STORE_LIST.find(e => e.name == name);
+                const productIndex = Math.clamp(product_object.current_level, 0, product_object.items.length-1);
+                checkProductByName(name, product_object.items[productIndex].level, product_object.items[productIndex].value);
+            }
+        }
+        
+
+
+        document.querySelectorAll(".control_button").forEach(button => {
+            button.onclick = () => {
+                let value = parseInt(button.innerHTML);
+                if ( Array.from(document.querySelectorAll('#control_radio_list input')).indexOf(document.querySelector('#control_radio_list input:checked')) == 0 ){
+                    addCash(value);
+                }else{
+                    addXp(value);
+                }
+                checkAllProducts();
+            };
+        });
+
+
+
+        document.querySelectorAll(".product_wrapper").forEach(product => {
+            product.onmousedown = (event) => {
+                event.stopImmediatePropagation();
+                if ( event.button == 0 ){
+                    const isSelected = product.classList.contains("product_selected");
+                    if ( !isSelected ){
+                        document.querySelectorAll(".product_wrapper.product_selected").forEach(e => e.classList.remove("product_selected"));   
+                        openProductByName( product.getAttribute("item-name") );
+                    }
+                    product.classList.toggle("product_selected", !isSelected);
+                    setProductInfoScreenVisible( !isSelected );
+                }
+            };
+        });
+
+
+
+        document.getElementById("product_list").onmousedown = (event) => {
+            document.querySelectorAll(".product_wrapper.product_selected").forEach(e => e.classList.remove("product_selected"));   
+            setProductInfoScreenVisible(false);
+        };
+
+        
+
+        product_info_buy.onclick = (event) => {
+            if ( product_info_buy.classList.contains("product_info_buy_active") ){
+                let product        = document.querySelector(".product_selected");
+                const name         = product.getAttribute("item-name"); 
+                let product_object = STORE_LIST.find(e => e.name == name);
+                if ( product_object.current_level < product_object.items.length ){
+                    const productIndex = Math.clamp(product_object.current_level, 0, product_object.items.length-1);
+                    setCash(CURRENT_CASH - product_object.items[productIndex].value);
+                    product_object.current_level++; 
+                }
+                openProductByName(name);
+            }
+        };
+        
+
+
+        onload = () => {
+            checkAllProducts();
+        };
+
+
+    </script>
+
+</body>
+</html>

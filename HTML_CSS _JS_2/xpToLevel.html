@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+            overflow: hidden;
+        }
+
+
+
+        #grafico_container{
+            display: flex;
+            overflow: hidden;
+        }
+        
+        
+        .item{
+            flex-shrink: 0;
+            background-color: #353535;
+            width: 1px;
+            height: 100px;
+        }
+        .item:hover{
+            background-color: red;
+        }
+ 
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+    <div id="grafico_container"></div>
+ 
+
+
+     
+
+
+    <script>
+
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+
+        var current = 0;
+
+         
+
+        function update(){
+ 
+            let item = document.createElement('div');
+            item.classList.add('item');
+            item.style.height = Math.abs(Math.asinh(current * Math.PI / 100) * 300) + 'px';
+            item.title = current;
+
+            item.innerHTML = `<div style="width: 1px; height: ${Math.abs(Math.atan(current * Math.PI / 100) * 300)}px; position:absolute; background-color: blue;"></div>`;
+
+            grafico_container.appendChild(item);
+            current = (current + 1) ;
+
+            if ( current > 512 ){
+                grafico_container.firstElementChild.remove();
+            }
+
+        
+ 
+            requestAnimationFrame(update);
+        }
+
+
+
+        onload = update;
+
+
+        
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

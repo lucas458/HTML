@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+            overflow: hidden;
+        }
+
+
+        html,body, #main{
+            height: 100%;
+        }
+
+
+        #main{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly; 
+        }
+
+
+        .seekbar_round{
+            width: 256px;
+            height: 256px; 
+            border-radius: 50%;
+            border: 2px solid #353535;
+            position: relative;
+        }
+        
+
+        .seekbar_round_handle{
+            width: 20px;
+            height: 20px;
+            background-color: #007bff;
+            border-radius: 50%; 
+            transform-origin: center calc(256px/2 + 20px/2);
+            transform: rotate(0deg); 
+            position: absolute;
+            left: calc(50% - 10px);
+            top: calc(-10px);
+        }
+
+
+        .seekbar_round_value{
+            height: 100%;
+            font-size: 2em;
+            pointer-events: none;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+    <div id="main">
+
+        <div class="seekbar_round" seekbar-current-tick="0">
+            <div class="seekbar_round_handle"></div>
+            <div class="seekbar_round_value">0%</div>
+        </div>
+
+        <div class="seekbar_round seekbar_round_discrete" seekbar-tick="12" seekbar-current-tick="0">
+            <div class="seekbar_round_handle"></div>
+            <div class="seekbar_round_value">0</div>
+            
+        </div>
+
+    </div>
+
+
+    
+
+
+
+
+
+
+     
+
+
+    <script>
+ 
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+
+
+
+        document.querySelectorAll(".seekbar_round").forEach(e => {
+
+            e.ontouchmove = (event) => {
+
+                let position = {
+                    x: event.touches[0].clientX - (e.offsetLeft + e.offsetWidth/2),
+                    y: event.touches[0].clientY - (e.offsetTop + e.offsetHeight/2)
+                };
+
+                let angle = 180 - Math.atan2(position.x, position.y) * 180 / Math.PI;
+                let index = 0;
+                
+                if ( e.classList.contains("seekbar_round_discrete") ){
+                    index = Math.trunc(angle / (360 / e.getAttribute("seekbar-tick")));
+                    angle = index * (360 / e.getAttribute("seekbar-tick"));
+                } 
+
+                e.setAttribute("seekbar-current-tick", (e.classList.contains("seekbar_round_discrete"))? index : Math.round(angle / 360 * 100) );
+                e.querySelector(".seekbar_round_value").innerHTML = (e.classList.contains("seekbar_round_discrete"))? index : Math.round(angle / 360 * 100) + "%";
+                e.querySelector(".seekbar_round_handle").style.transform = `rotate(${angle}deg)`;
+
+            };
+
+
+
+
+            e.onmousedown = () => {
+
+                e.onmousemove = (event) => {
+
+                    let position = {
+                        x: event.clientX - (e.offsetLeft + e.offsetWidth/2),
+                        y: event.clientY - (e.offsetTop + e.offsetHeight/2)
+                    };
+
+                    let angle = 180 - Math.atan2(position.x, position.y) * 180 / Math.PI;
+                    let index = 0;
+                    
+                    if ( e.classList.contains("seekbar_round_discrete") ){
+                        index = Math.trunc(angle / (360 / e.getAttribute("seekbar-tick")));
+                        angle = index * (360 / e.getAttribute("seekbar-tick"));
+                    } 
+
+                    e.setAttribute("seekbar-current-tick", (e.classList.contains("seekbar_round_discrete"))? index : Math.round(angle / 360 * 100) );
+                    e.querySelector(".seekbar_round_value").innerHTML = (e.classList.contains("seekbar_round_discrete"))? index : Math.round(angle / 360 * 100) + "%";
+                    e.querySelector(".seekbar_round_handle").style.transform = `rotate(${angle}deg)`;
+
+                };
+
+            };
+
+
+
+            e.onmouseout = () => e.onmousemove = null;
+            e.onmouseup = () => e.onmousemove = null;
+
+
+
+
+
+            e.onwheel = (event) => {
+
+                let isDiscrete = e.classList.contains("seekbar_round_discrete");
+
+                if ( event.deltaY < 0 ){
+                    e.setAttribute("seekbar-current-tick", (parseInt(e.getAttribute("seekbar-current-tick")) + 1) % ((isDiscrete)? e.getAttribute("seekbar-tick") : 101));
+                    e.querySelector(".seekbar_round_value").innerHTML = e.getAttribute("seekbar-current-tick") + ((isDiscrete)? "" : "%");
+                    e.querySelector(".seekbar_round_handle").style.transform = `rotate(${(isDiscrete)? (360 / e.getAttribute("seekbar-tick") * e.getAttribute("seekbar-current-tick")) : (parseInt(e.getAttribute("seekbar-current-tick")) * 360 / 100)}deg)`;
+                }else{
+                    let value = (isDiscrete)? ((parseInt(e.getAttribute("seekbar-current-tick")) - 1) % e.getAttribute("seekbar-tick")) : ((parseInt(e.getAttribute("seekbar-current-tick")) - 1) % 101);
+                    if (value < 0){
+                        value = (isDiscrete)? (e.getAttribute("seekbar-tick") - 1) : 100;
+                    }
+                    e.setAttribute("seekbar-current-tick", value);
+                    e.querySelector(".seekbar_round_value").innerHTML = value + ((isDiscrete)? "" : "%"); 
+                    e.querySelector(".seekbar_round_handle").style.transform = `rotate(${(isDiscrete)? (360 / e.getAttribute("seekbar-tick") * value) : (value * 360 / 100)}deg)`;
+                }
+
+            };
+
+
+        });
+        
+
+ 
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

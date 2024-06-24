@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #fff;
+            color: #000;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%; 
+            padding: 16px;
+            position: fixed;
+        }
+
+
+
+
+
+
+        /* INPUT */
+        .input_wrapper{ 
+            height: 48px;
+            padding-right: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .input_label{
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+
+        .input_element{
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 0 8px;
+            font-size: 1.1em;
+            display: block;
+        }
+
+        .input_icon{
+            width: 32px;
+            height: 100%;
+            color: #007bff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+
+
+        .input_helper{
+            font-size: 0.8em;
+            color: #585858;
+        }
+
+
+
+
+
+        /* BUTTON */
+
+        .button{
+            width: fit-content;
+            border-radius: 4px;
+            padding: 16px 32px;
+            color: #fff;
+            font-weight: 500;
+            background-color: #007bff;
+            border: 2px solid #007bff;
+            margin: 8px 0;
+        }
+        .button:active{
+            background-color: #005abb;
+            border-color: #005abb;
+        }
+
+
+        .button_outline{
+            background-color: transparent;
+            color: #585858;
+            border-color: #e0e0e0;
+        }
+
+        .button_outline:active{
+            background-color: transparent;
+            color: #007bff;
+            border-color: #007bff;
+        }
+
+
+
+
+
+        /* RADIO & CHECKBOX */
+
+        .radio_group,
+        .checkbox_group{
+            display: flex;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .radio input,
+        .checkbox input{
+            display: none;
+        }
+
+        .radio,
+        .checkbox{
+            display: flex;
+            align-items: center;
+            gap: 8px; 
+        }
+
+
+        .radio_wrapper,
+        .checkbox_wrapper{
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid #bdbdbd;
+            padding: 4px;
+            background-color: #f6f9fb;
+        }
+
+        .checkbox_wrapper{
+            border-radius: 4px;
+        }
+
+        .checkbox_wrapper div{
+            background-color: transparent !important;
+            color: #007bff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .radio_wrapper div,
+        .checkbox_wrapper div{
+            width: 100%;
+            height: 100%;
+            background-color: #007bff;
+            transform: scale(0);
+            transition: 200ms;
+            border-radius: 50%;
+        }
+
+
+        .radio input:checked ~ .radio_wrapper div,
+        .checkbox input:checked ~ .checkbox_wrapper div{
+            transform: scale(1);
+        }
+
+
+
+
+
+         
+
+
+
+        /* CALENDAR */
+
+
+        .calendar{
+            width: fit-content;
+            border: 2px solid #dbdbdb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .calendar_header{
+            display: flex;
+            justify-content: space-between;
+            color: #a0aeb3;
+            border-bottom: 2px solid #dbdbdb;
+            background-color: #f5f9fc;
+        }
+
+        .calendar_value{
+            border-right: 2px solid #dbdbdb;
+            height: 100%;
+            padding: 8px;
+            flex: 1;
+        }
+
+        .calendar_icon{
+            padding: 8px;
+            flex-shrink: 0; 
+        }
+
+        .calendar_content{
+            background-color: #fbfcfe;
+            padding: 8px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            justify-items: center;
+            align-items: center;
+        }
+
+        .calender_day{
+            padding: 8px;
+            width: 100%;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .calender_day_out{
+            color: #dbdbdb;
+        }
+
+        .calender_day:not(.calender_day_selected):hover{
+            background-color: #bdbdbd;
+        }
+
+        .calender_day_selected{
+            background-color: #007bff;
+            color: #fff;
+        }
+
+
+
+
+
+
+
+
+
+        .seekbar{
+            height: 4px;
+            background-color: #e0e0e0;
+            margin-top: 16px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+
+        .seekbar_fill{ 
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            background-color: #007bff;
+            pointer-events: none;
+            position: relative;
+            left: 0;
+        }
+
+
+        .seekbar_handler{
+            width: 16px;
+            height: 16px;
+            border: 1px solid #e0e0e0;
+            background-color: #fff;
+            /* box-shadow: 0 0 2px 0 #9e9e9e; */
+            border-radius: 50%;
+            position: absolute;
+            top: calc(100% - 8px - 4px/2);
+        }
+        
+        .seekbar_handler_max{
+            left: calc(100% - 16px);
+        }
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+
+      
+
+
+        <div class="input">
+            <div class="input_label">Text Field</div>
+
+            <div class="input_wrapper">
+                <input type="text" class="input_element" spellcheck="false">
+                <div class="input_icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="input_helper">Please provide more detail</div>
+        </div>
+
+
+
+
+        <div class="button">Done</div>
+        <div class="button button_outline">Log In</div>
+
+
+        <div class="radio_group">
+
+            <label class="radio">
+                <input type="radio" class="radio_element" name="option_group" checked>
+                <div class="radio_wrapper"><div></div></div>
+                <div class="radio_label">Option 1</div>
+            </label>
+
+            <label class="radio">
+                <input type="radio" class="radio_element" name="option_group">
+                <div class="radio_wrapper"><div></div></div>
+                <div class="radio_label">Option 2</div>
+            </label>
+
+        </div>
+
+
+        <div class="checkbox_group">
+
+            <label class="checkbox">
+                <input type="checkbox" class="checkbox_element" checked>
+                <div class="checkbox_wrapper">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/></svg>
+                    </div>
+                </div>
+                <div class="checkbox_label">Option 1</div>
+            </label>
+
+            <label class="checkbox">
+                <input type="checkbox" class="checkbox_element">
+                <div class="checkbox_wrapper">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/></svg>
+                    </div>
+                </div>
+                <div class="checkbox_label">Option 2</div>
+            </label>
+
+        </div>
+
+
+
+
+
+
+
+        <div class="calendar">
+
+            <div class="calendar_header">
+
+                <div class="calendar_value">dd/mm/yyyy</div>
+
+                <div class="calendar_icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
+                        <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                    </svg>
+                </div>
+
+            </div>
+
+
+            <div class="calendar_content">
+                <div class="calender_day calender_day_out">29</div>
+                <div class="calender_day calender_day_out">30</div>
+                <div class="calender_day">1</div>
+                <div class="calender_day">2</div>
+                <div class="calender_day">3</div>
+                <div class="calender_day">4</div>
+                <div class="calender_day">5</div>
+                <div class="calender_day">6</div>
+                <div class="calender_day">7</div>
+                <div class="calender_day">8</div>
+                <div class="calender_day">9</div>
+                <div class="calender_day">10</div>
+                <div class="calender_day">11</div>
+                <div class="calender_day">12</div>
+                <div class="calender_day">13</div>
+                <div class="calender_day">14</div>
+                <div class="calender_day">15</div>
+                <div class="calender_day">16</div>
+                <div class="calender_day">17</div>
+                <div class="calender_day">18</div>
+                <div class="calender_day">19</div>
+                <div class="calender_day">20</div>
+                <div class="calender_day">21</div>
+                <div class="calender_day">22</div>
+                <div class="calender_day">23</div>
+                <div class="calender_day">24</div>
+                <div class="calender_day">25</div>
+                <div class="calender_day">26</div>
+                <div class="calender_day">27</div>
+                <div class="calender_day">28</div>
+                <div class="calender_day calender_day_selected">29</div>
+                <div class="calender_day">30</div>
+                <div class="calender_day calender_day_out">1</div>
+                <div class="calender_day calender_day_out">2</div>
+                <div class="calender_day calender_day_out">3</div>
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+
+
+        <div class="seekbar">
+            <div class="seekbar_fill"></div>
+            <div class="seekbar_handler seekbar_handler_min"></div>
+            <div class="seekbar_handler seekbar_handler_max"></div>
+        </div>
+
+
+
+
+
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+        
+
+        document.querySelectorAll('.seekbar').forEach(seekbar => {
+            seekbar.querySelectorAll('.seekbar_handler').forEach(handler => {
+                handler.onmousedown = handler.ontouchstart = () => {
+                    seekbar.classList.add('seekbar_pressed');
+                    handler.classList.add('seekbar_handler_pressed');
+                };
+            });
+        });
+
+
+        ontouchend = onmouseup = onblur = () => {
+            document.querySelectorAll('.seekbar_pressed').forEach(seekbar_pressed => {
+                seekbar_pressed.classList.remove('seekbar_pressed');
+                seekbar_pressed.querySelectorAll('.seekbar_handler_pressed').forEach(e => {
+                    e.classList.remove('seekbar_handler_pressed');
+                });
+            });
+        };
+
+
+        ontouchmove = onmousemove = (event) => {
+
+            document.querySelectorAll('.seekbar_pressed').forEach(seekbar_pressed => {
+
+                seekbar_pressed.querySelectorAll('.seekbar_handler_pressed').forEach(seekbar_handler_pressed => {
+
+                    const clientX = (event.type == "mousemove")? event.clientX : event.touches[0].clientX;
+                    const min     = seekbar_pressed.querySelector('.seekbar_handler_min').offsetLeft;
+                    const max     = seekbar_pressed.querySelector('.seekbar_handler_max').offsetLeft;
+                    let currentX  = Math.clamp(clientX - seekbar_pressed.offsetLeft - seekbar_handler_pressed.offsetWidth/2, 0, seekbar_pressed.offsetWidth);
+
+                    if ( seekbar_handler_pressed.classList.contains('seekbar_handler_min') ){
+                        if ( currentX > max ){
+                            currentX = max;
+                        }
+                    }else{
+                        if ( currentX < min ){
+                            currentX = min;
+                        }
+                    }
+
+                    seekbar_handler_pressed.style.left = Math.clamp(currentX, 0, seekbar_pressed.offsetWidth - seekbar_handler_pressed.offsetWidth) + 'px';
+                    seekbar_pressed.querySelector('.seekbar_fill').style.left = (min + seekbar_handler_pressed.offsetWidth/2) + 'px';
+                    seekbar_pressed.querySelector('.seekbar_fill').style.width = (max - min) + 'px';
+                    
+                });
+
+            });
+
+        };
+
+        
+        document.querySelectorAll('.calender_day').forEach(calender_day => {
+            calender_day.onclick = () => {
+                document.querySelectorAll('.calender_day_selected').forEach(e => {
+                    e.classList.remove('calender_day_selected');
+                });
+                calender_day.classList.add('calender_day_selected');
+            };
+        });
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

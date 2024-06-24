@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibrate Pattern</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+
+
+        .modal{
+            width: 100%;
+            height: 100%;
+            display: none;
+            position: fixed; 
+        }
+        .modal_open{
+            display: block !important;
+        }
+        .modal_container{
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .modal_blur{
+            width: 100%;
+            height: 100%;
+            background-color: #00000080;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .modal_window{ 
+            width: 70%;
+            height: 160px;
+            border-radius: 10px;
+            background-color: #212121; 
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .modal_window > div{
+            width: 100%;
+        }
+        .modal_header{ 
+            padding: 8px 16px;
+            font-size: x-large;
+            font-weight: 500;
+            text-align: left;
+        }
+
+
+
+
+        .modal_content{
+            width: 10%;
+            height: 100%;
+            padding: 16px; 
+        }
+
+
+        .modal_footer{ 
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #353535;
+        }
+        .modal_action{
+            padding: 8px 16px; 
+            flex: 1;
+            text-align: center;
+        }
+        .modal_action:nth-child(odd){
+            border-right: 1px solid #353535;
+        }
+
+        .modal_action:active{
+            background-color: #353535;
+        }
+        
+
+
+
+
+        .screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+ 
+        .screen_content{
+            height: 100%;
+        }
+        
+
+
+
+
+        #screen_main .screen_header{
+            height: 64px;
+            padding: 8px;
+            box-shadow: 0 0 5px 0 #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #numberInput,
+        #numberInputEdit{
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            padding: 0 10px;
+            border-radius: 8px 0 0 8px;
+            background-color: #353535;
+            color: #fff;
+        }
+        #numberInputEdit{
+            height: 32px;
+            border-radius: 8px;
+            width: 100%;
+        }
+        #addButton{
+            background-color: #333;
+            padding: 0 16px;
+            height: 100%;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 0;
+        }
+        .can_add{
+            background-color: #28a745 !important;
+        }
+        .can_add:active{
+            opacity: 0.7;
+        }
+        
+
+
+
+
+        #item_list{
+            padding: 8px;
+            overflow: hidden auto;
+        }
+        .item{
+            background-color: #212121;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px 0 #111;
+            margin-bottom: 8px;
+        }
+        .item:nth-child(even){
+            background-color: #333;
+        }
+        .item_content{
+            font-size: 1.3em;
+            line-height: 0;
+            font-weight: 500;
+            color: #ddd;
+        }
+        .item_contols{
+            display: flex;
+        }
+        .item_button{
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            margin-left: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #303030;
+        }
+        .item_button:last-child{
+            background-color: #a12f3a;
+        }
+
+        .item_button:active{
+            opacity: 0.7;
+        }
+        
+
+
+
+
+        #screen_main .screen_footer{
+            padding: 8px;
+        }
+        #vibrateButton{
+            width: 100%;
+            background-color: #353535;
+            color: #9e9e9e;
+            text-align: center;
+            font-size: 1.2em;
+            padding: 16px 0;
+            transition: 200ms;
+            border-radius: 10px;
+        }
+        .can_execute{
+            background-color: #28a745 !important;
+            color: #fff !important;
+        }
+        .can_execute:active{
+            transform: scale(0.95);
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+
+    <div class="screen" id="screen_main">
+        <div class="screen_header">
+            <input type="number" placeholder="0 a 1000" min="0" max="1000" id="numberInput">
+            <div id="addButton">ADD</div>
+        </div>
+        <div class="screen_content" id="item_list"></div>
+        <div class="screen_footer">
+            <div id="vibrateButton">Executar</div>
+        </div>
+    </div>
+
+
+    <div class="modal" id="modal_edit">
+        <div class="modal_container">
+            <div class="modal_blur"></div>
+            <div class="modal_window">
+                <div class="modal_header">Editar</div>
+                <div class="modal_content">
+                    <input type="number" placeholder="0 a 1000" min="0" max="1000" id="numberInputEdit">
+                </div>
+                <div class="modal_footer">
+                    <div class="modal_action" id="modal_cancel">Cancelar</div>
+                    <div class="modal_action" id="modal_save">Salvar</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <script>
+
+        var INDEX_EDIT = -1;
+
+        modal_cancel.onclick = () => {
+            modal_edit.classList.toggle("modal_open", false);
+            numberInputEdit.value = '';
+        };
+
+
+        modal_save.onclick = () => {
+            if ( checkValidValue(numberInputEdit.value) && INDEX_EDIT >= 0 ){
+                item_list.children[INDEX_EDIT].querySelector('.item_content').innerText = numberInputEdit.value;
+                INDEX_EDIT = -1;
+                modal_edit.classList.toggle("modal_open", false);
+                numberInputEdit.value = '';
+            }else{
+                numberInputEdit.focus();
+            }
+        };
+
+
+        function checkValidValue( value = 0 ){
+            value = Math.abs( Math.trunc(value) );
+            return value > 0 && value <= 1000;
+        }
+        
+
+        function onAddItem( input_value = 0 ){
+            if ( checkValidValue(input_value) ){
+                addItem(input_value);
+                numberInput.value = '';
+                numberInputEdit.value = '';
+            }
+        }
+
+
+        addButton.onclick = () => {
+            if ( addButton.classList.contains("can_add") ){
+                onAddItem(numberInput.value);
+                numberInput.focus();
+            }
+        };
+
+
+        numberInput.onkeydown = (event) => {
+            if ( event.keyCode == 13 ){
+                onAddItem(numberInput.value);
+                numberInput.focus();
+            }
+        };
+
+        numberInput.oninput = () => {
+            addButton.classList.toggle("can_add", checkValidValue(numberInput.value));
+        };
+        
+
+        vibrateButton.onclick = () => {
+            if ( vibrateButton.classList.contains("can_execute") && navigator.vibrate ){
+                vibrateButton.classList.remove("can_execute");
+                addButton.classList.remove("can_add");
+                let pattern = [];
+                let wait_time = 0;
+                for (i of item_list.children){
+                    pattern.push( parseInt(i.innerText) );
+                    wait_time += parseInt(i.innerText);
+                }
+                navigator.vibrate(pattern);
+                setTimeout(()=>{
+                    vibrateButton.classList.add("can_execute");
+                    addButton.classList.toggle("can_add", checkValidValue(numberInput.value));
+                }, wait_time);   
+            }
+        };
+        
+
+        function addItem( value = 0 ){
+            if ( value < 0 || value > 1000) return;
+            let item = document.createElement("div");
+            item.classList.add("item");
+            item.innerHTML = `
+            <div class="item_content">${value}</div>
+            <div class="item_contols">
+                <div class="item_button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>
+                </div>
+                <div class="item_button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/></svg>
+                </div>
+            </div>`;
+            item_list.appendChild(item);
+            vibrateButton.classList.add("can_execute");
+            item.querySelectorAll(".item_button")[0].onclick = () => {
+                console.log("edit");
+                for (let i = 0; i < item_list.children.length; i++){
+                    if ( item_list.children[i] == item ){
+                        INDEX_EDIT = i;
+                        break;
+                    }
+                }
+                numberInputEdit.value = item.querySelector(".item_content").innerText;
+                modal_edit.classList.toggle("modal_open", true);
+                numberInputEdit.focus();
+            };
+            item.querySelectorAll(".item_button")[1].onclick = () => {
+                item.style.transition = "200ms";
+                item.style.transform  = "translateX(-100%)";
+                setTimeout(()=>{
+                    item.remove();
+                    vibrateButton.classList.toggle("can_execute", item_list.children.length > 0);
+                }, 250);
+            }
+        }
+
+
+    </script>
+
+</body>
+</html>

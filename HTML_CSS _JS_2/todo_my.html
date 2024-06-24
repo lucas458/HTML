@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #fff;
+            color: #000;
+        }
+
+
+
+
+
+
+        /*** MODAL ***/
+
+        .modal{
+            width: 100%;
+            height: 100%;
+            background-color: #000000a0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 6;
+            position: fixed;
+        }
+
+        .modal-window{
+            background-color: #fff;
+            overflow: hidden;
+            width: 75%;
+            height: 50%;
+            max-height: 75%;
+            border-radius: 8px;
+            
+            display: flex;
+            flex-direction: column;
+            
+
+            transform: scale(0);
+            transition: 250ms;
+        }
+
+        .modal-window > div{
+            padding: 8px;
+        }
+
+
+
+        .modal-header{
+            color: #212529;
+            font-weight: bold;
+        }
+
+
+
+        .modal-content{
+            border-top: 1px solid #ced4da;
+            border-bottom: 1px solid #ced4da;
+            overflow: auto;
+            height: 100%;
+        }
+
+
+        #modalInputWrapper{
+            display: flex;
+            align-items: center;
+            height: 32px;
+            border: 1px solid #6c757d;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+         
+
+        #modalInputMax{
+            display: flex;
+            align-items: center;
+            color: #666;
+            margin-right: 8px;
+        }
+
+        #modalInputText{
+            border: none;
+            padding: 0 8px;
+            outline: none;
+            width: 100%;
+        }
+
+        #modalHelper{
+            font-size: .8em;
+            color: #dc3545;
+            visibility: hidden;
+            margin-top: 4px;
+        }
+
+
+
+        .modal-footer{
+            display: flex;
+            justify-content: space-between;
+            padding: 0 !important;
+        }
+
+        .modal-action{
+            
+            flex: 1;
+            text-align: center;
+            padding: 12px 8px;
+            border-right: 1px solid #ced4da;
+        }
+        .modal-action:last-child{
+            border: none;
+        }
+
+        .modal-action:active{
+            background-color: #ced4da;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*** SCREEN >> CLASS ***/
+
+        .screen{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+        .screen-content{
+            height: 100%;
+        }
+
+
+
+
+
+
+        /*** TELA -- ACTIONSHEET ***/
+
+        #tela-actionsheet{
+            background-color: #000000a0;
+            padding: 8px;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        #actionsheeet-window{
+            transform: translateY( calc(100% + 8px) );
+            transition: 200ms;
+        }
+
+
+        .actionsheet-wrapper{
+            margin-bottom: 16px;
+            background-color: #fff;
+            font-weight: bold;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .actionsheet-wrapper:last-child{
+            margin: 0;
+        }
+
+        .actionsheet-wrapper:last-child div{
+            border-radius: 10px;
+        }
+
+
+        .actionsheet-option{
+            padding: 12px 8px;
+            border-bottom: 1px solid #ced4da;
+            text-align: center;
+        }
+        .actionsheet-option:last-child{
+            border: none;
+        }
+
+        .actionsheet-option:active{
+            background-color: #ced4da;
+        }
+
+
+
+
+
+
+
+        
+
+        /*** TELA -- MAIN ***/
+
+
+        #tela-main .screen-header{
+            box-shadow: 0 0 5px 0 #9e9e9e;
+        }
+
+        /* HEADER */
+
+        #sorter-wrapper{
+            display: flex;
+            justify-content: space-between;
+            background-color: #e9ecef;
+            color: #212529;
+            border: 1px solid #ced4da;
+             
+            margin: 8px;
+            border-radius: 8px;
+            overflow: auto;
+        }
+
+
+        .sorter-radio-wrapper{
+            width: 100%;
+        }
+
+        .sorter-radio-wrapper input{
+            display: none;
+        }
+
+        .sorter-button{
+            width: 100%;
+            padding: 8px;
+            flex: 1;
+            text-align: center;
+            border-right: 1px solid #ced4da;
+        }
+        .sorter-button:last-child{
+            border: none;
+        }
+
+        
+
+        .sorter-radio-wrapper input:checked ~div{
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+
+
+
+
+
+
+        /* CONTENT */
+
+        .content-scroll{
+            overflow: auto;
+        }
+ 
+
+        .item-wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 0 5px 0 #6c757d;
+            color: #212529;
+            overflow: hidden;
+        }
+
+        .item-wrapper > *{
+            padding: 16px;
+        }
+
+        .item-hidden{
+            display: none;
+        }
+
+
+
+        .item-checker{
+            padding: 10px;
+        }
+
+        .item-checker input{
+            display: none;
+        }
+
+        .item-checker > div{
+            width: 16px;
+            height: 16px; 
+            border: 1px solid #212529;
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        .item-checker > div > div{
+            background-color: #0d47a1;
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 250ms;
+        }
+
+        .item-checker input:checked ~ div > div{
+            transform: scale(1);
+        }
+
+
+
+
+        .item-label{
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+
+        .item-options{
+            display: flex;
+            padding: 18px 16px;
+             
+        }
+        .item-options:active{
+            background-color: #e9ecef; 
+        }
+
+
+
+
+
+
+
+        /* FOOTER */
+
+        #tela-main .screen-footer{
+            display: flex;
+            justify-content: flex-end;
+            padding: 16px;
+        }
+
+        #add-button{
+            width: 48px;
+            height: 48px;
+            background-color: #28a745;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            box-shadow: 0 0 5px 0 #000;
+            transition: 250ms;
+            color: #fff;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            margin: 16px;
+        }
+
+        #add-button:active{
+            transition: 50ms;
+            transform: scale(1.2) !important;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+    <!-- TELA -- ACTIONSHEET -->
+    <div class="screen" id="tela-actionsheet" style="display: none;">
+
+        <div id="actionsheeet-window">
+
+            <div class="actionsheet-wrapper">
+                <div class="actionsheet-option" style="color: #dc3545;" onclick="actionsheet_deleteItem()">Deletar</div>
+                <div class="actionsheet-option" style="color: #007bff;" onclick="actionsheet_editItem()">Editar</div>
+                <div class="actionsheet-option" style="color: #007bff;" id="actionsheeet-toggleState" onclick="actionsheet_toggleItem()">Marcar/Desmarcar</div>
+            </div>
+    
+            <div class="actionsheet-wrapper">
+                <div class="actionsheet-option" style="color: #007bff;" onclick="toggleScreenActionsheet(false)">Fechar</div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <!-- MODAL -- ADD/EDIT ITEM -->
+    <div class="modal" id="modal-addEdit" style="display: none;">
+
+        <div class="modal-window">
+
+            <div class="modal-header">Criar</div>
+
+
+            <div class="modal-content">
+
+                <div id="modalInputWrapper">
+                    <input type="text" id="modalInputText" maxlength="32">
+                    <div id="modalInputMax">0/32</div>
+                </div>
+
+                <div id="modalHelper">preencha o campo acima</div>
+
+            </div>
+
+
+
+            <div class="modal-footer">
+                <div class="modal-action" style="color: #dc3545;" onclick="toggleModal(this.parentElement.parentElement.parentElement.id, false)">Cancelar</div>
+                <div class="modal-action" style="color: #007bff;" onclick="modalAddEditSaveClick()">Salvar</div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- TELA -- MAIN -->
+    <div class="screen" id="tela-main">
+
+
+        <!-- HEADER -->
+        <div class="screen-header">
+            
+            <div id="sorter-wrapper">
+
+                <label class="sorter-radio-wrapper">
+                    <input type="radio" name="sorter" checked>
+                    <div class="sorter-button">Todos</div>
+                </label>
+
+                <label class="sorter-radio-wrapper">
+                    <input type="radio" name="sorter">
+                    <div class="sorter-button">Completos</div>
+                </label>
+
+                <label class="sorter-radio-wrapper">
+                    <input type="radio" name="sorter">
+                    <div class="sorter-button">Incompletos</div>
+                </label>
+
+            </div>
+
+        </div>
+
+
+
+
+        <!-- CONTENT -- LISTA -->
+        <div class="screen-content content-scroll" style="padding-bottom: 64px;">
+
+
+            <!-- ITEM -->
+            <!-- <div class="item-wrapper">
+
+                <label class="item-checker">
+                    <input type="checkbox">
+                    <div><div></div></div>
+                </label>
+
+                <div class="item-label">label </div>
+
+                <div class="item-options">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div> -->
+
+        </div>
+
+
+
+        <!-- ADD BUTTON -->
+        <div id="add-button" onclick="openModalAddEdit(true)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></svg>
+        </div>
+         
+
+    </div>
+
+
+
+
+    
+     
+
+
+    <script>
+
+
+
+
+
+
+
+
+
+        var modalInputText = document.getElementById('modalInputText');
+        var isEditMode = false;
+
+        var TASK_LIST = [];
+
+
+
+        
+
+
+
+        function modalAddEditSaveClick(){
+            console.log('click');
+
+            let str = modalInputText.value;
+
+            document.getElementById('modalHelper').style.visibility = (str.length > 0)? 'hidden' : 'visible';
+
+            if ( str.length > 0 ){
+
+                if ( isEditMode ){
+
+                    addItem(str);
+                }
+                else{
+
+                    let itens = document.querySelector('#tela-main .screen-content');
+                    itens.children[itemIndexHandle].querySelector('.item-label').innerText = str;
+
+                    // document.getElementById('modalInputText').value = '';
+                    // document.getElementById('modalInputMax').innerText = '0/32';
+
+                    itemIndexHandle = -1;
+
+                    toggleModal('modal-addEdit', false);
+
+                    
+                }
+
+                
+            }
+
+        }
+
+
+
+
+        modalInputText.addEventListener('input', (evt)=>{
+            document.getElementById('modalHelper').style.visibility = 'hidden';
+            document.getElementById('modalInputMax').innerText = (evt.target.value.length) + '/32';
+        });
+
+        modalInputText.addEventListener('keydown', (evt)=>{
+            if ( evt.keyCode == 13 ){
+                modalAddEditSaveClick();
+            }
+        });
+
+
+        
+
+
+        var itemIndexHandle = -1;
+
+
+        function addItem( label ){
+
+
+            let item = document.createElement('div');
+            item.classList.add('item-wrapper');
+
+            item.innerHTML = `
+            <label class="item-checker">
+                <input type="checkbox">
+                <div><div></div></div>
+            </label>
+
+            <div class="item-label">${label}</div>
+
+            <div class="item-options">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                </svg>
+            </div>
+            `;
+
+
+            item.querySelector('.item-checker input').addEventListener('change', (evt)=>{
+                let state = evt.target.checked;
+                item.querySelector('.item-label').style.textDecoration = (state)?'line-through': 'none';
+                item.style.backgroundColor = (state)? '#e9ecef' : '#fff';
+
+
+                for (let i = 0; i < sorterButtons.length; i++){
+
+                    if ( sorterButtons[i].checked ){
+                        
+                        if ( i == 0 ){
+                            sortItens('all');
+                        }
+                        else if ( i == 1 ){
+                            sortItens('completed');
+                        }
+                        else if ( i == 2 ){
+                            sortItens('uncompleted');
+                        }
+
+                        break;
+                    }
+
+                }
+
+
+            });
+
+            
+
+            item.querySelector('.item-options').addEventListener('click', ()=>{
+
+
+ 
+                let itens = document.querySelector('#tela-main .screen-content');
+
+                for (let i = 0; i < itens.children.length; i++){
+                    if ( itens.children[i] == item ){
+                        itemIndexHandle = i;
+                        break;
+                    }
+                }
+
+
+                console.log('index', itemIndexHandle);
+
+
+                let state = item.querySelector('.item-checker input').checked;
+                document.getElementById('actionsheeet-toggleState').innerText = (state)? 'Desmarcar' : 'Marcar';
+
+                toggleScreenActionsheet(true);
+            });
+
+
+            document.querySelector('#tela-main .screen-content').appendChild(item);
+
+
+            toggleModal('modal-addEdit', false);
+
+        }
+
+
+
+
+
+
+
+
+
+
+        function actionsheet_deleteItem(){
+
+            let itens = document.querySelector('#tela-main .screen-content');
+
+            if ( itemIndexHandle >= 0 && itens.children.length > 0 ){
+                itens.children[itemIndexHandle].remove();
+                itemIndexHandle = -1;
+                toggleScreenActionsheet(false);
+            }
+
+        }
+
+
+
+        function actionsheet_editItem(){
+
+            let itens = document.querySelector('#tela-main .screen-content');
+
+            if ( itemIndexHandle >= 0 && itens.children.length > 0 ){
+                
+                
+                toggleScreenActionsheet(false);
+
+                if ( itemIndexHandle >= 0 ){
+                    let str = itens.children[itemIndexHandle].querySelector('.item-label').innerText;
+                    openModalAddEdit(false, str);
+                    //itemIndexHandle = -1;
+                }
+                
+
+                
+            }
+
+        }
+
+
+
+        function actionsheet_toggleItem(){
+            let itens = document.querySelector('#tela-main .screen-content');
+
+            if ( itemIndexHandle >= 0 && itens.children.length > 0 ){
+                
+                let state = itens.children[itemIndexHandle].querySelector('.item-checker input').checked;
+                state = !state;
+                itens.children[itemIndexHandle].querySelector('.item-checker input').checked = state;
+
+                itens.children[itemIndexHandle].querySelector('.item-label').style.textDecoration = (state)?'line-through': 'none';
+                itens.children[itemIndexHandle].style.backgroundColor = (state)? '#e9ecef' : '#fff';
+
+                itemIndexHandle = -1;
+                
+                for (let i = 0; i < sorterButtons.length; i++){
+
+                    if ( sorterButtons[i].checked ){
+                        
+                        if ( i == 0 ){
+                            sortItens('all');
+                        }
+                        else if ( i == 1 ){
+                            sortItens('completed');
+                        }
+                        else if ( i == 2 ){
+                            sortItens('uncompleted');
+                        }
+
+                        break;
+                    }
+
+                }
+                
+                toggleScreenActionsheet(false);
+
+
+
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+        let sorterButtons = document.getElementsByName('sorter');
+
+
+        sorterButtons.forEach((e, i)=>{
+
+            e.addEventListener('change', (evt)=>{
+                console.log('sorter', i);
+
+                if ( i == 0 ){
+                    sortItens('all');
+                }
+                else if ( i == 1 ){
+                    sortItens('completed');
+                }
+                else if ( i == 2 ){
+                    sortItens('uncompleted');
+                }
+
+            }); 
+
+        });
+
+
+
+
+
+        function sortItens( mode ){
+
+            let itens = document.querySelector('#tela-main .screen-content');
+
+            if ( itens.children.length <= 0 ){
+                return;
+            }
+
+
+
+
+
+
+            if ( mode == 'all' ){
+                for (let i = 0; i < itens.children.length; i++){
+                    itens.children[i].classList.remove('item-hidden');
+                }
+            }
+
+
+            else if ( mode == 'completed' ){
+
+                for (let i = 0; i < itens.children.length; i++){
+                    
+                    let state = itens.children[i].querySelector('.item-checker input').checked;
+                    if ( state ){
+                        itens.children[i].classList.remove('item-hidden');
+                    }
+                    else{
+                        itens.children[i].classList.add('item-hidden');
+                    }
+
+                }
+
+            }
+
+
+            else if ( mode == 'uncompleted' ){
+                for (let i = 0; i < itens.children.length; i++){
+                    let state = itens.children[i].querySelector('.item-checker input').checked;
+                    if ( state ){
+                        itens.children[i].classList.add('item-hidden');
+                    }
+                    else{
+                        itens.children[i].classList.remove('item-hidden');
+                    }
+                }
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+        
+
+
+
+        function toggleScreenActionsheet( state ){
+
+
+            if ( state ){
+
+                document.getElementById('add-button').style.transform = 'scale(0)';
+
+                document.getElementById('tela-actionsheet').style.display  = 'flex';
+
+
+                setTimeout(()=>{
+                    document.getElementById('actionsheeet-window').style.transform  = 'translateY(0)';
+                }, 1);
+                
+
+            }
+
+            else{
+
+                document.getElementById('actionsheeet-window').style.transform  = 'translateY( calc(100% + 8px) )';
+                
+                setTimeout(()=>{
+                    document.getElementById('tela-actionsheet').style.display  = 'none';
+                    document.getElementById('add-button').style.transform = 'none';
+
+                    //   = -1;
+                }, 250);
+
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function toggleModal( id, state ){
+
+
+            let modal = document.getElementById(id);
+
+
+            if ( state ){
+                modal.style.display = 'flex';
+
+                setTimeout(()=>{
+                    modal.querySelector('.modal-window').style.transform = 'scale(1)';
+                }, 1);
+
+            }
+
+            else{
+                
+
+                modal.querySelector('.modal-window').style.transform = 'scale(0)';
+                setTimeout(()=>{
+                    modal.style.display = 'none';
+                }, 250);
+            }
+
+        }
+
+
+
+
+
+
+        function openModalAddEdit( mode , valueInput ){
+
+            // mode TRUE: add
+            // mode FALSE: edit
+            isEditMode = mode;
+
+            toggleModal('modal-addEdit', true);
+            
+            
+
+            document.querySelector('#modal-addEdit .modal-header').innerHTML = (mode)? 'Criar' : 'Editar';
+
+            if ( valueInput != null ){
+                document.getElementById('modalInputText').value = valueInput;
+                document.getElementById('modalInputMax').innerText = (valueInput.length) + '/32';
+            }
+            else{
+                document.getElementById('modalInputText').value = '';
+                document.getElementById('modalInputMax').innerText = '0/32';
+            }
+
+            document.getElementById('modalInputText').focus();
+        }
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Touches (0)</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            overscroll-behavior-y: contain;
+        }
+
+
+
+         
+
+        .touchBall{
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+            box-shadow: 0 0 5px #000;
+            border-radius: 50%;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+    <div id="ball-list">
+        
+    </div>
+    
+     
+
+
+    <script>
+
+
+
+
+        window.addEventListener("touchmove", (evt)=>{
+            onTouch( evt );
+        });
+
+        window.addEventListener("touchstart", (evt)=>{
+            onTouch( evt );
+        });
+
+        window.addEventListener("touchend", (evt)=>{
+            onTouch( evt );
+        });
+
+
+
+        function onTouch( evt ){
+
+
+
+            document.title = `Touches (${evt.touches.length})`;
+
+            document.getElementById('ball-list').innerHTML = '';
+
+            for (let i = 0; i < evt.touches.length; i++){
+
+                let ball = document.createElement('div');
+                ball.classList.add('touchBall');
+
+                document.getElementById('ball-list').appendChild(ball);
+
+                ball.style.left = (evt.touches[i].clientX - ball.offsetWidth/2) + 'px';
+                ball.style.top = (evt.touches[i].clientY - ball.offsetHeight/2) + 'px';
+                
+
+            }
+
+
+        }
+        
+
+
+
+
+    </script>
+
+
+</body>
+</html>
