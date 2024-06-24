@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+        @font-face {
+            font-family: 'Digital';
+            src: url("digital-7.mono.ttf");
+        }
+
+
+
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+ 
+
+
+        #mcp{
+            width: calc(1437px / 2);
+            height: calc(251px / 2); 
+            
+            position: relative;
+        }
+
+        .texture{
+            background-image: url("assets737.png");
+            background-size: calc(1437px / 2) calc(307px / 2);
+        }
+
+
+
+        .lcd{
+            padding-top: 1px;
+            height: calc(26px / 2);
+            font-family: 'Digital';
+            line-height: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            letter-spacing: 4px;
+            position: absolute;
+        } 
+
+        .lcd_small{
+            width: calc(67px / 2);
+            
+        }
+        .lcd_big{
+            width: calc(133px / 2);
+        }
+
+
+
+        
+        
+        .korry{
+            width: calc(56px / 2);
+            height: calc(23px / 2);
+            background-position: 0px 23px;
+            position: absolute;
+        }
+        
+        .korry::before{
+            content: '';
+            display: block;
+            width: calc(56px / 2);
+            height: calc(53px / 2);
+            cursor: pointer;
+            position: absolute;
+            top: -15px;
+        }
+
+        .korry_on{ 
+            background-position: 0px 11.5px !important;
+        }
+
+
+
+
+
+        .flightDirector{
+            width: calc(23px / 2);
+            height: calc(37px / 2);
+            cursor: pointer; 
+            background-position: -50px 18.5px;
+            transform: rotate(180deg);
+            position: absolute;  
+        }
+
+        .flightDirector_on{
+            transform: rotate(0);
+            background-position: -50.1px 18px;
+        }
+
+
+
+
+
+        .rotary_encoder{
+            cursor: pointer; 
+            position: absolute; 
+        }
+
+        .rotary_encoder_horizontal{
+            width: calc(50px / 2);
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            
+        }
+
+        .rotary_encoder_vertical{
+            width: calc(24px / 2);
+            height: calc(89px / 2);
+        }
+
+
+
+        .button_black{
+            width: calc(34px / 2);
+            aspect-ratio: 1/1;
+            cursor: pointer;
+            border-radius: 50%;  
+            position: absolute; 
+        }
+
+
+
+
+        .rotary_switch{
+            width: calc(52px / 2);
+            height: calc(56px / 2);
+            cursor: pointer; 
+            background-position: -73px 28px;
+            transform-origin: center 15px;
+            transform: rotate(0deg);
+            position: absolute;
+            left: 276px;
+            top: 47px;
+        }
+
+
+
+
+
+        .indicator_ma{
+            width: calc(21px / 2);
+            height: calc(22px / 2); 
+            background-position: -39.3px 11px;
+            position: absolute;
+        }
+
+        .indicator_ma_on{
+            background-position: -28.1px 11px !important;
+        }
+
+
+
+        .indicator_atArm{
+            width: calc(23px / 2);
+            height: calc(8px / 2);
+            /* background-color: red; */
+            background-position: -28px 15px;
+            position: absolute;
+            left: 102px;
+            top: 23px;
+        }
+
+        .indicator_atArm_on{
+            background-image: none;
+        }
+
+
+
+
+
+        .atArm_switch{
+            width: calc(23px / 2);
+            height: calc(32px / 2);
+            cursor: pointer;
+            background-position: -61.5px 16px;
+            transform: rotate(180deg);
+            position: absolute;
+            left: 102px;
+            top: 35px;
+        }
+
+        .atArm_switch_on{
+            transform: rotate(0);
+            
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+    <div id="main_screen">
+
+
+
+        <div id="mcp" class="texture">
+
+
+            <div id="lcd_list">
+                <div class="lcd lcd_small" aria-level="1" aria-colcount="3" aria-label="course_left" style="left: 43px; top: 22px;">000</div>
+                <div class="lcd lcd_big" aria-level="1"  aria-colcount="3" aria-label="ias_mach" style="left: 140px; top: 22px;">000</div>
+                <div class="lcd lcd_small" aria-level="1"  aria-colcount="3" aria-label="heading" style="left: 274px; top: 22px;">000</div>
+                <div class="lcd lcd_big" aria-level="1"  aria-colcount="4" aria-label="altitude" style="left: 372px; top: 22px;">0000</div>
+                <div class="lcd lcd_big" aria-level="100"  aria-colcount="4" aria-label="vert_speed" style="left: 470px; top: 22px;">0000</div>
+                <div class="lcd lcd_small" aria-level="1"  aria-colcount="3" aria-label="course_right" style="left: 646px; top: 22px;">000</div>
+            </div>
+
+
+            <div id="korry_list">
+
+                <!-- N1 -->
+                <div class="texture korry" style="left: 94px; top: 99px;"></div>
+                <!-- SPEED -->
+                <div class="texture korry" style="left: 128px; top: 99px;"></div>
+
+                <!-- LVL CHG -->
+                <div class="texture korry" style="left: 227px; top: 99px;"></div>
+                <!-- VNAV -->
+                <div class="texture korry" style="left: 227px; top: 27px;"></div>
+
+
+                <!-- HDG SEL -->
+                <div class="texture korry" style="left: 274px; top: 99px;"></div>
+
+                <!-- APP -->
+                <div class="texture korry" style="left: 324px; top: 99px;"></div>
+                <!-- LNAV -->
+                <div class="texture korry" style="left: 324px; top: 64px;"></div>
+                <!-- LNAV -->
+                <div class="texture korry" style="left: 324px; top: 27px;"></div>
+
+
+                <!-- ALT HLD -->
+                <div class="texture korry" style="left: 391px; top: 99px;"></div>
+                <!-- V/S -->
+                <div class="texture korry" style="left: 430px; top: 99px;"></div>
+
+
+                <!-- CMD A -->
+                <div class="texture korry" style="left: 558px; top: 35px;"></div>
+                <!-- CWS A -->
+                <div class="texture korry" style="left: 558px; top: 70px;"></div>
+                <!-- CMD B -->
+                <div class="texture korry" style="left: 597px; top: 35px;"></div>
+                <!-- CWS B -->
+                <div class="texture korry" style="left: 597px; top: 70px;"></div>
+
+            </div>
+
+
+            <div id="flightDirector_list">
+                <div class="texture flightDirector" id="flightDirectorLeft" style="left: 75px; top: 85px;"></div>
+                <div class="texture flightDirector" id="flightDirectorRight" style="left: 637px; top: 85px;"></div>
+            </div>
+
+
+            <div id="rotary_encoder_list">
+                <!-- COURSE -->
+                <div class="rotary_encoder rotary_encoder_horizontal" aria-label="course_left" aria-valuemin="0" aria-valuemax="359" style="left: 40px; top: 50px;"></div>
+                <!-- IAS/MACH -->
+                <div class="rotary_encoder rotary_encoder_horizontal" aria-label="ias_mach" aria-valuemin="0" aria-valuemax="300" style="left: 178px; top: 61px;"></div>
+                <!-- ALTITUDE -->
+                <div class="rotary_encoder rotary_encoder_horizontal" aria-label="altitude" aria-valuemin="0" aria-valuemax="45000" style="left: 393px; top: 50px;"></div>
+                <!-- COURSE -->
+                <div class="rotary_encoder rotary_encoder_horizontal" aria-label="course_right" aria-valuemin="0" aria-valuemax="359" style="left: 658px; top: 50px;"></div>
+                <!-- VERT SPEED -->
+                <div class="rotary_encoder rotary_encoder_vertical" aria-label="vert_speed" aria-valuemin="-5000" aria-valuemax="5000" style="left: 516px; top: 58px;"></div>
+            </div>
+
+
+            <div id="button_black_list">
+                <div class="button_black" style="left: 150px; top: 53px;"></div>
+                <div class="button_black" style="left: 213px; top: 53px;"></div>
+                <div class="button_black" style="left: 431px; top: 53px;"></div>
+            </div>
+
+
+            <div id="rotary_switch_list">
+                <!-- HEADING -->
+                <div id="rotary" aria-label="heading" aria-valuemin="0" aria-valuemax="359" class="texture rotary_encoder rotary_encoder_horizontal rotary_switch"></div>
+            </div>
+
+
+            <div id="indicator_ma_list">
+                <div class="texture indicator_ma" id="indicator_ma_left" style="left: 75px; top: 52px;"></div>
+                <div class="texture indicator_ma" id="indicator_ma_right" style="left: 636px; top: 52px;"></div>
+            </div>
+
+
+            <div id="indicator_atArm_list">
+                <div class="texture indicator_atArm"></div>
+            </div>
+
+
+            <div id="atArm_switch_list">
+                <div class="texture atArm_switch"></div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+ 
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+        const zeroPad = (num, places) => String(num).padStart(places, '0');
+
+
+        // KORRY SWITCH
+        document.querySelectorAll(".korry").forEach(korry => {
+            korry.onclick = () => {
+                console.log("korry");
+                korry.classList.toggle('korry_on');
+            };
+        });
+
+
+        // FLIGHT DIRECTOR SWITCH
+        document.querySelectorAll('.flightDirector').forEach(flightDirector => {
+            flightDirector.onclick = () => {
+                console.log("fd");
+                flightDirector.classList.toggle('flightDirector_on');
+                
+                const leftIsActive  = flightDirectorLeft.classList.contains('flightDirector_on');
+                const rightIsActive = flightDirectorRight.classList.contains('flightDirector_on');
+
+                if ( flightDirector.id == 'flightDirectorLeft'){
+
+
+                    if ( leftIsActive ){
+                        indicator_ma_left.classList.toggle('indicator_ma_on', !rightIsActive);
+                    }else{
+                        indicator_ma_left.classList.toggle('indicator_ma_on', false);
+                        indicator_ma_right.classList.toggle('indicator_ma_on', rightIsActive);
+                    }
+
+                }else{
+
+                    if ( rightIsActive ){
+                        indicator_ma_right.classList.toggle('indicator_ma_on', !leftIsActive);
+                    }else{
+                        indicator_ma_right.classList.toggle('indicator_ma_on', false);
+                        indicator_ma_left.classList.toggle('indicator_ma_on', leftIsActive);
+                    }
+                        
+                }
+                
+            };
+        });
+        
+
+        // ROTARY ENCODER & ROTARY SWITCH
+        document.querySelectorAll('.rotary_encoder').forEach(rotary_encoder => {
+            rotary_encoder.onclick = rotary_encoder.onwheel = (event) => { 
+                event.preventDefault();
+
+                const label = rotary_encoder.ariaLabel;
+
+                if ( rotary_encoder.classList.contains('rotary_switch') ){
+                    if ( event.type == 'wheel' ){
+                        rotary_encoder_handler(label, (event.deltaY < 0) , event.shiftKey);
+                    }
+
+                }else{
+                    rotary_encoder_handler(label, ((event.offsetX > rotary_encoder.offsetWidth / 2 && event.type == 'click' && rotary_encoder.classList.contains('rotary_encoder_horizontal') ) || (event.offsetY > rotary_encoder.offsetHeight / 2 && event.type == 'click')) || (event.deltaY < 0), rotary_encoder.classList.contains('rotary_switch') );
+
+                }
+                 
+
+            };
+        });
+
+
+        var rotary_switch_current = 2;
+
+        const rotary_switch_angle = [
+            {key: 10, value: -60},
+            {key: 15, value: -30},
+            {key: 20, value: 0},
+            {key: 25, value: 30},
+            {key: 30, value: 60}
+        ];
+
+
+        function rotary_encoder_handler(name, isClockWise, isRotarySwitch){
+            if ( isRotarySwitch ){
+                rotary_switch_current = Math.clamp(rotary_switch_current + ((isClockWise)? 1 : -1), 0, rotary_switch_angle.length-1);                
+                rotary.style.transform = `rotate(${rotary_switch_angle[rotary_switch_current].value}deg)`;
+                console.log("rotary",name, isClockWise, rotary_switch_angle[rotary_switch_current].key);
+            }else{
+                console.log("encoder",name, isClockWise);
+
+                let lcd_element = document.querySelector(`.lcd[aria-label="${name}"]`);
+                let rotary_element = document.querySelector(`.rotary_encoder[aria-label="${name}"]`);
+                
+                
+
+                let value = parseInt(lcd_element.innerHTML);
+
+                const min = parseInt(rotary_element.ariaValueMin);
+                const max = parseInt(rotary_element.ariaValueMax);
+                const step = parseInt(lcd_element.ariaLevel);
+
+                value += (isClockWise)? step : -step;
+
+                if ( value > max ){
+                    value = 0;
+                }else if ( value < min ){
+                    value = max;
+                }
+
+                if ( name == 'vert_speed' ){
+                   
+
+                    if ( Math.abs(value) > 0 ){
+                        lcd_element.innerHTML = ((value > 0)? '+' : '-') + zeroPad(Math.abs(value), lcd_element.ariaColCount);
+                    }else{
+                        lcd_element.innerHTML = zeroPad(0, lcd_element.ariaColCount);
+                    }
+
+                }else{
+                    lcd_element.innerHTML = zeroPad(value, lcd_element.ariaColCount);
+                }
+
+
+
+
+            }
+
+
+        }
+
+
+        
+
+
+        // BLACK BUTTON
+        document.querySelectorAll('.button_black').forEach(button_black => {
+            button_black.onclick = () => {
+                console.log("black button");
+            };
+        });
+
+
+
+
+
+        // AT/ARM SWITCH
+        document.querySelectorAll('.atArm_switch').forEach(atArm_switch => {
+            atArm_switch.onclick = () => {
+                atArm_switch.classList.toggle("atArm_switch_on");
+
+                indicator_atArm_list.firstElementChild.classList.toggle("indicator_atArm_on", atArm_switch.classList.contains("atArm_switch_on"));
+
+            };
+        });
+
+
+
+
+    </script>
+
+
+</body>
+</html>

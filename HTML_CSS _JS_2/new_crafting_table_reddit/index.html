@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+        @font-face {
+            font-family: 'minecraft';
+            src: url('font.ttf');
+            
+        }
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'minecraft';
+        }
+
+
+        img{
+            image-rendering: pixelated;
+            pointer-events: none;
+        }
+
+        body{ 
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+         
+
+        .screen{
+            width: 100%;
+            height: 100%;
+            position: fixed; 
+            padding: 16px 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .screen-window{
+            width: 720px;
+            height: 100%;
+            padding: 12px;
+            background-image: url("background.png");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            image-rendering: pixelated;
+        }
+
+
+
+
+
+
+        /* CRAFTING TABLE */
+
+        #screen-crafting .screen-window{
+            display: flex;
+            flex-direction: column;
+        }
+
+        #crafting_tab{
+            display: flex;
+            overflow: hidden;
+            padding: 2px;
+            margin-bottom: 8px;
+            padding-bottom: 20px;
+        }
+
+        .crafting_tab_item{
+            min-width: 80px;
+            height: 80px; 
+            padding: 16px;
+            margin-right: 24px;
+            background-image: url("tabs.png");
+            background-repeat: no-repeat;
+            background-size: 200% 100%;
+            background-position-x: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .crafting_tab_item:last-child{
+            margin: 0;
+        }
+
+
+
+        .crafting_tab_item_active{
+            background-position-x: 0;
+        }
+
+
+
+
+        .image_wrapper_tab{
+             
+            width: 100%;
+            height: 100%;
+            background-position: 50px;
+                 
+
+            background-image: url("InvSprite.png");
+            background-size: 1536px 5472px; 
+            background-position: calc(-48px * 0) calc(-48px * 0);
+            background-repeat: no-repeat;
+            image-rendering: pixelated;
+        }
+
+
+
+
+
+        /* SCROLL  */
+
+        .scroll{
+            border: 2px inset;
+        }
+
+        .scroll_horizontal{
+             
+            width: 100%;
+            height: 24px;
+
+            /* background-color: red; */
+            
+           
+        }
+
+        .scroll_track{
+             
+            width: 100%;
+            height: 100%;
+            background-color: #8b8b8b;
+            position: relative;
+        }
+        
+        .scroll_thumb{
+            cursor: pointer;
+        }
+
+        /* horizontal */
+        .scroll_horizontal .scroll_track{
+            height: 20px;
+        }
+
+        .scroll_horizontal .scroll_thumb{
+            background-image: url("scroll_horizontal.png");
+            width: 25px;
+            height: 20px;
+            background-repeat: no-repeat;
+            background-size: 100% 200%;
+            position: absolute;
+            left: 0;
+        }
+
+        .scroll_horizontal_inactive .scroll_thumb{
+            background-position: 0 100%;
+        }
+
+
+
+
+
+        /* vertical */
+        .scroll_vertical .scroll_track{
+            width: 20px;
+        }
+        .scroll_vertical .scroll_thumb{
+            background-image: url("scroll_vertical.png");
+            min-width: 20px;
+            height: 25px;
+            background-repeat: no-repeat;
+            background-size: 200% 100%;
+            position: absolute;
+            top: 0;
+        }
+
+        .scroll_vertical_inactive .scroll_thumb{
+            background-position: 100% 0;
+        }
+
+
+
+
+
+
+
+        #crafting_content{
+            width: 100%;
+            height: 100%; 
+            padding: 8px 0;
+            display: flex;
+            overflow: hidden;
+        }
+
+ 
+        
+
+        #crafting_content_left{
+            /* background-color: red; */
+            min-width: 30%;
+            width: 30%;
+            max-width: 30%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #crafting_content_right{
+            /* background-color: green; */
+            width: 100%; 
+        }
+
+
+        /* EXPANSION PANEL */
+        #crafting_expansion_list{
+            width: 100%;
+            overflow: hidden;
+        }
+
+
+        .crafting_expansion_summary{
+            border: 2px solid #000;
+            border-radius: 2px;
+            background: url("expand.png");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            padding: 8px;
+            padding-bottom: 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+
+        }
+        .crafting_expansion_summary:hover{
+            border-color: #fff;
+        }
+
+        .crafting_expansion_label{
+            white-space: nowrap;
+            overflow: hidden;
+            margin-right: 8px;
+        }
+
+        .crafting_expansion_arrow{
+            background-image: url("expando_arrow.png");
+            background-repeat: no-repeat;
+            min-width: 14px;
+            height: 22px;
+            transition: 250ms transform;
+        }
+
+         
+
+        .crafting_expansion_open .crafting_expansion_summary{
+            border-color: #000;
+        }
+
+        .crafting_expansion_open .crafting_expansion_arrow{
+            background-position-y: 100%;
+            transform: rotate(90deg) translateX(2px);
+        }
+        
+        .crafting_expansion_open .crafting_expansion_content{
+            display: block;
+        }
+
+
+        .crafting_expansion_content{
+            display: none;
+        }
+
+        .crafting_expansion_content_item{
+            background: url("expand.png");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            padding: 4px;
+            padding-bottom: 0;
+            cursor: pointer;
+
+            border: 2px solid transparent;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 2px;
+            width: calc( 100% - 8px );
+        }
+
+        .crafting_expansion_content_item:hover{
+            border-color: #000;
+            
+        }
+ 
+
+
+        .crafting_expansion_content:hover{
+            border-color: #fff;
+        }
+
+
+
+        .crafting_expansion_content_label{
+            white-space: nowrap;
+            overflow: hidden;
+            margin-right: 8px;
+        }
+
+
+        .crafting_expansion_content_indicator{
+            min-width: 16px;
+            height: 20px;
+            background-image: url("craft_indicator.png");
+            background-repeat: no-repeat;
+            background-position-x: 100%;
+        }
+
+        .crafting_expansion_content_canCraft .crafting_expansion_content_indicator{
+            background-position-x: 0;
+        }
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+    <!-- CRAFTING TABLE -->
+    <div class="screen" id="screen-crafting">
+
+
+
+        <div class="screen-window">
+
+            <div id="crafting_tab">
+
+                <!-- WEAPONS & TOOLS -->
+                <div class="crafting_tab_item crafting_tab_item_active">
+                    <div class="image_wrapper_tab" style="background-position: calc(-48px * 21) calc(-48px * 111);"></div>
+                </div>
+ 
+                <!-- BLOCKS -->
+                <div class="crafting_tab_item">
+                    <div class="image_wrapper_tab" style="background-position: calc(-48px * 5) calc(-48px * 27);"></div>
+                </div>
+
+                <!-- FOOD -->
+                <div class="crafting_tab_item">
+                    <div class="image_wrapper_tab" style="background-position: calc(-48px * 24) calc(-48px * 99);"></div>
+                </div>
+
+                <!-- DECORATION -->
+                <div class="crafting_tab_item">
+                    <div class="image_wrapper_tab" style="background-position: calc(-48px * 17) calc(-48px * 98);"></div>
+                </div>
+
+                <!-- COMBINE TO REPAIR -->
+                <div class="crafting_tab_item">
+                    <div class="image_wrapper_tab" style="background-position: calc(-48px * 9) calc(-48px * 112);"></div>
+                </div>
+
+                <!-- REDSTONE -->
+                <div class="crafting_tab_item">
+                    <div class="image_wrapper_tab" style="background-position: calc(-48px * 7) calc(-48px * 110);"></div>
+                </div>
+
+                <!-- TRANSPORT -->
+                <div class="crafting_tab_item">
+                    <div class="image_wrapper_tab" style="background-position: calc(-48px * 14) calc(-48px * 104);"></div>
+                </div>
+
+                <!-- MISC -->
+                <div class="crafting_tab_item">
+                    <div class="image_wrapper_tab" style="background-position: calc(-48px * 10) calc(-48px * 98);"></div>
+                </div>
+
+
+                <!-- POTION -->
+                <div class="crafting_tab_item">
+                    <div class="image_wrapper_tab" style="background-position: calc(-48px * 3) calc(-48px * 9);"></div>
+                </div>
+
+                 
+            </div>
+
+
+            <div class="scroll scroll_horizontal" scroll-pressed="false">
+                <div class="scroll_track">
+                    <div class="scroll_thumb"></div>
+                </div>
+            </div>
+
+
+
+
+
+            <div id="crafting_content">
+                
+
+                <!-- LEFT -->
+                <div id="crafting_content_left">
+                    
+
+                    
+
+                    <!-- EXPANSION PANEL LIST -->
+                    <div id="crafting_expansion_list">
+
+                        <!-- EXPANSION PANEL -->
+                        <div class="crafting_expansion_wrapper crafting_expansion_open">
+
+                            <!-- EXPANSION PANEL SUMMARY -->
+                            <div class="crafting_expansion_summary">
+                                <div class="crafting_expansion_label">Swords</div>
+                                <div class="crafting_expansion_arrow"></div>
+                            </div>
+                            
+                            <!-- EXPANSION PANEL CONTENT -->
+                            <div class="crafting_expansion_content">
+                                
+                                <!-- EXPANSION PANEL CONTENT ITEM -->
+                                <div class="crafting_expansion_content_item">
+                                    <div class="crafting_expansion_content_label">Iron Sword</div>
+                                    <div class="crafting_expansion_content_indicator"></div>
+                                </div> 
+                                
+                            </div>
+                        </div>
+                        
+
+                    </div>
+
+
+                    <!-- SCROLL -->
+                    <div class="scroll scroll_vertical scroll_vertical_inactive" id="scroll_expansion" scroll-pressed="false">
+                        <div class="scroll_track">
+                            <div class="scroll_thumb"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+                <div id="crafting_content_right">b</div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+     
+
+
+    <script>
+
+
+
+
+        var scroll_list = document.querySelectorAll(".scroll .scroll_thumb");
+
+
+        function clamp(x, min, max){
+            if ( x < min ) return min;
+            if ( x > max ) return max;
+            return x;
+        }
+
+
+
+        // MOVE SCROLL
+        window.onmousemove = (evt)=>{
+
+            scroll_list.forEach((e, i)=>{
+                
+
+                if ( e.parentNode.parentElement.getAttribute("scroll-pressed") === "true" ){
+
+                    if ( e.parentNode.parentElement.classList.contains("scroll_horizontal") && !e.parentNode.parentElement.classList.contains("scroll_horizontal_inactive") ){
+                        let tab_scroll = document.getElementById("crafting_tab");
+                        let width_track = e.parentElement.offsetWidth;
+                        let posX = evt.clientX - e.parentElement.offsetLeft - e.offsetWidth/2;
+                        posX = clamp(posX, 0, width_track - e.offsetWidth);
+                        e.style.left = posX + 'px';
+                        let percent = posX / (width_track - e.offsetWidth);
+                        tab_scroll.scrollLeft = percent * (tab_scroll.scrollWidth - tab_scroll.offsetWidth);
+                    }
+
+
+                    else if (  e.parentNode.parentElement.classList.contains("scroll_vertical") && !e.parentNode.parentElement.classList.contains("scroll_vertical_inactive") ){
+                        let expansion_scroll = document.getElementById("crafting_expansion_list");
+                        let height_track = e.parentElement.offsetHeight;
+                        let posY = evt.clientY - e.parentElement.offsetTop - e.offsetHeight/2;
+                        posY = clamp(posY, 0, height_track - e.offsetHeight); 
+                        e.style.top = posY + 'px'; 
+                        let percent = posY / (height_track - e.offsetHeight); 
+                        expansion_scroll.scrollTop = percent * (expansion_scroll.scrollHeight - expansion_scroll.offsetHeight);
+                    }
+
+                }
+
+
+            });
+
+        }
+
+
+        // RELEASE SCROLL
+        ['mouseup', 'blur'].forEach(item=>{
+            window.addEventListener(item, (evt)=>{
+                scroll_list.forEach((e, i)=>{
+                    e.parentNode.parentElement.setAttribute("scroll-pressed", "false");
+                });
+            });
+        });
+
+
+
+        // PRESS SCROLL
+        scroll_list.forEach((e, i)=>{
+            e.onmousedown = (evt)=>{
+                e.parentNode.parentElement.setAttribute("scroll-pressed", "true");
+            }
+
+        });
+
+ 
+
+
+
+
+
+        // ACTIVE/INACTIVE SCROLL -- EXPSANSION 
+        function updateStateScroll(){
+
+            let expansion_content = document.getElementById("crafting_expansion_list");
+            let scroll_expansion = document.getElementById("scroll_expansion"); 
+            document.getElementById('scroll_expansion').classList.toggle('scroll_vertical_inactive', !(expansion_content.scrollHeight > expansion_content.offsetHeight));
+
+            if ( !(expansion_content.scrollHeight < expansion_content.offsetHeight) ){
+                scroll_expansion.querySelector(".scroll_thumb").style.top = 0;
+            }
+
+        }
+
+
+
+
+
+
+        function createExpansion( tag = 'tool_weapons' ){
+
+
+
+        }
+
+
+
+
+
+        
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

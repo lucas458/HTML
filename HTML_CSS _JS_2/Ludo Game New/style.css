@@ -1,0 +1,188 @@
+
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #181818;
+    color: #fff;
+}
+
+
+
+
+
+
+.screen{
+    width: 100%;
+    height: 100%; 
+    display: flex;
+    flex-direction: column; 
+    position: fixed;
+}
+
+
+.screen-content{
+    height: 100%; 
+}
+
+
+
+
+
+
+
+
+@keyframes dicePulse {
+    0%{
+        transform: scale(1);
+    }
+    75%{
+        transform: scale(0.8);
+    }
+}
+
+
+
+
+
+
+
+
+
+/* PLAYER WRAPPER */
+
+.player-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+
+}
+
+.player-column{
+    flex: 1;
+    overflow: hidden;
+}
+
+
+.player{
+    display: flex;
+    align-items: center;
+}
+
+
+.player-name{
+    margin: 0 8px;
+    overflow: hidden;
+}
+
+
+.player-diceWrapper{
+    min-width: 48px;
+    width: 48px;
+    height: 48px;
+    padding: 8px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+}
+
+.player-diceImg{
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    /* background-image: url('assets/dice/1_dot.png'); */
+    /* animation: dicePulse 1s infinite; */
+}
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+#table-screen{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#table-wrapper{  
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+
+
+
+#table-img{
+    background-image: url('assets/tableNew.jpg');
+    background-size: contain;
+
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
+
+
+
+
+
+
+
+.piece{
+
+    display: flex;
+    /* background-color: #00f; */
+    filter: drop-shadow( 0px 0px 2px rgba(0, 0, 0, .7));
+
+
+    transform: translateX(-50%) translateY(-100%);
+
+    transition: 250ms;
+    position: absolute;
+    left: 0;
+    top: 0;
+
+
+
+}
+
+
+
+#player-1 .piece{
+    color: #dc3545;
+    transform: translateX(-100%) translateY(-100%);
+}
+
+#player-2 .piece{
+    color: #28a745;
+    transform: translateX(0) translateY(-100%);
+}
+
+#player-3 .piece{
+    color: #ffc107;
+    transform: translateX(-100%) translateY(-50%);
+}
+
+#player-4 .piece{
+    color: #007bff;
+    transform: translateX(0) translateY(-50%);
+}
+
+ 

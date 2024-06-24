@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player</title>
+
+
+    <style>
+
+
+        /* TUDAS AS 'tags' IRÃO RECEBER ISSO ABAIXO */
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+        /* CLASSE TELA  */
+        .screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+        /* CONTAINER TITULO DO APP */
+        .screen-header{
+            padding: 8px;
+            color: #9e9e9e;
+            font-weight: bold;
+        }
+
+
+        /* CONTAINER DA LISTA DE MUSICAS */
+        .screen-content{
+            height: 100%;
+            overflow: hidden auto;
+        }
+
+
+        
+
+
+
+
+
+        /************** MUSICA ITEM *************/
+        .music-wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center; 
+            padding: 8px;
+            border-bottom: 1px solid #353535;
+            transition: 300ms;
+        }
+
+
+        /* QUANDO A MUSICA FOR A SELECIONAR */
+        .music-active{
+            background-color: #353535;
+        }   
+        /* QUANDO A MUSICA FOR A SELECIONAR */
+        .music-active .music-playIcon{
+            visibility: visible;
+        }
+
+
+
+        /* QUANDO SEGURAR A MUSICA */
+        .music-wrapper:active{
+            transition: 1ms;
+            background-color: #353535;
+        }
+
+        /* REMOVER BORDA (top) DA PRIMEIRA MUSICA DA LISTA */
+        .music-wrapper:first-child{
+            border-top: 1px solid #353535;
+        }
+
+
+
+        /* ICONE DE PLAY NA MUSICA */
+        .music-playIcon{
+            width: 32px;
+            height: 32px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+        }
+
+
+        /* CONTAINER: TITULO e ARTISTA */
+        .music-string{
+            flex: 1;
+            margin-left: 4px;
+            overflow: hidden;
+        }
+
+        /* ARTISTA */
+        .music-subTitle{
+            font-size: 0.8em;
+            color: #9e9e9e;
+        }
+
+        /* TITULO e ARTISTA */
+        .music-title,
+        .music-subTitle{
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+         /************** TELA DE BAIXO *************/
+
+        /* CONTAINER DA TELA DE BAXIO (titulo, controles, barra de progress, tempo) */
+        .screen-footer{
+            border-top: 1px solid #353535;
+            box-shadow: 0 0 5px 0 #000;
+            padding: 8px;
+        }
+
+
+
+        /* TITULO DA MUSICA */
+        .footer-title{
+            white-space: pre;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+        
+
+        /* CONTAINER CONTROLES */
+        .footer-controls{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        /* ICONE DOS BOTOES */
+        .controls-icon{
+            width: 48px;
+            height: 48px;
+            transition: 300ms;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* QUANDO SEGURAR UM BOTAO */
+        .controls-icon:active{
+            transition: 1ms;
+            background-color: #353535;
+        }
+
+
+
+        /* BARRA DE PROGRESSO (PAI) */
+        .footer-progress-wrapper{
+            width: 100%;
+            height: 8px;
+            background-color: #353535;
+            margin: 8px 0;
+        }
+
+        /* BARRA DE PROGRESSO (FILHO) */
+        .footer-progress-fill{
+            height: 100%;
+            width: 0;
+            background-color: #007bff;
+        }
+
+
+        /* CONTAINER TEMPO ATUAL e TOTAL */
+        .footer-time{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+
+<body>
+
+    
+
+
+
+
+    <div class="screen" id="screen-main">
+
+
+        <!-- TITULO DO APP -->
+        <div class="screen-header">PLAYER</div>
+
+
+        <!-- LISTA DE MUSICAS -->
+        <div class="screen-content" id="main-content">
+            
+
+            <!-- ITEM -->
+            <!-- <div class="music-wrapper music-active">
+                <div class="music-playIcon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                        <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                    </svg>
+                </div>
+                <div class="music-string">
+                    <div class="music-title">Title</div>
+                    <div class="music-subTitle">subtitle</div>
+                </div>
+                <div class="music-time">0:00</div>
+            </div> -->
+
+        </div>
+
+
+
+        <!-- CONTROLES -->
+        <div class="screen-footer" id="main-footer">
+
+            
+            <!-- TITULO DA MUSICA ATUAL -->
+            <div class="footer-title"> </div>
+
+
+            <!-- BOTOES -->
+            <div class="footer-controls">
+
+
+                <!-- NO-SHUFFLE | SHUFFLE -->
+                <div class="controls-icon button-shuffle" style="opacity: 0.5;">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M14 20v-2h2.6l-3.2-3.2 1.425-1.425L18 16.55V14h2v6Zm-8.6 0L4 18.6 16.6 6H14V4h6v6h-2V7.4Zm3.775-9.425L4 5.4 5.4 4l5.175 5.175Z"/></svg>
+                </div>
+
+                <!-- BACK -->
+                <div class="controls-icon button-back" style="transform: rotate(180deg);">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M8.025 22 6.25 20.225 14.475 12 6.25 3.775 8.025 2l10 10Z"/></svg>
+                </div>
+
+
+                <!-- PLAY | PAUSE -->
+                <div class="controls-icon button-playPause">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M8 19V5l11 7Z"/></svg>
+                </div>
+
+                <!-- NEXT -->
+                <div class="controls-icon button-next">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M8.025 22 6.25 20.225 14.475 12 6.25 3.775 8.025 2l10 10Z"/></svg>
+                </div>
+
+                <!-- NO-REPEAT | REPEAT | REPEAT ONE  -->
+                <div class="controls-icon button-repeat" style="opacity: 0.5;">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="m7 22-4-4 4-4 1.4 1.45L6.85 17H17v-4h2v6H6.85l1.55 1.55ZM5 11V5h12.15L15.6 3.45 17 2l4 4-4 4-1.4-1.45L17.15 7H7v4Z"/></svg>
+                </div>
+
+
+            </div>
+            
+             
+            <!-- BARRA DE PROGRESS -->
+            <div class="footer-progress-wrapper">
+                <div class="footer-progress-fill"></div>
+            </div>
+ 
+
+
+            <!-- TEMPO ATUAL e TOTAL -->
+            <div class="footer-time">
+                <div class="footer-time-actual">0:00</div>
+                <div class="footer-time-total">0:00</div>
+            </div>
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+
+
+
+
+    <script>
+
+        var AUDIO_ELEMENT = new Audio();    // ELEMENTO DE AUDIO. ISSO É PARA O NAVEGADAOR DE FATO EXECUTAR O .mp3
+
+        var MUSIC_INDEX = -1;       // INDEX DA MUSICA ATUAL
+        var SHUFFLE_MODE = false;   // MODO ALEATÓRIO?
+
+
+        // REPEAT MODE:
+        // 0 -- sem repetir
+        // 1 -- repetir
+        // 2 -- repetir uma vez
+        var REPEAT_MODE = 0;
+        var REPEAT_CONT = 0;    // QUANTIDADE DE VEZES QUE JA TOCOU NO MODO REPETIR UMA VEZ
+
+
+
+        // LISTA DE MUSICAS -- AQUI PODE SER GERADO AUTOMÁTICAMENTE VIA PHP POR EXEMPLO
+        var MUSIC_LIST = [
+
+            {
+                'title': 'Brothers',                // TITULO DA MUSICA: PODE USASR O NOME DO AQUIVO e TIRA O '.mp3' ---- Brothers.mp3 >> Brothers
+                'artist': 'Crossfire Collision',    // BANDA/ARTISTA
+                'time': 248,                        // DURAÇÃO EM SEGUNDOS
+                'path': 'root/Brothers.mp3'         // NOME DO ARQUIVO
+            },
+
+            {
+                'title': 'Burden',
+                'artist': 'Crossfire Collision',
+                'time': 165,
+                'path': 'root/Burden.mp3'
+            },
+
+            {
+                'title': 'Down the River',
+                'artist': 'Crossfire Collision',
+                'time': 193,
+                'path': 'root/Down the River.mp3'
+            },
+
+            {
+                'title': 'Keep up or Get out',
+                'artist': 'Crossfire Collision',
+                'time': 187,
+                'path': 'root/Keep up or Get out.mp3'
+            },
+
+            {
+                'title': 'Storyteller',
+                'artist': 'Crossfire Collision',
+                'time': 265,
+                'path': 'root/Storyteller.mp3'
+            },
+
+            {
+                'title': 'Unravelling',
+                'artist': 'Crossfire Collision',
+                'time': 270,
+                'path': 'root/Unravelling.mp3'
+            }
+
+             
+
+
+
+        ];
+
+
+
+
+         
+
+        // GERAR NUMERO ALEATORIO (INT)
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+
+        // TRANSFORMA 'SEGUNDOS' em 'time track' Ex: 124 segundos >> '2:04'
+        function timeTrack( value ){
+
+            if ( value <= 0 || isNaN(value) || value == null ){
+                return '--:--';
+            }
+
+            let min = parseInt( value / 60 );
+            let sec = parseInt( value % 60 );
+
+            if ( sec < 10 ){
+                sec = ('0' + sec);
+            }
+
+            return `${min}:${sec}`;
+        }
+
+
+
+
+
+
+ 
+
+
+
+        // SELECIONAR COLOCANDO COR CINZA NO ITEM PELO VALOR DO INDEX
+        function selectMusicItem( index ){
+
+            let list_element = document.querySelectorAll('#main-content>div');
+
+            // DESELECIONAR TODAS AS MUSICAS
+            list_element.forEach((e, i)=>{
+                e.classList.remove('music-active');
+            });
+
+            // SELECIONAR A MUSICA PELO INDEX
+            if ( index >= 0 && index < list_element.length ){
+                list_element[index].classList.add('music-active');
+            }
+
+        }
+
+
+
+
+
+        // TOCAR MUSICA PELO INDEX 
+        function playByIndex( index ){
+
+            // VERIFICAR SE O INDEX É VALIDO
+            if ( index < 0 ){
+                return;
+            }
+
+            // ATRIBUIR NOVO INDEX
+            MUSIC_INDEX = index;    
+
+            // COLOCAR O 'source' da musica como o 'patth' ex: root/teste.mp3 é o 'src'
+            AUDIO_ELEMENT.src = MUSIC_LIST[MUSIC_INDEX].path;
+
+            // ZERAR O CONTADOR DE REPETIÇÃO
+            REPEAT_CONT = 0;
+
+            // TOCAR A MUSICA
+            safePlay();
+
+        }
+
+
+
+
+
+        // APERTAR O PLAY. Mas, com tratamento de erros, mudar icone, selecionar o item (deixar cinza) e colocar titulo nos controles (nome da musica atual la em baixo)
+        function safePlay(){
+
+            AUDIO_ELEMENT.play().then(()=>{
+
+                console.log("pass");
+
+                // icone do botao
+                document.querySelector(".button-playPause").innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M13 19V5h6v14Zm-8 0V5h6v14Z"/></svg>';
+
+                // selecionar musica
+                selectMusicItem(MUSIC_INDEX);
+
+                // colocar titiulo nos controles
+                document.querySelector(".footer-title").innerHTML = MUSIC_LIST[MUSIC_INDEX].title;
+
+            }).catch(()=>{
+
+                console.log("error");
+
+            });
+
+        }
+
+
+
+
+
+
+        // CHAMAR ESSE FUNÇAO TOCA UMA MUSICA ALEATÓRIA DA LISTA
+        function playRandom(){
+
+
+            let temp = 0;
+
+            do{
+                temp = getRandomInt(0, MUSIC_LIST.length);
+            }while ( MUSIC_INDEX == temp );
+
+            playByIndex( temp );
+            
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // EVENTO -- CLICK NO BOTÃO: ALEATÓRIO
+        document.querySelector(".button-shuffle").addEventListener('click', ()=>{
+            toggleSuffle();
+        });
+
+        // EVENTO -- CLICK NO BOTÃO: VOLTAR MÚSICA
+        document.querySelector(".button-back").addEventListener('click', ()=>{
+            musicBack();
+        });
+
+        // EVENTO -- CLICK NO BOTÃO: PLAY/PAUSE
+        document.querySelector(".button-playPause").addEventListener('click', ()=>{
+            musicPlayPause();
+        });
+
+        // EVENTO -- CLICK NO BOTÃO: PASSAR MÚSICA
+        document.querySelector(".button-next").addEventListener('click', ()=>{
+            musicNext();
+        });
+
+        // EVENTO -- CLICK NO BOTÃO: REPETIR
+        document.querySelector(".button-repeat").addEventListener('click', ()=>{
+            toggleRepeat();
+        });
+
+
+
+
+
+
+
+
+        // PLAY/PAUSE NA MUSICA e MUDA O ICONE 
+        function musicPlayPause(){
+
+
+            // SE O INDEX FOR INVALIDAO NA HORA DE DAR PLAY: TOCAR A PRIMEIRA MUSICA (se existir)
+            if ( MUSIC_INDEX < 0 && MUSIC_LIST.length > 0 ){
+                MUSIC_INDEX = 0;
+                playByIndex( MUSIC_INDEX );
+                return;
+            }
+
+            // SE O INDEX FOR VALIDO
+            if ( MUSIC_INDEX >= 0 ){
+
+                // PLAY e TROCAR ICONE
+                if ( AUDIO_ELEMENT.paused ){
+                    AUDIO_ELEMENT.play();
+                    document.querySelector(".button-playPause").innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M13 19V5h6v14Zm-8 0V5h6v14Z"/></svg>';
+                }
+
+
+                // PAUSE e TROCAR ICONE
+                else{
+                    AUDIO_ELEMENT.pause();
+                    document.querySelector(".button-playPause").innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M8 19V5l11 7Z"/></svg>';
+                }
+
+            }
+
+        }
+
+
+
+
+        // PASSAR MÚSICA
+        function musicNext(){
+
+            // SE O INDEX FOR INVALIDO TROCAR A PRIMEIRA MUSICA
+            if ( MUSIC_INDEX < 0 ){
+                MUSIC_INDEX = 0;
+                playByIndex( MUSIC_INDEX );
+                return;
+            }
+
+            // PASSAR A MUSICA: POREM VAI TOCAR UMA ALEATÓRIA
+            if ( SHUFFLE_MODE ){
+                playRandom();
+            }
+
+
+            // PASSARA A MUSICA
+            else{
+
+                if ( MUSIC_INDEX < MUSIC_LIST.length-1 ){
+                    playByIndex( ++MUSIC_INDEX );
+                }
+            }
+
+
+        }
+
+
+
+
+        // VOLTAR MÚSICA
+        function musicBack(){
+
+            // SE O INDEX FOR INVALIDO TROCAR A ULTIMA MUSICA
+            if ( MUSIC_INDEX < 0 ){
+                MUSIC_INDEX = MUSIC_LIST.length - 1;
+                playByIndex(MUSIC_INDEX);
+                return;
+            }
+
+            // PASSAR A MUSICA: POREM VAI TOCAR UMA ALEATÓRIA
+            if ( SHUFFLE_MODE ){
+                playRandom();
+            }
+
+            // VOLTAR A MUSICA
+            else{
+
+                if ( MUSIC_INDEX > 0 ){
+                    playByIndex( --MUSIC_INDEX );
+                }
+            }
+
+        }
+
+
+
+
+
+        // LIGAR/DESLIGAR ALEATÓRIO
+        function toggleSuffle(){
+
+
+            // TROCAR O ESTADO DO MODO DE REPETIÇÃO (liga/desliga) UNSADO 'NOT'
+            // SE ON  >> OFF
+            // SE OFF >> ON
+            SHUFFLE_MODE = !SHUFFLE_MODE;
+
+            // SE LIGADO: DEIXAR O BOTAO BRANCO
+            if ( SHUFFLE_MODE ){
+                document.querySelector(".button-shuffle").style.opacity = '1';
+            }
+
+            // SE DESLIGADO: DEIXAR O BOTAO ESCURO
+            else{
+                document.querySelector(".button-shuffle").style.opacity = '0.5';
+            }
+
+
+        }
+
+
+
+        // MUDAR MODO DE REPETIR e ICONE
+        function toggleRepeat(){
+
+
+            // MUDAR MODO DE REPETIR: 0, 1 ou 2
+            REPEAT_MODE = (REPEAT_MODE+1) % 3;
+
+            // ICONE REPETIR
+            document.querySelector(".button-repeat").innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="m7 22-4-4 4-4 1.4 1.45L6.85 17H17v-4h2v6H6.85l1.55 1.55ZM5 11V5h12.15L15.6 3.45 17 2l4 4-4 4-1.4-1.45L17.15 7H7v4Z"/></svg>';
+
+            // BOTAO BRANCO
+            document.querySelector(".button-repeat").style.opacity = '1';
+
+
+            switch (REPEAT_MODE){
+
+                // SE REPETIR: (NAO REPETIR) >> BOTAO ESCURO
+                case 0:
+                    document.querySelector(".button-repeat").style.opacity = '0.5';
+                    break;
+                // SE REPETIR: (REPETIR UMA VEZ) >> BOTAO BRANCO e ICONE COM '1' DENTRO
+                case 2:
+                    document.querySelector(".button-repeat").innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="m7 22-4-4 4-4 1.4 1.45L6.85 17H17v-4h2v6H6.85l1.55 1.55Zm4.5-7v-4.5H10V9h3v6ZM5 11V5h12.15L15.6 3.45 17 2l4 4-4 4-1.4-1.45L17.15 7H7v4Z"/></svg>';
+                    break;                
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+        // TOCAR A MUSICA ATUAL PELO VALOR DA BARRA DE PROGRESSO
+        // EXECUTADO QUANDO SOLTA A BARRA DE PROGRESSO NA NOVA POSIÇÃO
+        function playByProgress(){
+
+            if ( MUSIC_INDEX >= 0 ){
+                let sizeMax = document.querySelector(".footer-progress-wrapper").offsetWidth;
+                let size = document.querySelector(".footer-progress-fill").offsetWidth;
+                let percent = size / sizeMax;
+                AUDIO_ELEMENT.currentTime = percent * AUDIO_ELEMENT.duration;
+            }
+
+            
+        }
+
+
+
+
+
+
+
+
+
+        // RESETAR PARA OS PADROES: EXECUTADO QUANDO ACABA A AULTIMA MUSICA
+        function defaultControls(){
+
+            REPEAT_CONT = 0;
+            MUSIC_INDEX = -1;
+
+            // '-1' FAZ DESSELECIONAR TUDO
+            selectMusicItem(-1);    
+
+            // TITLULO
+            document.querySelector(".footer-title").innerHTML = ' ';
+
+            // BARRA DE PROGRESSO
+            document.querySelector(".footer-progress-fill").style.width = 0;
+
+            // TIMER ATUAL e TOTAL
+            document.querySelector(".footer-time-actual").innerHTML = '0:00';
+            document.querySelector(".footer-time-total").innerHTML = '0:00';
+
+            // BOTAO PLAY-PAUSE >> ICONE de PAUSE
+            document.querySelector(".button-playPause").innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor"><path d="M8 19V5l11 7Z"/></svg>';
+
+
+
+        }
+
+
+
+
+
+
+
+    
+
+
+        // PARA VERICAR SE ESTA SEGURANDO A BARRA DE PROGRESSO
+        var PROGRESS_PRESSED = false;
+
+
+
+
+        // EVENTO -- QUANDO O TEMPO DE MUSICA MUDAR >> USANDO PARA ATUALIZAR O 'frame'
+        AUDIO_ELEMENT.addEventListener("timeupdate", ()=>{
+
+
+            // SE NÃO ESTIVER PRECIONANDO A BARRA DE PROGRESSO
+            if ( !PROGRESS_PRESSED ){
+
+                // BARRA DE PROGRESSO
+                document.querySelector(".footer-progress-fill").style.width = ( AUDIO_ELEMENT.currentTime / AUDIO_ELEMENT.duration * 100 ) + '%';
+
+                // TIMER ATUAL ex: 0:40
+                document.querySelector(".footer-time-actual").innerHTML = timeTrack(AUDIO_ELEMENT.currentTime);
+            }
+
+
+            // TIMER TOTAL ex: 1:23
+            document.querySelector(".footer-time-total").innerHTML = timeTrack(AUDIO_ELEMENT.duration);
+
+
+        });
+
+
+
+
+
+        // EVENTO -- QUANDO A MUSICA ACABAR
+        AUDIO_ELEMENT.addEventListener("ended", ()=>{
+
+
+            console.log("music ended");
+
+
+
+            // ACABOU A ULTIMA MUSICA DA LISTA?
+            if ( !SHUFFLE_MODE && MUSIC_INDEX >= MUSIC_LIST.length-1 && ((REPEAT_CONT >= 1 && REPEAT_MODE == 2) || REPEAT_MODE == 0) ){
+                console.log("fim da lista");
+                defaultControls();
+                return;
+            }
+
+
+
+            // NÃO REPETIR: PASSAR A MUSICA
+            if ( REPEAT_MODE == 0 ){
+                musicNext();
+            }
+
+            // REPETIR SEMPRE: TOCAR A MUSICA ATUAL DE NOVO
+            else if ( REPEAT_MODE == 1 ){
+                AUDIO_ELEMENT.currentTime = 0;
+                safePlay();
+            }
+
+
+            // REPETIR UMA VEZ: NEM PRECIO EXPLICAR
+            else if ( REPEAT_MODE == 2 ){
+
+                // TOCAR DE NOVO E ADD+1 NA VARIAVEL
+                if ( REPEAT_CONT >= 1 ){
+                    REPEAT_CONT = 0;
+                    musicNext();
+
+                }
+
+                // SE VARIAVEL FOR MAIOR QUE ZERO: PASSAR A MUSICA E ZERAR O CONTADOR
+                else{
+                    AUDIO_ELEMENT.currentTime = 0;
+                    safePlay();
+                    REPEAT_CONT++;
+                }
+            }
+            
+
+
+
+        });
+
+
+
+
+
+
+
+        // COLOCAR 'PROGRESS_PRESSED' para TRUE quando: PRECIONAR NO progregess bar CINZA (PAI) USANDO MOUSE/TOUCH
+        ['touchstart', 'mousedown'].forEach((el)=>{
+
+            document.querySelector(".footer-progress-wrapper").addEventListener(el, ()=>{
+                console.log("x");
+                
+
+                if ( MUSIC_INDEX >= 0 ){
+                    PROGRESS_PRESSED = true;
+                }
+
+            });
+
+        });
+
+
+        
+
+
+
+        // POSICIONAR A BARRA DE PROGRESSO USANDO CLICK
+        document.querySelector(".footer-progress-wrapper").addEventListener('click', (e)=>{
+            console.log('click at', e.offsetX);
+
+            if ( MUSIC_INDEX >= 0 ){
+                document.querySelector(".footer-progress-fill").style.width = (e.offsetX) + 'px';
+                playByProgress();
+            }
+            
+
+            
+        });
+
+
+
+
+        // COLOCAR 'PROGRESS_PRESSED' para FALSE quando: SOLTAR O MOUSE/DEDO ou TROCAR A PÁGINA
+        ['touchcancel', 'touchend', 'mouseup', 'blur'].forEach((e)=>{
+
+            window.addEventListener(e, ()=>{
+
+                if ( PROGRESS_PRESSED ){
+                    playByProgress();
+                    PROGRESS_PRESSED = false;
+                }
+
+                
+            });
+
+        });
+        
+
+
+
+
+
+        // MOVER A BARRA DE PROGRESSO NO MOUSE/TOUCH -- APENAS SE 'PROGRESS_PRESSED' for TRUE
+        ['touchmove', 'mousemove'].forEach((el)=>{
+
+
+            window.addEventListener(el, (e)=>{
+                if ( PROGRESS_PRESSED ){
+                
+                let posx = 0;
+                if ( el == 'touchmove' ){
+                    posX = e.touches[0].clientX
+                }
+                else{
+                    posX = e.clientX;
+                }
+
+                if ( posX < 0 ){
+                    posX = 0;
+                }
+                else if ( posX > document.querySelector(".footer-progress-wrapper").offsetWidth ){
+                    posX = document.querySelector(".footer-progress-wrapper").offsetWidth;
+                }
+
+                document.querySelector(".footer-progress-fill").style.width = (posX) + 'px';
+
+            }
+            });
+
+        })
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // GERA A LISTA DE MÚSICAS A APARTIR DO ARRAY 'MUSIC_LIST'
+        function gerarLista(){
+
+
+            let main_content = document.getElementById("main-content");
+
+            // LIMPAR A LISTA DE ITENS (HTML)
+            main_content.innerHTML = '';
+
+
+            MUSIC_LIST.forEach((e,i)=>{
+
+                let music_item = document.createElement('div'); // CRAIR DIV
+                music_item.classList.add("music-wrapper");      // ADD CLASSE 'music-wrapper' NESSA DIV CRIADA
+
+                // CONTEUDO QUE ESTA NA DIV
+                music_item.innerHTML = `
+                <div class="music-playIcon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                        <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                    </svg>
+                </div>
+                <div class="music-string">
+                    <div class="music-title">${e.title}</div>
+                    <div class="music-subTitle">${e.artist}</div>
+                </div>
+                <div class="music-time">${timeTrack(e.time)}</div>
+                `;
+
+
+                // EVENTO -- CLICK NA MUSICA
+                music_item.addEventListener("click", ()=>{
+                    console.log('music', i);
+                    playByIndex(i);
+                });
+
+                // ADCIONAR DIV À DIV PAI (main-content) -- ESSA FUNÇÃO DE FATO ADCIONAR UM FILHO 
+                main_content.appendChild(music_item);
+
+            });
+
+        }
+
+
+        gerarLista();   // GERAR A LISTA
+        
+
+
+
+
+
+
+
+    </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- ICON -->
+    <link rel="shortcut icon" href="assets/table2.jpg" type="image/x-icon">
+
+    <!-- FONT -->
+    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@500&display=swap" rel="stylesheet"> -->
+
+
+    <title>LUDO</title>
+
+
+
+</head>
+
+
+
+
+
+
+<body>
+    
+
+
+ 
+
+
+
+
+
+
+
+
+ 
+    <!-- NORMAL PLAYER -->
+    <!--
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+    -->
+    
+
+
+    <div class="screen" id="screen-main">
+
+
+        <!-- HEADER -->
+        <header>
+            <div class="playerDiceWrapper playerDice-active">
+                <div class="playerDice" onclick="jogarDado()"></div>
+                <div class="playerName"></div>
+            </div>
+
+            <div class="playerDiceWrapper">
+                <div class="playerName"></div>
+                <div class="playerDice" onclick="jogarDado()"></div>
+            </div>
+        </header>
+
+
+        <!-- CONTENT -->
+        <div id="table">
+
+
+            
+            <!-- DADO -->
+            <img src="assets/dice/1_dot.png" id="diceImage" onclick="jogarDado()">
+
+
+
+            <div id="table-wrapper">
+
+                <!-- TABLULEIRO -->
+                <img src="assets/table2.jpg" id="tableImage">
+
+                
+
+
+                <!-- LISTA DE JOGADORES -- RED -->
+                <div id="players-red" class="player-list">
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+                <!-- LISTA DE JOGADORES -- GREEN -->
+                <div id="players-green" class="player-list">
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+                </div>
+
+
+
+                <!-- LISTA DE JOGADORES -- BLUE -->
+                <div id="players-blue" class="player-list">
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+                </div>
+
+
+
+
+                <!-- LISTA DE JOGADORES -- YELLOW -->
+                <div id="players-yellow" class="player-list">
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+
+                    <div class="player-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="player-piece" fill="currentColor" viewBox="0 0 384 512"><path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0z"/></svg>
+                        <div></div>
+                    </div>
+                </div>
+
+
+            </div>
+            
+
+        
+
+        </div>
+
+
+
+
+        <!-- FOOTER -->
+        <footer>
+            <div class="playerDiceWrapper">
+                <div class="playerDice" onclick="jogarDado()"></div>
+                <div class="playerName"></div>
+            </div>
+
+            <div class="playerDiceWrapper">
+                <div class="playerName"></div>
+                <div class="playerDice" onclick="jogarDado()"></div>
+            </div>
+        </footer>
+
+
+    </div>
+
+
+
+
+
+
+
+
+ 
+
+
+
+    <div class="screen" id="screen-menu">
+        <section>
+            <div id="menu-wrapper">
+                <div class="menu-button effect-angle" onclick="toggleScreenMenuAdd(true)"> <div>Jogar</div> </div>
+                <div class="menu-button effect-angle"> <div>Opções</div> </div>
+            </div>
+        </section>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <div class="screen" id="screen-menu-addPlayer" style="left: -100%;">
+
+        <!-- HEADER -->
+        <header>
+            <svg xmlns="http://www.w3.org/2000/svg" class="backButton" onclick="toggleScreenMenuAdd(false)" width="16" height="16" fill="currentColor"  viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+            </svg>
+            <div>Voltar</div>
+        </header>
+
+
+        <!-- CONTENT -->
+        <section>
+
+
+            <div>
+
+
+                <!-- RED -->
+                <div class="playerAddWrapper">
+                    <div class="playerColor">Jogaddor 1</div>
+                    <div class="playerName">
+                        <input type="text" class="inputName" maxlength="16" placeholder="Digite">
+                    </div>
+
+                    <div class="playerHelperInput">Preencher campo</div>
+
+
+                    <div class="playerType">
+                        <label class="ui-checkox">
+                            <input type="checkbox">
+                            <div><div></div></div>
+                        </label>
+                        <div>BOT</div>
+                    </div>
+                </div>
+
+                <!-- GREEN -->
+                <div class="playerAddWrapper">
+                    <div class="playerColor">Jogaddor 2</div>
+                    <div class="playerName">
+                        <input type="text" class="inputName" maxlength="16" placeholder="Digite">
+                    </div>
+
+                    <div class="playerHelperInput">Preencher campo</div>
+
+                    <div class="playerType">
+                        <label class="ui-checkox">
+                            <input type="checkbox">
+                            <div><div></div></div>
+                        </label>
+                        <div>BOT</div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            
+
+            <div>
+
+
+                <!-- BLUE -->
+                <div class="playerAddWrapper">
+                    <div class="playerColor">Jogaddor 3</div>
+                    <div class="playerName">
+                        <input type="text" class="inputName" maxlength="16" placeholder="Digite">
+                    </div>
+
+                    <div class="playerHelperInput">Preencher campo</div>
+
+                    <div class="playerType">
+                        <label class="ui-checkox">
+                            <input type="checkbox">
+                            <div><div></div></div>
+                        </label>
+                        <div>BOT</div>
+                    </div>
+                </div>
+
+                <!-- YELLOW -->
+                <div class="playerAddWrapper">
+                    <div class="playerColor">Jogaddor 4</div>
+                    <div class="playerName">
+                        <input type="text" class="inputName" maxlength="16" placeholder="Digite">
+                    </div>
+
+                    <div class="playerHelperInput">Preencher campo</div>
+
+                    
+                    <div class="playerType">
+                        <label class="ui-checkox">
+                            <input type="checkbox">
+                            <div><div></div></div>
+                        </label>
+                        <div>BOT</div>
+                    </div>
+                </div>
+
+            </div>
+
+
+                
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer>
+
+            <button onclick="gameInitCheck()">Iniciar</button>
+
+        </footer>
+
+    </div>
+
+
+
+ 
+ 
+  
+
+
+
+
+    
+
+    
+
+
+
+    <script src="jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
