@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #container > div{
+            margin: 16px;
+        }
+
+
+        #eicas_gauge_fuel_quantity_center{
+            width: 55px;
+            height: 47px; 
+            background-image: url('eicas_gauge_fuel_quantity_center.png');
+            image-rendering: pixelated; 
+            display: flex;
+            justify-content: center;
+        }
+
+
+        #eicas_gauge_fuel_quantity_center_progress{
+            width: 55px;
+            height: 55px; 
+            border-radius: 50%; 
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+            position: relative;
+            z-index: -1;
+        }
+
+        #eicas_gauge_fuel_quantity_center_progress::after{
+            content: '';
+            display: block;
+            width: 47px;
+            height: 47px;
+            background-color: #181818;
+            border-radius: 50%;
+        }
+
+
+
+
+        #eicas_gauge_egt_eng_1{
+            width: 66px;
+            height: 53px;
+            background-image: url("eicas_gauge_egt_eng_1.png");
+            image-rendering: pixelated; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+
+        #eicas_gauge_egt_eng_1_needle{
+            width: 31px;
+            height: 3px;
+            background-image: url("eicas_gauge_egt_eng_1_needle.png");
+            image-rendering: pixelated;
+            transform-origin: 1px center;
+            transform: rotate(0deg); 
+            position: relative;
+            left: 15px;
+            top: -5px;
+        }
+         
+
+        #eicas_gauge_egt_eng_1_progress{
+            width: 61px;
+            height: 61px; 
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            z-index: -1; 
+            position: absolute;
+            left: 4px;
+            top: -9px;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+        <div id="container">
+            <div id="eicas_gauge_fuel_quantity_center">
+                <div id="eicas_gauge_fuel_quantity_center_progress"></div>
+            </div> 
+
+            <div id="eicas_gauge_egt_eng_1">
+                <div id="eicas_gauge_egt_eng_1_progress"></div>
+                <div id="eicas_gauge_egt_eng_1_needle"></div>
+            </div>
+
+        </div>
+
+
+
+        <input type="range" oninput="update(this)" value="0">
+    
+    
+    </div>
+
+
+     
+
+
+    <script>
+        
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        } 
+
+
+        function update( rangeBar ){ 
+            setProgress(rangeBar.value);
+        }
+        
+
+        function setProgress( value = 0 ){
+            eicas_gauge_fuel_quantity_center_progress.style.background = `conic-gradient(from 225deg, #fff ${map(value,0,100,0,270)}deg, #00000000 0deg)`;
+            eicas_gauge_egt_eng_1_progress.style.background = `conic-gradient(from 90deg, #424242 ${map(value,0,100,0,214)}deg, #00000000 0deg)`;
+            eicas_gauge_egt_eng_1_needle.style.transform = `rotate(${map(value,0,100,0,214)}deg)`;
+        } 
+        
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+
+
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+html,body{
+    width: 100%;
+    height: 100%;
+}
+
+body{
+    font-family: 'Changa', sans-serif;
+    user-select: none;
+}
+
+
+
+
+.screen{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+
+    background-color: brown;
+}
+
+
+
+
+#screen-main{
+    display: flex;
+    flex-direction: column;
+}
+
+
+header{
+    padding: 4px 8px;
+    background-color: brown;
+    color: #fff;
+    font-size: 1.5em;
+    box-shadow: 0 0 5px 0 #000;
+}
+
+
+#table{
+    background-color: blue;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    margin: 0 auto; 
+}
+
+
+
+.slot{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.piece-light::after, .piece-dark::after{
+    content: '';
+    display: flex;
+    width: 75%;
+    height: 75%;
+    border-radius: 50%;
+}
+
+ 
+
+
+
+.piece-light::after{
+    background-color: cornflowerblue;
+    
+}
+
+.piece-light:hover::after{
+    animation: pulseLight 800ms infinite;
+ 
+}
+
+
+
+
+.piece-dark::after{
+    background-color: crimson; 
+}
+
+
+.piece-dark:hover::after{
+    animation: pulseDark 800ms infinite;
+}
+
+ 
+
+
+@keyframes pulseLight {
+    0%{
+        box-shadow: 0 0 0 0 cornflowerblue;
+    }
+    75%{
+        box-shadow: 0 0 0 16px #6494ed00;
+    }
+}
+
+
+@keyframes pulseDark {
+    0%{
+        box-shadow: 0 0 0 0 crimson;
+    }
+    75%{
+        box-shadow: 0 0 0 16px #dc143c00;
+    }
+}
+
+
+
+
+
+
+.marker-way{
+    box-shadow: inset 0 0 20px 5px #ff5722;
+}
+ 
+
+
+
+
+.marker-player{
+    border: 2px solid lime;
+}
+
+
+
+
+
+
+
+

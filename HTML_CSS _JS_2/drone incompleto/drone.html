@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #drone{
+            width: 480px;
+            height: 480px;
+            background-image: url("frame.jpg");
+            background-size: 100% 100%;
+            /* background-color: green; */
+            position: relative;
+        }
+
+
+        .motor{
+            width: 136px; 
+            aspect-ratio: 1/1;
+            /* background-color: #ff000080; */
+            transform-origin: center center;
+            transform: rotate(0deg);
+            border-radius: 50%;
+            background-image: url("propeller.png");
+            background-size: 100% 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #motor1{
+            
+            left: 275px;
+            top: 250px;
+        }
+        #motor2{
+            left: 275px;
+            top: 94px;
+        }
+        #motor3{
+            left: 70px;
+            top: 94px;
+        }
+        #motor4{
+            left: 70px;
+            top: 250px;
+        }
+
+
+        #heading{
+            position: absolute;
+            top: 8px;
+        }
+        
+        #altitude{
+            position: absolute;
+            right: 8px;
+        }
+
+        #speed{
+            position: absolute;
+            left: 8px;
+        }
+
+        .valueWrapper{
+            border: 1px solid #fff;
+            width: 64px;
+            height: 32px;
+            letter-spacing: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .valueWrapper:has(span){
+            align-items: baseline;
+        }
+
+        .valueWrapper span{
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+
+
+
+
+        #orientationBall{
+            width: 96px;
+            height: 96px;
+            background-color: #000;
+            border-radius: 50%;
+            margin: 16px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #vline{
+            width: 1px;
+            height: 96px;
+            background-color: #5f5;
+            position: relative;
+            left: 50%;
+            transform: translateX(0px);
+        }
+
+        #hline{
+            width: 96px;
+            height: 1px;
+            background-color: #f55;
+            position: relative;
+            bottom: 50%;
+            transform: translateY(0px);
+        }
+
+
+
+        #roundIndicator{
+            width: 96px;
+            height: 96px;
+            /* background-color: #ff000080; */
+            transform: rotate(0deg);
+            position: absolute;
+            top: 0;
+        }
+
+        #roundIndicator div{
+            width: 16px;
+            height: 16px;
+            /* background-color: green; */
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            left: calc(50% - 16px/2);
+            top: -16px;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+        <div id="drone">
+            <div class="motor" id="motor1"></div>
+            <div class="motor" id="motor2"></div>
+            <div class="motor" id="motor3"></div>
+            <div class="motor" id="motor4"></div>
+        </div>
+
+        <div id="heading"> <div id="headingValue" class="valueWrapper">000</div> </div>
+        
+        <div id="altitude"> <div id="altitudeValue" class="valueWrapper"> <span>00</span>000</div> </div>
+        <div id="speed"> <div id="speedValue" class="valueWrapper">000</div> </div>
+
+
+        <div id="orientationBall">
+            <div id="vline"></div>
+            <div id="hline"></div> 
+            <div id="roundIndicator"> <div>&Delta;</div> </div>
+        </div>
+
+        
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+        // https://www.st.com/resource/en/product_presentation/steval-drone01_getting_started_guide.pdf
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+        
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+        const DATES = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        const MONTHS = [
+            "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"
+        ];
+
+
+
+
+
+
+
+
+
+        var DRONE = {
+
+            speed: 0,
+            altitude: 0,
+
+            motors: [
+                { speed: 0, accel: 0 },
+                { speed: 0, accel: 0 },
+                { speed: 0, accel: 0 },
+                { speed: 0, accel: 0 }
+            ],
+
+            orientation: {
+                roll: 0,
+                pitch: 0,
+                yaw: 0
+            }
+
+
+        };
+
+
+
+
+
+        const drone = document.getElementById('drone');
+
+        var delta = 0;
+        var timestampOld = 0;
+
+
+        const CONTROLLER_AXIS_SENSE = 2;
+
+        var CONTROLLER_AXIS = {
+            thr: 0, // Thrust : left  v
+            rud: 0, // Yaw    : left  h
+            ail: 0, // Roll   : right v
+            ele: 0  // Pitch  : right h
+        }
+
+
+        var CONTROLLER = {
+
+            // LEFT GROUP
+            w: {
+                pressed: false,
+                call: () => { CONTROLLER_AXIS.thr = Math.clamp(CONTROLLER_AXIS.thr+CONTROLLER_AXIS_SENSE, -10, 100); }
+            },
+            s: {
+                pressed: false,
+                call: () => { CONTROLLER_AXIS.thr = Math.clamp(CONTROLLER_AXIS.thr-CONTROLLER_AXIS_SENSE, -100, 100); }
+            },
+            a: {
+                pressed: false,
+                call: () => { CONTROLLER_AXIS.rud = Math.clamp(CONTROLLER_AXIS.rud+CONTROLLER_AXIS_SENSE, -100, 100); }
+            },
+            d: {
+                pressed: false,
+                call: () => { CONTROLLER_AXIS.rud = Math.clamp(CONTROLLER_AXIS.rud-CONTROLLER_AXIS_SENSE, -100, 100); }
+            },
+            
+            // RIGHT GROUP
+            ArrowUp: {
+                pressed: false,
+                call: () => { CONTROLLER_AXIS.ail = Math.clamp(CONTROLLER_AXIS.ail+CONTROLLER_AXIS_SENSE, -100, 100); }
+            },
+            ArrowDown: {
+                pressed: false,
+                call: () => { CONTROLLER_AXIS.ail = Math.clamp(CONTROLLER_AXIS.ail-CONTROLLER_AXIS_SENSE, -100, 100); }
+            },
+            ArrowLeft: {
+                pressed: false,
+                call: () => { CONTROLLER_AXIS.ele = Math.clamp(CONTROLLER_AXIS.ele+CONTROLLER_AXIS_SENSE, -100, 100); }
+            },
+            ArrowRight: {
+                pressed: false,
+                call: () => { CONTROLLER_AXIS.ele = Math.clamp(CONTROLLER_AXIS.ele-CONTROLLER_AXIS_SENSE, -100, 100); }
+            }
+
+        };
+
+
+
+
+        onkeydown = onkeyup = onblur = (event) => {
+            if ( CONTROLLER[event.key] ){
+                CONTROLLER[event.key].pressed = event.type == 'keydown';
+            }
+        };
+
+
+
+
+
+        function setDroneAngle( pitch = 0, roll = 0 ){
+
+            // pitch = map(pitch, -90, 90, -15, 15);
+            // roll = map(roll, -90, 90, -15, 15);
+
+            drone.style.transform = `perspective(1200px) rotateY(${roll}deg) rotateX(${pitch}deg)`;
+
+        }
+
+
+
+
+
+        function update( timestamp = 0 ){
+            requestAnimationFrame(update);
+            delta = (timestamp - timestampOld) / 1000;
+            timestampOld = timestamp;
+            
+            Object.keys(CONTROLLER).forEach(key => {
+                CONTROLLER[key].pressed && CONTROLLER[key].call();
+            }); 
+            
+            
+            // console.log(CONTROLLER_AXIS);
+
+
+            
+            if ( CONTROLLER_AXIS.thr != 0 ){
+                DRONE.motors.forEach((e, i) => {
+                    e.speed = Math.clamp(CONTROLLER_AXIS.thr, 0, 100);
+                });
+            }
+            
+             if ( CONTROLLER_AXIS.ail != 0 ){
+                DRONE.motors.forEach((e, i) => {
+
+                    if ( CONTROLLER_AXIS.ail > 0 ){
+                        if ( i == 0 || i == 3 ){
+                            e.speed = Math.clamp(e.speed + CONTROLLER_AXIS.thr / CONTROLLER_AXIS.ail, 0, 100);
+                        }else{
+                            e.speed = Math.clamp(e.speed + CONTROLLER_AXIS.thr, 0, 100);
+                        }
+                    }else{
+                        if ( i == 0 || i == 3 ){
+                            e.speed = Math.clamp(e.speed + CONTROLLER_AXIS.thr, 0, 100);
+                        }else{
+                            e.speed = Math.clamp(e.speed + CONTROLLER_AXIS.thr / CONTROLLER_AXIS.ail, 0, 100);
+                        }
+                    }
+
+                });
+            }
+
+
+
+
+
+
+            DRONE.motors.forEach((e, i) => {
+                e.accel = (e.speed + e.accel) % 360;
+                drone.children[i].style.transform = `rotate(${e.accel}deg)`;
+            }); 
+            
+        }
+
+
+        onload = update;
+        
+
+
+    </script>
+
+
+</body>
+</html>
