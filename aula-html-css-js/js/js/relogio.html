@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        *{margin: 0 auto; padding: 0; border: 0;}
+        body{
+            background-color: cornflowerblue;
+        }
+        #container{
+            background-color: black;
+            width: 500px;
+            height: 100px;
+            padding: 25px;
+            box-sizing: border-box;
+            border-radius: 50px;
+            position: relative;
+            top: 200px;
+        }
+        #tempo{
+            background-color: gray;
+            width: 90%;
+            height: 50px;
+        }
+        #txt{
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            font-size: 42px;
+            
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="container">
+        <div id="tempo">
+            <p id="txt"></p>
+        </div>
+    </div>
+
+    <script>
+        txt = document.querySelector("#txt");
+        function tempo(){
+            data = new Date();
+
+            dia = data.getDate();
+            mes = data.getMonth()+1;
+            ano = data.getFullYear();
+
+            hora = data.getHours();
+            minuto = data.getMinutes();
+            sec = data.getSeconds()
+            
+            console.log(dia, mes, ano, hora, minuto, sec);
+            txt.innerHTML = dia + "/" + mes + "/" + ano + " " + hora + ":" + minuto + ":" + sec;
+        }
+
+        setInterval(tempo, 1000)
+    </script>
+</body>
+</html>

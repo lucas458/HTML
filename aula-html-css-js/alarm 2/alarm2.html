@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+
+    <title>Alarme 2</title>
+
+
+
+     
+
+
+</head>
+<body>
+    
+
+
+
+    <!-- SWITCH -->
+    <!-- <label class="UI-widget UI-switch">
+        <input type="checkbox">
+        <div><div></div></div>
+    </label> -->
+
+
+
+    <!-- WEEKDAY -->
+    <!-- <label class="UI-widget UI-toggleButton">
+        <input type="checkbox">
+        <div>D</div>
+    </label> -->
+
+
+
+
+    <!-- TELA-1 : PRINCIAL -->
+    <div class="screen" id="tela1">
+
+        <!-- HEADER  -->
+        <div id="headerContainer" class="header-container">
+            <div>Alarme</div>
+            <div id="header-clock"></div>
+        </div>
+
+
+
+        <!-- ALL ITEMS -->
+        <div id="alarmListContainer">
+
+
+            <!-- ITEM -->
+            <div class="alarmItemContainer" style="display: none;">
+
+                <!-- HORA:MINUTO - AM/PM   |  ACTIVE? -->
+                <div class="alarmClockContainer">
+                    <!-- TIME -->
+                    <div class="alarmClock">
+                        <span>10:15</span>
+                        <span>AM</span>
+                    </div>
+                    <!-- ON/OFF ALARM -->
+                    <div>
+                        <!-- <input type="checkbox"> -->
+                        <label class="UI-widget UI-switch">
+                            <input type="checkbox" checked>
+                            <div><div></div></div>
+                        </label>
+                    </div>
+                </div>
+
+
+                <!--  NOME DO ALARME -- OPTIONAL -->
+                <pre class="alarmName"> </pre>
+
+                <!-- MOSTAR MAIS -->
+                <div class="alarmMoreOptions">
+                    <details>
+                        <!-- DIAS QUE REPETE -- RESUMO -->
+                        <summary>Hoje</summary>
+                        
+                        <!-- REPETIR? -->
+                        <label class="alarmRepeatToggle">
+                            <label class="UI-widget UI-checkbox"><input type="checkbox"><div></div></label>
+                            Repetir
+                        </label>
+
+                        <!-- SELCIONAR OS DIAS PRA REPETIR -- REPETIR DEVE ESTAR CHECK -->
+                        <div class="alarmRepeatContainer">
+                            <label class="UI-widget UI-toggleButton toggle-weekday"><input type="checkbox"><div>D</div></label>
+                            <label class="UI-widget UI-toggleButton toggle-weekday"><input type="checkbox"><div>S</div></label>
+                            <label class="UI-widget UI-toggleButton toggle-weekday"><input type="checkbox"><div>T</div></label>
+                            <label class="UI-widget UI-toggleButton toggle-weekday"><input type="checkbox"><div>Q</div></label>
+                            <label class="UI-widget UI-toggleButton toggle-weekday"><input type="checkbox"><div>Q</div></label>
+                            <label class="UI-widget UI-toggleButton toggle-weekday"><input type="checkbox"><div>S</div></label>
+                            <label class="UI-widget UI-toggleButton toggle-weekday"><input type="checkbox"><div>S</div></label>
+                        </div>
+
+                        <!-- SOM DO ALARME -->
+                        <div class="iconWithLabel alarmSongButton" data-song="0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                            </svg>
+                            <div>Silencioso</div>
+                        </div>
+
+                        <!-- NOME DO ALARME (opt.) -->
+                        <div class="iconWithLabel alarmNameInputContainer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-fill" viewBox="0 0 16 16">
+                                <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+                            </svg>
+                            <input type="search" class="alarmInputName" placeholder="Marcador">
+                        </div>
+
+                        <!-- DELETAR -->
+                        <div class="iconWithLabel alarmDelete">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                            </svg>
+                            <div>Excluir</div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- TELA-2 : SLIDE SELECT SONG -->
+    <div class="screen" id="tela2">
+
+        
+        <!-- HEADER -->
+        <div id="tela2-header" class="header-container">
+
+            <div id="tela2-backArrow" onclick="tela2(false)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                </svg>
+            </div>
+
+            <div id="tela2-headerTitle">Som Do Alarme</div>
+            
+        </div>
+
+
+
+
+
+        <!-- title -->
+        <div style="color: #5d91e7; padding: 5px; margin-top: 50px;">Sons</div>
+
+
+
+        <!-- OPTION -- SILENCE -->
+        <label class="UI-widget UI-optionBox optionSongContainer">
+            <input type="radio" name="radioSong">
+            <div>
+                <div class="optionSongIcon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-slash-fill" viewBox="0 0 16 16">
+                        <path d="M5.164 14H15c-1.5-1-2-5.902-2-7 0-.264-.02-.523-.06-.776L5.164 14zm6.288-10.617A4.988 4.988 0 0 0 8.995 2.1a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 7c0 .898-.335 4.342-1.278 6.113l9.73-9.73zM10 15a2 2 0 1 1-4 0h4zm-9.375.625a.53.53 0 0 0 .75.75l14.75-14.75a.53.53 0 0 0-.75-.75L.625 15.625z"/>
+                    </svg>
+                </div>
+                <div class="optionSongName">Silencioso</div>
+            </div>
+        </label>
+
+        <!-- OPTION -->
+        <label class="UI-widget UI-optionBox optionSongContainer">
+            <input type="radio" name="radioSong">
+            <div>
+                <div class="optionSongIcon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                    </svg>
+                </div>
+                <div class="optionSongName">Nome da musica</div>
+            </div>
+        </label>
+        
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- TELA-3 :  EDITA/CIRAR ALARME -->
+    <div class="screen" id="tela3" style="display: none;">
+
+       
+
+        <!-- HORAS -->
+        <div class="tela3-timePicker">
+
+            <div onclick="changeClockHour(true)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                </svg>
+            </div>
+
+            <div id="tela3-hours">0</div>
+
+            <div onclick="changeClockHour(false)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </div>
+        </div>
+
+
+        <span id="tale3-timePickerGroove">:</span>
+
+        <!-- MINUTOS -->
+        <div class="tela3-timePicker">
+            <div onclick="changeClockMinute(true)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                </svg>
+            </div>
+            
+            <div id="tela3-minutes">00</div>
+
+            <div onclick="changeClockMinute(false)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </div>
+        </div>
+
+
+
+
+        <!-- AM/PM -->
+        <div id="tela3-timeModeContainer">
+            
+
+            <label class="timeModeScreen3Item">
+                <input type="radio" name="timeModeScreen3" checked>
+                <div>AM</div>
+            </label>
+
+            <label class="timeModeScreen3Item">
+                <input type="radio" name="timeModeScreen3">
+                <div>PM</div>
+            </label>
+
+        </div>
+
+
+
+
+        <div id="tela3-controls">
+
+            <div onclick="closeTimePicker();">Cancelar</div>
+            <div onclick="timerPickerOk();">Ok</div>
+
+        </div>
+
+        
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- FLOAT BUTTON -- CRIAR ALARME -->
+    <div id="newAlarm-container">
+        <div id="newAlarm-button" onclick="createNewAlarm()">&plus;</div>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+
+
+
+    <!-- POPUP -->
+    <div id="popup-container">
+        <div id="popup-message" onclick="$(this).fadeOut(250)"></div>
+    </div>
+
+
+
+
+
+
+    <audio src="#"></audio>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="script.js"></script>
+
+
+    
+
+</body>
+</html>

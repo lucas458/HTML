@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{padding: 0; margin: 0;}
+        body{
+            background-color: grey;
+            margin: 10px;
+        }
+        .led{
+            width: 50px;
+            height: 50px;
+            padding: 5px;
+            text-align: center;
+            box-sizing: border-box;
+            color: #ffffff;
+            background-color: #171717;
+            margin: 3px;
+            float: left;
+        }
+        .container{
+            height: 60px;
+            padding: 5px;
+            background-color: black;
+            width: fit-content;
+			user-select: none;	
+        }
+        /**/
+        #reset{
+            outline: none;
+            margin-top: 10px;
+            width: 100px;
+            height: 50px;
+            background-color: green;
+            color: #ffffff;
+            border: 0px;
+			border-radius: 15px;
+        }
+        #reset:hover{
+            border: 1px dashed black;
+            background-color: gray;
+            transition: 0.1s;
+        }
+        #reset:active{
+            background-color: green;
+        }
+        /**/
+        #gerar{
+            outline: none;
+            margin-top: 10px;
+            margin-left: 20px;
+            width: 100px;
+            height: 50px;
+            background-color: green;
+            color: #ffffff;
+            border: 0px;
+			border-radius: 15px;  
+        }
+        #gerar:hover{
+            border: 1px dashed black;
+            background-color: gray;
+            transition: 0.1s;
+        }
+        #gerar:active{
+            background-color: green;
+        }
+        #tabela{
+            text-align: center;
+            width: 220px;
+            color: green;
+            background-color: #000000;
+            position: absolute;
+            left: 600px;
+            top: 100px;
+            font-size: 2.2em;
+			border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!--1-->
+    <div class="container">
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+    </div>
+    <!--2-->
+    <div class="container">
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+    </div>
+    <!--3-->
+    <div class="container">
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+    </div>
+    <!--4-->
+    <div class="container">
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+    </div>
+    <!--5-->
+    <div class="container">
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+    </div>
+    <!--6-->
+    <div class="container">
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+    </div>
+    <!--7-->
+    <div class="container">
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+    </div>
+    <!--8-->
+    <div class="container">
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+        <div class="led" onclick="cor(this)">0</div>
+    </div>
+
+    <button id="reset">resetar</button>
+    <button id="gerar">gerar</button>
+    
+    <div id="tabela">
+        <div id="gerado"></div>
+    </div>
+    
+    <script>
+        leds = document.getElementsByClassName("led");
+		//matrix principal
+        class LED{
+            constructor(){
+                this.luz = "0"
+                this.cor = "#171717"
+            }
+            estado(){
+                if (this.luz == "0"){
+                    this.luz = "1"
+                    this.cor = "red"
+                }
+                else if (this.luz == "1"){
+                    this.luz = "0"
+                    this.cor = "#171717"
+                }
+            }
+        }
+
+        //TODOS OS LEDs
+        //1
+        led0 = new LED()
+        luz0 = document.getElementsByClassName("led")[0]
+        luz0.onclick = function(){
+            led0.estado()
+            luz0.style.backgroundColor = led0.cor
+            luz0.innerHTML = led0.luz
+        }
+        led1 = new LED()
+        luz1 = document.getElementsByClassName("led")[1]
+        luz1.onclick = function(){
+            led1.estado()
+            luz1.style.backgroundColor = led1.cor
+            luz1.innerHTML = led1.luz
+        }
+        led2 = new LED()
+        luz2 = document.getElementsByClassName("led")[2]
+        luz2.onclick = function(){
+            led2.estado()
+            luz2.style.backgroundColor = led2.cor
+            luz2.innerHTML = led2.luz
+        }
+        led3 = new LED()
+        luz3 = document.getElementsByClassName("led")[3]
+        luz3.onclick = function(){
+            led3.estado()
+            luz3.style.backgroundColor = led3.cor
+            luz3.innerHTML = led3.luz
+        }
+        led4 = new LED()
+        luz4 = document.getElementsByClassName("led")[4]
+        luz4.onclick = function(){
+            led4.estado()
+            luz4.style.backgroundColor = led4.cor
+            luz4.innerHTML = led4.luz
+        }
+        led5 = new LED()
+        luz5 = document.getElementsByClassName("led")[5]
+        luz5.onclick = function(){
+            led5.estado()
+            luz5.style.backgroundColor = led5.cor
+            luz5.innerHTML = led5.luz
+        }
+        led6 = new LED()
+        luz6 = document.getElementsByClassName("led")[6]
+        luz6.onclick = function(){
+            led6.estado()
+            luz6.style.backgroundColor = led6.cor
+            luz6.innerHTML = led6.luz
+        }
+        led7 = new LED()
+        luz7 = document.getElementsByClassName("led")[7]
+        luz7.onclick = function(){
+            led7.estado()
+            luz7.style.backgroundColor = led7.cor
+            luz7.innerHTML = led7.luz
+        }
+        //2
+        led8 = new LED()
+        luz8 = document.getElementsByClassName("led")[8]
+        luz8.onclick = function(){
+            led8.estado()
+            luz8.style.backgroundColor = led8.cor
+            luz8.innerHTML = led8.luz
+        }
+        led9 = new LED()
+        luz9 = document.getElementsByClassName("led")[9]
+        luz9.onclick = function(){
+            led9.estado()
+            luz9.style.backgroundColor = led9.cor
+            luz9.innerHTML = led9.luz
+        }
+        led10 = new LED()
+        luz10 = document.getElementsByClassName("led")[10]
+        luz10.onclick = function(){
+            led10.estado()
+            luz10.style.backgroundColor = led10.cor
+            luz10.innerHTML = led10.luz
+        }
+        led11 = new LED()
+        luz11 = document.getElementsByClassName("led")[11]
+        luz11.onclick = function(){
+            led11.estado()
+            luz11.style.backgroundColor = led11.cor
+            luz11.innerHTML = led11.luz
+        }
+        led12 = new LED()
+        luz12 = document.getElementsByClassName("led")[12]
+        luz12.onclick = function(){
+            led12.estado()
+            luz12.style.backgroundColor = led12.cor
+            luz12.innerHTML = led12.luz
+        }
+        led13 = new LED()
+        luz13 = document.getElementsByClassName("led")[13]
+        luz13.onclick = function(){
+            led13.estado()
+            luz13.style.backgroundColor = led13.cor
+            luz13.innerHTML = led13.luz
+        }
+        led14 = new LED()
+        luz14 = document.getElementsByClassName("led")[14]
+        luz14.onclick = function(){
+            led14.estado()
+            luz14.style.backgroundColor = led14.cor
+            luz14.innerHTML = led14.luz
+        }
+        led15 = new LED()
+        luz15 = document.getElementsByClassName("led")[15]
+        luz15.onclick = function(){
+            led15.estado()
+            luz15.style.backgroundColor = led15.cor
+            luz15.innerHTML = led15.luz
+        }
+        //3
+        led16 = new LED()
+        luz16 = document.getElementsByClassName("led")[16]
+        luz16.onclick = function(){
+            led16.estado()
+            luz16.style.backgroundColor = led16.cor
+            luz16.innerHTML = led16.luz
+        }
+        led17 = new LED()
+        luz17 = document.getElementsByClassName("led")[17]
+        luz17.onclick = function(){
+            led17.estado()
+            luz17.style.backgroundColor = led17.cor
+            luz17.innerHTML = led17.luz
+        }
+        led18 = new LED()
+        luz18 = document.getElementsByClassName("led")[18]
+        luz18.onclick = function(){
+            led18.estado()
+            luz18.style.backgroundColor = led18.cor
+            luz18.innerHTML = led18.luz
+        }
+        led19 = new LED()
+        luz19 = document.getElementsByClassName("led")[19]
+        luz19.onclick = function(){
+            led19.estado()
+            luz19.style.backgroundColor = led19.cor
+            luz19.innerHTML = led19.luz
+        }
+        led20 = new LED()
+        luz20 = document.getElementsByClassName("led")[20]
+        luz20.onclick = function(){
+            led20.estado()
+            luz20.style.backgroundColor = led20.cor
+            luz20.innerHTML = led20.luz
+        }
+        led21 = new LED()
+        luz21 = document.getElementsByClassName("led")[21]
+        luz21.onclick = function(){
+            led21.estado()
+            luz21.style.backgroundColor = led21.cor
+            luz21.innerHTML = led21.luz
+        }
+        led22 = new LED()
+        luz22 = document.getElementsByClassName("led")[22]
+        luz22.onclick = function(){
+            led22.estado()
+            luz22.style.backgroundColor = led22.cor
+            luz22.innerHTML = led22.luz
+        }
+        led23 = new LED()
+        luz23 = document.getElementsByClassName("led")[23]
+        luz23.onclick = function(){
+            led23.estado()
+            luz23.style.backgroundColor = led23.cor
+            luz23.innerHTML = led23.luz
+        }
+        //4
+        led24 = new LED()
+        luz24 = document.getElementsByClassName("led")[24]
+        luz24.onclick = function(){
+            led24.estado()
+            luz24.style.backgroundColor = led24.cor
+            luz24.innerHTML = led24.luz
+        }
+        led25 = new LED()
+        luz25 = document.getElementsByClassName("led")[25]
+        luz25.onclick = function(){
+            led25.estado()
+            luz25.style.backgroundColor = led25.cor
+            luz25.innerHTML = led25.luz
+        }
+        led26 = new LED()
+        luz26 = document.getElementsByClassName("led")[26]
+        luz26.onclick = function(){
+            led26.estado()
+            luz26.style.backgroundColor = led26.cor
+            luz26.innerHTML = led26.luz
+        }
+        led27 = new LED()
+        luz27 = document.getElementsByClassName("led")[27]
+        luz27.onclick = function(){
+            led27.estado()
+            luz27.style.backgroundColor = led27.cor
+            luz27.innerHTML = led27.luz
+        }
+        led28 = new LED()
+        luz28 = document.getElementsByClassName("led")[28]
+        luz28.onclick = function(){
+            led28.estado()
+            luz28.style.backgroundColor = led28.cor
+            luz28.innerHTML = led28.luz
+        }
+        led29 = new LED()
+        luz29 = document.getElementsByClassName("led")[29]
+        luz29.onclick = function(){
+            led29.estado()
+            luz29.style.backgroundColor = led29.cor
+            luz29.innerHTML = led29.luz
+        }
+        led30 = new LED()
+        luz30 = document.getElementsByClassName("led")[30]
+        luz30.onclick = function(){
+            led30.estado()
+            luz30.style.backgroundColor = led30.cor
+            luz30.innerHTML = led30.luz
+        }
+        led31 = new LED()
+        luz31 = document.getElementsByClassName("led")[31]
+        luz31.onclick = function(){
+            led31.estado()
+            luz31.style.backgroundColor = led31.cor
+            luz31.innerHTML = led31.luz
+        }
+        //5
+        led32 = new LED()
+        luz32 = document.getElementsByClassName("led")[32]
+        luz32.onclick = function(){
+            led32.estado()
+            luz32.style.backgroundColor = led32.cor
+            luz32.innerHTML = led32.luz
+        }
+        led33 = new LED()
+        luz33 = document.getElementsByClassName("led")[33]
+        luz33.onclick = function(){
+            led33.estado()
+            luz33.style.backgroundColor = led33.cor
+            luz33.innerHTML = led33.luz
+        }
+        led34 = new LED()
+        luz34 = document.getElementsByClassName("led")[34]
+        luz34.onclick = function(){
+            led34.estado()
+            luz34.style.backgroundColor = led34.cor
+            luz34.innerHTML = led34.luz
+        }
+        led35 = new LED()
+        luz35 = document.getElementsByClassName("led")[35]
+        luz35.onclick = function(){
+            led35.estado()
+            luz35.style.backgroundColor = led35.cor
+            luz35.innerHTML = led35.luz
+        }
+        led36 = new LED()
+        luz36 = document.getElementsByClassName("led")[36]
+        luz36.onclick = function(){
+            led36.estado()
+            luz36.style.backgroundColor = led36.cor
+            luz36.innerHTML = led36.luz
+        }
+        led37 = new LED()
+        luz37 = document.getElementsByClassName("led")[37]
+        luz37.onclick = function(){
+            led37.estado()
+            luz37.style.backgroundColor = led37.cor
+            luz37.innerHTML = led37.luz
+        }
+        led38 = new LED()
+        luz38 = document.getElementsByClassName("led")[38]
+        luz38.onclick = function(){
+            led38.estado()
+            luz38.style.backgroundColor = led38.cor
+            luz38.innerHTML = led38.luz
+        }
+        led39 = new LED()
+        luz39 = document.getElementsByClassName("led")[39]
+        luz39.onclick = function(){
+            led39.estado()
+            luz39.style.backgroundColor = led39.cor
+            luz39.innerHTML = led39.luz
+        }
+        //6
+        led40 = new LED()
+        luz40 = document.getElementsByClassName("led")[40]
+        luz40.onclick = function(){
+            led40.estado()
+            luz40.style.backgroundColor = led40.cor
+            luz40.innerHTML = led40.luz
+        }
+        led41 = new LED()
+        luz41 = document.getElementsByClassName("led")[41]
+        luz41.onclick = function(){
+            led41.estado()
+            luz41.style.backgroundColor = led41.cor
+            luz41.innerHTML = led41.luz
+        }
+        led42 = new LED()
+        luz42 = document.getElementsByClassName("led")[42]
+        luz42.onclick = function(){
+            led42.estado()
+            luz42.style.backgroundColor = led42.cor
+            luz42.innerHTML = led42.luz
+        }
+        led43 = new LED()
+        luz43 = document.getElementsByClassName("led")[43]
+        luz43.onclick = function(){
+            led43.estado()
+            luz43.style.backgroundColor = led43.cor
+            luz43.innerHTML = led43.luz
+        }
+        led44 = new LED()
+        luz44 = document.getElementsByClassName("led")[44]
+        luz44.onclick = function(){
+            led44.estado()
+            luz44.style.backgroundColor = led44.cor
+            luz44.innerHTML = led44.luz
+        }
+        led45 = new LED()
+        luz45 = document.getElementsByClassName("led")[45]
+        luz45.onclick = function(){
+            led45.estado()
+            luz45.style.backgroundColor = led45.cor
+            luz45.innerHTML = led45.luz
+        }
+        led46 = new LED()
+        luz46 = document.getElementsByClassName("led")[46]
+        luz46.onclick = function(){
+            led46.estado()
+            luz46.style.backgroundColor = led46.cor
+            luz46.innerHTML = led46.luz
+        }
+        led47 = new LED()
+        luz47 = document.getElementsByClassName("led")[47]
+        luz47.onclick = function(){
+            led47.estado()
+            luz47.style.backgroundColor = led47.cor
+            luz47.innerHTML = led47.luz
+        }
+        //7
+        led48 = new LED()
+        luz48 = document.getElementsByClassName("led")[48]
+        luz48.onclick = function(){
+            led48.estado()
+            luz48.style.backgroundColor = led48.cor
+            luz48.innerHTML = led48.luz
+        }
+        led49 = new LED()
+        luz49 = document.getElementsByClassName("led")[49]
+        luz49.onclick = function(){
+            led49.estado()
+            luz49.style.backgroundColor = led49.cor
+            luz49.innerHTML = led49.luz
+        }
+        led50 = new LED()
+        luz50 = document.getElementsByClassName("led")[50]
+        luz50.onclick = function(){
+            led50.estado()
+            luz50.style.backgroundColor = led50.cor
+            luz50.innerHTML = led50.luz
+        }
+        led51 = new LED()
+        luz51 = document.getElementsByClassName("led")[51]
+        luz51.onclick = function(){
+            led51.estado()
+            luz51.style.backgroundColor = led51.cor
+            luz51.innerHTML = led51.luz
+        }
+        led52 = new LED()
+        luz52 = document.getElementsByClassName("led")[52]
+        luz52.onclick = function(){
+            led52.estado()
+            luz52.style.backgroundColor = led52.cor
+            luz52.innerHTML = led52.luz
+        }
+        led53 = new LED()
+        luz53 = document.getElementsByClassName("led")[53]
+        luz53.onclick = function(){
+            led53.estado()
+            luz53.style.backgroundColor = led53.cor
+            luz53.innerHTML = led53.luz
+        }
+        led54 = new LED()
+        luz54 = document.getElementsByClassName("led")[54]
+        luz54.onclick = function(){
+            led54.estado()
+            luz54.style.backgroundColor = led54.cor
+            luz54.innerHTML = led54.luz
+        }
+        led55 = new LED()
+        luz55 = document.getElementsByClassName("led")[55]
+        luz55.onclick = function(){
+            led55.estado()
+            luz55.style.backgroundColor = led55.cor
+            luz55.innerHTML = led55.luz
+        }
+        //8
+        led56 = new LED()
+        luz56 = document.getElementsByClassName("led")[56]
+        luz56.onclick = function(){
+            led56.estado()
+            luz56.style.backgroundColor = led56.cor
+            luz56.innerHTML = led56.luz
+        }
+        led57 = new LED()
+        luz57 = document.getElementsByClassName("led")[57]
+        luz57.onclick = function(){
+            led57.estado()
+            luz57.style.backgroundColor = led57.cor
+            luz57.innerHTML = led57.luz
+        }
+        led58 = new LED()
+        luz58 = document.getElementsByClassName("led")[58]
+        luz58.onclick = function(){
+            led58.estado()
+            luz58.style.backgroundColor = led58.cor
+            luz58.innerHTML = led58.luz
+        }
+        led59 = new LED()
+        luz59 = document.getElementsByClassName("led")[59]
+        luz59.onclick = function(){
+            led59.estado()
+            luz59.style.backgroundColor = led59.cor
+            luz59.innerHTML = led59.luz
+        }
+        led60 = new LED()
+        luz60 = document.getElementsByClassName("led")[60]
+        luz60.onclick = function(){
+            led60.estado()
+            luz60.style.backgroundColor = led60.cor
+            luz60.innerHTML = led60.luz
+        }
+        led61 = new LED()
+        luz61 = document.getElementsByClassName("led")[61]
+        luz61.onclick = function(){
+            led61.estado()
+            luz61.style.backgroundColor = led61.cor
+            luz61.innerHTML = led61.luz
+        }
+        led62 = new LED()
+        luz62 = document.getElementsByClassName("led")[62]
+        luz62.onclick = function(){
+            led62.estado()
+            luz62.style.backgroundColor = led62.cor
+            luz62.innerHTML = led62.luz
+        }
+        led63 = new LED()
+        luz63 = document.getElementsByClassName("led")[63]
+        luz63.onclick = function(){
+            led63.estado()
+            luz63.style.backgroundColor = led63.cor
+            luz63.innerHTML = led63.luz
+        }
+        //end
+		//resetar
+        reset = document.getElementById("reset")
+        reset.onclick = function(){
+            for (let c = 0; c <= 63; c++){
+                leds[c].style.backgroundColor = "#171717"
+                leds[c].innerHTML = "0"
+            }
+			for (let c = 0; c <= 63; c++){
+				lista.push(leds[c].innerHTML)
+				gerado.innerHTML = lista.join("  ")
+            }
+            lista = []
+            //reset nos LEDS
+            led0.luz = "0"
+            led1.luz = "0"
+            led2.luz = "0"
+            led3.luz = "0"
+            led4.luz = "0"
+            led5.luz = "0"
+            led6.luz = "0"
+            led7.luz = "0"
+            led8.luz = "0"
+            led9.luz = "0"
+            led10.luz = "0"
+            led11.luz = "0"
+            led12.luz = "0"
+            led13.luz = "0"
+            led14.luz = "0"
+            led15.luz = "0"
+            led16.luz = "0"
+            led17.luz = "0"
+            led18.luz = "0"
+            led19.luz = "0"
+            led20.luz = "0"
+            led21.luz = "0"
+            led22.luz = "0"
+            led23.luz = "0"
+            led24.luz = "0"
+            led25.luz = "0"
+            led26.luz = "0"
+            led27.luz = "0"
+            led28.luz = "0"
+            led29.luz = "0"
+            led30.luz = "0"
+            led31.luz = "0"
+            led32.luz = "0"
+            led33.luz = "0"
+            led34.luz = "0"
+            led35.luz = "0"
+            led36.luz = "0"
+            led37.luz = "0"
+            led38.luz = "0"
+            led39.luz = "0"
+            led40.luz = "0"
+            led41.luz = "0"
+            led42.luz = "0"
+            led43.luz = "0"
+            led44.luz = "0"
+            led45.luz = "0"
+            led46.luz = "0"
+            led47.luz = "0"
+            led48.luz = "0"
+            led49.luz = "0"
+            led50.luz = "0"
+            led51.luz = "0"
+            led52.luz = "0"
+            led53.luz = "0"
+            led54.luz = "0"
+            led55.luz = "0"
+            led56.luz = "0"
+            led57.luz = "0"
+            led58.luz = "0"
+            led59.luz = "0"
+            led60.luz = "0"
+            led61.luz = "0"
+            led62.luz = "0"
+            led63.luz = "0"
+        }
+		//gerar
+        gerar = document.getElementById("gerar")
+        lista = [];
+        gerado = document.getElementById("gerado")
+        gerar.onclick = function(){
+            for (let c = 0; c <= 63; c++){
+				lista.push(leds[c].innerHTML)
+				gerado.innerHTML = lista.join("  ")
+            }
+            lista = []
+        }
+		//mostrar lista gerada no inicio
+		for (let c = 0; c <= 63; c++){
+				lista.push(leds[c].innerHTML)
+				gerado.innerHTML = lista.join("  ")
+            }
+            lista = []
+    </script>
+</body>
+</html>
