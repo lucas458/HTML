@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            flex-direction: column;
+        }
+
+
+
+        #digitos_wrapper{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .digito{
+            width: 32px;
+            height: 48px;
+            font-size: 1.2em;
+            border-radius: 4px;
+            border: 1px solid #505050;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .senha_pass .digito{
+            background-color: #28a745;
+            border-color: #fff;
+        }
+
+
+        .senha_wrong .digito{
+            background-color: #dc3545;
+            border-color: #fff;
+        }
+
+
+
+        #knob_wrapper{
+            width: 256px;
+            height: 256px;
+            background-image: url("safe_knob.png");
+            background-size: 100%; 
+        }
+
+
+        #knob{
+            width: 188px;
+            height: 185px; 
+            background-size: 256px 261px;
+            background-position: -33px -36px;
+            background-image: url("safe_knob.png");
+            border-radius: 50%;
+            transform: rotate(0deg);
+            /* opacity: 0.5; */
+            position: relative;
+            left: 33px;
+            top: 37px;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+    <div id="main_screen">
+
+
+        <div id="digitos_wrapper">
+            <div class="digito">0</div>
+            <div class="digito">0</div>
+            <div class="digito">0</div>
+            <div class="digito">0</div>
+        </div>
+
+
+
+        <div id="knob_wrapper">
+            <div id="knob"></div>
+        </div>
+
+
+
+
+
+    </div>
+ 
+
+
+     
+
+
+    <script>
+        
+
+        const password             = '3224';
+        var currentDigitValue      = 0;
+        var currentDigit           = 0;
+        var currentPasswordValue   = [];
+        var oldRotationisClickWise = null;
+        var canHandle              = true;
+        var currentAngle           = 0;
+
+        knob_wrapper.onwheel = (event) => {
+
+            if ( !canHandle ) return;
+
+            const isClockWise = event.deltaY < 0;
+
+            if ( oldRotationisClickWise == null ){
+                oldRotationisClickWise = isClockWise;
+            }
+
+
+            if ( isClockWise != oldRotationisClickWise ){
+                console.log('change');
+                oldRotationisClickWise = isClockWise;
+                
+                currentPasswordValue.push(currentDigitValue);
+                currentDigitValue = 0;
+
+                if ( ++currentDigit >= 4 ){
+
+                    const isCorrect = currentPasswordValue.join('') == password;
+                    
+                    digitos_wrapper.classList.toggle("senha_pass", isCorrect);
+                    digitos_wrapper.classList.toggle("senha_wrong", !isCorrect);
+
+                    currentDigit           = 0;
+                    currentDigitValue      = 0;
+                    currentPasswordValue   = [];
+                    canHandle              = false;
+                    oldRotationisClickWise = null;
+                    currentAngle           = 0;
+                    knob.style.transform   = '';
+
+                    setTimeout(()=>{
+                        digitos_wrapper.classList.remove("senha_pass", "senha_wrong");
+                        digitos_wrapper.querySelectorAll('.digito').forEach(e => e.innerHTML = 0);
+                        canHandle = true;
+                    }, 1000);
+                    
+                    return;
+                }
+                
+            }
+
+            currentAngle += (isClockWise)? -3.7 : 3.7;
+            knob.style.transform = `rotate(${currentAngle}deg)`;
+            currentDigitValue = (currentDigitValue + 1) % 10;
+            digitos_wrapper.children[currentDigit].innerHTML = currentDigitValue;
+
+        };
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

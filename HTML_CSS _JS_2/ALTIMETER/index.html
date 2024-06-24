@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altimeter</title>
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+        #frame{
+            width: 600px;
+            height: 600px;
+            box-shadow: 0 0 5px 0 #000;
+            border-radius: 50% 50% 50% 64px;
+            background-color: #333; 
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #container{
+            width: calc( 266px * 2 );
+            height: calc( 266px * 2 );
+            background-color: #414143;
+            box-shadow: inset 0 0 32px 0 #000;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #markListBig, #markListMini{
+            width: calc( 266px * 2 );
+            height: calc( 266px * 2 );
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+        }
+
+        .markBig, .markMini{
+            width: 8px;
+            height: 38px;
+            background-color: #fff;
+            border-radius: 25px 25px 0 0;
+            transform-origin: center calc(-266px + 38px);
+            transform: translateY( calc(266px - 38px/2) ) rotate(0deg);
+            position: absolute;
+        }
+
+        .markBig{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .markBig div{
+            transform: translateY(-60px) rotate(0deg);
+            font-size: 4em;
+            font-weight: 500;
+        }
+
+        .markMini{
+            width: 6px;
+            height: 28px;
+            background-color: #fff;
+            transform-origin: center calc(-266px + 28px);
+            transform: translateY( calc(266px - 28px/2) ) rotate(7.2deg);
+        }
+
+
+
+
+        #fixedDisc{
+            width: calc(130px * 2);
+            height: calc(130px * 2);
+            border-radius: 50%;
+            position: absolute;
+            overflow: hidden;
+        }
+
+
+        #labelAlt{
+            font-size: 3em;
+            font-weight: 500;
+            position: absolute;
+            left: 32px;
+            top: 32px;
+        }
+
+
+
+        
+
+
+
+        #stripContainer{
+            display: flex;
+            justify-content: flex-end;
+            background-color: #fff;
+            height: 100%;
+            transform: rotate(50deg);
+            gap: 12px;
+        }
+        #stripContainer > div{
+            width: 12px;
+            background-color: #1b1b1b;
+            flex-shrink: 0;
+        }
+
+
+        #stripContainerMask{
+            width: calc(130px * 2);
+            height: calc(130px * 2);
+            border-radius: 50%;
+            background-image: conic-gradient(from -140deg, #333 275deg, transparent 0);
+            overflow: hidden;
+            position: absolute;
+            top: 0;
+        }
+
+        #stripContainerMask::after{
+            content: '';
+            display: block;
+            width: 96px;
+            aspect-ratio: 1/1;
+            background-color: #333;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+
+
+
+
+        /* BARO KNOB */
+        #baroKnob{
+            width: 96px;
+            aspect-ratio: 1/1;
+            background-color: #414143;
+            border: 4px solid #b5b8b1;
+            box-shadow: 0 0 5px 0 #000;
+            border-radius: 50%;
+            z-index: 5;
+            margin: 64px;
+            transform: translate(-50%, 50%) rotate(0deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+        }
+
+        #baroKnob::before, #baroKnob::after{
+            content: '';
+            display: block;
+            width: 25%;
+            height: 2px;
+            background-color: #b5b8b1;
+            position: absolute;
+        }
+
+        #baroKnob::after{
+            transform: rotate(90deg);
+        }
+
+
+
+        /* BARO INDICATOR */
+        #baroIndicator{
+            border: 11px solid transparent;
+            border-right-color: #fff; 
+            position: absolute;
+            right: 16px;
+        }
+        
+        
+        
+        /* BARO */
+        #baroContainer{
+            width: 100px;
+            height: 64px;
+            background-color: #333;
+            overflow: hidden;
+            transform: translateY(4px); 
+            border-radius: 18px;
+            border: 2px solid #1b1b19;
+            position: absolute;
+            left: calc( 50% + 137px );
+            
+        }
+
+
+        #markListPivot{
+            width: 426px;
+            height: 427px;
+            z-index: 999;
+            position: absolute;
+            left: -333px;
+            top: -187px;
+            transform: rotate(0deg);
+        }
+
+        #markListBaro{
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            position: relative;
+            gap: 4px;
+            
+        }
+
+        .markBaro{
+            width: 23px;
+            height: 2px;
+            flex-shrink: 0; 
+            background-color: #fff; 
+            transform-origin: -190px center;
+            transform: rotate(0deg);
+            position: absolute;
+        }
+
+        .markBaro:first-child,
+        .markBaro:nth-child(5n+1){
+            height: 4px;
+        }
+
+
+
+
+        .markBaro[value]::after{
+            content: attr(value);
+            width: 64px;
+            text-align: right; 
+            height: 22px;
+            line-height: 20px;
+            direction: rtl;
+            font-size: 2em; 
+            display: block;
+            position: relative;
+            top: calc(-22px + 22px/2 + 4px/2);
+            right: calc(64px + 2px);
+        }
+
+
+
+
+
+        /* NEEDLE */
+        .needlePivot{
+            width: 1px;
+            height: 1px;
+            flex-shrink: 0;
+            transform-origin: center center;
+            transform: rotate(0deg);
+            position: absolute;
+        }
+
+
+        #needle1000{
+            width: 138px;
+            height: 34px;
+            background-color: #fff; 
+            transform: translateY(-50%);
+            position: relative;
+        }
+
+        #needle1000::after{
+            content: '';
+            display: block;
+            width: fit-content;
+            border: calc(34px/2) solid transparent;
+            border-left-color: #fff;
+            border-left-width: 34px;
+            position: absolute;
+            left: 100%;
+        }
+
+
+
+        #needle10000{
+            width: calc(266px + 1px);
+            height: 7px;
+            background-color: #fff;
+            transform: translateY(-50%);
+            position: relative;
+        }
+        #needle10000::after{
+            content: '';
+            display: block;
+            border: calc(58px/2) solid transparent;
+            border-right-color: #fff;
+            border-right-width: 49px;
+            transform-origin: center center;
+            transform: translateY(calc(-50% + 7px/2));
+        }
+
+
+ 
+
+
+        #needle100A{
+            width: 207px;
+            height: 24px;
+            background-color: #fff;
+            transform: translateY(-50%);
+            position: absolute;
+        }
+        #needle100A::after{
+            content: '';
+            display: block;
+            border: calc(24px/2) solid transparent;
+            border-left-color: #fff;
+            border-left-width: 20px;
+            position: absolute;
+            left: 100%;
+        }
+
+
+        #needle100B{
+            width: 40px;
+            height: 24px;
+            background-color: #000;
+            transform: translateY(-50%);
+            position: absolute;
+        }
+        #needle100B::after{
+            content: '';
+            display: block;
+            border: calc(24px/2) solid transparent;
+            border-left-color: #000;
+            border-left-width: 20px;
+            position: absolute;
+            left: 100%;
+        }
+
+
+
+        #needle100C{
+            width: 80px;
+            height: 24px;
+            background-color: #000;
+            transform: translate(-100%,-50%);
+            position: absolute;
+        }
+        #needle100C::after{
+            content: '';
+            display: block;
+            width: 38px;
+            height: 38px;
+            background-color: #000;
+            border-radius: 50%;
+            transform: translate(-8px, calc(-50% + 24px/2));
+        }
+
+
+
+        #needle100Disc{
+            width: 48px;
+            height: 48px;
+            background-color: #000;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            position: relative;
+        }
+        #needle100Disc::after{
+            content: '';
+            display: block;
+            width: 20px;
+            height: 20px;
+            background-color: #333;
+            border-radius: 50%;
+            margin: auto;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    <div id="main_screen">
+
+        <div id="frame">
+
+            <div id="baroKnob" angle="0"></div>
+
+            <div id="container">
+
+                <div id="markListBig"></div>
+                <div id="markListMini"></div>
+
+                <div id="fixedDisc">
+                    <div id="stripContainer">
+                        <div></div><div></div><div></div>
+                        <div></div><div></div><div></div>
+                    </div>
+                    <div id="stripContainerMask"></div>
+                    <div id="labelAlt">ALT</div>
+
+                </div>
+                
+                <div id="baroIndicator"></div>
+                
+
+                <div id="baroContainer">
+                    <div id="markListPivot">
+                        <div id="markListBaro"></div>
+                    </div>
+                </div>
+                
+
+                <div id="needleList">
+                    <div class="needlePivot">
+                        <div id="needle1000"></div>
+                    </div>
+                    <div class="needlePivot">
+                        <div id="needle10000"></div>
+                    </div>
+                    <div class="needlePivot">
+                        <div id="needle100A"></div>
+                        <div id="needle100B"></div>
+                        <div id="needle100C"></div>
+                        <div id="needle100Disc"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+        
+        
+        
+
+        const audioBuffer   = new Audio("tickClick.mp3");
+        var currentAltitude = 0;
+        var currentBaro     = 2800;
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+        function playTickClick(){
+            audioBuffer.currentTime = 0;
+            audioBuffer.play().catch(()=> console.warn("Erro ao reproduzir SFX."));
+        }
+
+
+        function generateBigMarks(){
+            markListBig.innerHTML = "";
+
+            for (let i = 0; i < 10; i++){
+                const angle = 360/10*i;
+                const value = (5 + i) % 10;
+                const markBig = document.createElement("div");
+                markBig.classList.add("markBig");
+                markBig.innerHTML = `<div>${value}</div>`;
+                markBig.firstElementChild.style.transform = `translateY(-60px) rotate(${-angle}deg)`;
+                markBig.style.transform = `translateY( calc(266px - 38px/2) ) rotate(${angle}deg)`;
+                markListBig.appendChild(markBig);
+            }
+
+        }
+
+
+        function generateMiniMarks(){
+            markListMini.innerHTML = "";
+
+            for (let i = 0; i < 50; i++){
+                if ( i%5 == 0 ){
+                    continue;
+                }
+                const angle = 360/50*i;
+                const markMini = document.createElement("div");
+                markMini.classList.add("markMini");
+                markMini.style.transform = `translateY( calc(266px - 28px/2) ) rotate(${angle}deg)`;
+                markListMini.appendChild(markMini);
+            }
+
+        }
+
+
+
+        function generateBaroMarks(){
+            markListBaro.innerHTML = "";
+            let value = 280;
+            const amountMarksBig = Math.abs(280 - 312) + 1;
+            const totalMarks = amountMarksBig * 5;
+
+            for (let i = 0; i < totalMarks; i++){
+                const markBaro = document.createElement("div");
+                markBaro.classList.add("markBaro");
+                markBaro.style.transform = `rotate(${360/totalMarks*i}deg)`;
+                if ( i%5 == 0 ){
+                    markBaro.setAttribute("value", (value/10).toFixed(1));
+                    value++;
+                }
+                markListBaro.appendChild(markBaro);
+            }
+
+        }
+
+
+
+        
+
+
+
+        
+
+        function setAltitude( altitudeValue = 0 ){
+            altitudeValue = Math.abs(altitudeValue);
+            needleList.children[2].style.transform = `rotate(${ map(altitudeValue%1000, 0, 1000-1, 0, 360)-90 }deg)`;     //    100
+            needleList.children[0].style.transform = `rotate(${ map(altitudeValue%10000, 0, 10000-1, 0, 360)-90 }deg)`;   //  1.000
+            needleList.children[1].style.transform = `rotate(${ map(altitudeValue%100000, 0, 100000-1, 0, 360)-90 }deg)`; // 10.000
+        }
+
+
+        // RANGE: 28.00 to 31.20 (2800 to 3120)
+        function setBaro( valueBaro ){
+            valueBaro = Math.clamp(valueBaro, 2800, 3120);
+            const index = 3120-valueBaro-320;
+            markListPivot.style.transform = `rotate(${ 360/165*index / 2 }deg)`;
+        }
+
+
+        onload = () => {
+            generateBigMarks();
+            generateMiniMarks();
+            generateBaroMarks();
+            setAltitude(currentAltitude);
+            setBaro(currentBaro);
+        };
+
+
+        baroKnob.onwheel = (event) => {
+            const delta = Math.sign(-event.deltaY);
+            currentBaro = Math.clamp(currentBaro+delta, 2800, 3120);
+            let newAngle = parseInt(baroKnob.getAttribute("angle")) + delta*10;
+            baroKnob.setAttribute("angle", newAngle);
+            baroKnob.style.transform = `translate(-50%, 50%) rotate(${newAngle}deg)`;
+            setBaro(currentBaro);
+            playTickClick();
+        };
+        
+
+
+        onkeydown = (event) => {
+
+            // ALTIMETER
+            if ( event.key == '1' ){
+                currentAltitude -= 10;
+                setAltitude(currentAltitude);
+            }else if ( event.key == '2' ){
+                currentAltitude += 10;
+                setAltitude(currentAltitude);
+            }
+            
+            // BARO
+            else if ( event.key == '3' ){
+                currentBaro = Math.clamp(currentBaro-1, 2800, 3120);
+                setBaro(currentBaro);
+            }else if ( event.key == '4' ){
+                currentBaro = Math.clamp(currentBaro+1, 2800, 3120);
+                setBaro(currentBaro);
+            }
+
+        };
+
+
+
+    </script>
+
+
+</body>
+</html>

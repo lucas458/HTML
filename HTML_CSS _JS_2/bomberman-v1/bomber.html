@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bomber v1</title>
+
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000;
+        }
+
+        html,body{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            user-select: none;
+        }
+
+
+        header{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header > button{
+            height: fit-content;
+            background-color: inherit;
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            margin: 8px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: 200ms;
+        }
+        header > button:active{
+            background-color: #dc3545;
+            color: #fff;
+            transition: 100ms;
+        }
+
+
+
+
+
+        #lcd{
+            width: 100%;
+            height: 100%;
+
+            max-width: 420px;
+            max-height: 420px;
+
+            
+
+            background-color: #212121;
+            border: 2px solid #fff;
+        }
+
+        
+
+
+        #gameArea{
+            display: flex;
+            flex-wrap: wrap;
+            background-color: #388700;
+        }
+
+
+        /* GENERIC BOX */
+        .box{
+            width: 32px;
+            height: 32px;
+            background-color: inherit;
+            position: relative;
+        }
+
+
+        .box-content{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            position: absolute;
+        }
+
+
+        .image{
+            width: 440px;
+            height: 747px;
+            pointer-events: none;
+            position: absolute;
+            top: 0px;
+            left: 0px
+            
+        }
+
+         
+
+
+
+        /* PLAYER */
+
+        .player{ 
+            z-index: 1;
+        }
+
+
+        .player-dir-left img{left: calc( -31px * 1);}
+        .player-dir-down img{left: calc( -31px * 4);}
+
+        .player-dir-right img{left: calc( -31px * 1);top: calc( -31px * 1);}
+        .player-dir-up img{left: calc( -31px * 4);top: calc( -31px * 1);}
+
+
+
+
+        /* UNBREAK */
+        .unbreakBox{ 
+        }
+        .unbreakBox img{
+            top: -94px;
+            left: -93px
+        }
+
+
+
+        /* BREAKALBE BOX */
+        .breakBox{ 
+        }
+        .breakBox img{
+            top: -94px;
+            left: -125px;
+        }
+        
+
+
+
+
+
+        /* ITEM COLECTABLE */
+        .item img{
+            top: calc( -436px );
+             
+        }
+
+
+        .item-bomb img{left: calc( -31px * 0);}
+        .item-fire img{left: calc( -31px * 1);}
+
+        
+
+
+
+
+
+        /* BOMB */
+        .bomb{ 
+        }
+
+
+        .bomb img{ top: -94px;}
+        .bomb-frame1 img{left: -62px;}
+        .bomb-frame2 img{left: -32px;}
+        .bomb-frame3 img{left: 0;}
+
+
+
+
+
+        /* FIRE FRAME 1 */
+        .bombFireCenter-frame1 img{top: calc( -31px * 6);left: calc( -31px * 2);}
+        .bombFireBody-frame1 img{top: calc( -31px * 5);left: calc( -31px * 2);}
+        .bombFireTail-frame1 img{top: calc( -31px * 4);left: calc( -31px * 2);}
+
+        /* FIRE FRAME 2 */
+        .bombFireCenter-frame2 img{top: calc( -31px * 6);left: calc( -31px * 7);}
+        .bombFireBody-frame2 img{top: calc( -31px * 5);left: calc( -31px * 7);}
+        .bombFireTail-frame2 img{top: calc( -32px * 4);left: calc( -31px * 7);}
+
+        /* FIRE FRAME 3 */
+        .bombFireCenter-frame3 img{top: calc( -31px * 11);left: calc( -31px * 2);}
+        .bombFireBody-frame3 img{top: calc( -31px * 10);left: calc( -31px * 2);}
+        .bombFireTail-frame3 img{top: calc( -31px * 9);left: calc( -31px * 2);}
+
+        /* FIRE FRAME 4 */
+        .bombFireCenter-frame4 img{top: calc( -31px * 11);left: calc( -31px * 7);}
+        .bombFireBody-frame4 img{top: calc( -31px * 10);left: calc( -31px * 7);}
+        .bombFireTail-frame4 img{top: calc( -31px * 9);left: calc( -31px * 7);}
+
+
+
+
+    </style>
+
+
+</head>
+
+
+<body>
+
+    
+    <header>
+        
+        <button onclick="location.reload()">RESET</button>
+
+    </header>
+
+    <div id="lcd">
+
+
+
+        
+
+
+        <div id="gameArea">
+
+            <!-- PLAYER -->
+            <div class="box">
+                <div class="box-content player player_0 player-dir-down"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            
+
+
+            <!-- UNBREAKABLE -->
+            <div class="box">
+                <div class="box-content unbreakBox collidier"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            <!-- BREAKABLE -->
+            <div class="box">
+                <div class="box-content breakBox collidier"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+
+
+
+
+
+            <!-- ITEM -->
+            <div class="box">
+                <div class="box-content item item-bomb"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            <div class="box">
+                <div class="box-content item item-fire"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+            <!-- BOMB -->
+            <div class="box">
+                <div class="box-content bomb collidier bomb-frame3"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            <div class="box">
+                <div class="box-content bomb collidier bomb-frame2"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            <div class="box">
+                <div class="box-content bomb collidier bomb-frame1"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+
+
+
+
+            <!-- FIRE FRAME 1 -->
+            <div class="box">
+                <div class="box-content bombFire bombFireCenter-frame1"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            <div class="box">
+                <div class="box-content bombFire bombFireBody-frame1"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            <div class="box">
+                <div class="box-content bombFire bombFireTail-frame1"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+
+
+            <!-- FIRE FRAME 2 -->
+            <div class="box">
+                <div class="box-content bombFire bombFireCenter-frame2"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            <div class="box">
+                <div class="box-content bombFire bombFireBody-frame2"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            <div class="box">
+                <div class="box-content bombFire bombFireTail-frame2"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+
+
+            <!-- FIRE FRAME 3 -->
+            <div class="box">
+                <div class="box-content bombFire bombFireCenter-frame3"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            <div class="box">
+                <div class="box-content bombFire bombFireBody-frame3"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            <div class="box">
+                <div class="box-content bombFire bombFireTail-frame3"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+
+
+            <!-- FIRE FRAME 4 -->
+            <div class="box">
+                <div class="box-content bombFire bombFireCenter-frame4"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            <div class="box">
+                <div class="box-content bombFire bombFireBody-frame4"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+            <div class="box">
+                <div class="box-content bombFire bombFireTail-frame4"> <img src="assets2.png" class="image"> </div>
+            </div>
+
+
+
+        </div>
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+    <script>
+
+
+         
+
+
+        var GAME = {
+
+            'isRunning': true,
+
+            'player': [
+
+                {
+                    'x':0,
+                    'y':0,
+                    'bombMax':1,
+                    'fireMax':1,
+
+                    'bombList': [
+                        //{'x':0,'y':0, 'time':0}
+                    ]
+                }
+
+            ]
+
+        };
+
+        
+
+
+        
+
+        let brickListIndex = [
+            3,5,7,8,9,
+            15,17,19,21,23,
+            27,28,29,30,31,32,33,34,36,37,
+            39,41,43,45,47,49,51,
+            52,53,54,55,56,57,58,59,60,62,63,64,
+            67,71,73,75,
+            78,79,80,81,82,83,84,86,88,89,90,
+            91,93,95,97,99,101,103,
+            105,106,107,108,109,110,111,112,113,115,
+            119,121,123,125,127,
+            133,134,136,138,139
+        ];
+
+        let itemFireIndex = [
+            3, 5, 39
+        ];
+
+
+        let itemBombIndex = [
+            15, 17
+        ];
+        
+        
+
+
+        function gerarMapa(){
+
+
+            document.getElementById("gameArea").innerHTML = '';
+
+
+
+            
+             
+
+
+            
+
+
+            
+
+
+            // SLOTS 
+            let lastIdx = 0;
+            let lastItemFireIdx = 0;
+            let lastItemBombIdx = 0;
+            for (let i = 0; i < 13*13 ; i++){
+
+
+                let x = i%13|0;
+                let y = i/13|0;
+
+                let item = document.createElement("div");
+                item.classList.add("box");
+                item.setAttribute("box-x", x);
+                item.setAttribute("box-y", y);
+                document.getElementById("gameArea").appendChild(item);
+
+
+                
+
+                // PUT PLAYER
+                if ( i == 0 ){
+                    item.innerHTML = `<div class="box-content player player_0 player-dir-down"> <img src="assets2.png" class="image"> </div>`;
+                }
+
+ 
+                // PUT SOLID WALL
+                if ( x%2==1 && y%2==1 ){
+                    item.innerHTML = `<div class="box-content unbreakBox collidier"> <img src="assets2.png" class="image"> </div>`;
+                }
+                
+                
+                // ITEM FIRE
+                let itemType = '';
+                if ( i == itemFireIndex[lastItemFireIdx] ){
+                    console.log("item-fire", i);
+                    lastItemFireIdx++;
+                    itemType = 'hide-item-fire';
+                }
+
+                // ITEM BOMB
+                if ( i == itemBombIndex[lastItemBombIdx] ){
+                    console.log("item-bomb", i);
+                    lastItemBombIdx++;
+                    itemType = 'hide-item-bomb';
+                }
+
+
+
+                // PUT BREAKABLE BRICK
+                if ( i == brickListIndex[lastIdx] ){
+                    item.innerHTML = `<div class="box-content breakBox collidier ${itemType}"> <img src="assets2.png" class="image"> </div>`;
+                    lastIdx++;
+                }
+ 
+
+                //document.querySelectorAll('.image').forEach((el)=>{el.src="https://www.spriters-resource.com/resources/sheets/8/7884.png?updated=1536535237"});
+            }
+
+ 
+        }
+
+
+        gerarMapa();
+
+
+
+
+
+
+        function hasHideFire(x, y){
+            let foundIdx = -1;
+            for (let i = 0; i < itemFireIndex.length; i++){
+                if ( itemFireIndex[i] == x+y*13 ){
+                    putItem(x, y, 'fire');
+                    foundIdx = i;
+                }
+            }
+
+            if (foundIdx >= 0 ){
+                itemFireIndex.splice(foundIdx, 1);
+            }
+        }
+
+
+
+        function hasHideBomb(x, y){
+            let foundIdx = -1;
+            for (let i = 0; i < itemBombIndex.length; i++){
+                if ( itemBombIndex[i] == x+y*13 ){
+                    putItem(x, y, 'bomb');
+                    foundIdx = i;
+                }
+            }
+
+            if (foundIdx >= 0 ){
+                itemBombIndex.splice(foundIdx, 1);
+            }
+        }
+
+
+        
+
+
+
+
+
+
+        // EXPLODE
+        
+        let flag_kill = false;
+        function explodePosition(x,y,size,frame){
+            
+      
+            let flagXPlus = true;
+            let flagXMinus = true;
+            let flagYPlus = true;
+            let flagYMinus = true;
+            
+            
+            
+            list = document.querySelectorAll("#gameArea > .box");
+            
+            
+       
+            
+
+             
+
+            
+            
+            
+            
+            
+            for (let i = 0; i < size+1; i++){
+
+
+                // CENTER
+                if (i == 0){
+                    
+
+                    if ( frame == 0 ){
+                        let index = x + (y*13);
+                        for (let i = 0; i < list[index].children.length; i++){
+                            if ( list[index].children[i].classList.contains("bombFire") ){
+                                list[index].children[i].remove();
+                            }
+                        }
+                    }
+                    else{
+                        list[x+y*13].innerHTML = `<div class="box-content bombFire bombFireCenter-frame${frame}"> <img src="assets2.png" class="image"> </div>`;
+                    }
+
+                }
+
+                // ARROUND CENTER
+                else{
+                
+                    // RIGHT
+                    if ( x + i < 13 && flagXPlus ){
+                        if ( list[x+i+y*13].querySelector('.unbreakBox') != null ){
+                            flagXPlus = false;
+                        }
+                        else{
+                            
+                            if (frame == 0){
+                                let idx = x+i+y*13; 
+                                for (let i = 0; i < list[idx].children.length; i++){   
+                                    if ( list[idx].children[i].classList.contains("bombFire") ){
+                                        hasHideFire(idx%13|0, idx/13|0);
+                                        hasHideBomb(idx%13|0, idx/13|0);
+                                        list[idx].children[i].remove();                                         
+                                    }
+                                }
+                            }
+                            else{
+                                if ( i >= size || x+i >= 13-1 ){list[x+i+y*13].innerHTML = `<div class="box-content bombFire bombFireTail-frame${frame}" style="transform: rotate(90deg)"> <img src="assets2.png" class="image" > </div>`;}
+                                else{list[x+i+y*13].innerHTML = `<div class="box-content bombFire bombFireBody-frame${frame}" style="transform: rotate(90deg)"> <img src="assets2.png" class="image"> </div>`;}
+                            }
+
+                            
+                        }
+                    }
+                    
+                    // LEFT    
+                    if ( x-i >= 0 && flagXMinus ){
+                        if ( list[x-i+y*13].querySelector('.unbreakBox') != null ){
+                            flagXMinus = false;
+                        }
+                        else{
+
+                            if ( frame == 0 ){
+                                let idx = x-i+y*13;
+                                for (let i = 0; i < list[idx].children.length; i++){
+                                    if ( list[idx].children[i].classList.contains("bombFire") ){
+                                        hasHideFire(idx%13|0, idx/13|0);
+                                        hasHideBomb(idx%13|0, idx/13|0);
+                                        list[idx].children[i].remove();
+                                    }
+                                }
+                            }
+                            else{
+                                if ( i >=size || x-i <= 0 ){list[x-i+y*13].innerHTML = `<div class="box-content bombFire bombFireTail-frame${frame}" style="transform: rotate(-90deg)"> <img src="assets2.png" class="image"> </div>`;}
+                                else{list[x-i+y*13].innerHTML = `<div class="box-content bombFire bombFireBody-frame${frame}" style="transform: rotate(90deg)"> <img src="assets2.png" class="image"> </div>`;}
+                            }
+
+                                
+                        }
+                    }
+
+
+                    
+                    
+                    // BOTTOM     
+                    if ( y+i < 13 && flagYPlus ){
+                        if ( list[x+(y+i)*13].querySelector('.unbreakBox') != null ){
+                            flagYPlus = false;
+                        }
+                        else{
+
+                            if ( frame == 0 ){
+                                let idx = x+(y+i)*13;
+                                for (let i = 0; i < list[idx].children.length; i++){
+                                    if ( list[idx].children[i].classList.contains("bombFire") ){
+                                        hasHideFire(idx%13|0, idx/13|0);
+                                        hasHideBomb(idx%13|0, idx/13|0);
+                                        list[idx].children[i].remove();
+                                    }
+                                }
+                            }
+                            else{
+                                if ( i >= size || y+i >= 13-1){list[x+(y+i)*13].innerHTML = `<div class="box-content bombFire bombFireTail-frame${frame}" style="transform: rotate(180deg)"> <img src="assets2.png" class="image"> </div>`;}
+                                else{list[x+(y+i)*13].innerHTML = `<div class="box-content bombFire bombFireBody-frame${frame}"> <img src="assets2.png" class="image"> </div>`;}
+                            }
+                            
+                        }
+                    }
+                    
+
+
+
+
+                    // TOP   
+                    if ( y-i >= 0 && flagYMinus ){
+                        if ( list[x+(y-i)*13].querySelector('.unbreakBox') != null ){
+                            flagYMinus = false;
+                        }
+                        else{
+
+                            if ( frame == 0 ){
+                                let idx = x+(y-i)*13;
+                                for (let i = 0; i < list[idx].children.length; i++){
+                                    if ( list[idx].children[i].classList.contains("bombFire") ){
+                                        hasHideFire(idx%13|0, idx/13|0);
+                                        hasHideBomb(idx%13|0, idx/13|0);
+                                        list[idx].children[i].remove();
+                                    }
+                                }
+                            }
+                            else{
+                                if ( i>= size || y-i <= 0 ){list[x+(y-i)*13].innerHTML = `<div class="box-content bombFire bombFireTail-frame${frame}"> <img src="assets2.png" class="image"> </div>`;}
+                                else{list[x+(y-i)*13].innerHTML = `<div class="box-content bombFire bombFireBody-frame${frame}"> <img src="assets2.png" class="image"> </div>`;}
+
+                            }
+
+                            
+                        }
+                    } 
+                    
+                    
+
+                    document.querySelectorAll('.image').forEach((el)=>{el.src="https://www.spriters-resource.com/resources/sheets/8/7884.png?updated=1536535237"});
+                    // MATOU NA CRIAÇÃO DA EXPLOSAO?
+
+                    
+                    
+                    
+                    if ( document.querySelector("#lcd .box .player_0") == null ){
+                        if ( flag_kill ){continue;}
+                        console.warn("MATOU");
+                        flag_kill = true;
+
+                    }
+                
+
+
+                
+                }
+            }
+            
+
+
+
+
+
+
+
+            if ( document.querySelectorAll(".breakBox").length == 0 && GAME.isRunning ){
+                GAME.isRunning = false;
+                console.warn("WIINNER");
+            }
+
+
+            
+            
+        
+        }
+        // END EXPLODE
+
+ 
+
+        //explodePosition(8, 10, 2, 1);
+
+
+
+
+
+        function setBombIcon(x,y, frame){
+
+            
+
+            let index = x + (y*13);
+
+            console.log(index);
+
+            let list = document.querySelectorAll('#lcd .box');
+
+            for (let i = 0; i < list[index].children.length; i++){
+                if ( list[index].children[i].classList.contains("bomb") ){
+                    list[index].children[i].remove();
+                }   
+            }
+            if ( index >= 0 && index <= list.length ){
+
+                
+                if ( frame != 0 ){
+                    
+                    list[index].innerHTML += `<div class="box-content bomb collidier bomb-frame${frame}"> <img src="assets2.png" class="image"> </div>`;
+                    document.querySelectorAll('.image').forEach((el)=>{el.src="https://www.spriters-resource.com/resources/sheets/8/7884.png?updated=1536535237"});
+                }
+
+            }
+
+
+        }
+        
+
+
+        
+
+        var TIMER_BOMB = null;
+
+
+
+
+
+
+
+       
+
+
+        function animateExplode(x, y, size){
+
+
+            let pattern = [1,2,3,4,3,2,1,0];
+
+            for (let i = 1; i < pattern.length; i++){
+
+                setTimeout(()=>{
+                    
+                    explodePosition(x,y, size, pattern[i] );
+                    
+                }, 100*i);
+
+            }
+
+        }
+
+        
+
+
+
+
+
+        function bombClock(){
+
+
+            for (let i = 0; i < GAME.player[0].bombList.length; i++){
+
+
+                setBombIcon(
+                    GAME.player[0].bombList[i].x,
+                    GAME.player[0].bombList[i].y,
+                    GAME.player[0].bombList[i].time%3+1);
+
+                GAME.player[0].bombList[i].time--;
+
+
+                if ( GAME.player[0].bombList[0].time <= 0 ){
+                    console.warn("BOOOM");    
+                    animateExplode(GAME.player[0].bombList[i].x, GAME.player[0].bombList[i].y, GAME.player[0].fireMax);
+                    GAME.player[0].bombList.splice(0, 1);
+                }
+
+                if (GAME.player[0].bombList.length == 0){
+                    clearInterval(TIMER_BOMB);
+                    TIMER_BOMB = null;
+                }
+
+            }
+
+        }
+
+        
+
+        function bombPosition(x , y, player){
+
+
+            
+            /*for (let i = 0; i < GAME.player[player].bombList.length; i++){
+                if ( GAME.player[player].bombList[i].x == x && GAME.player[player].bombList[i].y == y ){
+                    console.warn("NAO PODE COLOCAR BOMBA NO MESMO LUGAR");
+                    return;
+                }
+            }*/
+
+
+
+
+
+            GAME.player[player].bombList.push({
+                'x':x,
+                'y':y,
+                'time': 10,
+                'on': false,
+            });
+
+            
+            if ( TIMER_BOMB == null ){
+                TIMER_BOMB = setInterval(bombClock, 100);
+            }
+
+            
+
+            console.log("BOMBA: ", GAME.player[player].bombList[GAME.player[player].bombList.length-1]);
+            
+
+        }
+
+
+
+
+
+
+
+
+
+        function player1_move( dir ){
+
+
+            let tempItem = '';
+
+            let list = document.querySelectorAll('#lcd .box');
+
+            let actualIdx =  GAME.player[0].x + (GAME.player[0].y*13);
+
+            // UP
+            if ( dir == "up" ){
+                //document.querySelector(".player_0").parentNode.innerHTML = `<div class="box-content player player_0 player-dir-up"> <img src="assets2.png" class="image"> </div>`;
+
+
+                if ( GAME.player[0].y > 0 ){
+                    console.log("POSSO MOVER - UP");
+
+                    // CAIXA (QUEBRAVEL OU INQUEBRAVEL)
+                    for (let i = 0; i < list[actualIdx-13].children.length; i++){
+                        if ( list[ actualIdx-13 ].children[i].classList.contains("collidier") ){
+                            console.log("xx");
+                            return;
+                        }
+
+                        if ( list[ actualIdx-13 ].children[i].classList.contains("item") ){
+                            console.log("ITEM");
+                            if ( list[ actualIdx-13 ].children[i].classList.contains("item-fire") ){
+                                GAME.player[0].fireMax += 1;
+                                console.warn("+1 fire")
+                            }
+                            else if ( list[ actualIdx-13 ].children[i].classList.contains("item-bomb") ){
+                                GAME.player[0].bombMax += 1;
+                                console.warn("+1 bomb");
+                            }
+                            list[ actualIdx-13 ].children[i].remove();
+                        }
+
+                    }
+
+                    // MOVER
+                    for (let i = 0; i < list[ actualIdx ].children.length; i++ ){
+
+                        if ( list[ actualIdx ].children[i].classList.contains("player_0") ){
+                            list[ actualIdx ].children[i].remove();
+                            GAME.player[0].y -= 1;
+                            list[ actualIdx - 13 ].innerHTML += `<div class="box-content player player_0 player-dir-up"> <img src="assets2.png" class="image"> </div>`;
+                            document.querySelectorAll('.image').forEach((el)=>{el.src="https://www.spriters-resource.com/resources/sheets/8/7884.png?updated=1536535237"});
+                        }
+
+                    }
+
+
+                }
+                else{
+                    console.warn("LIMITE - UP");
+                }
+
+
+            }
+
+
+            // DOWN
+            else if ( dir == "down" ){
+                //document.querySelector(".player_0").parentNode.innerHTML = `<div class="box-content player player_0 player-dir-down"> <img src="assets2.png" class="image"> </div>`;
+
+                if ( GAME.player[0].y < 13-1 ){
+                    console.log("POSSO MOVER - DOWN");
+
+
+                    // CAIXA (QUEBRAVEL OU INQUEBRAVEL)
+                    for (let i = 0; i < list[actualIdx+13].children.length; i++){
+                        if ( list[ actualIdx+13 ].children[i].classList.contains("collidier")  ){
+                            console.log("xx");
+                            return;
+                        }
+
+                        if ( list[ actualIdx+13 ].children[i].classList.contains("item") ){
+                            console.log("ITEM");
+                            if ( list[ actualIdx+13 ].children[i].classList.contains("item-fire") ){
+                                GAME.player[0].fireMax += 1;
+                                console.warn("+1 fire")
+                            }
+                            else if ( list[ actualIdx+13 ].children[i].classList.contains("item-bomb") ){
+                                GAME.player[0].bombMax += 1;
+                                console.warn("+1 bomb");
+                            }
+                            list[ actualIdx+13 ].children[i].remove();
+                        }
+
+                    }
+
+
+
+
+                    // MOVER
+                    for (let i = 0; i < list[ actualIdx ].children.length; i++ ){
+
+                        if ( list[ actualIdx ].children[i].classList.contains("player_0") ){
+                            list[ actualIdx ].children[i].remove();
+                            GAME.player[0].y += 1;
+                            list[ actualIdx + 13 ].innerHTML += `<div class="box-content player player_0 player-dir-down"> <img src="assets2.png" class="image"> </div>`;
+                            document.querySelectorAll('.image').forEach((el)=>{el.src="https://www.spriters-resource.com/resources/sheets/8/7884.png?updated=1536535237"});
+
+                        }
+
+                    }
+
+                }
+                else{
+                    console.warn("LIMITE - DOWN");
+                }
+
+            }
+
+
+            // LEFT
+            else if ( dir == "left" ){
+                //document.querySelector(".player_0").parentNode.innerHTML = `<div class="box-content player player_0 player-dir-left"> <img src="assets2.png" class="image"> </div>`;
+
+                if ( GAME.player[0].x > 0 ){
+                    console.log("POSSO MOVER - LEFT");
+
+                    // CAIXA (QUEBRAVEL OU INQUEBRAVEL)
+                    for (let i = 0; i < list[actualIdx-1].children.length; i++){
+                        if ( list[ actualIdx-1 ].children[i].classList.contains("collidier") ){
+                            console.log("xx");
+                            return;
+                        }
+
+                        if ( list[ actualIdx-1 ].children[i].classList.contains("item") ){
+                            console.log("ITEM");
+                            if ( list[ actualIdx-1 ].children[i].classList.contains("item-fire") ){
+                                GAME.player[0].fireMax += 1;
+                                console.warn("+1 fire")
+                            }
+                            else if ( list[ actualIdx-1 ].children[i].classList.contains("item-bomb") ){
+                                GAME.player[0].bombMax += 1;
+                                console.warn("+1 bomb");
+                            }
+                            list[ actualIdx-1 ].children[i].remove();
+                        }
+                    }
+
+                    // MOVER
+                    for (let i = 0; i < list[ actualIdx ].children.length; i++ ){
+
+                        if ( list[ actualIdx ].children[i].classList.contains("player_0") ){
+                            list[ actualIdx ].children[i].remove();
+                            GAME.player[0].x -= 1;
+                            list[ actualIdx - 1 ].innerHTML += `<div class="box-content player player_0 player-dir-left"> <img src="assets2.png" class="image"> </div>`;
+                            document.querySelectorAll('.image').forEach((el)=>{el.src="https://www.spriters-resource.com/resources/sheets/8/7884.png?updated=1536535237"});
+                        }
+
+                    }
+
+                }
+                else{
+                    console.warn("LIMITE - LEFT");
+                }
+
+            }
+
+
+            // RIGHT
+            else if ( dir == "right" ){
+                //document.querySelector(".player_0").parentNode.innerHTML = `<div class="box-content player player_0 player-dir-right"> <img src="assets2.png" class="image"> </div>`;
+
+                if ( GAME.player[0].x < 13-1 ){
+                    console.log("POSSO MOVER - RIGHT");
+
+
+
+                    // CAIXA (QUEBRAVEL OU INQUEBRAVEL)
+                    for (let i = 0; i < list[actualIdx+1].children.length; i++){
+                        if ( list[ actualIdx+1 ].children[i].classList.contains("collidier") ){
+                            console.log("xx");
+                            return;
+                        }
+
+                        if ( list[ actualIdx+1 ].children[i].classList.contains("item") ){
+                            console.log("ITEM");
+                            if ( list[ actualIdx+1 ].children[i].classList.contains("item-fire") ){
+                                GAME.player[0].fireMax += 1;
+                                console.warn("+1 fire")
+                            }
+                            else if ( list[ actualIdx+1 ].children[i].classList.contains("item-bomb") ){
+                                GAME.player[0].bombMax += 1;
+                                console.warn("+1 bomb");
+                            }
+                            list[ actualIdx+1 ].children[i].remove();
+                        }
+
+                    }
+
+
+                    // MOVER
+                    for (let i = 0; i < list[ actualIdx ].children.length; i++ ){
+                        if ( list[ actualIdx ].children[i].classList.contains("player_0") ){
+                            list[ actualIdx ].children[i].remove();
+                            GAME.player[0].x += 1;
+                            list[ actualIdx + 1 ].innerHTML += `<div class="box-content player player_0 player-dir-right"> <img src="assets2.png" class="image"> </div>`;
+                            document.querySelectorAll('.image').forEach((el)=>{el.src="https://www.spriters-resource.com/resources/sheets/8/7884.png?updated=1536535237"});
+                        }
+                    }
+
+                }
+                else{
+                    console.warn("LIMITE - RIGHT");
+                }
+
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+        function putItem(x,y, type){
+            let index = x + y*13;
+            let list = document.querySelectorAll("#lcd .box");
+            list[index].innerHTML += `<div class="box-content item item-${type}"> <img src="assets2.png" class="image"> </div>`;
+			document.querySelectorAll('.image').forEach((el)=>{el.src="https://www.spriters-resource.com/resources/sheets/8/7884.png?updated=1536535237"});
+        }
+
+
+        
+        
+
+
+
+
+
+
+        
+
+        window.addEventListener("keydown", (e)=>{
+
+            
+
+            
+
+
+            let player_0 = document.querySelector(".player_0");
+
+            
+
+            if ( e.key == "ArrowUp" ){
+                console.log("UP 1");
+
+                player1_move("up");
+            }
+
+
+
+            else if ( e.key == "ArrowDown" ){
+                console.log("DOWN 1");
+                player1_move("down");
+            }
+
+
+
+            else if ( e.key == "ArrowLeft" ){
+                console.log("LEFT 1");
+                player1_move("left");
+            }
+
+
+            else if ( e.key == "ArrowRight" ){
+                console.log("RIGHT 1");
+                player1_move("right");
+            }
+
+            // SPACE
+            if ( e.keyCode == 32 ){
+                console.log("BOMB 1");
+
+                if ( GAME.player[0].bombList.length < GAME.player[0].bombMax ){
+                    bombPosition(GAME.player[0].x, GAME.player[0].y, 0);
+                }
+
+                
+
+            }
+
+
+
+
+        });
+
+
+	
+	
+	
+	
+			
+			
+			
+		 
+
+
+
+
+    </script>
+
+
+
+
+</body>
+</html>

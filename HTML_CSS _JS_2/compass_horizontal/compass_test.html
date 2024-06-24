@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        #compass{
+            width: 64px;
+            height: 48px;
+            background-image: url("compass_strip.png");
+            background-position-x: 50%;
+            background-color: red;
+        }
+ 
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+    <div id="compass"></div>
+
+
+ 
+    <input type="range" min="0" max="360" value="180" oninput="inputHandler(this)">
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+
+        var heading = 180;
+
+        var compass = document.getElementById("compass");
+
+
+        function inputHandler( input ){
+            heading = parseInt(input.value);
+            updateCompass();
+        }
+
+        function updateCompass(){
+            compass.style.backgroundPositionX = map(heading,0,360, 0, 100) + '%'
+            // console.log(heading);
+        }
+
+
+        function update(){
+            requestAnimationFrame(update);
+            heading = (heading + 2) % 322;
+            updateCompass();
+        }
+
+        update();
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

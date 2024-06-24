@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+	
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        @font-face {
+            font-family: HUDFont;
+            src: url("AirbusDisp.ttf");
+        }
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            font-family: "HUDFont";
+            flex-direction: column;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #container{
+            display: flex;
+            align-items: center;
+            border: 1px solid #0f0;
+            color: #0f0;
+        }
+        
+        .digitGroup, .digitGroupBig{
+            overflow: hidden;
+        }
+
+        .digitGroup{
+            height: calc(25px*3); 
+        }
+        .digitGroupSingle{
+            height: 25px;
+        }
+
+        .digitGroupBig{
+            height: 36px;
+            font-size: 36px;
+            /* background-color: rebeccapurple; */
+        }
+ 
+        .miniDigit{
+            font-size: 24px;
+        }
+
+        .bigDigit, .miniDigit{
+            text-align: center;
+        }
+
+        .moveable{
+            transform: translateY(0px);
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+        <div id="valor">0</div>
+		
+        <div id="container">
+            
+            <div class="digitGroupBig">
+                <div class="moveable">
+                    <div class="bigDigit">0</div>
+                    <div class="bigDigit">9</div>
+                    <div class="bigDigit">8</div>
+                    <div class="bigDigit">7</div>
+                    <div class="bigDigit">6</div>
+                    <div class="bigDigit">5</div>
+                    <div class="bigDigit">4</div>
+                    <div class="bigDigit">3</div>
+                    <div class="bigDigit">2</div>
+                    <div class="bigDigit">1</div>
+                    <div class="bigDigit">0</div>
+                </div>
+            </div>
+            
+            <div class="digitGroupBig">
+                <div class="moveable">
+                    <div class="bigDigit">0</div>
+                    <div class="bigDigit">9</div>
+                    <div class="bigDigit">8</div>
+                    <div class="bigDigit">7</div>
+                    <div class="bigDigit">6</div>
+                    <div class="bigDigit">5</div>
+                    <div class="bigDigit">4</div>
+                    <div class="bigDigit">3</div>
+                    <div class="bigDigit">2</div>
+                    <div class="bigDigit">1</div>
+                    <div class="bigDigit">0</div>
+                </div>
+            </div>
+
+            <div class="digitGroup digitGroupSingle">
+                <div class="moveable">
+                    <div class="miniDigit">0</div>
+                    <div class="miniDigit">9</div>
+                    <div class="miniDigit">8</div>
+                    <div class="miniDigit">7</div>
+                    <div class="miniDigit">6</div>
+                    <div class="miniDigit">5</div>
+                    <div class="miniDigit">4</div>
+                    <div class="miniDigit">3</div>
+                    <div class="miniDigit">2</div>
+                    <div class="miniDigit">1</div>
+                    <div class="miniDigit">0</div>
+                </div>
+            </div>
+
+            <div class="digitGroup digitGroupDual">
+                <div class="moveable">
+                    <div class="miniDigit">20</div>
+                    <div class="miniDigit">00</div>
+                    <div class="miniDigit">80</div>
+                    <div class="miniDigit">60</div>
+                    <div class="miniDigit">40</div>
+                    <div class="miniDigit">20</div>
+                    <div class="miniDigit">00</div>
+                    <div class="miniDigit">80</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+		
+		var altitude = 0;
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        }; 
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+		
+        function getGraphOffetY( stepY = 25, thX = 90, thX2 = 100, valueX = 0 ){
+            const segmentIndex = Math.trunc(valueX / thX2);
+			let currentY = valueX % thX2;
+
+            if ( currentY <= thX ){
+                currentY = thX;
+            }
+			
+            return stepY * segmentIndex + map(currentY, thX, thX2, 0, stepY);
+
+        }
+		
+		
+		
+        function setAltitude( value ){
+            altitude = Math.clamp(value, 0, 60000); 
+            valor.innerHTML = altitude;
+
+            document.querySelectorAll('.digitGroupBig')[0].firstElementChild.style.transform = `translateY(${ getGraphOffetY(36, 10000-10, 10000, altitude % (10000*10) ) + (-36*10) }px)`;
+            document.querySelectorAll('.digitGroupBig')[1].firstElementChild.style.transform = `translateY(${ getGraphOffetY(36, 1000-10, 1000, altitude % (1000*10) ) + (-36*10) }px)`;
+            document.querySelector(".digitGroupSingle>div").style.transform = `translateY(${ getGraphOffetY(25, 90, 100, altitude % (100*10) ) + (-25*10) }px)`;
+            document.querySelector(".digitGroupDual>div").style.transform = `translateY(${ getGraphOffetY(25, 0, 20, altitude%100  ) + (-25*5) }px)`;
+
+        }
+		
+		
+		
+        onkeydown = (event) => {
+            if ( event.key == '1' ){
+                setAltitude(altitude-1);
+                return;
+            }else if ( event.key == '2' ){
+                setAltitude(altitude+1);
+                return;
+            }
+        };
+
+
+        setAltitude(0);
+		
+		
+    </script>
+
+</body>
+</html>

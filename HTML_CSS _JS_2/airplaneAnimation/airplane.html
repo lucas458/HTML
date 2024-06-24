@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+        
+        #airplane{
+            transform-origin: center center;
+            transform: translateY(0px) rotate(0deg); 
+        } 
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+    <div id="main_screen">
+        <img id="airplane" width="150" src="airplane.png"/> 
+    </div>
+    
+    <script>
+        var angle = 0; 
+        function update(){
+            requestAnimationFrame(update);
+            angle = (angle + 2) % 360;
+            airplane.style.transform = `translateY(${Math.sin(angle * Math.PI / 180) * 50}px) rotate(${Math.cos(angle * Math.PI / 180) * 45}deg)`;
+        }
+        update();
+    </script>
+
+
+</body>
+</html>
