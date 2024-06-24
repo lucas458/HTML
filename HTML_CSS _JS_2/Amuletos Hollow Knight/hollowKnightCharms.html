@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amuletos Hollow Knight</title>
+
+    
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif; 
+            background-color: #090911;
+            color: #fff;
+			user-select: none;
+            cursor: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex; 
+            padding: 16px;
+            gap: 16px;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+        }
+        
+
+
+        /* CURRENT CHARMS */
+        #currentCharmList{
+            width: 100%;
+            padding-left: 16px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .currentCharmListFull .currentCharmSlot:last-child{
+            display: none;
+        }
+
+        .currentCharmSlot{
+            width: 64px;
+            height: 64px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .currentCharmImage{
+            width: 100%;
+            height: 100%; 
+            visibility: hidden;
+            background-image: url("charms/Void_Heart.webp");
+            background-size: 100% 100%;
+        }
+
+        .currentCharmSlotUsed .currentCharmImage{
+            visibility: visible !important;
+        }
+
+        .charmSlotNext{
+            width: 24px;
+            height: 24px;
+            background-image: url("slot_free.jpg");
+            background-size: 100%;
+            border-radius: 80%;
+            position: absolute;
+            z-index: -1;
+        }
+        
+
+
+        /* LABEL */
+        #labelEncaixes{
+            width: 100%;
+            padding: 0 16px;
+            margin-top: 24px;
+            margin-bottom: 8px;
+        }
+        
+
+
+        /* USED SLOT INDICATOR */
+        #slotUsedList{
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            padding: 0 16px;
+        }
+
+        .slotStatus{
+            width: 16px;
+            height: 16px;
+            background-image: url("slot_free.jpg");
+            background-size: 100%;
+        }
+        
+        .slotStatusUsed{
+            background-image: url("slot_used.jpg");
+        }
+
+        .slotStatusOverloaded{
+            background-image: url("slot_overloaded.jpg");
+        }
+        
+
+        /* ALL CHARMS GRID */
+        #charmList .charmRow:nth-child(even){
+            padding-left: 32px;
+        }
+
+        .charmRow{
+            margin: 10px 0;
+        }
+
+        .charm{
+            width: 64px;
+            height: 64px; 
+            background-size: 100% 100%;
+            flex-shrink: 0; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .charmUsed{
+            opacity: 0.3;
+        }
+
+        .charmRow{
+            display: flex;
+            gap: 10px;
+        }
+        
+
+
+        #separator{
+            width: 100%;
+            height: 4px;
+            margin: 10px 0 16px;
+            border-radius: 100%;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+        }
+        
+
+
+        #contentRight{
+            height: 500px;
+            width: 100%; 
+            display: flex;
+            flex-direction: column; 
+            align-items: center;
+            position: relative;
+        }
+
+
+        #charmLabel{
+            font-size: 1.5em;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        #charmWeightWrapper{
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+        }
+
+        #charmWeightList{
+            display: flex;
+            gap: 10px;
+        }
+
+
+
+
+
+        #charmImage{
+            width: 64px;
+            height: 64px;
+            background-size: 100% 100%; 
+            margin: 16px 0;
+            flex-shrink: 0;
+        }
+
+        #charmDescription{
+            height: 100%;
+            width: 100%; 
+            padding: 0 16px; 
+        }
+        #charmDescription div:first-child{
+            margin-bottom: 16px;
+        } 
+
+
+
+
+        /* GRIMM FIRE */
+        #grimmFireList{
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+            gap: 24px;
+        }
+        #grimmFireList div{
+            width: 30px;
+            height: 51px;
+            flex-shrink: 0;
+            background-image: url("grimm_fire.jpg");
+        }
+
+
+
+        #selector{
+            width: 75px;
+            height: 75px;
+            background-image: url("selector.png");
+            background-repeat: no-repeat;
+            background-size: 100%; 
+            visibility: hidden;
+            pointer-events: none;
+            animation: 1s pulse infinite;
+            transition: 200ms;
+            z-index: 5;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        @keyframes pulse {
+            0%{transform: scale(1.2);}
+            50%{transform: scale(1);}
+            100%{transform: scale(1.2);}
+        }
+        
+
+
+        .selectorActive{  
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .charmUsed:not(.selectorActive)::after,
+        .selectorActive::after{
+            content: '';
+            display: block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #76767680;
+            box-shadow: 0 0 20px 16px #76767680;
+            z-index: -2;
+            position: absolute;
+        }
+        
+        .selectorActive::after{
+            background-color: #007bff80;
+            box-shadow: 0 0 20px 16px #007bff80;
+        }
+        
+
+
+
+        #cursor{
+            width: 32px;
+            height: 32px;
+            background-image: url("cursor.png");
+            pointer-events: none;
+            z-index: 99;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+
+
+        #charmAnimation{
+            width: 64px;
+            height: 64px;
+            background-size: 100% 100%;
+            flex-shrink: 0;
+            /* background-color: green; */
+            z-index: 10;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+
+    </style>
+
+
+</head>
+
+
+
+<body oncontextmenu="return false;">
+    
+
+    <div id="main_screen">
+        <div id="cursor"></div>
+        <div id="selector"></div>
+        <div id="charmAnimation"></div>
+
+        <div id="contentLeft">
+
+            <div id="currentCharmList"></div>
+            <div id="labelEncaixes">Encaixes</div>
+
+            <div id="slotUsedList">
+                <div class="slotStatus"></div>
+                <div class="slotStatus"></div>
+                <div class="slotStatus"></div>
+                <div class="slotStatus"></div>
+                <div class="slotStatus"></div>
+                <div class="slotStatus"></div>
+                <div class="slotStatus"></div>
+                <div class="slotStatus"></div>
+                <div class="slotStatus"></div>
+                <div class="slotStatus"></div>
+                <div class="slotStatus"></div>
+            </div>
+
+            <div id="separator"></div>
+            <div id="charmList"></div>
+
+        </div>
+
+        <div id="contentRight">
+            <div id="charmLabel"></div>
+            <div id="charmWeightWrapper">
+                <div>Custo </div>
+                <div id="charmWeightList"></div>
+            </div>
+            <div id="charmImage"></div>
+            <div id="charmDescription"></div>
+        </div>
+
+    </div>
+    
+
+
+    <script>
+        
+
+        const CHARM_LIST = [
+            
+            {
+                name: "Wayward_Compass",
+                weight: 1,
+                label: "Bússola Caprichosa",
+                description: "Sussura sua localização ao portador sempre que o mapa estiver aberto, permitindo que os aventureiros identifiquem sua localização atual.",
+                icon: "charms/Wayward_Compass.webp"
+            },
+            {
+                name: "Gathering_Swarm",
+                weight: 1,
+                label: "Enxame de Colecionadores",
+                description: "<div>Um enxame seguirá o portador e coletará quaisquer Geo deixado no chão.</div><div>Útil para aqueles que não conseguem deixar nada para trás, por mais insignificante que seja.</div>",
+                icon: "charms/Gathering_Swarm.webp"
+            },
+            {
+                name: "Stalwart_Shell",
+                weight: 2,
+                label: "Carapaça Robusta",
+                description: "<div>Aumenta a resistência. Ao se recuperar de danos, o portador permanecerá invulnerável por mais tempo.</div> <div>Facilita a fuga de situações perigosas.</div>",
+                icon: "charms/Stalwart_Shell.webp"
+            },
+            {
+                name: "Soul_Catcher",
+                weight: 2,
+                label: "Apanhador de Almas",
+                description: "<div>Usado pelos xamãs para atrair mais ALMA do mundo ao seu redor</div> <div>Aumenta a quantidade de ALMA recebida quando um oponente é atingido com o ferrão.</div>",
+                icon: "charms/Soul_Catcher.webp"
+            },
+            {
+                name: "Shaman_Stone",
+                weight: 3,
+                label: "Pedra do Xamã",
+                description: "<div>Diz-se que contém o conhecimento das gerações passadas dos xamãs</div> <div>Aumenta o poder das magias, causando mais dano aos oponentes.</div>",
+                icon: "charms/Shaman_Stone.webp"
+            },
+            {
+                name: "Soul_Eater",
+                weight: 4,
+                label: "Devorador de Almas",
+                description: "<div>Artefato xamã esquecido, usado para extrair ALMA de criaturas ainda vivas.</div> <div>Aumenta consideravelmente a quantidade de ALMA recebida quando um oponente é atingido com o ferrão.</div>",
+                icon: "charms/Soul_Eater.webp"
+            },
+            {
+                name: "Dashmaster",
+                weight: 2,
+                label: "Mestre da Esquiva",
+                description: "<div>Se assemelha a um inseto excêntrico conhecido apenas como 'O Mestre das Esquivas'.</div> <div>O portador será capaz de esquivar mais frequentemente, bem como esquivar para baixo. Perfeito para aqueles que querem se mover o mais rápido possivel.</div>",
+                icon: "charms/Dashmaster.webp"
+            },
+            {
+                name: "Sprintmaster",
+                weight: 1,
+                label: "Mestre da Corrida",
+                description: "<div>Toma a semelhança de um inseto estranho conhecido apenas como 'O Mestre da Corrida'.</div> <div>Aumenta a velocidade do portador, permitindo que ele evite perigo ou supere rivais.</div>",
+                icon: "charms/Sprintmaster.webp"
+            },
+            {
+                name: "Grubsong",
+                weight: 1,
+                label: "Canção das Larvas",
+                description: "<div>Contém a gratidão de larvas que foram salvas.</div> <div>Recebe ALMA sempre que dano for recebido.</div>",
+                icon: "charms/Grubsong.webp"
+            },
+            {
+                name: "Grubberflys_Elegy",
+                weight: 3,
+                label: "Elegia da Larvamosca",
+                description: "<div>Contém a poesia das larvas que evoluíram para o próximo estágio de suas vidas. Infunde armas com uma energia sagrada.</div> <div>Quando o portador está com a vida cheia, ele lançará feixes de energia branca atráves de seu ferrão.</div>",
+                icon: "charms/Grubberflys_Elegy.webp"
+            },
+            {
+                name: "Unbreakable_Heart.webp",
+                weight: 2,
+                label: "Coração Inquebrável",
+                description: "<div>Aumenta a vida do portador, permitindo-lhe sofre mais dano.</div> <div>Este amuleto é inquebrável.</div>",
+                icon: "charms/Unbreakable_Heart.webp"
+            },
+            {
+                name: "Unbreakable_Greed",
+                weight: 2,
+                label: "Ganância Inquebrável",
+                description: "<div>Faz com que o portador encontre mais Geo ao derrotar inimigos.</div> <div>Este amuleto é inquebrável.</div>",
+                icon: "charms/Unbreakable_Greed.webp"
+            },
+            {
+                name: "Unbreakable_Strength",
+                weight: 3,
+                label: "Força Inquebrável",
+                description: "<div>Fortalece o portador, aumentando o dano causado aos inimigos com o ferrão.</div> <div>Este amuleto é inquebrável.</div>",
+                icon: "charms/Unbreakable_Strength.webp"
+            },
+            {
+                name: "Spell_Twister",
+                weight: 2,
+                label: "Dobrador de Magias",
+                description: "<div>Refletindo os desejos do Santuário das Almas de dominar a ALMA, melhora a capacidade do portador de lançar magias.</div> <div>Reduz o custo de ALMA para a canalização de magias.</div>",
+                icon: "charms/Spell_Twister.webp"
+            },
+            {
+                name: "Steady_Body",
+                weight: 1,
+                label: "Corpo Firme",
+                description: "<div>Mantém seu portador firme, prevenindo-o de recuar quando atingir um inimigo com o Ferrão.</div> <div>Permite que se mantenha firme e continue atacando.</div>",
+                icon: "charms/Steady_Body.webp"
+            },
+            {
+                name: "Heavy_Blow",
+                weight: 2,
+                label: "Golpe Pesado",
+                description: "<div>Formado a partir dos ferrões de guerreiros caídos.</div> <div>Aumenta a força do ferrão do portador, causando inimigos a recuar mais quando atingidos.</div>",
+                icon: "charms/Heavy_Blow.webp"
+            },
+            {
+                name: "Quick_Slash",
+                weight: 3,
+                label: "Corte Rápido",
+                description: "<div>Nascido de ferrões imperfeitos e descartados que se fundiram. Os ferrões ainda desejam ser empunhados.</div> <div>Permite que o portador corte muito mais rapidamente com seu ferrão.</div>",
+                icon: "charms/Quick_Slash.webp"
+            },
+            {
+                name: "Longnail",
+                weight: 2,
+                label: "Ferrão Longo",
+                description: "Aumenta o alcance do ferrão do portador, permitando que ele ataque inimigos de mais longe.",
+                icon: "charms/Longnail.webp"
+            },
+            {
+                name: "Mark_of_Pride",
+                weight: 3,
+                label: "Marca do Orgulho",
+                description: "<div>Livremente dado pela Tribo Louva-a-Deus para aqueles que eles respeitam.</div> <div>Aumenta consideravelmente o alcance do ferrão do portador, permitindo-lhe atingir os inimigos de mais longe.</div>",
+                icon: "charms/Mark_of_Pride.webp"
+            },
+            {
+                name: "Fury_of_the_Fallen",
+                weight: 2,
+                label: "Fúria dos Caídos",
+                description: "<div>Incorpora a fúria e o heroísmo que vem sobre aqueles que estão prestes a morrer.</div> <div>Quando próximo da morte, a força do portador irá aumentar.</div>",
+                icon: "charms/Fury_of_the_Fallen.webp"
+            },
+            {
+                name: "Thorns_of_Agony",
+                weight: 1,
+                label: "Espinhos da Agonia",
+                description: "<div>Sente a dor do seu portador e ataca o mundo ao seu redor.</div> <div>Quando dano é recebido, brotam-se vinhas espinhetas que machucam inimigos próximos.</div>",
+                icon: "charms/Thorns_of_Agony.webp"
+            },
+            {
+                name: "Baldur_Shell",
+                weight: 2,
+                label: "Carapaça de Baldur",
+                description: "<div>Protege o portador com uma carapaça dura enquanto estiver focando ALMA.</div> <div>A carapaça não é indestrutível e se quebrará se absorver muito dano.</div>",
+                icon: "charms/Baldur_Shell.webp"
+            },
+            {
+                name: "Flukenest",
+                weight: 3,
+                label: "Ninho de Flukes",
+                description: "<div>Um Amuleto vivo que nasceu no intestino de uma Flukemarm.</div> <div>Transforma a magia Espirito Vingativo em uma horda de voláteis bebês flukes.</div>",
+                icon: "charms/Flukenest.webp"
+            },
+            {
+                name: "Defenders_Crest",
+                weight: 1,
+                label: "Insígnia do Defensor",
+                description: "<div>Amuleto único concedido pelo Rei de Hallownest ao seu mais leal cavaleiro. Gasto e sujo, mas bem cuidado.</div> <div>O portador irá emitir um odor heróico.</div>",
+                icon: "charms/Defenders_Crest.webp"
+            },
+            {
+                name: "Glowing_Womb",
+                weight: 2,
+                label: "Útero Brilhante",
+                description: "<div>Drena a ALMA de seu portador e a ultiliza para parir crias.</div> <div>As crias não desejam comer e nem viver, e se sacrificarão para proteger o seu progenitor.</div>",
+                icon: "charms/Glowing_Womb.webp"
+            },
+            {
+                name: "Quick_Focus",
+                weight: 3,
+                label: "Foco Rápido",
+                description: "<div>Um Amuleto que contém uma lente de cristal.</div> <div>Aumenta a velocidade de foco de ALMA, permitindo que o portador se cure mais rapidamente.</div>",
+                icon: "charms/Quick_Focus.webp"
+            },
+            {
+                name: "Deep_Focus",
+                weight: 4,
+                label: "Foco Profundo",
+                description: "<div>Naturalmente formado dentro de um cristal durante um longo período. Atrai ALMA do ar que nos rodeia.</div> <div>O portador irá focar ALMA em um ritmo mais lento, mais o efeito de cura será dobrado.</div>",
+                icon: "charms/Deep_Focus.webp"
+            },
+            {
+                name: "Lifeblood_Heart",
+                weight: 2,
+                label: "Coração de Sangue Vital",
+                description: "<div>Contém um núcleo vivo que goteja sangue vital precioso.</div> <div>Ao descansar, o portador irá ganhar uma camada de Sangue Vital que lhe protege de uma moderada quantidade de dano.</div>",
+                icon: "charms/Lifeblood_Heart.webp"
+            },
+            {
+                name: "Lifeblood_Core",
+                weight: 3,
+                label: "Núcleo de Sangue Vital",
+                description: "<div>Contém um núcleo vivo que derrama sangue vital precioso.</div> <div>Ao descansar, o portador irá ganhar uma camada de Sangue Vital que lhe protege de uma grande quantidade de dano.</div>",
+                icon: "charms/Lifeblood_Core.webp"
+            },
+            {
+                name: "Jonis_Blessing",
+                weight: 4,
+                label: "Bênção de Joni",
+                description: "<div>Abençoado por Joni, a gentil herege. Transfigura os fluidos vitais para sangue vital azul.</div> <div>O portador terá uma carapaça mais saudável e poderá receber mais dano, porém ele será incapaz de se curar focando ALMA.</div>",
+                icon: "charms/Jonis_Blessing.webp"
+            },
+            {
+                name: "Hiveblood",
+                weight: 4,
+                label: "Sangue da Colmeia",
+                description: "<div>Pepita dourada de um precioso néctar endurecido da Colmeia.</div> <div>Cura as feridas do portador ao longo do tempo, permitindo-o recuperar vida sem focar ALMA.</div>",
+                icon: "charms/Hiveblood.webp"
+            },
+            {
+                name: "Spore_Shroom",
+                weight: 1,
+                label: "Cogumelo com Esporos",
+                description: "<div>Composto por fungos vivos. Dispersa esporos em contato com a ALMA.</div> <div>Ao focar a ALMA, emite uma nuvem de esporos que danifica lentamente os inimigos.</div>",
+                icon: "charms/Spore_Shroom.webp"
+            },
+            {
+                name: "Sharp_Shadow",
+                weight: 2,
+                label: "Sombra Afiada",
+                description: "<div>Contém um feitiço proibido que transforma as sombras em armas mortais.</div> <div>Ao se utilizar Esquiva Sombria, o corpo do portador se afiará e danificará inimigos.</div>",
+                icon: "charms/Sharp_Shadow.webp"
+            },
+            {
+                name: "Shape_of_Unn",
+                weight: 2,
+                label: "Forma de Unn",
+                description: "<div>Revela a forma de Unn dentro do portador.</div> <div>Enquanto estiver focando ALMA, o portador assumirá uma nova forma e poderá se mover livremente para evitar inimigos.</div>",
+                icon: "charms/Shape_of_Unn.webp"
+            },
+            {
+                name: "Nailmasters_Glory",
+                weight: 1,
+                label: "Glória do Metre do Ferrão",
+                description: "<div>Contém a paixão, a habilidade e os arrenpedimentos de um Mestre do Ferrão.</div> <div>Aumenta a maestria do portador sob as Artes do Ferrão, permitindo-o focar seus poderes mais rapidamente, e os liberar mais cedo.</div>",
+                icon: "charms/Nailmasters_Glory.webp"
+            },
+            {
+                name: "Weaversong",
+                weight: 2,
+                label: "Canção das Tecelãs",
+                description: "<div>Amuleto sedoso contendo uma música de despedida, deixada pelas Tecelãs que partiram de Hallownest para sua antiga casa.</div> <div>Invoca pequenas tecelãs para dar ao portador solitário um pouco de companheirismo e proteção.</div>",
+                icon: "charms/Weaversong.webp"
+            },
+            {
+                name: "Dream_Wielder",
+                weight: 1,
+                label: "Portador dos Sonhos",
+                description: "<div>Amuleto transitório criado para aqueles que usam o Ferrão dos Sonhos e coletam Essência.</div> <div>Permite ao portador carregar o Ferrão dos Sonhos mais rapidamente e coletar mais ALMA atingido inimigos.</div>",
+                icon: "charms/Dream_Wielder.webp"
+            },
+            {
+                name: "Dreamshield.webp",
+                weight: 3,
+                label: "Escudo dos Sonhos",
+                description: "<div>Amuleto defensivo outrora usado por uma tribo que poderia moldar sonhos.</div> <div>Conjura um escudo que segue o portador e tenta protegê-lo.</div>",
+                icon: "charms/Dreamshield.webp"
+            },
+            {
+                name: "Grimmchild",
+                weight: 2,
+                fireLevel: 3,
+                label: "Criança Grimm",
+                description: "<div>Usado por aqueles que participam do Ritual da Trupe Grimm.</div> <div>O portador deve buscar os Grimmários e coletar suas chamas. Chamas não coletadas aparecerão no mapa do portador.</div>",
+                icon: "charms/Grimmchild.webp"
+            },
+            {
+                name: "Void_Heart",
+                weight: 0,
+                label: "Coração Vazio",
+                description: "<div>Um vazio escondido interiormente, agora sem restrições. Unifica o vazio sob a vontade do portador.</div> <div>Esse Amuleto é uma parte do seu portador e não pode ser desequipado.</div>",
+                icon: "charms/Void_Heart.webp"
+            }
+
+        ];
+        
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+        var CURRENT_CHARM_LIST = [];
+        const charmList = document.getElementById('charmList');
+        const slotUsedList = document.getElementById('slotUsedList');
+
+        
+        function generateCharmList(){
+            charmList.innerHTML = '';
+            let charmIndex = 0;
+            
+            for (let i = 0; i < 4; i++){
+                const charmRow = document.createElement('div');
+                charmRow.classList.add('charmRow');
+
+                for (let j = 0; j < 10; j++, charmIndex++){
+                    const charm = document.createElement('div');
+                    charm.classList.add('charm');
+                    charm.style.backgroundImage = `url("${CHARM_LIST[charmIndex].icon}")`;
+                    charm.setAttribute('charm-name', CHARM_LIST[charmIndex].name);
+                    
+                    if ( CHARM_LIST[charmIndex].name == 'Void_Heart' ){
+                        charm.classList.add('charmUsed');
+                    }
+
+                    charmRow.appendChild(charm);
+                     
+                }
+                charmList.appendChild(charmRow);
+            }
+
+            // SELECT FIRST CHARM (DEFAULT)
+            document.querySelector('.charm').classList.add('selectorActive');
+            moveSelectorToCurrentSelection();
+            document.querySelectorAll('.charm, .currentCharmSlotUsed').forEach(e => onMouseEvents(e) );
+        }
+        
+
+
+        function onMouseEvents( e ){
+            e.onclick = () => {
+                removeSelector();
+                e.classList.add('selectorActive');
+                moveSelectorToCurrentSelection(); 
+                generateCharmContentByName(e.getAttribute('charm-name'));
+            };
+
+            e.ondblclick = () => { 
+                toggleCharmByName(e.getAttribute('charm-name'));
+            };
+        }
+        
+
+        function removeSelector(){
+            document.querySelectorAll('.selectorActive').forEach(e => e.classList.remove('selectorActive'));
+        }
+
+        function removeOverloadedCharmStatus(){
+            slotUsedList.querySelectorAll('.slotStatusOverloaded').forEach(e => e.remove());
+        }
+
+        function generateOverloadedCharmStatusByAmount( qty = 1 ){
+            while (qty-- > 0){
+                const slotStatusOverloaded = document.createElement('div');
+                slotStatusOverloaded.classList.add('slotStatus', 'slotStatusUsed', 'slotStatusOverloaded');
+                slotUsedList.appendChild(slotStatusOverloaded);
+            }
+        }
+
+
+        function generateCharmStatusByAmount( qty = 0 ){
+            removeOverloadedCharmStatus();
+            const listSlotStatus = slotUsedList.querySelectorAll('.slotStatus');
+            
+            for (let i = 0; i < 11; i++){
+                listSlotStatus[i].classList.toggle('slotStatusUsed', i < qty);
+            }
+            generateOverloadedCharmStatusByAmount(qty - 11); 
+            currentCharmList.classList.toggle('currentCharmListFull', qty >= 11);
+        }
+
+
+        function moveSelectorToCurrentSelection(){
+            const e = document.querySelector('.selectorActive');
+            const centerBox = {
+                x: e.offsetLeft + e.offsetWidth/2 - selector.offsetWidth/2,
+                y: e.offsetTop + e.offsetHeight/2 - selector.offsetHeight/2
+            };
+            selector.style.left = centerBox.x + 'px';
+            selector.style.top = centerBox.y + 'px';
+            selector.style.visibility = 'visible';
+            generateCharmContentByName(e.getAttribute('charm-name'));
+
+            const selectorActive = document.querySelector('.selectorActive');
+            contentRight.style.display = ( selectorActive.classList.contains('currentCharmSlot') && !selectorActive.classList.contains('currentCharmSlotUsed') )? 'none' : '';
+        }
+
+
+        function generateCharmContentByName( charmName ){
+            const charmObject = CHARM_LIST.find(e => e.name == charmName);
+            if ( charmName == null ) return;
+
+            charmLabel.innerHTML = charmObject.label;
+            charmImage.style.backgroundImage = `url("${charmObject.icon}")`;
+            charmDescription.innerHTML = charmObject.description;
+            charmWeightList.innerHTML = '';
+            charmWeightWrapper.style.visibility = charmObject.weight > 0 ? 'visible' : 'hidden';
+
+            for (let i = 0; i < charmObject.weight; i++){
+                const slotWeightElement = document.createElement('div');
+                slotWeightElement.classList.add('slotStatus', 'slotStatusUsed');
+                charmWeightList.appendChild(slotWeightElement);
+            }
+
+            if ( charmName == "Grimmchild" ){
+                const grimmFireList = document.createElement('div');
+                grimmFireList.id = "grimmFireList";
+
+                for (let i = 0; i < charmObject.fireLevel; i++){
+                    grimmFireList.appendChild( document.createElement('div') );
+                }
+                charmDescription.appendChild(grimmFireList);
+            }
+
+        }
+        
+
+
+        function toggleCharmByName( charmName ){
+            if ( charmName == "Void_Heart" ) return;
+            const charmObject = CHARM_LIST.find(e => e.name == charmName);
+            const selectorActive = document.querySelector('.selectorActive');
+            const newSelectIndex = CURRENT_CHARM_LIST.indexOf(charmName); 
+            const charmElement = document.querySelector(`.charm[charm-name="${charmName}"]`);
+
+            
+
+            // charmAnimation.style.left = selectorActive.offsetLeft + 'px';
+            // charmAnimation.style.top = selectorActive.offsetTop + 'px';
+
+            
+
+            // REMOVE CHARM
+            if ( CURRENT_CHARM_LIST.indexOf(charmName) >= 0 ){
+                charmAnimation.style.backgroundImage = `url("${charmObject.icon}")`;
+                CURRENT_CHARM_LIST.splice( CURRENT_CHARM_LIST.indexOf(charmName) , 1);
+
+                const newPositionElement = document.querySelector(`.currentCharmSlot[charm-name="${charmName}"]`); 
+                charmAnimation.style.left = newPositionElement.offsetLeft + 'px';
+                charmAnimation.style.top = newPositionElement.offsetTop + 'px';
+                
+                setTimeout(()=>{
+                    charmAnimation.style.transition = '200ms';
+                    charmAnimation.style.left = charmElement.offsetLeft + 'px';
+                    charmAnimation.style.top = charmElement.offsetTop + 'px';
+                }, 5);
+
+                charmElement.classList.remove('charmUsed');
+            }
+            // ADD CHARM
+            else if ( getAmountSlotsUsed() < 11 ){
+                charmAnimation.style.backgroundImage = `url("${charmObject.icon}")`;
+                CURRENT_CHARM_LIST.push(charmName);
+
+                charmAnimation.style.left = charmElement.offsetLeft + 'px';
+                charmAnimation.style.top = charmElement.offsetTop + 'px';
+                
+                const newPositionElement = document.querySelector('#currentCharmList .currentCharmSlot:last-child');
+
+                setTimeout(()=>{
+                    charmAnimation.style.transition = '200ms';
+                    charmAnimation.style.left = newPositionElement.offsetLeft + 'px';
+                    charmAnimation.style.top = newPositionElement.offsetTop + 'px';
+                }, 5);
+                
+            }
+
+
+            setTimeout(()=>{
+                charmAnimation.style.backgroundImage = '';
+                charmAnimation.style.transition = '';
+
+                generateCurrentCharmByList();
+                generateCharmStatusByAmount( getAmountSlotsUsed() );
+    
+                if ( selectorActive.classList.contains('charm') ) return;
+    
+                setTimeout(()=>{
+                    const currentCharmSlotList = document.querySelectorAll('.currentCharmSlot');
+                    currentCharmSlotList[newSelectIndex+1].classList.add('selectorActive');
+        
+                    if ( !currentCharmSlotList[newSelectIndex+1].classList.contains('currentCharmSlotUsed') ){
+                        removeSelector();
+                        currentCharmSlotList[newSelectIndex].classList.add('selectorActive');
+                    }
+                    moveSelectorToCurrentSelection();
+
+                }, 100);
+
+            }, 200);
+
+
+        }
+        
+
+
+        function generateCurrentCharmByList(){
+
+            currentCharmList.innerHTML = '';
+
+            for (let i = 0; i < CURRENT_CHARM_LIST.length + 2; i++){
+
+                const currentCharmSlot = document.createElement('div');
+                currentCharmSlot.classList.add('currentCharmSlot');
+                currentCharmSlot.innerHTML = '<div class="currentCharmImage"></div>';
+
+                if ( i == 0 ){ 
+                    currentCharmSlot.classList.add('currentCharmSlotUsed', 'currentCharmLocked');
+                    currentCharmSlot.setAttribute('charm-name', 'Void_Heart');
+                    onMouseEvents(currentCharmSlot);
+                }else if ( i <= CURRENT_CHARM_LIST.length ){
+                    const name = CURRENT_CHARM_LIST[i-1];
+                    const charmObject = CHARM_LIST.find(e => e.name == name);
+                    currentCharmSlot.classList.add('currentCharmSlotUsed');
+                    currentCharmSlot.setAttribute('charm-name', charmObject.name);
+                    currentCharmSlot.querySelector('.currentCharmImage').style.backgroundImage = `url("${charmObject.icon}")`;
+                    
+                    document.querySelector(`.charm[charm-name="${name}"]`).classList.add('charmUsed');
+                    
+                    onMouseEvents(currentCharmSlot); 
+                }else{
+                    currentCharmSlot.innerHTML = '<div class="charmSlotNext"></div>';
+                }
+
+                currentCharmList.appendChild(currentCharmSlot);
+                
+            }
+
+        }
+
+
+        function getAmountSlotsUsed(){
+            let total = 0;
+            CURRENT_CHARM_LIST.forEach(charmName => {
+                const charmObject = CHARM_LIST.find(e => e.name == charmName);
+                total += charmObject.weight;
+            });
+            return total;
+        }
+        
+
+
+        
+        const CONTROLLER = {
+
+            ArrowLeft: () => {
+                const selectorActive = document.querySelector('.selectorActive');
+
+                if ( selectorActive.previousElementSibling == null ) return;
+
+                removeSelector();
+                selectorActive.previousElementSibling.classList.add('selectorActive');
+                moveSelectorToCurrentSelection();
+            },
+
+
+            ArrowRight: () => {
+                const selectorActive = document.querySelector('.selectorActive');
+
+                if ( selectorActive.nextElementSibling == null ) return;
+
+                removeSelector();
+                selectorActive.nextElementSibling.classList.add('selectorActive');
+                moveSelectorToCurrentSelection();
+            },
+
+
+            ArrowUp: () => {
+                const selectorActive = document.querySelector('.selectorActive');
+                const x = Array.from(selectorActive.parentElement.children).indexOf(selectorActive);
+
+                if ( !selectorActive.classList.contains('charm') ) return;
+
+                removeSelector();
+
+                if ( selectorActive.parentElement.previousElementSibling != null ){
+                    selectorActive.parentElement.previousElementSibling.children[x].classList.add('selectorActive');
+                }else{
+                    const currentCharmSlotUsed = document.querySelectorAll('.currentCharmSlotUsed');
+                    currentCharmSlotUsed[ Math.clamp(x, 0, currentCharmSlotUsed.length - 1) ].classList.add('selectorActive');
+                }
+                moveSelectorToCurrentSelection(); 
+                
+            },
+
+
+            ArrowDown: () => {
+                const selectorActive = document.querySelector('.selectorActive');
+                const x = Array.from(selectorActive.parentElement.children).indexOf(selectorActive);
+
+                if ( selectorActive.classList.contains('charm') ){
+                    if ( selectorActive.parentElement.nextElementSibling != null ){
+                        removeSelector();
+                        selectorActive.parentElement.nextElementSibling.children[x].classList.add('selectorActive');
+                    }
+                }else{
+                    removeSelector();
+                    document.querySelectorAll('.charm')[ Math.clamp(x, 0, 9) ].classList.add('selectorActive');
+                }
+                moveSelectorToCurrentSelection(); 
+            },
+
+
+            Enter: () => {
+                const selectorActive = document.querySelector('.selectorActive');
+                if ( selectorActive.classList.contains('currentCharmSlot') && !selectorActive.classList.contains('currentCharmSlotUsed') ) return;
+                toggleCharmByName(selectorActive.getAttribute('charm-name') );
+            }
+
+        };
+
+
+
+        onkeydown = (event) => {
+            if ( CONTROLLER[event.key] != null && !event.repeat ){
+                CONTROLLER[event.key]();
+            }
+        };
+        
+
+        onmousemove = (event) => {
+            cursor.style.left = (event.clientX - 3) + 'px';
+            cursor.style.top  = (event.clientY - 2) + 'px';
+        };
+        
+
+        onload = () => {
+            generateCurrentCharmByList();
+            generateCharmList();
+            update();
+        };
+
+
+
+        function update(){
+            
+            document.querySelectorAll('.currentCharmSlotUsed').forEach((e, i) => {
+                angle = getRandomInt(0, 361) * Math.PI / 180;
+                const x = Math.sin(angle) * 2;
+                const y = Math.cos(angle) * 2;
+                
+                e.style.transform = (getAmountSlotsUsed() > 11)? `translate(${x}px, ${y}px)` : '';
+            });
+
+            requestAnimationFrame(update);
+
+        }
+
+
+
+
+    </script>
+
+</body>
+</html>
