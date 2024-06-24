@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+
+        #lista, #lista_repetidos{
+            width: fit-content;
+        }
+
+        .placa{
+            padding: 8px;
+            margin: 4px 0 4px 4px;
+            background-color: #353535;
+            cursor: pointer;
+            color: #9e9e9e;
+            border-radius: 8px;
+        }
+        .placa:hover{
+            background-color: #212121;
+        }   
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+    <div id="lista"></div>
+    <div id="lista_repetidos"></div>
+    
+
+    <script>
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function gerarPlaca(){
+
+            // AAA-ZZZ
+            let placa = String.fromCharCode( getRandomInt(0x41, 0x5B) );
+            placa += String.fromCharCode( getRandomInt(0x41, 0x5B) );
+            placa += String.fromCharCode( getRandomInt(0x41, 0x5B) );
+
+            placa += '-';
+
+            // 0000-9999
+            placa += String.fromCharCode( getRandomInt(0x30, 0x3A) );
+            placa += String.fromCharCode( getRandomInt(0x30, 0x3A) );
+            placa += String.fromCharCode( getRandomInt(0x30, 0x3A) );
+            placa += String.fromCharCode( getRandomInt(0x30, 0x3A) );
+
+            return placa; 
+
+        }
+
+
+
+        let lista_placas = [];
+
+        function adicioarPlaca( placa_string ){
+
+            let placa = document.createElement('div');
+            placa.classList.add("placa");
+            placa.innerHTML = placa_string;
+
+            if ( lista_placas.indexOf(placa_string) >= 0 ){
+                lista_repetidos.appendChild(placa);
+                return;
+            }
+
+            lista.appendChild(placa);
+            lista_placas.push(placa_string);
+            placa.scrollIntoView();
+
+        }
+        
+
+        function* gerarListaPlacas( quantidade = 0 ){
+            while (quantidade > 0){
+                quantidade--; 
+                adicioarPlaca(gerarPlaca());
+                yield;
+            }
+        }
+
+        
+        let placas_iterator = gerarListaPlacas(1024);
+
+        let timer = setInterval(()=>{
+            const placa = placas_iterator.next();
+            if ( placa.done ){
+                clearInterval(timer);
+                return;
+            }
+        });
+        
+
+    </script>
+
+
+</body>
+</html>

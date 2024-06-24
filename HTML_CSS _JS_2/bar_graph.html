@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{ 
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        html, body{
+            height: 100%;
+        }
+
+        
+
+
+
+        #main{ 
+            width: 70%;
+            max-width: 90%;
+            display: flex;
+        }
+
+
+        #vertical_bar{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #333;
+            justify-content: space-between;
+            height: 320px;
+            padding: 0 4px;
+            padding-right: 8px;
+            text-align: center;
+        }
+
+        #content_container{
+            width: 100%;
+        }
+
+        #content_container > *{
+            padding: 0 10px;
+        }
+
+        #content{
+            height: 320px;
+            background-color: #222;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bar_wrapper{
+            width: 32px;
+            height: 100%; 
+            position: relative;
+        }
+        .bar_wrapper:hover .bar{
+            background-color: #007bff80;
+        }
+        .bar{
+            width: 100%;
+            height: 1%;
+            background-color: #007bff;
+            position: absolute;
+            bottom: 0;
+        }
+
+
+        #horizontal_bar{
+            display: flex;
+            justify-content: space-between;
+            background-color: #333;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+
+    <div id="main">
+
+        <div id="vertical_bar">
+            <!-- <div class="label">50</div>
+            <div class="label">40</div>
+            <div class="label">30</div>
+            <div class="label">20</div>
+            <div class="label">10</div>
+            <div class="label">0</div> -->
+        </div>
+
+
+        <div id="content_container">
+
+            <div id="content">
+                <!-- <div class="bar_wrapper"> <div class="bar"></div> </div>
+                <div class="bar_wrapper"> <div class="bar"></div> </div>
+                <div class="bar_wrapper"> <div class="bar"></div> </div>
+                <div class="bar_wrapper"> <div class="bar"></div> </div>
+                <div class="bar_wrapper"> <div class="bar"></div> </div>
+                <div class="bar_wrapper"> <div class="bar"></div> </div>
+                <div class="bar_wrapper"> <div class="bar"></div> </div>
+                <div class="bar_wrapper"> <div class="bar"></div> </div>
+                <div class="bar_wrapper"> <div class="bar"></div> </div> -->
+            </div>
+            
+            <div id="horizontal_bar">
+                <!-- <div class="label">2015</div>
+                <div class="label">2016</div>
+                <div class="label">2017</div>
+                <div class="label">2018</div>
+                <div class="label">2019</div>
+                <div class="label">2020</div>
+                <div class="label">2021</div>
+                <div class="label">2022</div>
+                <div class="label">2023</div> -->
+            </div>
+            
+        </div>
+
+    </div>
+ 
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+
+        var main = document.getElementById("main");
+
+
+        var data = {
+            "labels": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+            "content": [30, 10, 30, 45, 15, 18, 12, 35, 30]
+        };
+
+
+
+        function genGraph( dataList = [] ){
+
+            let maxValue = 0;
+            for (let i = 0; i < dataList.content.length; i++){
+                maxValue = (i == 0)? dataList.content[i] : Math.max(maxValue, dataList.content[i]);
+            }
+
+            let maxValueRound = maxValue;
+            if ( maxValueRound >= 10 ){
+
+            }
+
+            dataList.labels.forEach(e => {
+                let label_h = document.createElement("div");
+                label_h.classList.add("label");
+                label_h.innerHTML = e;
+                main.querySelector('#horizontal_bar').appendChild(label_h);
+            });
+
+
+
+            dataList.content.forEach(e => {
+                let percent = (maxValue >= 10)? (e / (Math.ceil(maxValue / 10) * 10) * 100) : (e/maxValue*100);
+
+                let bar_wrapper = document.createElement("div");
+                bar_wrapper.setAttribute("value", e);
+                bar_wrapper.classList.add("bar_wrapper");
+                bar_wrapper.innerHTML = `<div class="bar" style="height: ${percent}%"></div>`;
+                main.querySelector('#content').appendChild(bar_wrapper);
+            }); 
+
+            let step = (maxValue <= 10)? 10 : (Math.ceil(maxValue / 10) * 10);
+
+            for (let i = 0; i < 11; i++){
+                let label_v = document.createElement("div");
+                label_v.classList.add("label");
+                
+                label_v.innerHTML = step/10 * (10-i);
+                main.querySelector('#vertical_bar').appendChild(label_v);
+            } 
+
+
+
+            console.log(maxValue);
+
+        }
+
+
+        genGraph(data);
+
+
+
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

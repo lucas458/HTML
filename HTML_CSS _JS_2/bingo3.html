@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            padding: 8px;
+            display: flex; 
+            gap: 8px;
+            position: fixed;
+        }
+
+
+
+
+        #leftContent{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #fff;
+            border-radius: 6px;
+        }
+
+        #leftHeader,
+        #leftFooter{
+            padding: 8px;
+        }
+
+        #sortearBola,
+        #resetar{
+            padding: 8px 10px;
+            border-radius: 8px;
+        }
+        #sortearBola:hover,
+        #resetar:hover{
+            opacity: 0.8;
+        }
+
+        #sortearBola{
+            background-color: #28a745;
+        }
+        #resetar{ 
+            background-color: #dc3545;
+        }
+
+
+
+        #encaixeBolas{
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 2px;
+
+        }
+
+        .slotBola{
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 5px 0 #000;
+            font-size: 0.8em;
+            background-color: #101010;
+            color: #9e9e9e;
+        }
+        .slotBolaAtivo{
+            background-color: #fff;
+            color: #000;
+            box-shadow: 0 0 5px 0 #000;
+            font-size: initial;
+        }
+
+
+
+
+
+
+
+        #rightContent{
+            overflow: hidden scroll;
+            padding-right: 4px; 
+        }
+
+        .codigo{
+            color: #9e9e9e;
+            margin-bottom: 8px;
+        }
+        .codigo span{
+            border-radius: 6px;
+            border: 1px solid #000;
+            padding: 0 4px;
+        }
+
+        .cartela{
+            background-color: #212121; 
+            border: 1px solid #fff;
+            border-radius: 6px;
+            height: fit-content;
+            padding: 4px;
+            margin-bottom: 8px;
+        }
+
+
+        .tabela_lista{
+            display: flex;
+            gap: 8px;
+        }
+        
+        .tabela{
+            padding: 2px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            background-color: #404040;
+            gap: 1px;
+        }
+        .slot{
+            width: 24px;
+            aspect-ratio: 1/1;
+            background-color: #181818;
+            color: #9e9e9e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slotAcerto{
+            background-color: #28a745 !important;
+            color: #fff;
+        }
+
+
+        .codigo span:hover,
+        .slot:hover{
+            background-color: #353535;
+            color: #fff;
+        }
+        
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <!-- LEFT -->
+        <div id="leftContent">
+
+            <div id="leftHeader">
+                <div id="sortearBola" onclick="sortear()" >SORTEAR</div>
+            </div>
+            
+            <div id="encaixeBolas"></div>
+
+            <div id="leftFooter">
+                <div id="resetar" onclick="resetSlotBolas()">RESETAR</div>
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT -->
+        <div id="rightContent"></div>
+
+    </div>
+
+
+     
+
+
+    <script>
+ 
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        }; 
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+ 
+ 
+
+
+        var DATABASE = [];
+
+
+
+
+        
+        function getCheckNumber( code ){
+            let sum = 0;
+            
+            for (let i = 0; i < 7; i++){
+                if ( i % 2 == 0 ){
+                    sum += parseInt(code[i]) * 3;
+                }else{
+                    sum += parseInt(code[i]);
+                }
+            }
+            return ((parseInt(sum/10) * 10 + 10) - sum) % 10;
+        }
+
+
+        function getRandomBingoCode(){
+            const CODE = new Array(7).fill(0).map(e => getRandomInt(0, 10)).join('');
+            const DV = getCheckNumber(CODE);
+            const RESULT  = CODE.concat(DV);
+
+            if ( DATABASE.findIndex(e => e.code == RESULT) >= 0 ){
+                getRandomBingoCode();
+            }
+
+            return RESULT;
+        }
+
+
+        function getRandomTable(){
+            const maxCells = 5 * 4;
+            const maxNumber = 60;
+            let result = [];
+            
+            while (result.length < maxCells){
+                const value = getRandomInt(1, maxNumber+1);
+                if ( result.indexOf(value) < 0 ){
+                    result.push(value);
+                }
+            }
+
+            result.sort((a, b) => a - b);
+            return result;
+        }
+
+
+
+
+
+        function addRandomBingoToDatabase(){
+            const BINGO = new Array(4).fill([]).map(e => getRandomTable());
+            const BINGO_CODE = getRandomBingoCode();
+
+            return DATABASE.push({
+                table: BINGO,
+                code: BINGO_CODE
+            });
+
+        }
+
+
+
+
+
+        function gerarCartela(codigo, tabelaArray = []){
+            const cartela = document.createElement("div");
+            cartela.classList.add("cartela");
+
+            cartela.innerHTML = `
+            <div class="codigo">CÓDIGO <span>${codigo}</span></div>
+            <div class="tabela_lista"></div>`;
+
+            tabelaArray.forEach((table, tableIndex) => {
+                const tabela = document.createElement("div");
+                tabela.classList.add("tabela");
+                
+                table.forEach(slotValue => {
+                    const slot = document.createElement("div");
+                    slot.classList.add("slot");
+                    slot.innerHTML = String(slotValue).padStart(2, 0);
+                    tabela.appendChild(slot);
+                });
+
+                cartela.querySelector(".tabela_lista").appendChild(tabela);
+
+            });
+            
+            rightContent.appendChild(cartela);
+
+        }
+
+
+
+        function gerarCartelasFromDatabase(){
+            rightContent.innerHTML = '';
+            DATABASE.forEach(cartelaObj => gerarCartela(cartelaObj.code, cartelaObj.table) );
+        }
+
+
+
+
+
+
+
+        function gerarSlotBolas(){
+            encaixeBolas.innerHTML = '';
+            for (let i = 0; i < 60; i++){
+                const slotBola = document.createElement("div");
+                slotBola.classList.add("slotBola");
+                slotBola.innerHTML = String(i+1).padStart(2, 0);
+                encaixeBolas.appendChild(slotBola);
+
+                slotBola.onclick = () => {
+                    setSlotBola(i);
+                };
+            }
+        }
+
+
+        function resetSlotBolas(){
+            document.querySelectorAll(".slotBolaAtivo").forEach(e => e.classList.remove("slotBolaAtivo"));
+            document.querySelectorAll(".slotAcerto").forEach(e => e.classList.remove("slotAcerto"));
+        }
+
+
+        function setSlotBola( index ){
+            const valorBola = index + 1;
+            const ativo = encaixeBolas.children[index].classList.toggle("slotBolaAtivo");
+
+            [...document.querySelectorAll('.slot')]
+                .filter(slot => parseInt(slot.innerHTML) == valorBola)
+                .forEach(slot => slot.classList.toggle("slotAcerto", ativo));
+        }
+
+
+
+
+
+
+
+
+        function sortear(){
+
+            if ( document.querySelectorAll(".slotBolaAtivo").length == document.querySelectorAll(".slotBola").length ){
+                return;
+            }
+
+            let index = getRandomInt(0, 60);
+            
+            while ( document.querySelectorAll(".slotBola")[index].classList.contains("slotBolaAtivo") ){
+                index = getRandomInt(0, 60);
+            }
+            
+            setSlotBola(index);
+
+        }
+
+
+
+
+
+        onload = () => {
+
+            for (let i = 0; i < 4; i++){
+                addRandomBingoToDatabase();
+            }
+
+            gerarSlotBolas();
+            gerarCartelasFromDatabase();
+
+        };
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+
+        #player{
+            width: 31px;
+            height: 63px;
+            background-color: #5f5;
+            position: absolute;
+            left: 400px;
+            top: 300px;
+        }
+
+
+
+        #target{
+            width: 31px;
+            height: 63px;
+            background-color: #f55;
+            position: absolute;
+            left: 550px;
+            top: 150px; 
+        }
+
+
+
+        .line{
+            width: 100px;
+            height: 1px;
+            background-color: rebeccapurple;
+            transform-origin: left center;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        #lineX{ background-color: #5ff;}
+        #lineY{ background-color: #ff5;}
+        #lineDistance{ background-color: #f5f;}
+
+
+
+
+        .bullet{
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #55f;
+            left: 0;
+            top: 0;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+ 
+
+    <div id="main_screen">
+
+        <div id="target"></div>
+
+        <div id="player"></div>
+
+
+        <div id="lineList">
+            <div class="line" id="lineX"></div>
+            <div class="line" id="lineY"></div>
+            <div class="line" id="lineDistance"></div>
+        </div>
+
+
+        <div id="bullet_list">
+            <div class="bullet"></div>
+        </div>
+
+    </div>
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+        var main_screen  = document.getElementById("main_screen");
+
+        var lineX        = document.getElementById("lineX");
+        var lineY        = document.getElementById("lineY");
+        var lineDistance = document.getElementById("lineDistance");
+
+        var player       = document.getElementById("player");
+        var target       = document.getElementById("target");
+
+        var bullet_list  = document.getElementById("bullet_list");
+        
+
+
+
+
+        function setLine(x, y, length, angle, lineId){
+            let line = document.getElementById(lineId);
+            line.style.left = x + "px";
+            line.style.top = y + "px";
+            line.style.width = Math.abs(length) + "px";
+            line.style.transform = `rotate(${angle-90}deg)`;
+        }
+
+
+        function moveElement(x, y, reference){
+            reference.style.left = (x - reference.offsetWidth/2) + "px";
+            reference.style.top  = (y - reference.offsetHeight/2) + "px";
+        }
+
+
+        function getElementPosition(reference){
+            return [
+            reference.offsetLeft + reference.offsetWidth/2,
+            reference.offsetTop + reference.offsetHeight/2
+            ];
+        }
+
+        
+
+
+
+        function updateLines(){
+
+            center_player = {
+                x: player.offsetLeft + player.offsetWidth/2,
+                y: player.offsetTop + player.offsetHeight/2
+            };
+
+            center_target = {
+                x: target.offsetLeft + target.offsetWidth/2,
+                y: target.offsetTop + target.offsetHeight/2
+            };
+
+            diffX = (player.offsetLeft + player.offsetWidth/2) - (target.offsetLeft + target.offsetWidth/2);
+            diffY = (player.offsetTop + player.offsetHeight/2) - (target.offsetTop + target.offsetHeight/2);
+            distance = Math.hypot(diffX, diffY);
+
+            angle = Math.atan2(diffX, diffY);
+            angle = 360 - (angle * 180 / Math.PI + 180);
+
+            setLine(center_player.x, center_player.y, diffX, (diffX<=0)?90:-90, "lineX");
+            setLine(center_target.x, center_target.y, diffY, (diffY>=0)?180:360, "lineY");
+            setLine(center_player.x,  center_player.y, distance, angle-180, "lineDistance");
+        }
+
+
+
+
+
+
+
+
+        let center_player = {
+            x: player.offsetLeft + player.offsetWidth/2,
+            y: player.offsetTop + player.offsetHeight/2
+        };
+
+        let center_target = {
+            x: target.offsetLeft + target.offsetWidth/2,
+            y: target.offsetTop + target.offsetHeight/2
+        };
+
+        let diffX = (player.offsetLeft + player.offsetWidth/2) - (target.offsetLeft + target.offsetWidth/2);
+        let diffY = (player.offsetTop + player.offsetHeight/2) - (target.offsetTop + target.offsetHeight/2);
+        let distance = Math.hypot(diffX, diffY);
+
+        let angle = Math.atan2(diffX, diffY);
+        angle = 360 - (angle * 180 / Math.PI + 180);
+
+        
+
+
+
+
+
+
+        onload = () => {
+
+            player.style.left = getRandomInt(0, main_screen.offsetWidth - player.offsetWidth) +  "px";
+            player.style.top = getRandomInt(0, main_screen.offsetHeight - player.offsetHeight) + "px";
+            target.style.left = getRandomInt(0, main_screen.offsetWidth - target.offsetWidth) +  "px";
+            target.style.top = getRandomInt(0, main_screen.offsetHeight - target.offsetHeight) + "px";
+            updateLines();
+            moveElement(center_player.x, center_player.y, bullet_list.firstElementChild);
+
+            update(); 
+        };
+
+
+
+        onkeydown = (event) => {
+
+            if ( !event.repeat ){
+                if ( event.key == " " ){
+                    moveElement(center_player.x, center_player.y, bullet_list.firstElementChild);
+                    updateLines();
+                }else if ( event.key == "r" ){
+                    player.style.left = getRandomInt(0, main_screen.offsetWidth - player.offsetWidth) + "px";
+                    player.style.top = getRandomInt(0, main_screen.offsetHeight - player.offsetHeight) + "px";
+                    target.style.left = getRandomInt(0, main_screen.offsetWidth - target.offsetWidth) + "px";
+                    target.style.top = getRandomInt(0, main_screen.offsetHeight - target.offsetHeight) + "px";
+                    updateLines();
+                    moveElement(center_player.x, center_player.y, bullet_list.firstElementChild);
+                }
+            }
+
+        };
+
+
+
+
+        function update(){ 
+
+            let rad = (angle+90) * Math.PI / 180;
+            let speed = 5;
+
+            let Vx = speed * Math.cos(rad);
+            let Vy = speed * Math.sin(rad);
+
+            let position = getElementPosition(bullet_list.firstElementChild);
+            
+            position[0] = Math.clamp(position[0]+Vx, 0, main_screen.offsetWidth);
+            position[1] = Math.clamp(position[1]+Vy, 0, main_screen.offsetHeight);
+
+            
+
+            moveElement(position[0], position[1], bullet_list.firstElementChild);
+
+            requestAnimationFrame(update);
+
+        }
+
+
+        
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

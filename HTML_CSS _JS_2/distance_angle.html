@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        #main{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+
+
+
+        .line{
+            transform-origin: left;
+            transform: rotate(0deg);
+            width: 32px;
+            border-radius: 8px;
+            background-color: lime;
+            height: 1px;
+            position: absolute;
+            z-index: 1;
+            left: 0;
+            top: 0; 
+        }
+
+
+
+
+        #player{
+            visibility: hidden;
+        }
+
+        #player,
+        .element{
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+            line-height: 0;
+            transform: rotate(0deg);
+            animation: rotation 1s infinite linear;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        @keyframes rotation {
+            0%{
+                transform: rotate(0deg);
+            }
+            100%{
+                transform: rotate(360deg);
+            }
+        }
+
+
+
+        #player{
+            background-color: #fff;
+            color: #000;
+            z-index: 1;
+        }
+        .player_collision{
+            background-color: royalblue !important;
+        }
+
+        .home{
+            background-color: green;
+        }
+        .objective{
+            background-color: orange;
+        }
+        .enemie{
+            background-color: darkred;
+        }
+ 
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+
+    <div id="main">
+        <div id="line_list"> </div>
+        <div id="player"></div> 
+    </div> 
+
+
+    <script>
+
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+
+        var main = document.getElementById("main");
+        var player = document.getElementById('player');
+        var line_list = document.getElementById("line_list");
+
+        var minimap = document.getElementById("minimap");
+
+
+        window.onmousemove = (event) => {
+
+            player.style.visibility = 'visible';
+            player.style.left = (event.clientX - player.offsetWidth/2) + 'px';
+            player.style.top = (event.clientY - player.offsetHeight/2) + 'px';
+            player.classList.remove("player_collision");
+
+            let player_center = {
+                x: player.offsetLeft + player.offsetWidth/2,
+                y: player.offsetTop + player.offsetHeight/2
+            };
+
+            line_list.innerHTML = '';
+
+            document.querySelectorAll(".element").forEach((el, idx) => {
+
+                let element_center = {
+                    x: el.offsetLeft + el.offsetWidth/2,
+                    y: el.offsetTop + el.offsetHeight/2
+                };
+                
+                let position_diff = {
+                    x: player_center.x - element_center.x,
+                    y: player_center.y - element_center.y
+                }
+
+                let distance = Math.hypot(position_diff.x, position_diff.y);
+                let angle_rad = Math.atan2(position_diff.x, position_diff.y);
+                let angle_deg = 360 - (angle_rad * 180 / Math.PI + 180);
+
+                if ( distance <= 250 ){
+                    let percent = 1 - Math.clamp(distance, 0, 250) / 250;
+                    addLine(player_center.x, player_center.y, distance, angle_deg + 90, `rgb(${percent*255}, ${(1-percent)*255}, 0)`);
+
+                    el.style.animation = 'none';
+                    el.style.transform = `rotate(${angle_deg}deg)`;
+
+                }else{
+                    el.style.animation = '';
+                }
+
+                let isCollide = (player.offsetLeft + player.offsetWidth > el.offsetLeft) &&
+                                (player.offsetTop + player.offsetHeight > el.offsetTop) &&
+                                (el.offsetLeft + el.offsetWidth > player.offsetLeft) &&
+                                (el.offsetTop + el.offsetHeight > player.offsetTop);
+
+                isCollide =  distance < (player.offsetWidth/2) + (el.offsetWidth/2);
+                
+                
+                if ( isCollide ){
+                    player.classList.add("player_collision");
+                }
+                
+
+            });
+ 
+
+
+
+        };
+
+
+
+
+
+        function addLine(x, y, length, angle, color){
+            let line = document.createElement('div');
+            line.classList.add('line');
+            line.style.width = length + 'px';
+            line.style.left = x + 'px';
+            line.style.top  = y + 'px';
+            line.style.transform = `rotate(${angle}deg)`;
+            line.style.backgroundColor = color;
+            line_list.appendChild(line);
+        }
+
+
+
+
+
+
+
+        function generateElementAt(x, y, type){
+
+            let el = document.createElement('div');
+            el.classList.add(type); 
+            el.classList.add("element");
+            el.style.left = x + 'px';
+            el.style.top  = y + 'px';
+            el.innerHTML = '&uarr;';
+
+            main.appendChild(el);
+
+        }
+        
+
+
+        generateElementAt(32, 64, 'home');
+        generateElementAt(500, 256, 'home');
+        
+        generateElementAt(800, 480, 'objective');
+        generateElementAt(50, 200, 'objective');
+
+        generateElementAt(512, 64, 'enemie');
+        generateElementAt(480, 500, 'enemie');
+        generateElementAt(600, 96, 'enemie');
+         
+
+
+ 
+
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

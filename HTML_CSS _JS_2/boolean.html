@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        table{
+            /* background-color: red; */
+            /* border-collapse: collapse; */
+        }
+
+        
+        th, td{
+            padding: 8px;
+            /* background-color: rebeccapurple; */
+            border-bottom: 2px solid #181818;
+        }
+
+        thead tr{
+            background-color: #353535;
+        }
+
+        
+        tr *:nth-child(4){
+            padding: 8px 16px;
+            border-left: 16px solid #181818;
+            /* background-color: royalblue; */
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+                    <th>Y</th>
+                </tr>
+            </thead>
+
+            <tbody id="table_body"></tbody>
+        </table>
+        
+    </div>
+
+
+     
+
+
+    <script>
+
+
+
+
+        function generateTableRow( value = 0 ){
+            // IGNORE
+            const a = Boolean(value & 0x04);
+            const b = Boolean(value & 0x02);
+            const c = Boolean(value & 0x01);
+
+
+            // Expressão
+            const y = !c || (!a && b);
+            
+            // IGNORE
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+            <tr>
+                <td style="background-color: ${a? '#28a745' : '#dc354520'}">${a? 1: 0}</td>
+                <td style="background-color: ${b? '#28a745' : '#dc354520'}">${b? 1: 0}</td>
+                <td style="background-color: ${c? '#28a745' : '#dc354520'}">${c? 1: 0}</td>
+                <td style="background-color: ${y? '#28a745' : '#dc354520'}">${y? 1: 0}</td>
+            </tr>`; 
+            table_body.appendChild(tr);
+        }
+
+
+        // IGNORE
+        function generateTableFull(){
+            table_body.innerHTML = '';
+            for (let i = 0; i < 8; i++){
+                generateTableRow(i);
+            }
+        }
+		
+		 
+        // IGNORE
+        generateTableFull();
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

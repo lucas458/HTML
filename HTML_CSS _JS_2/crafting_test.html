@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: fixed;
+        }
+
+
+        .item_container{
+            height: 100%;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .item_container_header{
+            font-size: x-large;
+            font-weight: bold;
+            color: orange;
+            padding: 4px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #666;
+            margin-bottom: 10px;
+        }
+
+
+        .item_list{
+            overflow: hidden scroll;
+            height: 100%;
+            padding-right: 8px;
+        }
+
+        .item{
+            background-color: #353535;
+            padding: 8px;
+            margin-bottom: 4px;
+            
+        }
+
+        .item:hover{
+            background-color: darkorange;
+            color: #1f1f1f;
+        }
+
+
+
+
+
+
+
+
+        #tooltip{ 
+            background-color: #353535;
+            border: 2px solid darkgoldenrod;
+            border-radius: 8px;
+            padding: 8px;
+            pointer-events: none;
+            visibility: hidden;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        .tooltip_visible{
+            visibility: visible !important;
+        }
+
+
+        #tooltip_title{
+            font-size: large;
+            color: orange;
+        }
+
+        #tooltip_perCraft{
+            margin: 4px 0 8px;
+            font-size: 0.8em;
+        }
+        #tooltip_perCraft span{
+            font-size: 1.5em !important;
+            background-color: #555;
+            color: #fff8f8;
+            display: inline-block;
+            padding: 8px 10px;
+            padding-top: 5px;
+            line-height: 8px;
+            border-radius: 4px;
+        }
+
+
+        #tooltip_recipe_list{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: 64px;
+            row-gap: 8px;
+        }
+
+
+        .item_invalid{
+            color: #dc3545;
+        }
+        
+
+        
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+
+    
+    <div id="main_screen">
+        
+        <div class="item_container" id="inventory_container">
+            <div class="item_container_header">Inventário</div>
+            <div class="item_list"></div> 
+        </div>
+        
+        <div class="item_container" id="crafting_container">
+            <div class="item_container_header">Criação</div>
+            <div class="item_list"></div> 
+        </div>
+
+        <div id="tooltip">
+            <div id="tooltip_title"></div>
+            <div id="tooltip_perCraft">Quantidade Produzida: <span></span> </div>
+            <div id="tooltip_recipe_list"></div>
+        </div>
+        
+    </div>
+
+
+
+ 
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+
+        var main_screen = document.getElementById("main_screen");
+
+        var tooltip = document.getElementById("tooltip");
+        var tooltip_recipe_list = document.getElementById("tooltip_recipe_list");
+
+
+        onmousemove = (event) => {
+
+             
+
+
+           
+            
+            if ( event.clientX + 16 + tooltip.offsetWidth >= main_screen.offsetWidth){
+                tooltip.style.left = (event.clientX - tooltip.offsetWidth - 16) + "px";
+            }else{
+                tooltip.style.left = (event.clientX + 16) + "px";
+            }
+
+
+            if ( event.clientY + 16 + tooltip.offsetHeight >= main_screen.offsetHeight){
+                tooltip.style.top = (event.clientY - tooltip.offsetHeight - 16) + "px";
+            }else{
+                tooltip.style.top = (event.clientY + 16) + "px";
+            }
+            
+
+
+        };
+
+        
+        
+
+        function onMouseEnterEvent(event, element){
+
+            const name     = element.getAttribute("item-name");
+            const crafting = getCraftByName(name);
+            const item     = getItemByName(name); 
+
+            tooltip_perCraft.firstElementChild.innerHTML = crafting.percraft;
+            tooltip_title.innerHTML = item.label;
+
+            tooltip.classList.toggle("tooltip_visible", true);
+
+        }
+
+
+        function getItemByName( name ){
+            return ITEMS.find(e => e.name == name);
+        }
+
+
+        function getItemInventoryByName( name ){
+            return INVENTORY.find(e => e.name == name);
+        }
+
+
+        function getCraftByName( name ){
+            return CRAFTING.find(e => e.name == name);
+        }
+
+
+        function checkCraftByName( name ){
+
+            let crafting       = getCraftByName(name);
+            let crafting_count = null;
+
+            crafting.recipe.forEach(item => {
+
+                let inventory_item = getItemInventoryByName(item.name);
+                item.current = (inventory_item == null)? 0 : inventory_item.qty;
+
+                if ( crafting_count == null ){
+                    crafting_count = item.current;
+                }
+
+                crafting_count = Math.min(crafting_count, Math.trunc(item.current/item.qty) );
+
+            });
+
+            crafting.count = crafting_count; 
+            
+            return crafting;
+
+        }
+
+
+
+        function updateTooltipByCrafting( crafting ){
+
+            tooltip_recipe_list.innerHTML = '';
+
+            crafting.recipe.forEach(recipeItem => {
+                let tooltip_recipe_item = document.createElement('div');
+                tooltip_recipe_item.classList.add("tooltip_recipe_item");
+                tooltip_recipe_item.classList.toggle("item_invalid", recipeItem.current < recipeItem.qty);
+                tooltip_recipe_item.innerHTML = `${recipeItem.current}/${recipeItem.qty} ${getItemByName(recipeItem.name).label}`;
+                tooltip_recipe_list.appendChild(tooltip_recipe_item);
+            });
+
+        }
+
+        
+
+
+        onload = () => {
+
+            document.querySelectorAll(".item_container .item_list").forEach(e => e.innerHTML = '');
+
+
+            INVENTORY.forEach(e => {
+                let item = document.createElement('div');
+                item.classList.add("item");
+                item.setAttribute("item-name", e.name);
+                if ( e.qty > 1 ){
+                    item.innerHTML = e.qty + 'x ';
+                }
+                item.innerHTML += getItemByName(e.name).label;
+                document.querySelector("#inventory_container .item_list").appendChild(item);
+            });
+
+
+            CRAFTING.forEach(e => {
+
+                const crafting_count = checkCraftByName(e.name).count;
+
+                let item = document.createElement('div');
+                item.classList.add("item");
+                item.classList.toggle("item_invalid", crafting_count <= 0);
+                item.setAttribute("item-name", e.name);
+                item.innerHTML = `${getItemByName(e.name).label} [${crafting_count}]`;
+
+                item.onmouseenter = (event) => {
+                    onMouseEnterEvent(event, item);
+                    updateTooltipByCrafting( checkCraftByName(e.name) );
+                };
+
+                item.onmouseout = item.onblur =  () => {
+                    tooltip.classList.toggle("tooltip_visible", false);
+                };
+
+                document.querySelector("#crafting_container .item_list").appendChild(item);
+
+            });
+ 
+        };
+
+
+
+
+
+
+        const ITEMS = [
+
+            {
+                "name": "tin_can",
+                "label": "Lata de Áluminio"
+            },
+            {
+                "name": "molotov",
+                "label": "Coquetel Molotov"
+            },
+            {
+                "name": "herb",
+                "label": "Erva"
+            },
+            {
+                "name": "gazue",
+                "label": "Gaze"
+            },
+            {
+                "name": "alcohol",
+                "label": "Álcool"
+            },
+            {
+                "name": "lockpick",
+                "label": "Gazua"
+            },
+            {
+                "name": "metal_parts",
+                "label": "Peças de Metal"
+            },
+            {
+                "name": "medkit",
+                "label": "Kit Médico"
+            },
+            {
+                "name": "string",
+                "label": "Corda"
+            },
+
+        ];
+
+
+
+
+
+
+        const CRAFTING = [
+
+
+            //
+            {
+                "name": "medkit",
+                "percraft": 2,
+                "recipe": [
+
+                    {
+                        "name": "alcohol",
+                        "qty": 1
+                    },
+                    {
+                        "name": "gazue",
+                        "qty": 2
+                    }
+
+                ]
+            },
+
+            //
+            {
+                "name": "molotov",
+                "percraft": 1,
+                "recipe": [
+
+                    {
+                        "name": "alcohol",
+                        "qty": 1
+                    },
+                    {
+                        "name": "string",
+                        "qty": 1
+                    }
+
+                ]
+            },
+
+            //
+            {
+                "name": "lockpick",
+                "percraft": 8,
+                "recipe": [
+
+                    {
+                        "name": "metal_parts",
+                        "qty": 1
+                    }
+
+                ]
+            },
+
+
+
+
+        ];
+
+
+
+
+
+
+
+        var INVENTORY = [
+
+            {
+                "name": "tin_can",
+                "qty": 8
+            },
+
+            {
+                "name": "metal_parts",
+                "qty": 5
+            },
+
+            {
+                "name": "string",
+                "qty": 5
+            },
+
+            {
+                "name": "gazue",
+                "qty": 1
+            },
+
+            {
+                "name": "alcohol",
+                "qty": 6
+            },
+
+            {
+                "name": "herb",
+                "qty": 4
+            },
+
+            {
+                "name": "medkit",
+                "qty": 1
+            },
+
+        ];
+
+
+
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

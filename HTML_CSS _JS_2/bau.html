@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baú</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex; 
+            position: fixed;
+        }
+
+
+
+        #chest_list{
+            flex: 1;
+            padding: 16px;
+        }
+
+
+        .chest{
+            padding: 8px 16px;
+            width: 100%;
+            margin-bottom: 8px;
+            background-color: #212121;
+            transition: 200ms;
+            border-radius: 8px; 
+            display: flex;
+            justify-content: space-between;
+        }
+        .chest:hover{
+            background-color: #353535;
+        }
+
+        .chest_open{
+            background-color: #007bff !important;
+            border-radius: 25px;
+        }
+
+
+        #chest_slot_list{
+            padding: 0 16px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            align-content: center;
+            gap: 2px;
+            visibility: hidden;
+        }
+
+        .chest_slot_list_visible{
+            visibility: visible !important;
+        }
+
+
+        .slot{
+            width: 40px;
+            height: 40px;
+            background-color: #353535;
+            position: relative;
+        }
+        .slot:hover::after{
+            content: '';
+            display: block;
+            width: 40px;
+            height: 40px;
+            background-color: #9e9e9e;
+            opacity: 0.2;
+            
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .slot:hover .item{
+            animation: 1s pulseItem infinite linear;
+        }
+
+        @keyframes pulseItem {
+            0%{
+                transform: scale(1);
+            }
+            50%{
+                transform: scale(0.8);
+            }
+            100%{
+                transform: scale(1);
+            }
+        }
+
+        .item{
+            height: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            padding-right: 3px; 
+            background-size: 100% 100%;
+            text-shadow: 1px 1px #000; 
+        }
+
+
+
+
+        #tempSlot{
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            z-index: 2;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #tempSlot .item{
+            animation: 1s fruitHold infinite;
+        }
+
+        @keyframes fruitHold{
+            0%{
+                transform: scaleY(1);
+            }
+            25%{
+                transform: scaleY(1.2);
+            }
+            50%{
+                transform: scaleX(1.2);
+            }
+
+        }
+
+
+        #tooltip{
+            padding: 4px;
+            background-color: #252525;
+            color: #e0e0e0;
+            border-radius: 4px;
+            border: 1px solid #9e9e9e;
+            pointer-events: none;
+            visibility: hidden;
+            z-index: 1;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .tooltip_visible{
+            visibility: visible !important;
+        }
+
+
+
+
+
+        #chest_tooltip{
+            width: 250px; 
+            padding: 8px;
+            background-color: #252525;
+            border: 1px solid #9e9e9e;
+            box-shadow: 0 0 5px 0 #000;
+            border-radius: 4px; 
+            opacity: 0;
+            transition: 200ms opacity;
+            pointer-events: none;
+            z-index: 1;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        .chest_tooltip_item{
+            transition: 100ms;
+            padding: 4px 8px;
+            background-color: #353535;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column; 
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .chest_tooltip_item:last-child{
+            margin: 0;
+        }
+
+        .chest_tooltip_item_label{
+            border-bottom: 1px solid #9e9e9e;
+            padding-bottom: 4px;
+        }
+
+        .chest_tooltip_item_content{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chest_tooltip_item_img{ 
+            width: 32px;
+            height: 32px;
+            background-image: url("https://cdn-icons-png.flaticon.com/512/1514/1514935.png");
+            background-size: 100% 100%;
+        }
+
+        .chest_tooltip_item_qty{
+            flex: 1;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+
+        .chest_tooltip_visible{
+            opacity: 1 !important;
+        }
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body oncontextmenu="return false;">
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="tempSlot"></div>
+        <div id="tooltip"></div>
+
+        <div id="chest_tooltip">
+
+            <!-- ITEM -->
+            <!-- <div class="chest_tooltip_item">
+                <div class="chest_tooltip_item_label">Cenoura</div>
+                <div class="chest_tooltip_item_content">
+                    <div class="chest_tooltip_item_img"></div>
+                    <div class="chest_tooltip_item_qty">999</div>
+                </div>
+            </div>  -->
+            
+        </div>
+        
+
+        <div id="chest_list">
+            <!-- <div class="chest" chest-id="0"> <div>Bau #00</div> <div></div> </div>
+            <div class="chest" chest-id="1"> <div>Bau #01</div> <div></div> </div>
+            <div class="chest" chest-id="2"> <div>Bau #02</div> <div></div> </div> -->
+        </div>
+
+        <div id="chest_slot_list">
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        // Math.clamp = (value, min, max) => {
+        //     if (value < min) return min;
+        //     if (value > max) return max;
+        //     return value;
+        // };
+
+
+        // function getRandomInt(min, max) {
+        //     min = Math.ceil(min);
+        //     max = Math.floor(max);
+        //     return Math.floor(Math.random() * (max - min) + min);
+        // }
+        
+
+        // function map(x, in_min, in_max, out_min, out_max) {
+        //     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        // }
+
+
+        // function shuffleArray( arr = [] ){
+        //     for (let i = arr.length - 1; i >= 1; i--){
+        //         let j = getRandomInt(0, i + 1);
+        //         let temp = arr[i];
+        //         arr[i] = arr[j];
+        //         arr[j] = temp;
+        //     }
+        //     return arr;
+        // }
+		
+		
+		// function fatorial(n){
+        //     if (n > 1) {
+        //         return n * fatorial(n - 1);
+        //     }
+        //     return n;
+        // }
+
+        var tempSlot = document.getElementById('tempSlot');
+        var tooltip  = document.getElementById('tooltip');
+        var chest_tooltip = document.getElementById('chest_tooltip');
+
+
+
+        var CHEST_LIST = [
+
+            {
+                chest_id: 0,
+                chest_content: [
+                    {
+                        item_name: "potato",
+                        item_qty: 1,
+                        item_chest_index: 0
+                    },
+                    {
+                        item_name: "carrot",
+                        item_qty: 5,
+                        item_chest_index: 2
+                    },
+                ]
+            },
+
+            {
+                chest_id: 1,
+                chest_content: [
+                    {
+                        item_name: "apple",
+                        item_qty: 8,
+                        item_chest_index: 0
+                    },
+                    {
+                        item_name: "carrot",
+                        item_qty: 5,
+                        item_chest_index: 1
+                    },
+                    {
+                        item_name: "grape",
+                        item_qty: 9,
+                        item_chest_index: 2
+                    },
+                ]
+            },
+
+            {
+                chest_id: 2,
+                chest_content: [
+                    {
+                        item_name: "orange",
+                        item_qty: 8,
+                        item_chest_index: 0
+                    },
+                    {
+                        item_name: "banana",
+                        item_qty: 8,
+                        item_chest_index: 2
+                    },
+                    {
+                        item_name: "banana",
+                        item_qty: 9,
+                        item_chest_index: 5
+                    },
+                    {
+                        item_name: "grape",
+                        item_qty: 10,
+                        item_chest_index: 10
+                    },
+                ]
+            }
+
+        ];
+        
+
+
+        const ITEMS = [
+
+            {
+                name: "potato",
+                label: "Batata",
+                pack: 16,
+                img: "https://cdn-icons-png.flaticon.com/512/1652/1652077.png"
+            },
+            {
+                name: "carrot",
+                label: "Cenoura",
+                pack: 16,
+                img: "https://cdn-icons-png.flaticon.com/512/1514/1514935.png"
+            },
+            {
+                name: "apple",
+                label: "Maçã",
+                pack: 16,
+                img: "https://cdn-icons-png.flaticon.com/512/415/415682.png"
+            },
+            {
+                name: "banana",
+                label: "Banana",
+                pack: 16,
+                img: "https://cdn-icons-png.flaticon.com/512/2619/2619464.png"
+            },
+            {
+                name: "orange",
+                label: "Laranja",
+                pack: 16,
+                img: "https://cdn-icons-png.flaticon.com/512/135/135620.png"
+            },
+            {
+                name: "grape",
+                label: "Uva",
+                pack: 16,
+                img: "https://cdn-icons-png.flaticon.com/512/2836/2836932.png"
+            }
+
+        ];
+
+        
+
+        
+ 
+
+        
+
+
+
+
+
+        function getItemObjectByName(name){
+            return ITEMS.find(e => e.name == name);
+        }
+
+
+        function getChestObjectById( chestId ){
+            return CHEST_LIST.find(e => e.chest_id == chestId);
+        }
+
+
+        function clearChest(){
+            document.querySelectorAll('.slot > .item').forEach(e => e.remove());
+        }
+
+
+        function getCurrentChestId(){
+            return Array.from(document.querySelectorAll('.chest')).indexOf(document.querySelector('.chest_open'));
+        }
+
+
+
+        function generateChest( chestId ){
+
+            clearChest();
+            const chestObject = getChestObjectById(chestId);
+            if ( chestObject == null ) return;
+
+            chestObject.chest_content.forEach(e => {
+
+                const itemObject = getItemObjectByName(e.item_name);
+
+                let itemElement = document.createElement('div');
+                itemElement.classList.add('item');
+                itemElement.innerHTML = e.item_qty;
+                itemElement.ariaValueText = itemObject.label;
+                itemElement.setAttribute('item-name', e.item_name);
+                itemElement.setAttribute('pack', itemObject.pack);
+
+                itemElement.style.backgroundImage = `url("${itemObject.img}")`;
+
+                chest_slot_list.children[e.item_chest_index].appendChild(itemElement);
+
+            });
+
+        }
+
+
+
+        function updateChest(){
+
+            const chestId   = getCurrentChestId();
+            var chestObject = getChestObjectById(chestId);
+
+
+            const chestSlotList = document.querySelectorAll('.slot');
+
+
+            chestObject.chest_content = [];
+
+            document.querySelectorAll('.slot > .item').forEach(item => {
+
+                const chestSlotIndex = Array.from(chestSlotList).indexOf(item.parentElement);
+
+                chestObject.chest_content.push({
+                    item_name: item.getAttribute("item-name"),
+                    item_qty: parseInt(item.innerHTML),
+                    item_chest_index: chestSlotIndex
+                });
+ 
+
+            });
+
+            updateChestAmount();
+
+
+        }
+
+
+
+        function updateChestAmount(){
+            CHEST_LIST.forEach(chest => {
+                document.querySelector(`.chest[chest-id="${chest.chest_id}"]`).lastElementChild.innerHTML = chest.chest_content.length + '/' + chest_slot_list.children.length;
+            });
+        }
+        
+
+        function getUniqueItemsByChestId( chestId ){
+
+            const chestObject = getChestObjectById(chestId);
+            let itemList = [];
+
+            chestObject.chest_content.forEach(e => {
+                
+                let foudedItem = itemList.find(el => el.name == e.item_name);
+
+                if ( foudedItem == null ){
+                    itemList.push({
+                        name: e.item_name,
+                        qty: e.item_qty
+                    });
+                }else{
+                    foudedItem.qty += e.item_qty;
+                }
+
+            });
+
+            return itemList;
+
+        }
+
+
+
+        function generateTooltipChest( chestId ){
+            
+            chest_tooltip.innerHTML = '';
+
+            const itemList = getUniqueItemsByChestId(chestId);
+            
+            itemList.forEach((item, index) => {
+               
+                setTimeout(()=>{
+
+                    const itemObject = getItemObjectByName(item.name);
+                    let chest_tooltip_item = document.createElement('div');
+                    chest_tooltip_item.classList.add('chest_tooltip_item');
+                    
+                    chest_tooltip_item.innerHTML = `
+                    <div class="chest_tooltip_item_label">${itemObject.label}</div>
+                    <div class="chest_tooltip_item_content">
+                        <div class="chest_tooltip_item_img"></div>
+                        <div class="chest_tooltip_item_qty">${item.qty}</div>
+                    </div>`;
+                    
+                    chest_tooltip_item.querySelector('.chest_tooltip_item_img').style.backgroundImage = `url("${itemObject.img}")`;
+                    chest_tooltip.appendChild(chest_tooltip_item);
+                }, 10 * index);
+
+            });
+
+        }
+
+
+
+
+        function generateChestButtons(){
+
+            chest_list.innerHTML = '';
+
+            CHEST_LIST.forEach(chest => {
+
+                let chestElement = document.createElement('div');
+                chestElement.classList.add('chest');
+                chestElement.innerHTML = `<div>Bau #${chest.chest_id}</div> <div></div>`;
+                chestElement.setAttribute('chest-id', chest.chest_id);
+                chest_list.appendChild(chestElement);
+
+            });
+
+        }
+
+
+
+
+        document.querySelectorAll('.slot').forEach(slot => {
+
+
+
+            slot.onmousemove = () => {
+
+                let slotIsEmpty = slot.firstElementChild == null;
+                let tempSlotIsEmpty = tempSlot.firstElementChild == null;
+
+                if ( !slotIsEmpty ){
+                    tooltip.innerHTML = slot.firstElementChild.ariaValueText;
+                }
+
+                tooltip.classList.toggle('tooltip_visible', !slotIsEmpty && tempSlotIsEmpty);
+            };
+
+
+            slot.onmouseleave = () => {
+                tooltip.classList.toggle('tooltip_visible', false);
+            };
+
+
+            slot.onmousedown = (event) => {
+                
+
+                let slotIsEmpty = slot.firstElementChild == null;
+                let tempSlotIsEmpty = tempSlot.firstElementChild == null;
+                
+                let slotQty = (slotIsEmpty)? 0 : parseInt(slot.firstElementChild.innerHTML);
+                let tempSlotQty = (tempSlotIsEmpty)? 0 : parseInt(tempSlot.firstElementChild.innerHTML);
+
+                let pack = (slotIsEmpty)? 0 : parseInt(slot.firstElementChild.getAttribute('pack'));
+
+
+                // LEFT CLICK
+                if ( event.button == 0 ){
+
+                    // PICK ITEM
+                    if ( !slotIsEmpty && tempSlotIsEmpty ){
+                        tempSlot.appendChild(slot.firstElementChild);
+                    }
+
+                    // PUT AT FREE SLOT
+                    else if ( slotIsEmpty && !tempSlotIsEmpty ){
+                        slot.appendChild(tempSlot.firstElementChild);
+                    }
+
+                    // SUM or SWAP
+                    else if ( !slotIsEmpty && !tempSlotIsEmpty ){
+                        
+                        if ( slot.firstElementChild.getAttribute('item-name') == tempSlot.firstElementChild.getAttribute('item-name') ){
+                            const total = slotQty + tempSlotQty;
+
+                            if ( total <= pack ){
+                                slot.firstElementChild.innerHTML = total;
+                                tempSlot.innerHTML = '';
+                            }else{
+                                slot.firstElementChild.innerHTML = pack;
+
+                                if ( total % pack > 0 ){
+                                    tempSlot.firstElementChild.innerHTML = total % pack;
+                                }else{
+                                    tempSlot.innerHTML = '';
+                                }
+                            }
+                        }else{
+                            tempSlot.appendChild(slot.firstElementChild);
+                            slot.appendChild(tempSlot.firstElementChild);
+                        }
+
+                    }
+
+
+                }
+
+
+
+                /// RIGHT CLICK
+                else if ( event.button == 2 ){
+                     
+                    // DIVIDE or PICK
+                    if ( !slotIsEmpty && tempSlotIsEmpty ){ 
+
+                        if (slotQty > 1){
+                            const divideQty = parseInt(slotQty/2);
+                            tempSlot.appendChild( slot.firstElementChild.cloneNode(true) );
+                            slot.firstElementChild.innerHTML = divideQty;
+                            tempSlot.firstElementChild.innerHTML = slotQty - divideQty;
+                        }else{
+                            tempSlot.appendChild(slot.firstElementChild);
+                        }
+                    }
+
+                    // PUT ONE AT FREE
+                    else if ( slotIsEmpty && !tempSlotIsEmpty ){ 
+
+                        if ( tempSlotQty > 1 ){
+                            slot.appendChild( tempSlot.firstElementChild.cloneNode(true) );
+                            slot.firstElementChild.innerHTML = 1;
+                            tempSlot.firstElementChild.innerHTML = tempSlotQty - 1;
+                        }else{
+                            slot.appendChild(tempSlot.firstElementChild);
+                        }
+
+                    }
+
+                    // SUM or SWAP
+                    else if ( !slotIsEmpty && !tempSlotIsEmpty ){
+
+                        if ( slot.firstElementChild.getAttribute('item-name') == tempSlot.firstElementChild.getAttribute('item-name') ){
+
+                            if ( slotQty < pack ){
+                                slot.firstElementChild.innerHTML = slotQty + 1;
+                                
+                                if ( tempSlotQty - 1 <= 0 ){
+                                    tempSlot.innerHTML = '';
+                                }else{
+                                    tempSlot.firstElementChild.innerHTML = tempSlotQty - 1;
+                                }
+                            }
+                        }else{
+                            tempSlot.appendChild(slot.firstElementChild);
+                            slot.appendChild(tempSlot.firstElementChild);
+                        }
+
+                    }
+
+                }
+
+
+
+
+
+                // TOOLTIP
+                slotIsEmpty = slot.firstElementChild == null;
+                tempSlotIsEmpty = tempSlot.firstElementChild == null;
+                if ( !slotIsEmpty ){
+                    tooltip.innerHTML = slot.firstElementChild.ariaValueText;
+                }
+                tooltip.classList.toggle('tooltip_visible', !slotIsEmpty && tempSlotIsEmpty);
+
+
+                updateChest();
+
+
+            };
+
+        });
+
+
+
+
+
+
+
+
+        onmousemove = (event) => {
+            tempSlot.style.left = (event.clientX - tempSlot.offsetWidth/2) + 'px';
+            tempSlot.style.top = (event.clientY - tempSlot.offsetHeight/2) + 'px';
+
+            tooltip.style.left = (event.clientX + tempSlot.offsetWidth/2) + 'px';
+            tooltip.style.top = (event.clientY - tooltip.offsetHeight) + 'px';
+        };
+
+
+
+        
+
+
+        onload = () => {
+
+            generateChestButtons();
+            updateChestAmount();
+
+            let timer = null;
+
+            document.querySelectorAll('.chest').forEach(chest => {
+
+                chest.onclick = () => {
+                    const isOpen = !chest.classList.contains('chest_open');
+                    document.querySelectorAll('.chest_open').forEach(e => e.classList.remove('chest_open'));
+                    chest.classList.toggle('chest_open', isOpen);
+                    const currentChestId = parseInt(chest.getAttribute('chest-id'));
+                    generateChest( isOpen? currentChestId : null );
+                    chest_slot_list.classList.toggle('chest_slot_list_visible', isOpen);
+                };
+
+                
+                
+                chest.onmouseenter = () => {
+                    clearInterval(timer);
+                    chest_tooltip.style.left = (chest.offsetLeft) + 'px';
+                    chest_tooltip.style.top = (chest.offsetTop + chest.offsetHeight + 4) + 'px';
+                    generateTooltipChest( parseInt(chest.getAttribute('chest-id')) );
+                    setTimeout(()=>{
+                        chest_tooltip.classList.toggle('chest_tooltip_visible', true);
+                    }, 1);
+                };
+
+                chest.onmouseleave = () => { 
+                    chest_tooltip.classList.toggle('chest_tooltip_visible', false);
+                    timer = setTimeout(()=>{
+                        chest_tooltip.innerHTML = '';
+                    }, 250);
+                };
+
+            });
+
+        };
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

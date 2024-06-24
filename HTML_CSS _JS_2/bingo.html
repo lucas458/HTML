@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+
+
+
+        #roleta{
+            margin: 4px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: inherit;
+            color: #28a745;
+            border: 1px solid #28a745;
+            transition: 200ms;
+        }
+        #roleta:hover{
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        #roleta:disabled{
+            background-color: #9e9e9e;
+            color: #fff;
+            border: 1px solid #fafafa;
+        }
+
+
+
+
+        #lista-bolas{
+            display: flex;
+            width: 100%;
+            overflow: auto;
+        }
+
+        .bola{
+            min-width: 48px;
+            width: 48px;
+            height: 48px;
+            background-color: red;
+            border-radius: 50%;
+            margin: 4px;
+        }
+        .bola .bola-valor{
+            min-width: 30px;
+            width: 30px;
+            height: 30px;
+            background-color: #fff;
+            border-radius: 50%;
+            border: 1px solid #000;
+            color: #000;
+        }
+
+        .bola,
+        .bola-valor{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+
+
+        #lista-cartelas{
+            display: flex;
+        }
+
+
+        .cartela-container{
+            width: fit-content;
+            border: 1px solid #000;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+         
+        .cartela-coluna{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #000;
+        }
+
+        .cartela-coluna:last-child{
+            border: none;
+        }
+
+        .cartela-coluna:first-child > div{
+            border: none;
+        }
+
+
+        .cartela-linha{
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-right: 1px solid #000;
+        }
+
+        .cartela-numeros:hover{
+            background-color: #9e9e9e;
+        }
+        .cartela-numeros > div:not(.cartela-estrela):hover{
+            background-color: #757575;
+            color: #fff;
+        }
+
+
+
+
+        .cartela-linha:last-child{
+            border: none;
+        }
+
+
+
+
+        .cartela-titulo{
+            background-color: #007cc3;
+            font-weight: bold;
+        }
+        .cartela-numeros{
+            background-color: #fff;
+            color: #000;
+        }
+
+        .cartela-estrela{
+            color: #ffc107;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+
+    <div id="controles">
+
+        <button id="roleta" onclick="girarRoleta()">Girar</button>
+
+
+        <div id="lista-bolas">
+            <!-- <div class="bola"><div class="bola-valor">00</div></div> -->
+        </div>
+        
+ 
+
+    </div>
+
+
+
+    <div id="lista-cartelas">
+
+
+        <!-- CARTELA -->
+        <div class="cartela-container">
+
+            <div class="cartela-coluna cartela-titulo">
+                <div class="cartela-linha">B</div>
+                <div class="cartela-linha">I</div>
+                <div class="cartela-linha">N</div>
+                <div class="cartela-linha">G</div>
+                <div class="cartela-linha">O</div>
+            </div>
+
+            <div class="cartela-coluna cartela-numeros">
+                <div class="cartela-linha">22</div>
+                <div class="cartela-linha">2</div>
+                <div class="cartela-linha">8</div>
+                <div class="cartela-linha">7</div>
+                <div class="cartela-linha">74</div>
+            </div>
+
+            <div class="cartela-coluna cartela-numeros">
+                <div class="cartela-linha">22</div>
+                <div class="cartela-linha">2</div>
+                <div class="cartela-linha">8</div>
+                <div class="cartela-linha">7</div>
+                <div class="cartela-linha">74</div>
+            </div>
+
+            <div class="cartela-coluna cartela-numeros">
+                <div class="cartela-linha">22</div>
+                <div class="cartela-linha">2</div>
+                <div class="cartela-linha cartela-estrela"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg></div>
+                <div class="cartela-linha">7</div>
+                <div class="cartela-linha">74</div>
+            </div>
+
+            <div class="cartela-coluna cartela-numeros">
+                <div class="cartela-linha">22</div>
+                <div class="cartela-linha">2</div>
+                <div class="cartela-linha">8</div>
+                <div class="cartela-linha">7</div>
+                <div class="cartela-linha">74</div>
+            </div>
+
+            <div class="cartela-coluna cartela-numeros">
+                <div class="cartela-linha">22</div>
+                <div class="cartela-linha">2</div>
+                <div class="cartela-linha">8</div>
+                <div class="cartela-linha">7</div>
+                <div class="cartela-linha">74</div>
+            </div>
+
+        </div>
+        
+
+
+
+
+
+
+    </div>
+
+
+    
+
+
+
+    
+     
+
+
+    <script>
+
+
+
+        var array_cores = [
+            '#505050',
+            'red',
+            'lime',
+            'blue',
+            'yellow',
+            'purple'
+        ];
+
+        
+        var lista_cartelas = document.getElementById('lista-cartelas');
+        var array_cartela = [];
+
+
+        function getRandomInt(min, max){
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+
+
+        function getRandomBest(min, max){
+            let temp = 1;
+            for (let x = 0; x < 10; x++){
+                temp = getRandomInt(min, max);
+            }
+            return temp;
+        }
+
+
+
+        function gerarArrayCartela(){
+
+            let arr = [];
+
+
+            for (let i = 0; i < 24; i++){
+
+                let value = getRandomBest(1, 50+1);
+                
+                while ( arr.indexOf(value) >= 0 ){
+                    value = getRandomBest(1, 50+1);
+                }
+
+                arr.push(value);
+            }
+
+            arr = arr.sort(function(a, b){
+                return a - b;
+            });
+
+            // console.log(arr);
+
+
+            return arr;
+
+
+
+        }
+
+
+         
+
+
+
+
+
+        function gerarCartela(){
+
+
+            
+
+            let cartela_container = document.createElement('div');
+            cartela_container.classList.add('cartela-container');
+            let cartela_titulo = ['B', 'I', 'N', 'G', 'O'];
+
+            let index = 0;
+            let lista_numeros = gerarArrayCartela();
+            
+
+
+            // COLUNA
+            for (let colIdx = 0; colIdx < 6; colIdx++){
+
+
+                let cartela_coluna = document.createElement('div');
+                cartela_coluna.classList.add('cartela-coluna');
+                cartela_coluna.classList.add( (colIdx==0)? 'cartela-titulo' : 'cartela-numeros' );
+
+
+                // LINHA
+                for (let linIdx = 0; linIdx < 5; linIdx++){
+
+                    let cartela_linha = document.createElement('div');
+                    cartela_linha.classList.add('cartela-linha');
+    
+
+                    if ( colIdx == 3 && linIdx == 2 ){
+                        cartela_linha.classList.add('cartela-estrela');
+                        cartela_linha.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>`;
+                    }
+
+                    else if ( colIdx == 0 ){
+                        cartela_linha.innerHTML = cartela_titulo[linIdx];
+                    }
+
+                    else{
+                        let valor = lista_numeros[index++];
+                        if ( valor < 10 ){ valor = '0' + valor; }
+                        cartela_linha.innerHTML = valor;
+                    }
+
+                    cartela_coluna.appendChild(cartela_linha);
+
+                }
+
+
+                cartela_container.appendChild(cartela_coluna);
+                lista_cartelas.appendChild(cartela_container);
+
+            }
+
+
+        }
+
+
+        lista_cartelas.innerHTML = '';
+        gerarCartela();
+        gerarCartela();
+        gerarCartela();
+
+
+
+
+
+
+
+        function girarRoleta(){
+
+            console.log('x');
+
+            let lista_bolas = document.getElementById('lista-bolas');
+
+
+            
+
+            
+            
+
+            if ( lista_bolas.children.length >= 50 ){
+                console.warn('end');
+                document.getElementById('roleta').disabled = true;
+            }
+            else{
+                let bola = document.createElement('div');
+                bola.classList.add('bola');
+                let valor   = 0;//getRandomBest(1, 50+1);
+                let corIdx  = getRandomBest(0, array_cores.length);
+
+                let flag_exist = false;
+
+                do{
+                    valor = getRandomBest(1, 50+1);
+                    flag_exist = false;
+                    for (let x = 0; x < lista_bolas.children.length; x++){
+                        if ( valor == parseInt(lista_bolas.children[x].innerHTML) ){
+                            flag_exist = true;
+                            break;
+                        }
+                    }
+                } while( flag_exist );
+
+
+
+                bola.style.backgroundColor = array_cores[corIdx];
+                bola.innerHTML = `<div class="bola-valor"">${valor}</div>`;
+                lista_bolas.appendChild(bola);
+                marcar_cartela(valor);
+
+                lista_bolas.scrollTo( lista_bolas.scrollWidth, 0 );
+
+                
+
+
+            }   
+
+        }
+
+
+
+
+
+        function marcar_cartela( valorBola ){
+
+            let list = document.querySelectorAll(".cartela-numeros .cartela-linha:not(.cartela-estrela)");
+
+
+            for (let i = 0; i < list.length; i++){
+
+                let valor = parseInt(list[i].innerText);
+
+                if ( valorBola == valor ){
+                    list[i].style.backgroundColor = '#28a745';
+                    list[i].style.color           = '#fff';
+                }
+
+            }
+
+
+
+        }
+
+
+
+
+    </script>
+
+
+</body>
+</html>

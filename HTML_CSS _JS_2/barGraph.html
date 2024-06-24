@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+        .bargraph{
+            background-color: #777578;
+            display: flex;
+            padding: 4px;
+            width: fit-content;
+        }
+
+
+        .bar-led{
+            width: 8px;
+            height: 32px;
+            background-color: #9e9e9e;
+            margin-right: 4px;
+        }
+		
+		
+		#adcInput{
+			margin: 0 auto;
+			width: 50%;
+		}
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+    <input type="range" id="adcInput" min="0" max="1023" value="0">
+
+
+
+    <div class="bargraph" id="my-bargraph">
+        <div class="bar-led" led-color="#01fd04"></div>
+        <div class="bar-led" led-color="#01fd04"></div>
+        <div class="bar-led" led-color="#01fd04"></div>
+        <div class="bar-led" led-color="#01fd04"></div>
+        <div class="bar-led" led-color="#01fd04"></div>
+        <div class="bar-led" led-color="#fdf101"></div>
+        <div class="bar-led" led-color="#fdf101"></div>
+        <div class="bar-led" led-color="#fdf101"></div>
+        <div class="bar-led" led-color="#ec1a24"></div>
+        <div class="bar-led" led-color="#ec1a24"></div>
+    </div>
+
+
+
+    <script>
+
+
+        var adcInput = document.getElementById("adcInput");
+
+
+
+        adcInput.addEventListener("input", (e)=>{
+
+
+            let led_qty = document.getElementById("my-bargraph").querySelectorAll(".bar-led").length;
+            let adc_value = e.target.value;
+            let max_adc = 1023; // 10bit A/D
+
+            let level = parseInt((adc_value * led_qty) / max_adc);
+
+            document.getElementById("my-bargraph").querySelectorAll(".bar-led").forEach((el, idx)=>{
+
+                if ( idx < level ){
+                    el.style.backgroundColor = el.getAttribute("led-color");
+                }else{
+                    el.style.backgroundColor = "#9e9e9e";
+                }
+
+            });
+
+
+        });
+
+
+
+    </script>
+
+
+</body>
+</html>

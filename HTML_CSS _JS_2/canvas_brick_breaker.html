@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brick Breaker</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+        #screen{
+            border: 1px solid #fff;
+            image-rendering: pixelated;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+
+
+        @media only screen and (max-width: 720px) {
+            #controller{
+                display: flex !important;
+            }
+        }
+
+
+
+        #controller{
+            width: 100%;
+            position: fixed;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            bottom: 64px;
+            display: none;
+        }
+
+        #leftArea{
+            display: flex;
+        }
+
+
+        .button{
+            width: 64px;
+            height: 64px;
+            background-color: #353535;
+            border-radius: 50%;
+            margin: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .button:active{
+            background-color: #9e9e9e;
+            color: #212121;
+        }
+
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    
+
+    <canvas id="screen">
+        
+    </canvas>
+
+
+    <div id="controller">
+
+        <div id="leftArea">
+
+
+            <div class="button button-move" id="button-left">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                </svg>
+            </div>
+
+
+            <div class="button button-move" id="button-right">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </div>
+
+
+        </div>
+
+        <div id="rightArea">
+            <div class="button" id="button-start">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-chevron-double-up" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.646 2.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 3.707 2.354 9.354a.5.5 0 1 1-.708-.708l6-6z"/>
+                    <path fill-rule="evenodd" d="M7.646 6.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 7.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                  </svg>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        var canvas = document.getElementById('screen');
+        var ctx = canvas.getContext('2d');
+
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+
+
+         
+
+
+
+        var player = {
+            speed: 5,
+            position_absolute:{
+                x:0,
+                y:0
+            },
+            size:{
+                width:64,
+                height:10
+            }
+        }
+
+        player.position_absolute.x = (canvas.width/2) - (player.size.width/2);
+        player.position_absolute.y = canvas.height-player.size.height;
+
+
+        var ball = {
+            speed: 5,
+            radius: 16/2,
+            position_absolute:{
+                x: canvas.width/2,
+                y: canvas.height-player.size.height*2
+            },
+
+            direction:{
+                isUp: true,
+                isLeft: false
+            }
+
+        };
+
+
+
+
+
+        var gameRunning = false;
+
+
+
+
+        var listBox = [];
+        
+        for (let i = 0; i < 8; i++){
+
+            for (let j = 0; j < 8; j++){
+
+
+
+                listBox.push({
+                    x: (canvas.width/8)*j,
+                    y: (16+4)*i,
+                    w: (canvas.width/8-4),
+                    h: 16
+                });
+
+                ctx.fillRect((canvas.width/8)*j, (16+4)*i, (canvas.width/8-4), 16);
+                ctx.fill();
+            }
+
+        }
+
+
+        function updateScreen(){
+
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+
+            // PLAYER
+            ctx.beginPath();
+            ctx.fillStyle = "#007bff";
+            ctx.fillRect(player.position_absolute.x, player.position_absolute.y, player.size.width, player.size.height);
+            ctx.fill();
+
+
+            
+
+
+
+            
+            
+             
+
+            /*for (let i = 0; i < 8; i++){
+
+                for (let j = 0; j < 8; j++){
+
+
+
+                    listBox.push({
+                        x: (canvas.width/8)*j,
+                        y: (16+4)*i,
+                        w: (canvas.width/8-4),
+                        h: 16
+                    });
+
+                    ctx.fillRect((canvas.width/8)*j, (16+4)*i, (canvas.width/8-4), 16);
+                    ctx.fill();
+                }
+
+            }*/
+
+
+            
+
+
+
+            if ( gameRunning ){
+                // BALL - MOVEMENT X
+                if ( ball.direction.isLeft ){
+                    if ( ball.position_absolute.x > ball.radius ){
+                        ball.position_absolute.x -= ball.speed;
+                    }else{
+                        ball.position_absolute.x = ball.radius;
+                        ball.direction.isLeft = !ball.direction.isLeft;
+                    }
+                }
+                else{
+                    if ( ball.position_absolute.x < canvas.width - ball.radius ){
+                        ball.position_absolute.x += ball.speed;
+                    }
+                    else{
+                        ball.position_absolute.x = canvas.width - ball.radius;
+                        ball.direction.isLeft = !ball.direction.isLeft;
+                    }
+                }
+
+                // BALL - MOVEMENT Y
+                if ( ball.direction.isUp ){
+                    if ( ball.position_absolute.y > ball.radius ){
+                        ball.position_absolute.y -= ball.speed;
+                    }else{
+                        ball.position_absolute.y = ball.radius;
+                        ball.direction.isUp = !ball.direction.isUp;
+                    }
+                }
+                else{
+                    if ( ball.position_absolute.y < canvas.height - ball.radius ){
+                        ball.position_absolute.y += ball.speed;
+                    }
+                    else{
+                        ball.position_absolute.y = canvas.height - ball.radius;
+                        ball.direction.isUp = !ball.direction.isUp;
+                        gameRunning = false;
+                    }
+                }
+
+
+
+
+
+
+            }
+            else{
+                ball.position_absolute.x = player.position_absolute.x + (player.size.width/2);
+                ball.position_absolute.y = canvas.height-player.size.height*2;
+            
+            }
+
+
+            
+
+            for ( let i = 0; i < listBox.length; i++ ){
+
+                ctx.beginPath();
+                ctx.fillStyle = "#dc3545";
+                ctx.fillRect(listBox[i].x, listBox[i].y, listBox[i].w, listBox[i].h);
+                ctx.fill();
+
+                let rect1 = {
+                    x: ball.position_absolute.x - ball.radius,
+                    y: ball.position_absolute.y - ball.radius,
+                    width: ball.radius*2,
+                    height: ball.radius*2
+                };
+
+                let rect2 = {
+                    x: listBox[i].x,
+                    y: listBox[i].y,
+                    width: listBox[i].w,
+                    height: listBox[i].h
+                };
+
+
+                if ( isColliding(rect1, rect2) ){
+                    console.log("collision");
+                    listBox.splice(i, 1);
+                    ball.direction.isUp = false;
+                    break;
+                }
+
+            }
+
+            
+
+
+            // PLAYER COLLISION
+            let rect_ball = {
+                x: ball.position_absolute.x - ball.radius,
+                y: ball.position_absolute.y - ball.radius,
+                width: ball.radius*2,
+                height: ball.radius*2
+            };
+
+            let rect_player = {
+                x: player.position_absolute.x,
+                y: player.position_absolute.y,
+                width: player.size.width,
+                height: player.size.height
+            };
+
+            if ( isColliding(rect_ball, rect_player) ){
+                console.log("collision player");
+                ball.direction.isUp = true;
+            }
+
+
+ 
+
+
+            // BALL -- RENDER
+            ctx.beginPath();
+            ctx.fillStyle = "#28a745";
+            ctx.arc(ball.position_absolute.x, ball.position_absolute.y, ball.radius, 0, Math.PI * 2, true);
+            ctx.fill();
+
+
+
+
+
+
+            requestAnimationFrame(updateScreen);
+        }
+        updateScreen();
+
+
+
+
+
+        var TIMER_KEYBOARD = null;
+
+
+        function get_input(evento){
+
+            if ( evento.key == "ArrowRight" ){
+                console.log(evento.key);
+                if ( player.position_absolute.x < canvas.width - player.size.width ){
+                    player.position_absolute.x += player.speed;
+                    if ( !gameRunning ){
+                        ball.position_absolute.x += player.speed;
+                        ball.direction.isLeft = true;
+                    }
+                }
+                else{
+                    player.position_absolute.x = canvas.width - player.size.width;
+                }
+            }
+
+            if ( evento.key == "ArrowLeft" ){
+                console.log(evento.key);
+                if ( player.position_absolute.x > 0 ){
+                    player.position_absolute.x -= player.speed;
+                    if ( !gameRunning ){
+                        ball.position_absolute.x -= player.speed;
+                        ball.direction.isLeft = false;
+                    }
+                }
+                else{
+                    player.position_absolute.x = 0;
+                }
+            }
+
+            if ( evento.keyCode == 0x20 ){
+                console.log("SPACE");
+                gameRunning = true;
+            }
+
+        }
+
+
+
+        window.addEventListener("keydown", (e)=>{
+
+            if ( TIMER_KEYBOARD == null ){
+                TIMER_KEYBOARD = setInterval(()=>{
+                    get_input(e);
+                }, 10);
+            }
+            
+        });
+
+        window.addEventListener("keyup", ()=>{
+            clearInterval(TIMER_KEYBOARD);
+            TIMER_KEYBOARD = null;
+        });
+
+        window.addEventListener("blur", ()=>{
+            clearInterval(TIMER_KEYBOARD);
+            TIMER_KEYBOARD = null;
+
+            clearInterval(TIMER_TOUCH);
+            TIMER_TOUCH = null;
+        });
+        
+
+
+
+
+
+
+        function isColliding(rect1, rect2){
+
+            if (rect1.x <= rect2.x + rect2.width &&
+                rect1.x + rect1.width >= rect2.x &&
+                rect1.y <= rect2.y + rect2.height &&
+                rect1.y + rect1.height >= rect2.y) {
+                // collision detected!
+
+                return true;
+            }
+
+            return false;
+        }
+        
+
+
+
+        var TIMER_TOUCH = null;
+
+
+
+
+        document.querySelectorAll(".button-move").forEach((e, i)=>{
+
+            e.addEventListener("touchstart", ()=>{
+                console.log(i)
+                if ( TIMER_TOUCH == null ){
+                    TIMER_TOUCH = setInterval(()=>{
+
+                        let my_event = {
+                            key: "",
+                            keyCode: 0x00
+                        }
+
+                        if ( i == 0 ){
+                            my_event.key = "ArrowLeft";
+                        }
+                        else{
+                            my_event.key = "ArrowRight";
+                        }
+
+                        get_input(my_event);
+
+ 
+                    }, 10); 
+                }
+                      
+            });
+
+
+            e.addEventListener("touchend", ()=>{
+                console.log("LEAVE")
+                clearInterval(TIMER_TOUCH);
+                TIMER_TOUCH = null;
+            });
+
+        });
+
+
+        document.getElementById("button-start").addEventListener("click", ()=>{
+            gameRunning = true;
+        });
+
+
+
+    </script>
+
+
+</body>
+</html>

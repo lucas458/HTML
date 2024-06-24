@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+        #pieceList{
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }   
+
+        .piece{
+            border-radius: 4px;
+            border: 1px solid #00f;
+            overflow: hidden;
+        }
+
+        .pieceValue{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+        }
+
+        .slot{
+            width: 16px;
+            height: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dot{
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #eee;
+        }
+
+        .separator{
+            width: 100%;
+            height: 1px;
+            background-color: #00f;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+        <div id="pieceList">
+
+        </div>
+        <!-- <div class="piece" value="0,0">
+            <div class="pieceValue top">
+                <div class="slot"></div>
+                <div class="slot"> <div class="dot"></div> </div>
+                <div class="slot"> <div class="dot"></div> </div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="pieceValue bottom">
+                <div class="slot"></div>
+                <div class="slot"> <div class="dot"></div> </div>
+                <div class="slot"> <div class="dot"></div> </div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+            </div>
+        </div> -->
+
+    </div>
+
+
+     
+
+
+    <script>
+
+        const PATTERN = [
+            [4],
+            [0, 8],
+            [0, 4, 8],
+            [0, 2, 6, 8],
+            [0, 2, 4, 6, 8],
+            [0, 2, 3, 5, 6, 8]
+        ];
+
+        function generatePiece( pieceType = "0,0" ){
+
+            const pieceTypeValues = pieceType.split(",").map(e => e | 0); 
+
+            const piece = document.createElement("piece");
+            piece.classList.add("piece");
+            piece.setAttribute("value", pieceType);
+
+            piece.innerHTML = `
+            <div class="pieceValue top"></div>
+            <div class="separator"></div>
+            <div class="pieceValue bottom"></div>`;
+
+            piece.querySelectorAll(".pieceValue").forEach((e, i) => {
+                e.innerHTML = ('<div class="slot"></div>').repeat(3*3);
+
+                if ( pieceTypeValues[i] > 0 ){
+                    PATTERN[ pieceTypeValues[i] - 1 ].forEach(idx => {
+                        e.children[idx].innerHTML = '<div class="dot"></div>';
+                    });
+                }
+            });
+
+            pieceList.appendChild(piece);
+
+        }
+
+
+        for (let i = 0; i <= 6; i++){
+            for (let j = i; j <= 6; j++){
+                generatePiece(i + ',' + j);
+            }
+        }
+ 
+
+
+    </script>
+
+
+</body>
+</html>

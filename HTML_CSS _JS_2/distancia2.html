@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distancia v2</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+
+        #map{
+            width: 100%;
+            height: 100%;
+            display: flex;
+
+            position: fixed; 
+        }
+
+
+
+        header{
+            background-color: #212121;
+            padding: 4px;
+            box-shadow: 0 0 5px 0 #000;
+             
+            width: 150px;
+            max-width: 150px;
+            
+        }
+
+        .markerItem{
+            background-color: #353535;
+            color: #9e9e9e;
+            border: 1px solid transparent;
+            padding: 4px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+        .markerItem-marker{
+            border-color: #007bff;
+            border-color: #007bff;
+            margin: 0;
+            border-radius: 0;
+            transition: 100ms;
+        }
+
+        
+ 
+        .markerItem-marker:last-child{
+            border-bottom: 1px solid #007bff;
+        }
+
+
+        .markerItem-player{
+            border-color: #28a745;
+        }
+
+
+
+        section{
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+
+
+        .marker, .player{ 
+            background-color: transparent;
+            width: fit-content;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            
+            
+
+        }
+        .marker{
+            color: #007bff;
+            transition: 250ms;
+            width: 0;
+            white-space: nowrap;
+        }
+        .player{
+            color: #28a745;
+        }
+
+        .marker::before{
+            content: attr(marker-value);
+            pointer-events: none;
+            color: #fff;
+            background-color: inherit;
+        }
+
+        .icon{
+            display: flex;
+        }
+        .value{
+            color: #fff;
+            transition: 200ms;
+        }
+
+
+
+
+
+        #mode_input{
+            display: flex;
+            align-items: center;
+        }
+
+        #mode_input>span{
+            margin-left: 4px;
+        }
+
+
+        #list{
+            margin-top: 8px;
+            overflow: auto;
+            height: 100%;
+
+            padding-bottom: 30px;
+        }
+
+
+        #players{
+            position: sticky;
+            top: 0;
+            background-color: #212121;
+            padding-bottom: 1px;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+
+        
+
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+
+
+
+    <div id="map">
+
+
+        <header>
+
+            
+            <label id="mode_input">
+                <input type="checkbox" id="mode">
+                <span>Player/Marker</span>
+            </label>
+
+            <div id="list">
+
+                <div id="players">
+                    <div class="markerItem markerItem-player">Player</div>
+                </div>
+
+                <div id="markers"> 
+                    <!-- <div class="markerItem markerItem-marker">Marker (400m)</div> -->
+                </div>
+
+                
+            </div>
+            
+
+        </header>
+
+
+        <section>
+
+            <!-- <div class="marker">
+                <div class="value">0 m</div>
+                <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg></div>
+            </div> -->
+
+        </section>
+
+
+    </div>
+
+
+
+
+    <script>
+
+
+        // MARKER
+        // <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+
+
+        // PLAYER
+        // <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor" ><path d="m5 21-1-1 8-18 8 18-1 1-7-3Zm2.1-3.1 4.9-2.1 4.9 2.1-4.9-11Zm4.9-2.1Z"/></svg>
+
+        function calcularDistancia(playerX, playerY, markerX, markerY){
+
+            let diff_x = Math.abs( playerX - markerX );
+            let diff_y = Math.abs( playerY - markerY );
+
+            return Math.sqrt(diff_x**2 + diff_y**2);
+
+        }
+
+
+
+
+
+
+        function formatDistance( value ){
+            distance = value;
+            if ( distance >= 1000 ){
+                distance = (distance/1000).toFixed(1);
+                if ( distance.split('.')[1] == 0 ){
+                    distance = distance | 0;
+                }
+                distance += ' km';
+            }
+            else{
+                distance = distance | 0;
+                distance += ' m';
+            }
+
+            return distance;
+        }
+
+
+
+
+
+
+ 
+
+
+
+         
+        // CLICK NO MAPA
+        document.querySelector("#map section").addEventListener("click", (e)=>{
+
+
+            console.log( e.offsetX, e.offsetY );
+
+
+            // PLAYER
+            if ( document.getElementById("mode").checked ){
+                setPlayer(e.offsetX, e.offsetY, 0);
+            }
+
+            // MARKER
+            else{
+                addMarker(e.offsetX, e.offsetY-42);
+                
+            }            
+            
+
+
+        });
+
+
+
+
+
+        // TECLADO
+
+         
+
+        var keys = {};
+
+        
+
+        window.addEventListener('keyup', (e) => {
+
+            keys[e.key] = false;
+            
+        });
+
+
+
+        // PRESS
+
+        document.querySelector("html").addEventListener("keypress", (e)=>{
+
+            console.log(e.key);
+
+            let speed = 5;
+
+            let posX = parseInt(document.querySelector("#map .player").style.left.split('px')[0]);
+            let posY = parseInt(document.querySelector("#map .player").style.top.split('px')[0]);
+
+
+
+            // ----
+            keys[e.key] = true;
+            
+            console.log("KEYS: ", keys);
+
+            
+            // ----
+             
+
+
+            // UP
+            if ( keys['w'] ){
+                
+                if ( posY > 0 ){
+                    posY -= speed;
+                }else{posY = 0;}
+
+                
+
+                if( keys['d']) {
+                    console.warn('W + D');
+
+
+                    if ( posX < document.querySelector("#map section").offsetWidth-24 ){
+                        posX += speed;
+                    }else{
+                        posX = document.querySelector("#map section").offsetWidth-24;
+                    }
+
+                    setPlayer(posX, posY, 45);
+                }
+                else if ( keys['a'] ){
+                    if ( posX > 0 ){
+                        posX -= speed;
+                    }else{posX = 0;}
+                    console.warn('W + A');
+                    
+                    setPlayer(posX, posY, -45);
+                }
+                else{
+                    console.warn("NADA")
+                    setPlayer(posX, posY, 0);
+                }
+
+            }
+
+
+
+
+
+
+            // DOWN
+            else if ( keys['s'] ){
+
+
+                if ( posY < document.querySelector("#map section").offsetHeight-24 ){
+                    posY += speed;
+                }else{
+                    posY = document.querySelector("#map section").offsetHeight-24;
+                }
+
+                
+
+                if(keys['d']) {
+                    console.warn('S + D');
+
+
+                    if ( posX < document.querySelector("#map section").offsetWidth-24 ){
+                        posX += speed;
+                    }else{
+                        posX = document.querySelector("#map section").offsetWidth-24;
+                    }
+
+                    setPlayer(posX, posY, 90+45);
+                }
+                else if ( keys['a'] ){
+                    if ( posX > 0 ){
+                        posX -= speed;
+                    }else{posX = 0;}
+                    console.warn('S + A');
+                    
+                    setPlayer(posX, posY, -90-45);
+                }
+                else{
+                    console.warn("NADA")
+                    setPlayer(posX, posY, 180);
+                }
+
+            }
+
+
+            // LEFT
+            else if ( keys['a'] ){
+
+
+                if ( posX > 0 ){
+                    posX -= speed;
+                }else{posX = 0;}
+
+
+                setPlayer(posX, posY, -90);
+
+                 
+
+            }
+
+
+            // RIGHT
+            else if ( keys['d'] ){
+
+                if ( posX < document.querySelector("#map section").offsetWidth-24 ){
+                    posX += speed;
+                }else{
+                    posX = document.querySelector("#map section").offsetWidth-24;
+                }
+
+                setPlayer(posX, posY, 90);
+            }
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function calcularDistanciaByMarkers(){
+
+
+            let markerList = [];
+
+            document.querySelectorAll("#map section > div").forEach((e, i)=>{
+
+                if ( e.classList.contains("marker") ){
+
+
+                    let distance = calcularDistancia(
+                        parseInt(document.querySelector(".player").style.left.split('px')[0]),
+                        parseInt(document.querySelector(".player").style.top.split('px')[0]),
+                        parseInt(e.style.left.split('px')[0]),
+                        parseInt(e.style.top.split('px')[0])
+                    );
+
+                    e.children[0].innerText = formatDistance( distance );
+                    markerList.push( {
+                        'id': i-1,
+                        'dist': distance
+                    } );
+                }
+
+            });
+
+
+
+
+            markerList.sort(function(a, b){
+                return (a.dist - b.dist);
+            });
+
+             
+
+            document.getElementById("markers").innerHTML = '';
+
+            markerList.forEach((e,i)=>{
+
+                let item = document.createElement("div");
+                item.classList.add("markerItem", "markerItem-marker");
+
+                item.innerHTML = `Marker [${e.id}] - ${formatDistance(e.dist)}`;
+
+                document.getElementById("markers").appendChild(item);
+
+            });
+
+
+            
+
+            
+
+            document.querySelectorAll(".markerItem-marker").forEach((e,i)=>{
+
+                e.addEventListener("mouseover", ()=>{
+                    console.log("MOUSE IN");
+                    focusItem( markerList[i].id, i );
+                    timer(false);
+                    toggleValueMarker(true);
+                    
+                     
+                });
+
+                e.addEventListener("mouseleave", ()=>{
+                    console.log("MOUSE OUT");
+                    focusItem(-1);
+                    timer(true);
+                    
+                });
+
+            });
+
+            
+            timer(true);
+
+
+        }
+
+
+
+
+        function focusItem( index, indexItem){
+
+            document.querySelectorAll("#map section > .marker").forEach((e, i)=>{
+                e.style.opacity = (i == index || index == -1 )? 1 : 0.3;
+                e.style.zIndex  = (i == index || index == -1 )? 2 : 1;
+
+                document.querySelectorAll("#map #list #markers > div")[i].style.opacity = (i == indexItem || index == -1 )? 1 : 0.3;
+                
+            });
+             
+        }
+
+
+
+
+
+        var TIMER;
+        function timer( state ){
+
+            
+            if ( TIMER == null ){
+
+                toggleValueMarker(true);
+                TIMER = setTimeout(()=>{
+                    toggleValueMarker(false);
+                }, 1500);
+
+            }
+
+            else{
+
+				
+
+                if ( state ){
+                    clearTimeout(TIMER);
+                    TIMER = null;
+
+                    toggleValueMarker(true);
+                    TIMER = setTimeout(()=>{
+                        toggleValueMarker(false);
+                    }, 1500);
+                }
+                else{
+                    clearTimeout(TIMER);
+                    TIMER = null;
+                }
+
+                 
+                
+            }
+
+
+
+        }
+
+
+
+
+
+
+
+        function toggleValueMarker( state ){
+
+            document.querySelectorAll("#map .marker .value").forEach((e,i)=>{
+                e.style.opacity = (state)? 1 : 0;
+            });
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function addMarker(x, y){
+
+            
+
+            let isSet = false;
+            document.querySelectorAll("#map .marker").forEach((e)=>{
+
+                if ( x == parseInt(e.style.left.split('px')[0]) && y == parseInt(e.style.top.split('px')[0]) ){
+                    console.warn("JA EXISTE NA POS");
+                    isSet = true;
+                    return true;
+                }
+
+            });
+
+            if ( isSet ){return;}
+
+
+
+            let marker = document.createElement("div");
+            marker.classList.add("marker");
+
+            marker.innerHTML = `
+            <div class="value">0 m</div>
+            <div class="icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg></div>
+            `;
+
+
+            
+
+
+            marker.addEventListener('click', e=>{e.stopImmediatePropagation(); marker.remove(); calcularDistanciaByMarkers()});
+
+            marker.addEventListener("mouseover", ()=>{
+                timer(false);
+                toggleValueMarker(true);
+            });
+
+            marker.addEventListener("mouseleave", ()=>{
+                focusItem(-1);
+                timer(true);
+            });
+
+
+
+            document.querySelector("#map section").appendChild(marker);
+
+
+            marker.style.left = (x - marker.offsetWidth/2| 0 ) + 'px';
+            marker.style.top  = y + 'px';
+
+
+
+            calcularDistanciaByMarkers();
+
+        }
+
+
+        setPlayer(
+            document.querySelector("#map section").offsetWidth/2|0,
+            document.querySelector("#map section").offsetHeight/2|0,
+            0);
+
+
+
+
+
+        document.querySelector(".player").addEventListener('click', e=>{e.stopImmediatePropagation();})
+
+
+        function setPlayer(x, y, rotate){
+
+
+            let isSet = false;
+
+            document.querySelectorAll("#map section > div").forEach((e, i)=>{
+
+                if ( e.classList.contains("player") ){
+                    //console.log("MOVER");
+                    isSet = true;
+
+                    e.style.left = x + 'px';
+                    e.style.top = y + 'px';
+                    e.style.transform = `rotate(${rotate}deg)`;
+
+                    return true;                  
+                }
+
+            });
+
+
+            if ( !isSet ){
+                console.log("NOVO");
+
+                let player = document.createElement("div");
+                player.classList.add("player");
+
+                player.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" fill="currentColor" ><path d="m5 21-1-1 8-18 8 18-1 1-7-3Zm2.1-3.1 4.9-2.1 4.9 2.1-4.9-11Zm4.9-2.1Z"/></svg>
+                `;
+
+
+                player.style.left = x + 'px';
+                player.style.top = y + 'px';
+                player.style.transform = `rotate(${rotate}deg)`;
+
+                document.querySelector("#map section").appendChild(player);
+
+
+            }
+
+
+
+            
+
+
+            calcularDistanciaByMarkers();
+            
+
+
+
+
+
+        }
+
+
+
+
+
+
+        
+
+         
+
+        
+
+
+         
+
+
+
+
+    </script>
+
+
+
+
+
+
+    
+
+</body>
+</html>

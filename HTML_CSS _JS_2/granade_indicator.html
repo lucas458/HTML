@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+         
+        #arrow-trajectory{
+            position: fixed;
+            /* background-color: red;  */
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+        }
+
+        .item{
+            width: 32px;
+            height: 32px;
+            /* background-color: blue; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            position: absolute;
+            
+            left: calc( 50% - (32px/2) );
+            top: calc( 50% - (32px/2) );
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+ 
+
+
+
+
+
+
+
+
+    <div id="arrow-trajectory">
+
+
+        <div class="item item-angle" id="arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M7.022 1.566a1.13 1.13 0 0 1 1.96 0l6.857 11.667c.457.778-.092 1.767-.98 1.767H1.144c-.889 0-1.437-.99-.98-1.767L7.022 1.566z"/>
+            </svg>
+        </div>
+
+        <div class="item" id="objective">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-c-circle" viewBox="0 0 16 16">
+                <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM8.146 4.992c-1.212 0-1.927.92-1.927 2.502v1.06c0 1.571.703 2.462 1.927 2.462.979 0 1.641-.586 1.729-1.418h1.295v.093c-.1 1.448-1.354 2.467-3.03 2.467-2.091 0-3.269-1.336-3.269-3.603V7.482c0-2.261 1.201-3.638 3.27-3.638 1.681 0 2.935 1.054 3.029 2.572v.088H9.875c-.088-.879-.768-1.512-1.729-1.512Z"/>
+              </svg>
+        </div>
+        
+
+    </div>
+
+
+
+
+
+
+    <script>
+
+
+ 
+        
+
+        var screen_center = {x: 0, y: 0};
+
+
+        var arrow_trajectory = document.getElementById("arrow-trajectory");
+
+
+        screen_center.x = arrow_trajectory.offsetWidth / 2;
+        screen_center.y = arrow_trajectory.offsetHeight / 2;
+
+
+        arrow_trajectory.onmousemove = (evt)=>{
+
+            let diffX = evt.clientX -  screen_center.x;
+            let diffY = evt.clientY -  screen_center.y;
+
+            let angle = Math.atan2(diffX, diffY);
+
+            let angle_deg = angle / Math.PI * 180 + (angle>0?0:360);
+
+            let posX = (arrow_trajectory.offsetWidth/2 - 16) * Math.sin(angle);
+            let posY = (arrow_trajectory.offsetHeight/2 - 16) * Math.cos(angle);
+
+
+            document.getElementById("arrow").style.transform = `translate(${posX}px, ${posY}px) rotate(${180-angle_deg}deg)`;
+
+
+            posX = (arrow_trajectory.offsetWidth/2 - 16) * Math.sin(angle-1);
+            posY = (arrow_trajectory.offsetHeight/2 - 16) * Math.cos(angle-1);
+            
+            document.getElementById("objective").style.transform = `translate(${posX}px, ${posY}px)`;
+
+            console.log(angle_deg);
+
+        }
+
+
+    </script>
+
+
+</body>
+</html>

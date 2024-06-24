@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+
+
+        .item_wrapper{
+            position: relative; 
+            height: 64px; 
+            overflow: hidden;
+        }
+
+
+        .item_swipe{
+            background-color: #fcc107;
+            color: #383838;
+            height: 64px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            opacity: 0;
+        }
+
+
+        .item_swipe:first-child{
+            right: 0;
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .item_swipe:last-child{
+            left: 0;
+            
+        }
+        
+
+
+        .item_content_wrapper{
+            width: 100%;
+            height: 64px;
+            z-index: 1;
+            background-color: #212121;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 8px;
+            position: relative;
+            left: 0;
+        }
+
+        .item_title{
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .item_subTitle{
+            color: #9e9e9e;
+        }
+
+
+        .item_option{
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+         
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+ 
+
+    <div id="main_list">
+
+
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+        <!-- ITEM -->
+        <div class="item_wrapper">
+            <div class="item_swipe">Remover</div>
+            <div class="item_swipe">Arquivar</div>
+
+            <div class="item_content_wrapper">
+                <div class="item_content">
+                    <div class="item_title">João</div>
+                    <div class="item_subTitle">1234-5678</div>
+                </div>
+
+                <div class="item_option">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    </svg>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+
+        var main_list       = document.getElementById("main_list");
+        var item_start_x    = 0;
+        var item_can_move   = false;
+
+        main_list.querySelectorAll(".item_content_wrapper").forEach(e => {
+
+
+            e.ontouchstart = (evt) => {
+                item_start_x = evt.touches[0].clientX - e.offsetLeft;
+                main_list.style.touchAction = '';
+                e.style.backgroundColor = '#353535';
+                if (!item_can_move){
+                    main_list.querySelectorAll('.item_opened').forEach(el => el.querySelector('.item_content_wrapper').style.left = 0);
+                } 
+                item_can_move = true;
+            };
+
+
+
+            e.ontouchmove = (evt) => {
+                
+                if (!item_can_move){return;}
+
+                main_list.querySelectorAll('.item_opened').forEach(el => el.querySelector('.item_content_wrapper').style.left = 0);
+                let posX = evt.touches[0].clientX - item_start_x;
+                
+
+                if ( posX < -e.parentNode.querySelectorAll(".item_swipe")[0].offsetWidth ){
+                    posX = -e.parentNode.querySelectorAll(".item_swipe")[0].offsetWidth + posX/10 + 10;
+                }
+                else if ( posX > e.parentNode.querySelectorAll(".item_swipe")[1].offsetWidth ){
+                    posX = e.parentNode.querySelectorAll(".item_swipe")[1].offsetWidth + posX/10 - 10;
+                }
+
+                e.parentNode.querySelectorAll(".item_swipe").forEach(el => el.style.opacity = '1');
+                e.parentNode.querySelectorAll(".item_swipe")[(posX < 0)?1:0].style.opacity = '0';
+                e.style.transition = e.style.backgroundColor = ''; 
+                e.style.left = (posX) + 'px'; 
+                main_list.style.touchAction = 'manipulation'; 
+            };
+
+
+
+            e.ontouchend = (evt) => {
+
+                if ( e.offsetLeft > e.parentNode.querySelectorAll(".item_swipe")[0].offsetWidth * 0.5 ){
+                    e.style.left = e.parentNode.querySelectorAll(".item_swipe")[0].offsetWidth - 2 + 'px';
+                    e.parentNode.classList.add("item_opened"); 
+                }
+                else if ( e.offsetLeft < -e.parentNode.querySelectorAll(".item_swipe")[1].offsetWidth * 0.5 ){
+                    e.style.left = -e.parentNode.querySelectorAll(".item_swipe")[1].offsetWidth - 2 + 'px';
+                    e.parentNode.classList.add("item_opened"); 
+                }
+                else{
+                    e.style.left = 0;
+                    e.parentNode.classList.remove("item_opened");
+                }
+
+                e.style.transition = '200ms';
+                e.style.backgroundColor = '';
+
+            };
+
+
+
+            e.onclick = () => {
+                e.style.transition = '200ms';
+                e.style.left = 0;
+                main_list.querySelectorAll('.item_opened').forEach(el => el.querySelector('.item_content_wrapper').style.left = 0);
+                console.log('item click');
+            };
+
+
+
+            e.parentNode.querySelectorAll(".item_swipe").forEach((el, idx) => {
+                el.onclick = () => {
+                    e.style.left = (idx == 0)? '-100%' : '100%';
+                    e.style.opacity = 0;
+                    setTimeout(()=> {
+                        e.parentNode.remove();
+                    }, 250);
+                };
+            });
+            
+
+
+            e.querySelector('.item_option').ontouchstart = (evt) => {
+                evt.stopImmediatePropagation(); 
+                e.querySelector('.item_option').style.backgroundColor = '#353535';
+                item_can_move = false; 
+            };
+
+
+
+            e.querySelector('.item_option').ontouchend = () => {
+                e.querySelector('.item_option').style.backgroundColor = ''; 
+            };
+
+
+
+            e.querySelector('.item_option').onclick = (evt) => {
+                evt.stopImmediatePropagation();
+                e.style.left = 0;
+                main_list.querySelectorAll('.item_opened').forEach(el => el.querySelector('.item_content_wrapper').style.left = 0);
+                console.log('option click');
+            };
+
+
+        });
+
+
+
+        window.onscroll = () => {
+            item_can_move = false;
+            main_list.querySelectorAll('.item_content_wrapper').forEach(el => {
+                el.style.transition = '200ms';
+                el.style.left = 0;
+            });
+            main_list.style.touchAction = 'pan-x';
+        };
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

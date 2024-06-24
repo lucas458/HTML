@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+
+
+        #window{
+            width: 216px;
+            height: 56px;
+            background-color: aqua;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            border-radius: 45px 45px 4px 4px;
+        }
+
+
+        #wiper_wrapper{
+            flex-shrink: 0;
+            width: 110px;
+            height: 1px; 
+            margin-bottom: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end; 
+            left: 200px;
+            top: 200px;
+        }
+
+
+        .wiper{
+            width: 3px;
+            height: 50px;
+            border-radius: 8px;
+            background-color: #000;
+            transform: rotate(0rad);
+            transform-origin: center 100%;
+        }
+
+
+        .speed_selector_wrapper{
+            display: flex;
+            gap: 16px;
+        }
+    
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="window">
+            <div id="wiper_wrapper">
+                <div class="wiper"></div>
+                <div class="wiper"></div>
+            </div>
+        </div>
+
+
+
+        <div id="speed_selector_container">
+
+            <div class="speed_selector_wrapper">
+                
+                <label class="speed_wrapper">
+                    <input type="radio" name="speed_left" value="0" checked>
+                    <span>off</span>
+                </label>
+    
+                <label class="speed_wrapper">
+                    <input type="radio" name="speed_left" value="2" >
+                    <span>1</span>
+                </label>
+    
+                <label class="speed_wrapper">
+                    <input type="radio" name="speed_left" value="3" >
+                    <span>2</span>
+                </label>
+    
+                <label class="speed_wrapper">
+                    <input type="radio" name="speed_left" value="5" >
+                    <span>3</span>
+                </label>
+    
+            </div>
+
+        </div>
+
+
+
+        
+
+
+
+
+
+         
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+
+
+        
+        
+
+      
+        var wiper_angle = -90;
+
+        function update(){
+
+            const speed = document.querySelector('input[name="speed_left"]:checked').value | 0;
+            wiper_angle  = (wiper_angle + speed) % 360;
+            const wiper = Math.sin( wiper_angle * Math.PI / 180 ) * 90;
+
+            wiper_wrapper.children[0].style.transform = `rotate(${wiper}deg)`;
+            wiper_wrapper.children[1].style.transform = `rotate(${wiper}deg)`;
+
+            
+            requestAnimationFrame(update);
+        }
+
+        onload = update;
+
+
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

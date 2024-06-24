@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+        #ball_list{
+            display: flex;
+            gap: 16px;
+        }
+
+
+
+        .ball_list_column:nth-child(even){
+            padding-top: 32px;
+        }
+
+
+        .ball_wrapper{
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .ball_wrapper > .ball_slot:not(:empty) ~ .ball_slot_number{
+            color: #5f5;
+        }
+
+
+        .ball_slot{
+            width: 32px;
+            height: 32px;
+            background-color: #212121;
+            box-shadow: inset 0 0 5px 0 #000;
+            border-radius: 50%;
+        }
+
+        .ball_slot_number{
+            color: #9e9e9e;
+        }
+
+
+
+        .ball{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 5px solid #000;
+            line-height: 0;
+            background-color: #fff;
+            color: #000;
+            font-weight: bold;
+            border-radius: 50%;
+        }
+
+
+
+
+
+
+        #table_list{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            flex-direction: column;
+            overflow: auto;
+        }
+
+        .table{
+            width: fit-content;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            background-color: #fff;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+
+        .table > div{
+            width: 48px;
+            height: 48px;
+            background-color: #202020;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        } 
+
+
+        .table_slot,
+        .table_dummy_slot{
+            background-color: #151515 !important;
+        }
+
+        .table_slot:not(.table_slot_marked):hover{
+            background-color: #1a3130 !important;
+        }
+
+
+        .table_dummy_slot{
+            padding: 10px;
+        }
+
+        .table_dummy{
+            width: 100%;
+            height: 100%;
+            background-color: #353535;
+            border-radius: 50%;
+        }
+
+
+        .table_slot_marked{
+            background-color: #4c3e73 !important;
+        }
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+        <div id="ball_list">
+
+            <!-- <div class="ball_list_column">
+                <div class="ball_wrapper">
+                    <div class="ball_slot"> <div class="ball">1</div> </div>
+                    <div class="ball_slot_number">1</div>
+                </div>
+                <div class="ball_wrapper">
+                    <div class="ball_slot"></div>
+                    <div class="ball_slot_number">2</div>
+                </div>
+                <div class="ball_wrapper">
+                    <div class="ball_slot"></div>
+                    <div class="ball_slot_number">3</div>
+                </div>
+            </div>
+
+            <div class="ball_list_column">
+                <div class="ball_wrapper">
+                    <div class="ball_slot"></div>
+                    <div class="ball_slot_number">1</div>
+                </div>
+                <div class="ball_wrapper">
+                    <div class="ball_slot"></div>
+                    <div class="ball_slot_number">2</div>
+                </div>
+            </div> -->
+            
+
+
+        </div>
+
+
+
+
+        <div id="table_list">
+
+
+
+            <div class="table">
+
+                <div>B</div>
+                <div>I</div>
+                <div>N</div>
+                <div>G</div>
+                <div>O</div>
+
+                <div class="table_slot">10</div>
+                <div class="table_slot">12</div>
+                <div class="table_slot">23</div>
+                <div class="table_slot">50</div>
+                <div class="table_slot">01</div>
+                <div class="table_slot">10</div>
+                <div class="table_slot">12</div>
+                <div class="table_slot">23</div>
+                <div class="table_slot">50</div>
+                <div class="table_slot">01</div>
+                <div class="table_slot">10</div>
+                <div class="table_slot">12</div>
+                <div class="table_dummy_slot"> <div class="table_dummy"></div> </div>
+                <div class="table_slot">50</div>
+                <div class="table_slot">01</div>
+                <div class="table_slot">10</div>
+                <div class="table_slot">12</div>
+                <div class="table_slot">23</div>
+                <div class="table_slot">50</div>
+                <div class="table_slot">01</div>
+                <div class="table_slot">10</div>
+                <div class="table_slot">12</div>
+                <div class="table_slot">23</div>
+                <div class="table_slot">50</div>
+                <div class="table_slot">01</div>
+                
+            </div>
+
+
+            <div class="table">
+
+                <div>B</div>
+                <div>I</div>
+                <div>N</div>
+                <div>G</div>
+                <div>O</div>
+
+                <div class="table_slot">10</div>
+                <div class="table_slot">12</div>
+                <div class="table_slot">23</div>
+                <div class="table_slot">50</div>
+                <div class="table_slot">01</div>
+                <div class="table_slot">10</div>
+                <div class="table_slot">12</div>
+                <div class="table_slot">23</div>
+                <div class="table_slot">50</div>
+                <div class="table_slot">01</div>
+                <div class="table_slot">10</div>
+                <div class="table_slot">12</div>
+                <div class="table_dummy_slot"> <div class="table_dummy"></div> </div>
+                <div class="table_slot">50</div>
+                <div class="table_slot">01</div>
+                <div class="table_slot">10</div>
+                <div class="table_slot">12</div>
+                <div class="table_slot">23</div>
+                <div class="table_slot">50</div>
+                <div class="table_slot">01</div>
+                <div class="table_slot">10</div>
+                <div class="table_slot">12</div>
+                <div class="table_slot">23</div>
+                <div class="table_slot">50</div>
+                <div class="table_slot">01</div>
+                
+            </div>
+
+
+        </div>
+
+
+
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        const colors = ['#f00', '#0f0', '#00f', '#ff0', '#f0f', '#0ff', '#555', '#ff6600', '#505'];
+        let ballList = [];
+        
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+
+        function putBallToSlot( value ){
+            let ballSlot = document.getElementById("ballSlot_" + value);
+            ballSlot.innerHTML = `<div class="ball">${value}</div>`;
+            ballSlot.querySelector('.ball').style.borderColor = colors[ getRandomInt(0, colors.length) ];
+        }
+
+
+
+        function markSlotTable( value ){
+
+            document.querySelectorAll('.table').forEach(table => {
+                
+                Array.from(table.querySelectorAll('.table_slot')).every(table_slot => { 
+
+                    if ( table_slot.innerHTML == value ){
+                        table_slot.classList.add('table_slot_marked');
+                    }
+
+                    return table_slot.innerHTML != value;
+
+                });
+
+            });
+
+        }
+
+
+
+        function generateBallListSlot(){
+
+            ball_list.innerHTML = '';
+            var count = 1;
+
+            for (let c = 0; c < 10; c++){
+                const maxLine = (c % 2 == 0)? 8: 7;
+                let ball_list_column = document.createElement('div');
+                ball_list_column.classList.add('ball_list_column');
+
+                for (let l = 0; l < maxLine; l++){
+                    let ball_wrapper = document.createElement('div');
+                    ball_wrapper.classList.add('ball_wrapper');
+
+                    ball_wrapper.innerHTML = `
+                    <div class="ball_slot" id="ballSlot_${count}"></div>
+                    <div class="ball_slot_number">${count++}</div>`;
+
+                    ball_list_column.appendChild(ball_wrapper);
+
+                }
+
+                ball_list.appendChild(ball_list_column);
+
+            }
+
+        }
+
+
+
+        function generateTableValues(){
+
+            document.querySelectorAll('.table').forEach(table => {
+
+                let tableSlotList = [];
+
+                for (let i = 0; i < 24; i++){
+                    let slotValue = getRandomInt(1, 75+1);
+
+                    while ( tableSlotList.indexOf(slotValue) >= 0 ){
+                        slotValue = getRandomInt(1, 75+1);
+                    }
+
+                    tableSlotList.push(slotValue);
+                }
+
+                tableSlotList.sort((a, b) => a - b);
+
+
+                table.querySelectorAll('.table_slot').forEach((table_slot, table_slot_index) => {
+                    table_slot.innerHTML = tableSlotList[table_slot_index];
+                });
+
+            });
+            
+        }
+
+
+
+        onkeydown = (event) => {
+
+            console.log( event );
+
+            if ( event.key == ' ' ){
+                
+                if ( document.querySelectorAll('.ball').length >= 75 ) return;
+
+                let ballValue = getRandomInt(1, 75+1);
+
+                while ( ballList.indexOf(ballValue) >= 0 ){
+                    ballValue = getRandomInt(1, 75+1);
+                }
+
+                ballList.push(ballValue);
+                putBallToSlot(ballValue);
+                markSlotTable(ballValue);
+
+            }
+
+        };
+
+
+        onload = () => {
+            generateBallListSlot();
+            generateTableValues();
+        };
+
+    </script>
+
+</body>
+</html>

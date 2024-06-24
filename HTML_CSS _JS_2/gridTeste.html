@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+         
+        #grid_selector{
+            width: 68px;
+            height: 68px;
+            pointer-events: none;
+            outline: 2px solid #007bff;
+            transition: 200ms;
+            box-shadow: 0 0 20px 0 #007bff;
+            animation: 1s pulsingSelector infinite;
+            position: absolute;
+            left: 263px;
+            top: 173px;
+        }
+
+        @keyframes pulsingSelector {
+            0%{ box-shadow: 0 0 20px 0 #007bff; }
+            50%{ box-shadow: 0 0 10px 0 #007bff; }
+            100%{ box-shadow: 0 0 20px 0 #007bff; }
+        }
+
+        
+
+        .grid_row{
+            display: flex;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .grid_row:nth-child(even){
+            padding-left: 36px;
+        }
+
+        .grid_row:last-child{
+            margin: 0;
+        }
+
+        .grid_item{
+            width: 64px;
+            height: 64px;
+            background-color: #353535;
+        }
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+        <div id="grid_selector"></div>
+
+        <div id="grid_container">
+
+            <div class="grid_row">
+                <div class="grid_item"></div>
+                <div class="grid_item"></div>
+                <div class="grid_item"></div>
+                <div class="grid_item"></div>
+            </div>
+            
+            <div class="grid_row">
+                <div class="grid_item"></div>
+                <div class="grid_item"></div>
+                <div class="grid_item"></div>
+                <div class="grid_item"></div>
+            </div>
+            
+            <div class="grid_row">
+                <div class="grid_item"></div>
+                <div class="grid_item"></div>
+                <div class="grid_item"></div>
+                <div class="grid_item"></div>
+            </div>
+            
+            <div class="grid_row">
+                <div class="grid_item"></div>
+                <div class="grid_item"></div>
+                <div class="grid_item"></div>
+                <div class="grid_item"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+        
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+        const DATES = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        const MONTHS = [
+            "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"
+        ];
+
+
+
+        let gridX = 0;
+        let gridY = 0;
+        
+
+        const keyController = {
+
+            ArrowLeft: () => {
+                if ( --gridX < 0 ) gridX = 3;
+            },
+
+            ArrowRight: () => {
+                if ( ++gridX > 3 ) gridX = 0;
+            },
+
+            ArrowUp: () => {
+                if ( --gridY < 0 ) gridY = 3;
+            },
+
+            ArrowDown: () => {
+                if ( ++gridY > 3 ) gridY = 0;
+            }
+
+
+        };  
+
+
+        var grid_selector = document.getElementById('grid_selector');
+
+        function selectorAt(x, y){
+            if ( grid_container.children[y].children[x] == null ) return;
+            grid_selector.style.left = (grid_container.children[y].children[x].offsetLeft - 2) + 'px';
+            grid_selector.style.top  = (grid_container.children[y].children[x].offsetTop - 2) + 'px';
+        }
+
+
+        
+
+        selectorAt(gridX, gridY);
+
+        onkeydown = (event) => { 
+            if ( keyController[event.key] && !event.repeat ){
+                keyController[event.key]();
+                selectorAt(gridX, gridY);
+            }
+        };
+
+
+
+        document.querySelectorAll('.grid_item').forEach(e => {
+            e.onmousemove = () => {
+                gridX = Array.from(e.parentElement.children).indexOf(e);
+                gridY = Array.from(grid_container.children).indexOf(e.parentElement);
+                selectorAt(gridX, gridY);
+            };
+        });
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

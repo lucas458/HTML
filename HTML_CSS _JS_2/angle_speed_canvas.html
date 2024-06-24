@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+        #game{
+            background-color: #000;
+            image-rendering: pixelated;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+ 
+
+    <canvas width="480" height="480" id="game"></canvas>
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+         
+
+
+        var game = document.getElementById("game");
+        var canva_ctx = game.getContext("2d");
+
+        
+
+        var Vx = 0;
+        var Vy = 0;
+
+
+        var time = 0;
+        var angle = 0;
+
+        function update(){
+
+            
+
+            canva_ctx.clearRect(0, 0, game.offsetWidth, game.offsetHeight);
+            
+            
+            
+            canva_ctx.beginPath();
+            canva_ctx.moveTo(100, 100);
+            canva_ctx.lineTo(Math.sin(90 * Math.PI/180) * 100, Math.cos(90 * Math.PI/180) * 100); 
+            canva_ctx.strokeStyle = "red";
+            canva_ctx.stroke(); 
+
+            canva_ctx.beginPath();
+            canva_ctx.moveTo(100, 100);
+            canva_ctx.lineTo(Math.sin(0 * Math.PI/180) * 100, Math.cos(0 * Math.PI/180) * 100); 
+            canva_ctx.strokeStyle = "green";
+            canva_ctx.stroke();
+            
+
+            
+
+            canva_ctx.beginPath();
+            canva_ctx.moveTo(0, 0);
+            canva_ctx.lineTo(Math.sin(angle * Math.PI/180) * 100, Math.cos(angle * Math.PI/180) * 100); 
+            canva_ctx.strokeStyle = "blue";
+            canva_ctx.stroke();
+
+
+            Vx += Math.sin(angle * Math.PI/180) * 4;
+            Vy += Math.cos(angle * Math.PI/180) * 4;
+
+            canva_ctx.fillStyle = "cyan";
+            canva_ctx.fillRect(Vx-2, Vy-2, 3, 3);
+
+            if ( time++ >= 100/4 ){
+                time = 0;
+                Vx = 0;
+                Vy = 0;
+                angle += 1;
+                console.log(angle);
+            }
+
+
+            requestAnimationFrame(update);
+            
+        }
+
+
+        update();
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

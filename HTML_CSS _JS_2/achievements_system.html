@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #achievement_list{
+            width: 75%; 
+        }
+
+
+        .achivement_container{
+            background-color: rebeccapurple;
+            margin-bottom: 8px;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+
+        /* HEADER */
+        .achievement_header{
+            background-color: #212121;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+        }
+        .achievement_header_label{
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+        .achievement_header_button{
+            padding: 4px 8px;
+            border-radius: 6px;
+            background-color: #28a74580;
+            cursor: pointer;
+        }
+        .achievement_header_button:hover{
+            background-color: #28a745;
+        }
+
+
+        /* CONTENT */
+        .achievement_content{
+            background-color: #353535;
+            padding: 8px;
+        }
+
+
+        .achievement_element{
+            padding: 8px 0;
+            color: #9e9e9e;
+        }
+        .achievement_element_header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .achievement_element_progress_track{
+            height: 16px;
+            background-color: #212121;
+            margin-top: 8px;
+        }
+        .achievement_element_progress_fill{
+            width: 25%;
+            height: 100%;
+            background-color: #e0e0e0;
+        }
+
+
+
+
+
+
+        /* MODAL */
+        #modal{
+            width: 100%;
+            height: 100%; 
+            justify-content: center;
+            background-color: #00000080;
+            align-items: center;
+            position: fixed;
+            display: none;
+        }
+
+        .modal_visible{
+            display: flex !important;
+        }
+
+        #modal_window{
+            width: 50%;
+            background-color: #353535;
+            box-shadow: 0 0 5px 0 #000;
+            border-radius: 10px;
+        }
+
+
+        #modal_content{
+            padding: 16px 8px;
+            text-align: center;
+        }
+
+        #modal_footer{
+            display: flex;
+            justify-content: flex-end;
+            padding: 8px;
+            padding-top: 0;
+        }
+
+        #modal_footer div{
+            background-color: #212121;
+            color: #eee;
+            padding: 6px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        #modal_footer div:hover{
+            background-color: #eee;
+            color: #212121;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+    <div id="main_screen">
+        <div id="achievement_list"></div> 
+    </div>
+
+    <div id="modal">
+        <div id="modal_window">
+            <div id="modal_content"></div>
+            <div id="modal_footer">
+                <div onclick="modalToggle(false)">Fechar</div>
+            </div>
+        </div>
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+        
+
+
+        var ACHIEVEMENTS = [
+
+            {
+                label: 'Ganhar',
+                type: 'achievement_winner',
+                groups: [
+                    {
+                        label: 'Ganhe 2 Vezes',
+                        need: 2,
+                        completed: false
+                    },
+                    {
+                        label: 'Ganhe 4 Vezes',
+                        need: 4,
+                        completed: false
+                    }
+                ]
+            },
+            {
+                label: 'Perder',
+                type: 'achievement_lose',
+                groups: [
+                    {
+                        label: 'Perca 2 Vezes',
+                        need: 2,
+                        completed: false
+                    }
+                ]
+            },
+            {
+                label: 'Morrer',
+                type: 'achievement_killed',
+                groups: [
+                    {
+                        label: 'Morra 2 Vezes',
+                        need: 2,
+                        completed: false
+                    },
+                    {
+                        label: 'Morra 4 Vezes',
+                        need: 4,
+                        completed: false
+                    },
+                    {
+                        label: 'Morra 8 Vezes',
+                        need: 8,
+                        completed: false
+                    }
+                ]
+            }
+
+
+        ];
+        
+
+        var GAME = {
+            achievement_winner: 0,
+            achievement_lose: 0,
+            achievement_killed: 0
+        }
+        
+
+        function generateAchievementContainer( obj ){
+            let achivement_container = document.createElement('div');
+            achivement_container.classList.add('achivement_container');
+
+            achivement_container.innerHTML = `
+            <div class="achievement_header">
+                <div class="achievement_header_label">${obj.label} (${GAME[obj.type]})</div>
+                <div class="achievement_header_button">Executar</div>
+            </div>
+            <div class="achievement_content"></div>`;
+
+            achivement_container.querySelector('.achievement_header_button').onclick = () => {
+                GAME[obj.type]++;
+                generateAchievementList();
+            };
+
+            obj.groups.forEach(e => {
+
+                const percent = Math.clamp(GAME[obj.type] / e.need * 100, 0, 100);
+                let achievement_element = document.createElement('div');
+                achievement_element.classList.add('achievement_element');
+
+                if ( !e.completed && percent == 100 ){
+                    e.completed = true;
+                    modal_content.innerHTML = `CONQUISTA DESBLOQUEADA:<br>${e.label}`;
+                    modalToggle(true);
+                }
+
+                achievement_element.innerHTML = `
+                <div class="achievement_element_header">
+                    <div class="achievement_elelent_label">${e.label}</div>
+                    <div class="achievement_elelent_labelCounter">${Math.clamp(GAME[obj.type], 0, e.need)}/${e.need}</div>
+                </div>
+                <div class="achievement_element_progress_track">
+                    <div class="achievement_element_progress_fill" style="width: ${percent}%"></div>
+                </div>`;
+                
+                achivement_container.querySelector('.achievement_content').appendChild(achievement_element);
+
+            });
+
+            achievement_list.appendChild(achivement_container);
+
+        }
+        
+
+        function generateAchievementList(){
+            achievement_list.innerHTML = '';
+            ACHIEVEMENTS.forEach(e => generateAchievementContainer(e));
+        }
+        
+
+        function modalToggle(state){
+            modal.classList.toggle('modal_visible', state);
+        }
+
+
+        onload = generateAchievementList;
+
+    </script>
+
+
+</body>
+</html>

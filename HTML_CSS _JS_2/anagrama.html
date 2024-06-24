@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anagramas</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #inputText,
+        #amount{
+            font-size: 1.2em;
+            margin: 0 4px;
+            padding: 4px;
+			color: #fff;
+			background-color: transparent;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+    <div id="main_screen">
+        <input type="text" id="inputText" placeholder="Digite">
+        <span id="amount">0</span>
+    </div>
+    
+    
+    <script>
+
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        } 
+
+        function getAnagramas( texto ){
+            return fatorial(texto.length) / [...new Set(texto)].map(e => fatorial(texto.split(e).length-1)).reduce((a, b) => a * b);
+        }
+        
+        inputText.onkeydown = (event) => {
+            if ( !(event.keyCode >= 65 && event.keyCode <= 90 || event.key == 'Backspace') ){
+                event.preventDefault();
+            }
+        };
+        
+        inputText.oninput = () => {
+            if ( inputText.value.length <= 0 ){
+                amount.innerHTML = 0;
+                return;
+            }
+            inputText.value  = inputText.value.toUpperCase();
+            amount.innerHTML = getAnagramas(inputText.value).toLocaleString();
+        };
+
+    </script>
+
+
+</body>
+</html>

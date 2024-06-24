@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+        
+        
+        #input_wrapper{
+            padding: 4px 8px;
+        }
+        
+        #inputText{ 
+            display: block;
+            border-radius: 25px; 
+            height: 100%;
+            width: 100%;
+            border: 1px solid #fff;
+            outline: none;
+            padding: 6px 10px;
+            color: #fff;
+            background-color: transparent;
+        }
+
+        .text_container{
+            height: 100%;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text_label{
+            padding: 8px 0;
+        }
+
+        .text_wrapper{
+            height: 100%;
+            padding: 8px;
+            background-color: #353535;
+            border-radius: 8px;
+        }
+
+
+
+        .text_wrapper{
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 8px;
+            box-shadow: inset 0 0 5px 0 #000; 
+        }
+
+        .item{
+            height: fit-content;
+            padding: 2px 6px;
+            color: #ffc107;
+            border: 2px solid transparent;
+            border-bottom: 2px solid;
+            border-radius: 8px 8px 0 0;
+            transition: 200ms;
+        }
+
+        .item_selected{
+            border-color: #ffc107;
+            background-color: #212121;
+            cursor: pointer;
+            z-index: 1;
+        } 
+
+
+        #line{
+            width: 0;
+            height: 2px;
+            transition: 200ms width;
+            box-shadow: 0 0 5px 0 #000;
+            transform-origin: left center;
+            transform: rotate(0deg);
+            background-color: #ffc107;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        
+        .text_wrapper:has(.item_selected) .item:not(.item_selected){
+            opacity: 0.3;
+        }
+        
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="line"></div>
+
+        <div id="input_wrapper">
+            <input type="text" inputmode="numeric" placeholder="0..1" id="inputText">
+        </div>
+
+
+        <div class="text_container">
+            <div class="text_label">INPUT: <i>binary</i></div>
+            <div class="text_wrapper"></div>
+        </div>
+        
+
+        <div class="text_container">
+            <div class="text_label">OUTPUT: <i>ASCII</i></div>
+            <div class="text_wrapper"></div>
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+        
+        const permitedKeys = ['1', '0', ' ', 'Backspace', 'Enter', 'ArrowLeft', 'ArrowRight'];
+
+        document.querySelectorAll('.text_wrapper').forEach(el => {
+            el.onmouseenter = eventMouse;
+        });
+
+
+        function eventMouse(){
+
+            document.querySelectorAll('.item').forEach((e, i) => {
+                e.onmouseenter = () => {
+                    line.style.width = '';
+                    line.style.transition = '0ms';
+                    const index = i %  document.querySelector('.text_wrapper').children.length;
+                    const a = document.querySelectorAll('.text_wrapper')[0].children[index];
+                    const b = document.querySelectorAll('.text_wrapper')[1].children[index];
+                    const x1 = a.offsetLeft + a.offsetWidth/2;
+                    const y1 = a.offsetTop + a.offsetHeight - 2;
+                    const x2 = b.offsetLeft + b.offsetWidth/2;
+                    const y2 = b.offsetTop;
+                    const dx = x1 - x2;
+                    const dy = y1 - y2;
+                    const dist = Math.hypot(dx, dy);
+                    const angle = -Math.atan2(dx, dy) - Math.PI/2;
+                    a.classList.add('item_selected');
+                    b.classList.add('item_selected');
+                    line.style.left = x1 + 'px';
+                    line.style.top = y1 + 'px';
+                    line.style.transform = `rotate(${angle}rad)`;
+                    setTimeout(()=>{
+                        line.style.transition = '';
+                        line.style.width = dist + 'px';
+                    }, 1);
+                };
+    
+
+                e.onmouseout = e.onblur = () => {
+                    line.style.width = '';
+                    line.style.transition = '0ms';
+                    document.querySelectorAll('.item_selected').forEach(e => e.classList.remove('item_selected'));
+                };
+    
+    
+                e.onclick = () => {
+                    line.style.width = '';
+                    line.style.transition = '0ms';
+                    const index = i %  document.querySelector('.text_wrapper').children.length; 
+                    document.querySelectorAll('.text_wrapper')[0].children[index].remove();
+                    document.querySelectorAll('.text_wrapper')[1].children[index].remove();
+                    eventMouse();
+                };
+    
+    
+            });
+        }
+
+
+
+
+        function intToBinary( value = 0 ){
+            let str = '';
+            let mask = 0x80;
+            while ( mask ){
+                str += ( value & mask )? '1' : '0';
+                mask >>= 1;
+            }
+            return str;
+        }
+
+
+        function getBinaryFromString( str ){
+            try{
+                return str.match( /[0-1]/g ).join('');
+            }catch (e){
+                return '';
+            }
+        }
+
+
+        function addItem( binary ){
+            const code = ('0b' + binary) - 0;
+            if ( code < 32 ) return;
+
+            for (let i = 0; i < 2; i++){
+                let item = document.createElement('div');
+                item.classList.add('item');
+                item.innerHTML = ( i == 0 )? binary : String.fromCharCode(code);
+                document.querySelectorAll('.text_wrapper')[i].appendChild(item);
+            }
+
+        }
+
+
+
+        
+        inputText.onkeydown = (event) => {
+            
+            if ( event.key == 'Enter' ){
+                const str = getBinaryFromString(inputText.value);
+                if ( str.length > 0 ){
+                    const array = str.match(/.{1,8}/g);
+
+                    array.forEach(e => {
+                        addItem(e);
+                    });
+
+                }
+                inputText.value = '';
+            }
+
+            let flag = false;
+            permitedKeys.every(e => {
+                flag = e == event.key;
+                return !flag;
+            });
+
+            if ( !flag ){
+                event.preventDefault();
+            }
+
+        };
+        
+
+
+    </script>
+
+
+</body>
+</html>

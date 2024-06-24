@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #353535;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        .item_list{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #353535;
+            border-radius: 50px;
+        }
+
+        .item{
+            height: 48px;
+            flex-shrink: 0;
+            background-color: #28a745;
+            display: flex;
+            align-items: center;
+            border-radius: 8px 0 0 8px;
+            cursor: pointer;
+            position: relative;
+        }
+
+
+        .item_number{
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #9e9e9e;
+            font-weight: 500;
+            margin: 0 8px;
+        }
+
+
+        .item_arrow{ 
+            border: 24px solid transparent;
+            border-left-color: #28a745;
+            border-right: none;
+            margin-left: 8px;
+            transform: translateX(24px);
+        }
+
+
+
+        .item:last-child .item_arrow,
+        .item:not(:first-child):not(:last-child) .item_arrow:first-child{
+            border-color: #28a745;
+            border-left-color: #353535;
+            transform: none;
+            margin: 0;
+        }
+
+        
+
+
+
+
+
+        .item:last-child{
+            padding-right: 8px;
+            border-radius: 0 8px 8px 0;
+        }
+
+
+        .item:first-child .item_arrow,
+        .item:not(:first-child):not(:last-child) .item_arrow:last-child{
+            z-index: 1;
+        }
+
+
+
+
+        .item:hover{
+            background-color: #227d37;
+        }
+        .item:not(:last-child):hover .item_arrow{
+            border-left-color: #227d37;
+        }
+        .item:not(:first-child):hover .item_arrow:first-child{
+            border-top-color: #227d37;
+            border-bottom-color: #227d37;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+        <div class="item_list">
+
+            <div class="item">
+                <div class="item_number">1</div>
+                <div class="item_text">Browse</div>
+                <div class="item_arrow"></div>
+            </div>
+            
+            <div class="item">
+                <div class="item_arrow"></div>
+                <div class="item_number">2</div>
+                <div class="item_text">Compare</div>
+                <div class="item_arrow"></div>
+            </div>
+
+            <div class="item">
+                <div class="item_arrow"></div>
+                <div class="item_number">3</div>
+                <div class="item_text">Order Confirmation</div>
+                <div class="item_arrow"></div>
+            </div>
+            
+            <div class="item">
+                <div class="item_arrow"></div>
+                <div class="item_number">4</div>
+                <div class="item_text">Checkout</div>
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+        
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+        const DATES = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        const MONTHS = [
+            "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"
+        ];
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

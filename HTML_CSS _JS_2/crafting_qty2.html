@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INVENTORY</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        .element_window{
+            display: flex;
+        }
+
+
+
+        .element_container{
+            padding: 8px;
+            flex: 1;
+        }
+
+        .element_title{
+            text-transform: uppercase;
+            font-size: 1.5em;
+            color: #ffc107;
+        } 
+
+        .element_label{
+            background-color: #333;
+            color: #c2c2c2;
+            padding: 4px 8px;
+            text-align: center;
+        }
+
+
+
+        .element_item{
+            padding: 8px;
+            background-color: #212121;
+            transition: 200ms padding;
+        }
+        .element_item:hover{
+            padding-left: 16px;
+            background-color: #ffcc00;
+            color: #1d1d1d;
+            opacity: 0.8;
+        }
+
+         
+
+
+        #crafting .element_item{
+            cursor: pointer;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* MODAL */
+
+        .modal_container{
+            width: 100%;
+            height: 100%;
+            background-color: #000000cc;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            display: none;
+
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+
+        .modal_window{
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .modal_window > *{
+            padding: 12px;
+            background-color: #212121;
+        }
+
+
+        .modal_header{
+            font-size: 1.2em;
+            color: #ffc107;
+            text-transform: uppercase;
+        }
+
+
+        .modal_content{
+            margin: 5px 0;
+            overflow: auto;
+            max-height: 256px;
+        }
+
+        .modal_component_label{
+            color: #9e9e9e;
+        }
+        .modal_component_label_red,
+        .modal_item_red{
+            color: #dc3545;
+        }
+
+        .modal_qty{
+            margin-bottom: 16px;
+        }
+
+
+        .modal_component_list{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+
+        .modal_item{
+            padding: 8px 16px;
+            width: fit-content;
+        }
+
+
+
+
+        .modal_footer{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .modal_button{
+            padding: 8px 16px;
+            margin-left: 16px;
+            background-color: #353535;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .modal_button:focus{
+            background-color: #ffcc00;
+            color: #181818;
+        }
+        .modal_button:disabled{
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    <!-- MAIN SCREEN -->
+    <div class="element_window">
+
+
+        <!-- LEFT SCREEN -->
+        <div class="element_container" id="inventory">
+
+            <!-- inventory -->
+            <div class="element_title">inventory</div>
+ 
+
+            <!-- WEAPONS -->
+            <div class="element_wrapper">
+                <div class="element_label">WEAPONS</div>
+                <div class="element_list">
+                    <div class="element_item" item-name="sword" item-qty="1"></div> 
+                </div>
+            </div> 
+
+            <!-- EQUIPAMENT -->
+            <div class="element_wrapper">
+                <div class="element_label">EQUIPAMENT</div>
+                <div class="element_list">
+                    <div class="element_item" item-name="molotov" item-qty="3"></div> 
+                </div>
+            </div> 
+            
+            <!-- CRAFT PARTS -->
+            <div class="element_wrapper">
+                <div class="element_label">CRAFT PARTS</div>
+                <div class="element_list">
+                    <div class="element_item" item-name="gaze" item-qty="8"></div>
+                    <div class="element_item" item-name="alcool" item-qty="5"></div>
+                    <div class="element_item" item-name="nails" item-qty="16"></div>
+                    <div class="element_item" item-name="cloth" item-qty="7"></div>
+                </div>
+            </div>
+    
+            <!-- OTHER -->
+            <div class="element_wrapper">
+                <div class="element_label">OTHER</div>
+                <div class="element_list">
+                    <!-- <div class="element_item" item-name="medkit" item-qty="2"></div>  -->
+                </div>
+            </div>
+     
+        </div>
+        
+        
+    
+        <!-- RIGHT SCREEN -->
+        <div class="element_container" id="crafting">
+            
+            <!-- crafting -->
+            <div class="element_title">crafting</div>
+
+
+            <!-- UTILITIES -->
+            <div class="element_wrapper">
+                <div class="element_label">UTILITIES</div>
+                <div class="element_list">
+                    <div class="element_item" item-name="medkit" item-craftQty="0" item-perCraftQty="2" item-recipe="gaze,2;alcool,1" item-group="OTHER"></div>
+                </div>
+            </div>
+            
+            <!-- THROWING WEAPONS -->
+            <div class="element_wrapper">
+                <div class="element_label">THROWING WEAPONS</div>
+                <div class="element_list">
+                    <div class="element_item" item-name="molotov" item-craftQty="0" item-perCraftQty="1" item-recipe="cloth,1;alcool,1" item-group="EQUIPAMENT"></div>
+                </div>
+            </div>
+            
+    
+        </div>
+
+    </div>
+
+    
+
+    
+
+
+    <!-- MODAL CRAFTING -->
+    <div class="modal_container" id="crafting_modal">
+
+        <div class="modal_window">
+
+            <div class="modal_header"></div>
+
+            <div class="modal_content">
+
+                <div class="modal_qty">QUANTITY PRODUCED</div>
+                <div class="modal_component_label">COMPONENTS</div>
+                
+
+                <div class="modal_component_list">
+                    <!-- <div class="modal_item">8/5 gaze</div>
+                    <div class="modal_item">1/2 alcool</div> -->
+                </div>
+                
+
+            </div>
+
+            <div class="modal_footer">
+                <button class="modal_button" onclick="modalCancel()">CANCEL</button>
+                <button class="modal_button" onclick="modalConfirm()">CRAFT</button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+     
+
+
+    <script>
+
+        var inventory        = document.getElementById("inventory");
+        var crafting         = document.getElementById("crafting");
+        var crafting_modal   = document.getElementById("crafting_modal");
+
+
+
+        function getObjetFromRecipeString( recipe ){
+            let slittedRecipe = recipe.split(';');
+            let tempObj = [];
+            slittedRecipe.forEach(e => {
+                tempObj.push({
+                    'name': e.split(',')[0],
+                    'qty': parseInt(e.split(',')[1])
+                });
+            });
+            return tempObj;
+        }
+
+
+
+        function hasItemIventoryByName( itemName ){
+            let tempObj = {
+                "name": "",
+                "qty": 0
+            };
+            let list_wrapper = inventory.querySelectorAll(".element_item"); 
+            for (let i = 0; i < list_wrapper.length; i++){
+                if ( itemName == list_wrapper[i].getAttribute("item-name") ){
+                    tempObj.name = list_wrapper[i].getAttribute("item-name");
+                    tempObj.qty = parseInt(list_wrapper[i].getAttribute("item-qty"));
+                    return tempObj;
+                }
+            }
+            return null;
+        }
+
+
+
+        function setItemInventoryQtyByName( itemName, value ){ 
+            let list_wrapper = inventory.querySelectorAll(".element_item");
+            for (let i = 0; i < list_wrapper.length; i++){
+                if ( itemName == list_wrapper[i].getAttribute("item-name") ){
+                    list_wrapper[i].setAttribute("item-qty", value);
+                    if (value <= 0){
+                        list_wrapper[i].remove();
+                    }else if (value > 1){
+                        list_wrapper[i].innerHTML = value + 'x ' + list_wrapper[i].getAttribute("item-name");
+                    }else{
+                        list_wrapper[i].innerHTML = list_wrapper[i].getAttribute("item-name");
+                    }
+                    return;
+                }
+            }
+        }
+
+
+        function getInventoryGroupIndexByName( groupName ){
+            for (let i = 0; i < inventory.querySelectorAll(".element_label").length; i++){
+                if ( groupName == inventory.querySelectorAll(".element_label")[i].innerHTML ){
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+
+
+        function updateInventoryQty(){
+            inventory.querySelectorAll(".element_item").forEach(e => {
+                let qty = parseInt(e.getAttribute("item-qty"));
+                if (qty > 1){
+                    e.innerHTML = qty + 'x ' + e.getAttribute("item-name");
+                }else{
+                    e.innerHTML = e.getAttribute("item-name");
+                }
+            });
+        }
+
+
+
+        function updateCraftingQty(){
+            document.querySelectorAll("#crafting .element_item").forEach((e,i) => {
+                let recipe = getObjetFromRecipeString( e.getAttribute("item-recipe") );
+                let minQty;
+                let qtyResult = 0;
+                for (let idx = 0; idx < recipe.length; idx++){
+                    let tempObj= hasItemIventoryByName(recipe[idx].name);
+                    if ( tempObj ){
+                        qtyResult = Math.trunc(tempObj.qty / recipe[idx].qty);
+                    }else{
+                        minQty = 0;
+                        break;
+                    }
+                    if ( qtyResult < minQty || idx == 0 ){
+                        minQty = qtyResult;
+                    } 
+                }
+                e.innerHTML = `${e.getAttribute("item-name")} [${minQty}]`;
+                e.setAttribute("item-craftQty", minQty);
+            });
+        }
+
+        
+
+        // CLICK CRAFT ITEM
+        crafting.onmousedown = () => {
+            crafting.querySelectorAll(".element_item").forEach((el) => {
+                el.onclick = () => {
+                    let recipe = getObjetFromRecipeString( el.getAttribute("item-recipe") );
+                    crafting_modal.querySelector(".modal_component_list").innerHTML = "";
+                    crafting_modal.querySelector(".modal_component_label").classList.remove("modal_component_label_red");
+                    crafting_modal.querySelector(".modal_button:last-child").disabled = false;
+                    crafting_modal.setAttribute('item-name', el.getAttribute("item-name"));
+                    crafting_modal.setAttribute('item-group', el.getAttribute("item-group"));
+                    crafting_modal.querySelector(".modal_qty").innerHTML = `QUANTITY PRODUCED ${el.getAttribute("item-perCraftQty")}`;
+                    for (let i = 0; i < recipe.length; i++){
+                        let item = hasItemIventoryByName(recipe[i].name); 
+                        let qty = Math.trunc(((item)?item.qty:0) / recipe[i].qty);
+                        if ( qty == 0 && !crafting_modal.querySelector(".modal_component_label").classList.contains("modal_component_label_red") ){
+                            crafting_modal.querySelector(".modal_component_label").classList.add("modal_component_label_red"); 
+                            crafting_modal.querySelector(".modal_button:last-child").disabled = true;
+                        }
+                        let modal_item = document.createElement("div");
+                        modal_item.classList.add("modal_item");
+                        modal_item.classList.toggle("modal_item_red", qty == 0);
+                        modal_item.innerHTML = `${(item)?item.qty:0}/${recipe[i].qty} ${recipe[i].name}`;
+                        crafting_modal.querySelector(".modal_component_list").appendChild(modal_item);
+                    }
+                    setModalHeader("crafting_modal", el.innerHTML );
+                    toggleModal("crafting_modal", true);
+                };
+            });
+        };
+
+
+
+        function setModalHeader(id, text ){
+            document.getElementById(id).querySelector(".modal_header").innerHTML = text;
+        }
+
+
+
+        function toggleModal(id, state){
+            document.getElementById(id).style.display = (state)? 'flex' : 'none';
+        }
+ 
+
+        
+
+        function modalCancel(){
+            toggleModal("crafting_modal", false); 
+        }
+
+
+
+        function modalConfirm(){
+            toggleModal("crafting_modal", false);
+            let item = hasItemIventoryByName(crafting_modal.getAttribute("item-name"));
+            let craft_item = null;
+            crafting.querySelectorAll(".element_item").forEach(e => {
+                if ( crafting_modal.getAttribute("item-name") == e.getAttribute("item-name") ){
+                    craft_item = e;
+                    return false;
+                }
+            });
+            if (item == null){
+                let itemDiv = document.createElement('div');
+                itemDiv.classList.add('element_item');
+                itemDiv.setAttribute("item-name", craft_item.getAttribute("item-name"));
+                itemDiv.setAttribute("item-qty", 0);
+                inventory.querySelectorAll(".element_wrapper")[getInventoryGroupIndexByName(craft_item.getAttribute("item-group"))].appendChild(itemDiv);
+                item = hasItemIventoryByName(crafting_modal.getAttribute("item-name"));
+            }
+            let recipe = getObjetFromRecipeString( craft_item.getAttribute("item-recipe") );
+            recipe.forEach(e => {
+                let getItem = hasItemIventoryByName(e.name);
+                setItemInventoryQtyByName(e.name, getItem.qty - e.qty);
+            }); 
+            setItemInventoryQtyByName(item.name, item.qty + parseInt(craft_item.getAttribute("item-perCraftQty")) );
+            updateCraftingQty();
+        }
+
+
+
+        updateInventoryQty();
+        updateCraftingQty();
+
+
+
+    </script>
+
+
+</body>
+</html>

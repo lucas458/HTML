@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{ 
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        #delete{
+            font-size: 1.2em;
+            color: #fff;
+            background-color: #dc3545;
+            text-align: center;
+            padding: 8px 0;
+            margin: 8px 8px 16px;
+            border-radius: 4px;
+            position: relative;
+        }
+        #delete::after{
+            content: '';
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #353535;
+            position: absolute;
+            top: calc(100% + 8px);
+        }
+
+
+
+
+        #list{
+            padding: 8px;
+        }
+
+
+        
+        .item{
+            padding: 8px;
+            height: 64px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border: 1px solid #9e9e9e;
+            background-color: #151515;
+            display: flex;
+            align-items: center;
+        }
+
+        .item_content{
+            margin-left: 32px;
+        }
+
+        .item_check input{
+            width: 32px;
+            height: 32px; 
+            outline: none; 
+        }
+
+
+        
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    <div id="delete" onclick="deleteSelectedItems()">Deletar</div>
+ 
+    <div id="list"></div>
+
+     
+
+
+    <script>
+
+        var list = document.getElementById("list");
+        var elementos = ["batata", "arroz", "manga", "laranja"];
+
+
+        function createItem( textContent = '' ){
+            textContent = textContent.trim();
+            if ( textContent.length > 0 ){
+                let item = document.createElement("label");
+                item.classList.add("item");
+                item.setAttribute("item-index", list.children.length);
+                item.innerHTML = `
+                <div class="item_check">
+                    <input type="checkbox" name="item_select">
+                </div>
+                <div class="item_content">${textContent}</div>`;
+                list.appendChild(item);
+            }
+        }
+
+
+        elementos.forEach(e => {
+            createItem(e);
+        });
+        
+
+        function deleteSelectedItems(){
+            let selected_list = list.querySelectorAll('.item input:checked');
+            for (let i = selected_list.length-1; i >= 0; i--){
+                elementos.splice(selected_list[i].parentNode.parentNode.getAttribute("item-index"), 1);
+                selected_list[i].parentNode.parentNode.remove();
+            }
+        }  
+
+    </script>
+
+
+</body>
+</html>

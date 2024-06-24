@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+
+        @keyframes pulse{
+
+            0%{
+                transform: scale(1);
+            }
+            50%{
+                transform: scale(1.2);
+            }
+            100%{
+                transform: scale(1);
+            }
+
+        }
+
+
+
+        
+
+        #craft_screen{
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: fixed;
+        }
+
+
+        #craft_window{
+            width: 700px;
+            height: 512px;
+            max-height: 512px;
+            background-color: #192638;
+            padding: 4px;
+
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px;
+        }
+
+
+
+
+
+
+
+
+
+
+        /* SELECT VIEW */
+        #craft_select_view{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #craft_select_view_buttons{
+            display: flex;
+        }
+
+        .craft_view_button{
+            width: 84px;
+            height: 64px;
+            background-color: #a8acba;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 16px 16px 0 0;
+            border: 2px solid #192638;
+        }   
+
+        .craft_view_button_active{
+            background-color: #d2d4dd !important;
+            color: #192638;
+            border: 2px solid transparent;
+        }
+
+
+        #craft_view_label{
+            color: #395983;
+            font-weight: bold;
+            font-size: 24px;
+            text-shadow: 1px 0 #180d0d, -1px 0 #180d0d, 0 1px #180d0d, 0 -1px #180d0d;
+            margin-right: 16px;
+        }
+
+
+
+        /* SEPARATOR LINE */
+        #craft_separator_line{
+            height: 5px;
+            width: 100%;
+            background-color: #d2d4dd;
+        }
+
+
+
+        /* FILTER */
+
+
+        #craft_filter_wrapper{
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        #craft_filter_buttons{
+            display: flex;
+        }
+
+        .craft_filter_button{
+            background-color: #2a3f5b;
+            width: 48px;
+            height: 48px;
+            border: 2px solid transparent;
+            margin-right: 4px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .craft_filter_button:first-child{
+            width: fit-content;
+        }
+        .craft_filter_button:last-child{
+            margin-right: 0;
+        }
+
+        .craft_filter_button_active{
+            background-color: #395983 !important;
+        }
+
+
+
+
+        #craft_filter_search_wrapper{
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding-left: 16px;
+            margin: 4px 0;
+        }
+
+        #craft_filter_search_input{
+            width: 100%;
+            height: 100%;
+            background-color: #2a3f5b;
+            border: 2px solid #395983;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+            padding: 0 8px;
+            outline: none;
+            font-family:   monospace;
+            color: #fff; 
+        }
+        #craft_filter_search_input:focus{
+            background-color: #192638;
+        }
+         
+
+        #craft_filter_search_icon{
+            height: 100%;
+            aspect-ratio: 1/1;
+            background-color: #395983;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;  
+        }
+
+        
+
+
+
+
+
+        /* CRAFT CONTENT */
+        #craft_content{
+            height: 100%;
+        }
+
+        .craft_content_screen{
+            display: none;
+            height: 100%;
+            padding-bottom: 8px;
+        }
+
+        .craft_content_screen_active{
+            display: flex;
+        }
+
+
+
+
+        .content-wrapper{
+            border: 2px solid #395983;
+            width: 100%;
+            padding: 16px;
+            overflow: auto;
+            max-height: 100%;
+             
+        }
+
+
+
+        /* GRID */
+
+        .grid-list-wrapper{
+            height: 0;
+        }
+
+        .grid-list{
+            width: 100%;
+            display: grid;
+            align-items: start;
+            grid-template-columns: repeat(5, 1fr);
+            justify-items: center;
+            align-content: center;
+            
+        }
+        
+        .item-slot{
+            width: 48px;
+            height: 48px;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transform: scale(1);
+            cursor: pointer;
+            overflow: hidden;
+            padding: 4px;
+        }
+
+
+        .item_slot_selected{
+            animation: 1s pulse infinite ease-in-out;
+            border: 2px solid #4caf50;
+        }
+
+        .item{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://static.wikia.nocookie.net/minecraft_gamepedia/images/4/44/InvSprite.png/revision/latest?cb=20221123185755&format=original&format=original');
+            background-size: 1152px 4104px;
+            background-position-x: calc(-36px * 0);
+            background-position-y: calc(-36px * 8);
+            image-rendering: pixelated;
+        } 
+
+ 
+
+
+
+        .item-not-found{
+            white-space: nowrap;
+        }
+
+
+        /* CRAFT CONTENT -- INVENTORY */
+
+
+
+
+
+
+
+
+
+        /* CRAFT CONTENT -- CRAFTING */
+
+        .content-craft-hidden > *{
+            display: none !important;
+        }
+
+        #craft_content_crafting{
+            justify-content: space-between;
+        }
+
+
+        #craft_content_crafting .content-wrapper:first-child{
+            margin-right: 16px;
+            border-radius: 0 8px 8px 8px;
+        }
+
+
+        #craft_content_crafting .content-wrapper:last-child{
+            display: flex; 
+            align-items: center;
+            flex-direction: column;
+            width: 70%;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+
+
+        #craft_summary_item_wrapper{
+            width: 80px;
+            min-height: 80px;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            
+        }
+ 
+
+        #craft_summary_separator{
+            width: 100%;
+            height: 2px;
+            background-color: #395983;
+            margin-top: 16px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            
+        }
+
+
+        #craft_ingreditent_label{
+            width: 100%;
+            text-align: left;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-shadow: 2px 0 #180d0d, -2px 0 #180d0d, 0 2px #180d0d, 0 -2px #180d0d;
+        }
+
+        #craft_ingreditent_list_container{
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            margin-bottom: 8px;
+        }
+
+        #craft_ingreditent_list_wrapper{
+            width: 100%;
+            height: 0;
+        }
+
+        #craft_ingreditent_list{
+            width: 100%;
+            margin-top: 16px; 
+        }
+
+
+
+        .craft_ingreditent_item_wrapper{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+
+        
+
+        .craft_ingreditent_item_icon{
+            min-width: 48px;
+            height: 48px;
+            margin-right: 8px;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4px;
+        }
+
+
+        
+        
+        .craft_ingreditent_item_content{
+            width: 100%;
+            border: 2px solid #fff;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+            font-weight: bold;
+            text-shadow: 2px 0 #180d0d, -2px 0 #180d0d, 0 2px #180d0d, 0 -2px #180d0d;
+            
+        }
+         
+
+        .craft_ingreditent_item_content_label{
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .craft_ingreditent_item_separator{
+            min-width: 2px;
+            height: 100%;
+            background-color: #2a3f5b;
+            margin: 0 8px;
+        }
+
+
+
+
+
+        #craft_ingreditent_control_button{
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background-color: #78909c;
+            border-radius: 8px;
+            border: 2px solid #fff;
+            font-weight: bold;
+            cursor: pointer;
+            color: #192638;
+        }
+
+        #craft_ingreditent_control_button svg{ 
+            margin-left: 8px;
+        }
+        
+
+        .craft_ingreditent_control_button_disabled{
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+    <div id="craft_screen">
+
+
+        <div id="tooltip">
+
+
+
+        </div>
+
+
+        <div id="craft_window">
+
+            <!-- SELECT SCREEN VIEW -->
+            <div id="craft_select_view">
+
+                <div id="craft_select_view_buttons">
+
+                    <div class="craft_view_button craft_view_button_active">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="40" width="40" fill="currentColor"><path d="M9.458 36.667q-1.166 0-1.979-.813-.812-.812-.812-1.979V13.042q0-2.292 1.416-4Q9.5 7.333 11.667 6.875V3.333h4.458v3.334h7.75V3.333h4.458v3.542q2.167.458 3.584 2.167 1.416 1.708 1.416 4v20.833q0 1.167-.812 1.979-.813.813-1.979.813Zm15.834-10.292h2.75v-6.083H11.958v2.75h13.334Z"/></svg>
+                    </div>
+
+                    <div class="craft_view_button">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="40" width="40" fill="currentColor"><path d="m31.833 35-10-10 2.75-2.75 10 10ZM8.042 35l-2.75-2.75 11.875-11.875-3.917-3.917-1.042 1-1.916-1.916v3.5L9.25 20.083l-5.083-5.041 1.041-1.084H8.75l-2.042-2 5.625-5.625q.75-.75 1.625-1.041Q14.833 5 15.833 5t1.875.354q.875.354 1.625 1.104l-4.25 4.25 2.042 2.042-1.083 1.042 3.833 3.833L24.542 13q-.292-.5-.459-1.146-.166-.646-.166-1.354 0-2.292 1.645-3.917 1.646-1.625 3.938-1.625.625 0 1.104.125.479.125.854.334l-3.75 3.75 3.084 3.083 3.75-3.75q.25.417.375.938.125.52.125 1.145 0 2.292-1.625 3.917T29.5 16.125q-.667 0-1.208-.104-.542-.104-1-.313Z"/></svg>
+                    </div>
+                </div>
+
+                <div id="craft_view_label">INVENTÁRIO</div>
+
+            </div>
+
+            <!-- SEPARATOR LINE -->
+            <div id="craft_separator_line"></div>
+
+            <!-- CRAFT FILTER -->
+            <div id="craft_filter_wrapper">
+
+                <div id="craft_filter_buttons">
+                    <div class="craft_filter_button craft_filter_button_active" filter-name="all">TUDO</div>
+                    <div class="craft_filter_button" filter-name="weapon"> <div class="item" style="background-position: calc(-36px * 20) calc(-36px * 227);"></div> </div>
+                    <div class="craft_filter_button" filter-name="dress_armor"> <div class="item" style="background-position: calc(-36px * 15) calc(-36px * 78);"></div> </div>
+                    <div class="craft_filter_button" filter-name="potion"> <div class="item" style="background-position: calc(-36px * 7) calc(-36px * 9);"></div> </div>
+                    <div class="craft_filter_button" filter-name="misc"> <div class="item" style="background-position: calc(-36px * 10) calc(-36px * 98);"></div> </div>
+                </div>
+
+
+                <div id="craft_filter_search_wrapper">
+
+                    <input type="text" maxlength="64" id="craft_filter_search_input">
+
+                    <div id="craft_filter_search_icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="currentColor"><path d="m15.938 17-4.98-4.979q-.625.458-1.375.719Q8.833 13 8 13q-2.083 0-3.542-1.458Q3 10.083 3 8q0-2.083 1.458-3.542Q5.917 3 8 3q2.083 0 3.542 1.458Q13 5.917 13 8q0 .833-.26 1.583-.261.75-.719 1.375L17 15.938ZM8 11.5q1.458 0 2.479-1.021Q11.5 9.458 11.5 8q0-1.458-1.021-2.479Q9.458 4.5 8 4.5q-1.458 0-2.479 1.021Q4.5 6.542 4.5 8q0 1.458 1.021 2.479Q6.542 11.5 8 11.5Z"/></svg>
+                    </div>
+
+                </div>
+            
+            </div>
+
+
+
+            <div id="craft_content">
+
+                <!-- INVENTORY CONTENT -->
+                <div id="craft_content_inventory" class="craft_content_screen craft_content_screen_active">
+
+                    
+                    <div class="content-wrapper">
+                        
+                        <!-- GRID -->
+                        <div class="grid-list-wrapper">
+
+                            <div class="grid-list" style="grid-template-columns: repeat(9, 1fr);">
+
+                                <!-- SLOT -->
+                                <div class="item-slot">
+                                    <div class="item"></div>
+                                </div> 
+
+                            </div>
+
+                        </div>
+
+                        
+
+                    </div>
+
+                </div>
+
+
+
+
+
+
+                <!-- CRAFTING CONTENT -->
+                <div id="craft_content_crafting" class="craft_content_screen">
+                    
+
+                    <!-- LEFT -->
+                    <div class="content-wrapper">
+                        
+                        <!-- GRID -->
+                        <div class="grid-list-wrapper">
+
+                            <div class="grid-list">
+
+                                <!-- SLOT -->
+                                <div class="item-slot">
+                                    <div class="item"></div>
+                                </div> 
+
+                            </div>
+
+                        </div>
+
+                        
+
+                    </div>
+
+                    
+
+                    <!-- RIGHT -->
+                    <div class="content-wrapper content-craft-hidden" id="summary_content">
+                        
+                        <div id="craft_summary_item_wrapper">
+                            <div class="item"></div>
+                        </div>
+
+
+                        <div id="craft_summary_separator"></div>
+                        
+                        <div id="craft_ingreditent_label">Ingredientes:</div>
+
+
+
+
+                        <div id="craft_ingreditent_list_container">
+                            <div id="craft_ingreditent_list_wrapper">
+                                <!-- LIST INGREDIENT -->
+                                <div id="craft_ingreditent_list"> 
+    
+                                    <!-- ITEM -->
+                                    <div class="craft_ingreditent_item_wrapper">
+    
+                                        <div class="craft_ingreditent_item_icon"> <div class="item"></div> </div>
+                                        
+                                        <div class="craft_ingreditent_item_content">
+                                            <div class="craft_ingreditent_item_content_label">Nome Aqui</div>
+                                            <div class="craft_ingreditent_item_separator"></div>
+                                            <div class="craft_ingreditent_item_content_qty">12/16</div>
+                                        </div>
+    
+                                    </div>
+    
+                                </div>
+                            </div>
+                        </div>
+
+                        
+
+
+                         
+
+                        <div id="craft_ingreditent_control_button">
+                            <div>CRIAR</div>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="currentColor"><path d="M7.5 9.25V7H4q0-1.667 1.167-2.833Q6.333 3 8 3h4v2.5L14.5 3H16v6h-1.5L12 6.5v2.75Zm1 7.75q-.417 0-.708-.292Q7.5 16.417 7.5 16v-5.25H12V16q0 .417-.292.708Q11.417 17 11 17Z"/></svg>
+                        </div>
+
+                        
+                        
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            
+
+
+
+
+        </div>
+
+
+    </div>
+
+    
+     
+
+
+    <script>
+
+
+
+
+
+        var craft_view_button = document.querySelectorAll(".craft_view_button");
+        var craft_filter_button = document.querySelectorAll(".craft_filter_button");
+
+        var craft_filter_search_input = document.getElementById("craft_filter_search_input");
+        var craft_filter_search_icon = document.getElementById("craft_filter_search_icon");
+        
+        var craft_ingreditent_control_button = document.getElementById("craft_ingreditent_control_button");
+
+
+
+        
+        var craft_content_inventory = document.querySelector("#craft_content_inventory .grid-list");
+
+        var craft_content_crafting  = document.querySelector("#craft_content_crafting .grid-list");
+        var craft_content_summary   = document.getElementById("summary_content");
+
+        
+
+        var INVENTORY_LIST = [
+
+            
+            {
+                'name': 'madeira',
+                'qty': 120,
+                'tag': 'misc',
+                'icon': [6, 28]
+            },
+
+
+            {
+                'name': 'espada de ferro',
+                'tag': 'weapon',
+                'attack': 5,
+                'defense': 2,
+                'icon': [20, 227]
+            },
+
+
+            {
+                'name': 'capacete de ferro',
+                'tag': 'dress_armor',
+                'protect': 8,
+                'icon': [16, 78]
+            },
+
+
+            {
+                'name': 'poção de cura',
+                'qty': 2,
+                'tag': 'potion',
+                'duration': 180,
+                'icon': [7, 9]
+            },
+
+
+            {
+                'name': 'graveto',
+                'qty': 5,
+                'tag': 'misc',
+                'icon': [19, 35]
+            }
+
+
+        ];
+
+
+
+
+
+        var CRAFT_LIST = [
+
+            // ITEM
+            {
+                'name': 'espada de ferro',
+                'qty': 1,
+                'tag': 'weapon',
+                'icon': [20, 227],
+                'recipe': [
+                    { 'name': 'barra de ferro', 'qty_need': 2, 'icon': [28, 223] },
+                    { 'name': 'graveto', 'qty_need': 1, 'icon': [19, 35] }
+                ]
+            },
+
+
+             // ITEM
+             {
+                'name': 'bancada de trabalho',
+                'qty': 1,
+                'tag': 'misc',
+                'icon': [16, 112],
+                'recipe': [
+                    { 'name': 'madeira', 'qty_need': 4, 'icon': [6, 28] }
+                ]
+            }
+
+        ];
+
+
+
+
+
+         
+
+        // TELA
+        craft_view_button.forEach((e, i)=>{
+            e.onclick = ()=>{
+                openScreenView(i);
+                if ( i == 0 ){
+                    genItensInventory( getFilterName(), craft_filter_search_input.value );
+                }
+                else if ( i == 1 ){
+                    genItensCraft( getFilterName(), craft_filter_search_input.value );
+                }
+            }
+        });
+
+        // FILTRO
+        craft_filter_button.forEach((e, i)=>{
+            e.onclick = ()=>{
+                selectFilterScreen(i);
+
+                genItensInventory( getFilterName(), craft_filter_search_input.value );
+
+                genItensCraft( getFilterName(), craft_filter_search_input.value );
+
+            }
+        });
+
+
+        // INPUT
+        craft_filter_search_input.oninput = (evt)=>{
+            
+
+            evt.target.value = evt.target.value.trimStart();
+            let formatedString = evt.target.value;
+
+            if ( formatedString.length > 1 ){
+
+                if (formatedString[formatedString.length-2] == ' ' && ' ' == formatedString[formatedString.length-1] ){
+                    formatedString = formatedString.slice(0, formatedString.length-1);
+                }
+
+            }
+
+            evt.target.value = formatedString;
+
+            setSearchInputIcon( formatedString.length > 0 ); 
+            genItensInventory( getFilterName(), craft_filter_search_input.value );
+            genItensCraft( getFilterName(), craft_filter_search_input.value );
+        }
+
+
+        // CLEAR INPUT
+        craft_filter_search_icon.onclick = ()=>{
+            craft_filter_search_input.value = '';
+            setSearchInputIcon(false);
+            craft_filter_search_input.focus();
+
+            genItensInventory( getFilterName(), craft_filter_search_input.value );
+            genItensCraft( getFilterName(), craft_filter_search_input.value );
+            toggleSummary(false);
+        }
+
+
+        // CRIAR ITEM
+        craft_ingreditent_control_button.onclick = ()=>{
+
+            if ( !craft_ingreditent_control_button.classList.contains('craft_ingreditent_control_button_disabled') ){
+                console.log("criar");
+            }
+            // craft_ingreditent_control_button_disabled
+            
+        }
+
+
+
+
+
+
+
+        function selectInventoryItem( index = -1 ){
+
+            
+            if ( index < 0 ){
+                craft_content_inventory.querySelectorAll('.item_slot_selected').forEach((e,i)=>{ 
+                    e.classList.remove('item_slot_selected');
+                });
+                return;
+            }
+
+            let old_state = craft_content_inventory.children[index].classList.contains('item_slot_selected');
+
+            craft_content_inventory.querySelectorAll('.item_slot_selected').forEach((e,i)=>{ 
+                e.classList.remove('item_slot_selected');
+            });
+            
+
+
+            craft_content_inventory.children[index].classList.toggle('item_slot_selected', !old_state);
+            
+        }
+
+
+
+        function selectCraftItem( index = -1 ){
+            
+            if ( index < 0 ){
+                craft_content_crafting.querySelectorAll('.item_slot_selected').forEach((e,i)=>{ 
+                    e.classList.remove('item_slot_selected');
+                });
+                return;
+            }
+
+            let old_state = craft_content_crafting.children[index].classList.contains('item_slot_selected');
+
+            craft_content_crafting.querySelectorAll('.item_slot_selected').forEach((e,i)=>{ 
+                e.classList.remove('item_slot_selected');
+            });
+            
+
+
+            craft_content_crafting.children[index].classList.toggle('item_slot_selected', !old_state);
+            
+            toggleSummary(!old_state);
+             
+            genCraftSummary( craft_content_crafting.children[index].getAttribute('item-name') );
+
+        }
+
+
+
+
+
+
+
+
+        function genItensInventory( filter = 'all', search = '' ){
+
+            console.log(filter, search);
+
+            craft_content_inventory.innerHTML = '';
+
+          
+
+            INVENTORY_LIST = INVENTORY_LIST.sort((a, b)=>{
+                if ( a.name > b.name ) return 1;
+                if ( a.name < b.name ) return -1;
+                return 0;
+            });
+
+            
+             
+            
+
+            for (let i = 0; i < INVENTORY_LIST.length; i++){
+
+                if ( (filter != 'all' && INVENTORY_LIST[i].tag != filter) || (INVENTORY_LIST[i].name.toLowerCase().indexOf(search.toLowerCase()) < 0) ){
+                    continue;
+                }
+                
+                // create slot with item
+                let slot = document.createElement('div');
+                slot.classList.add('item-slot');
+                slot.setAttribute('item-name', INVENTORY_LIST[i].name);
+                slot.innerHTML = `<div class="item" style="background-position: calc(-36px * ${INVENTORY_LIST[i].icon[0]}) calc(-36px * ${INVENTORY_LIST[i].icon[1]});"></div>`;
+                craft_content_inventory.appendChild(slot); 
+
+            }
+            
+
+            for (let i = 0; i < craft_content_inventory.children.length; i++){
+                craft_content_inventory.children[i].onclick = ()=>{
+                    selectInventoryItem(i);
+                }
+            }
+
+
+
+        }
+
+
+
+
+        genItensInventory( getFilterName(), craft_filter_search_input.value );
+        
+
+
+
+
+
+
+
+
+
+        function genItensCraft( filter = 'all', search = '' ){
+
+            console.log(filter, search);
+
+            toggleSummary(false);
+
+            craft_content_crafting.innerHTML = '';
+
+
+            CRAFT_LIST = CRAFT_LIST.sort((a, b)=>{
+                if ( a.name > b.name ) return 1;
+                if ( a.name < b.name ) return -1;
+                return 0;
+            });
+
+
+            for (let i = 0; i < CRAFT_LIST.length; i++){ 
+
+                if ( (filter != 'all' && CRAFT_LIST[i].tag != filter) || (CRAFT_LIST[i].name.toLowerCase().indexOf(search.toLowerCase()) < 0) ){
+                    continue;
+                } 
+
+                // create slot with item
+                let slot = document.createElement('div');
+                slot.classList.add('item-slot');
+                slot.setAttribute('item-name', CRAFT_LIST[i].name);
+                slot.innerHTML = `<div class="item" style="background-position: calc(-36px * ${CRAFT_LIST[i].icon[0]}) calc(-36px * ${CRAFT_LIST[i].icon[1]});"></div>`;
+                craft_content_crafting.appendChild(slot);
+                 
+
+            }
+
+
+            for (let i = 0; i < craft_content_crafting.children.length; i++){
+                craft_content_crafting.children[i].onclick = ()=>{
+                    selectCraftItem(i);
+                }
+            }
+
+        }
+
+
+
+
+        function toggleSummary( state = false ){
+            craft_content_summary.classList.toggle('content-craft-hidden', !state);
+        }
+
+
+
+        
+
+
+
+
+        function genCraftSummary( nameRef = '' ){
+
+            let objRef = getCraftItemInfo( nameRef );
+            
+            console.log(objRef);
+
+
+            // set icon
+            document.querySelector('#craft_summary_item_wrapper .item').style.backgroundPosition = `calc(-36px * ${objRef.icon[0]}) calc(-36px * ${objRef.icon[1]})`;
+
+            let list = document.getElementById("craft_ingreditent_list");
+
+
+            /*objRef.recipe = objRef.recipe.sort((a,b)=>{
+                if (a.name > b.name) return 1;
+                if (a.name < b.name) return -1;
+                return 0;
+            });*/
+
+
+            list.innerHTML = '';
+
+            let canCraftFlag = true;
+
+            for (let i = 0; i < objRef.recipe.length; i++){
+
+                let findItemInventory = hasItemInventory( objRef.recipe[i].name );
+                
+                let current_qty = (findItemInventory != null)? (findItemInventory.qty) : 0;
+                let need_qty = objRef.recipe[i].qty_need;
+
+                if ( canCraftFlag ){
+                    canCraftFlag = current_qty >= need_qty;
+                }
+                 
+
+                console.log(findItemInventory);
+
+                craft_ingreditent_control_button.classList.toggle('craft_ingreditent_control_button_disabled', !canCraftFlag);
+                
+
+                console.log( objRef.recipe[i].name );
+                console.log( current_qty + '/' + need_qty );
+
+
+                let item_recipe_wrapper = document.createElement('div');
+                item_recipe_wrapper.classList.add('craft_ingreditent_item_wrapper');
+
+
+                item_recipe_wrapper.innerHTML = `
+                <div class="craft_ingreditent_item_icon"> <div class="item" style="background-position: calc(-36px * ${objRef.recipe[i].icon[0]}) calc(-36px * ${objRef.recipe[i].icon[1]});"></div> </div>
+                
+                <div class="craft_ingreditent_item_content">
+                    <div class="craft_ingreditent_item_content_label">${objRef.recipe[i].name}</div>
+                    <div class="craft_ingreditent_item_separator"></div>
+                    <div class="craft_ingreditent_item_content_qty" style="color: ${(current_qty >= need_qty)?'':'#ff485a'}">${current_qty}/${need_qty}</div>
+                </div>
+                `;
+
+
+                craft_ingreditent_control_button.querySelector('div').innerHTML = `CRIAR (${objRef.qty})`;
+
+
+                list.appendChild(item_recipe_wrapper);
+
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+
+        function setSearchInputIcon( state ){
+
+            if ( state ){
+                craft_filter_search_icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="currentColor"><path d="M6.062 15 5 13.938 8.938 10 5 6.062 6.062 5 10 8.938 13.938 5 15 6.062 11.062 10 15 13.938 13.938 15 10 11.062Z"/></svg>`;
+            }else{
+                craft_filter_search_icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" fill="currentColor"><path d="m15.938 17-4.98-4.979q-.625.458-1.375.719Q8.833 13 8 13q-2.083 0-3.542-1.458Q3 10.083 3 8q0-2.083 1.458-3.542Q5.917 3 8 3q2.083 0 3.542 1.458Q13 5.917 13 8q0 .833-.26 1.583-.261.75-.719 1.375L17 15.938ZM8 11.5q1.458 0 2.479-1.021Q11.5 9.458 11.5 8q0-1.458-1.021-2.479Q9.458 4.5 8 4.5q-1.458 0-2.479 1.021Q4.5 6.542 4.5 8q0 1.458 1.021 2.479Q6.542 11.5 8 11.5Z"></path></svg>`;
+            }
+
+        }
+
+
+        function openScreenView( index = 0 ){
+
+            document.querySelectorAll(".craft_view_button_active").forEach(e=>{
+                e.classList.remove('craft_view_button_active');
+            });
+
+            document.querySelectorAll(".craft_content_screen_active").forEach(e=>{
+                e.classList.remove('craft_content_screen_active');
+            });
+
+            document.querySelectorAll(".craft_view_button")[index].classList.add('craft_view_button_active');
+            document.querySelectorAll(".craft_content_screen")[index].classList.add('craft_content_screen_active');
+
+            document.getElementById("craft_view_label").innerHTML = (index==0)? "INVENTÁRIO" : "CRAFTING";
+
+
+        }
+
+
+
+
+
+        function selectFilterScreen( index = 0 ){
+
+            document.querySelectorAll(".craft_filter_button_active").forEach(e=>{
+                e.classList.remove('craft_filter_button_active');
+            });
+
+
+            document.querySelectorAll(".craft_filter_button")[index].classList.add('craft_filter_button_active');
+
+        }
+
+
+
+        function getFilterName(){
+
+            let found = 'all';
+            document.querySelectorAll(".craft_filter_button").forEach((e, i)=>{
+
+                if ( e.classList.contains('craft_filter_button_active') ){
+                    found = e.getAttribute('filter-name');
+                    return false;
+                }
+
+            });
+
+            return found;
+
+        }
+
+
+
+
+
+        function hasItemInventory( name = '' ){
+
+            var index = INVENTORY_LIST.findIndex(function(obj) {
+                return obj.name == name;
+            });
+
+            return INVENTORY_LIST[index];
+
+        }
+
+
+        function getCraftItemInfo( name = '' ){
+            var index = CRAFT_LIST.findIndex(function(obj) {
+                return obj.name == name;
+            });
+
+            return CRAFT_LIST[index];
+        }
+
+
+        
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

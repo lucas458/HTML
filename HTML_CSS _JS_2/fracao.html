@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Frações</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+        ::-webkit-inner-spin-button{
+            display: none;
+        }
+
+
+        #main_header{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 8px;
+        }
+
+        #inputContainer{
+            width: fit-content;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .numberInput{
+            width: 128px;
+            height: 32px;
+            border: 1px solid #9e9e9e;
+            border-radius: 4px;
+            background-color: #353535;
+            color: #fff;
+            caret-color: #f00;
+            padding: 4px 6px;
+            margin: 4px;
+            font-size: 1.2em;
+            outline: none;
+            border: none;
+            text-align: center;
+        }
+
+        #numberSeparator{
+            height: 2px;
+            background-color: #fff;
+        }
+
+
+
+        #main_content{
+            overflow: auto;
+            padding-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .group{
+            width: fit-content;
+            border: 1px solid #9e9e9e;
+            border-radius: 4px;
+            padding: 2px;
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 2px;
+        }
+
+        .item{
+            width: 24px;
+            height: 24px;
+            background-color: #ffc107;
+        }
+
+        .itemEmpty{
+            background-color: #353535;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    <div id="main_screen">
+
+        <div id="main_header">
+
+            <div id="inputContainer">
+                <div class="numberInputWrapper">
+                    <input type="number" class="numberInput" id="inputNumerador" placeholder="numerador">
+                </div>
+                
+                <div id="numberSeparator"></div>
+    
+                <div class="numberInputWrapper">
+                    <input type="number" class="numberInput" id="inputDenominador" placeholder="denominador">
+                </div>
+            </div>
+
+        </div>
+
+        <div id="main_content"></div>
+
+    </div>
+
+
+     
+
+
+    <script>
+        
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        const numberInput = document.getElementsByClassName("numberInput");
+        const main_content = document.getElementById("main_content");
+
+
+        Array.from(numberInput).forEach(e => {
+            e.onkeydown = (event) => {
+                if ( event.key == 'Tab' || event.key == 'Backspace' || event.key == 'ArrowLeft' || event.key == 'ArrowRight' || event.key == '.' || event.key == ',' || event.ctrlKey ){
+                    return;
+                }
+                if ( event.key == 'Enter' ){
+                    (e == inputNumerador)? inputDenominador.focus() : inputNumerador.focus();
+                    return;
+                }
+
+                if ( event.key < '0' || event.key > '9' ){
+                    event.preventDefault();
+                }
+            };
+
+
+            e.oninput = () => {
+                let numerador = parseInt(inputNumerador.value);
+                let denominador = parseInt(inputDenominador.value);
+
+                numerador = isNaN(numerador)? 0 : numerador;
+                denominador = isNaN(denominador)? 0 : denominador;
+
+                if ( inputNumerador.value.length > 0 ){
+                    inputNumerador.value = Math.clamp(numerador, 0, 1024);
+                }
+
+                if ( inputDenominador.value.length > 0 ){
+                    inputDenominador.value = Math.clamp(denominador, 0, 1024);
+                }
+
+
+
+                generate(numerador, denominador);
+            };
+
+        });
+
+
+
+        function generateGroup(gridCols = 1, amountItems = 0, amountItemsActive = 0){
+            const group = document.createElement("div");
+            group.classList.add("group");
+            group.style.gridTemplateColumns = `repeat(${gridCols}, 1fr)`;
+
+            for (let i = 0; i < amountItems; i++){
+                const item = document.createElement("div");
+                item.classList.add("item");
+                item.classList.toggle("itemEmpty", i >= amountItemsActive);
+                group.appendChild(item);
+            }
+
+            return group;
+        }
+        
+
+        function generate(numerador, denominador){
+            main_content.innerHTML = '';
+            
+            if ( denominador == 0 ){
+                return;
+            }
+
+            const gridCols = Math.max(1, Math.trunc(Math.sqrt(denominador)) );
+            
+            if ( numerador > denominador ){
+                const amountGroups = Math.ceil(numerador/denominador);
+                const amountGroupsFull = Math.trunc(numerador/denominador);
+                const amountRemainItems = numerador % denominador;
+                
+                for (let i = 0; i < amountGroups; i++){
+                    main_content.appendChild( generateGroup(gridCols, denominador, (i >= amountGroupsFull)? amountRemainItems : denominador) );
+                }
+
+                return;
+            }
+
+            main_content.appendChild( generateGroup(gridCols, denominador, numerador) );
+
+        }
+
+
+    </script>
+
+
+</body>
+</html>

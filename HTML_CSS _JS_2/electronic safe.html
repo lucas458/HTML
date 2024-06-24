@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronic Safe</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #9e9e9e;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #safe{
+            background-color: #000;
+            padding: 16px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        #safe_door, #safe_door_back{
+            width: 500px;
+            height: 256px;
+            border-radius: 8px;
+            position: relative;
+            z-index: 1;
+            transition: 250ms;
+            transform-origin: left;
+            transition: all 0.5s ease-in-out;
+            background-color: #000 !important;
+        }
+        #safe_door{
+            z-index: 2; 
+            box-shadow: inset 0 0 5px 0 #212121;   
+        }
+        #safe_door_back{
+            cursor: pointer;
+        }
+
+        .doorOpen{
+            transform: perspective(1200px) rotateY(-105deg);
+        }
+
+        #safe_door.doorOpen ~ #safe_door_back{
+            transform: perspective(1200px) rotateY(-105deg);
+            z-index: 2;
+        }
+
+
+        #safe_content, #safe_door_back{
+            width: 500px;
+            height: 256px;
+            border-radius: 8px;
+            background-color: #212121;
+            position: absolute;
+            top: 16px;
+        }
+
+
+        #safe_content{
+            display: flex;
+            align-items: center;
+        }
+
+        #safe_content > div{
+            width: 100%;
+            height: 16px;
+            background-color: #000;
+        }   
+
+
+
+
+
+        #safe_lever{
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin-left: 128px;
+            transition: 200ms;
+            transform-origin: center center;
+            transform: rotate(0deg);
+            cursor: pointer;
+        }
+
+        #safe_lever::after{
+            content: '';
+            display: block;
+            width: 128px;
+            border-radius: 16px;
+            height: 48px;
+            background-color: #fff;
+            position: absolute;
+            right: 50%;
+        }
+
+
+
+
+
+
+
+
+        #safe_panel{
+            margin-right: 16px;
+            background-color: #0a0a0a;
+            padding: 6px;
+            border-radius: 8px;
+            border: 1px solid;
+        }
+        
+
+ 
+
+
+
+        #safe_door{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        #safe_lcd{
+            text-align: center;
+            font-size: 1.5em;
+            letter-spacing: 4px;
+            font-family: monospace;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #safe_lcd_content{
+            width: 128px;
+            padding: 4px 8px;
+            border: 2px solid #fff;
+            color: #aaa;
+            border-radius: 4px;
+            white-space: pre;
+        }
+
+
+
+
+
+
+        #safe_keypad{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            width: fit-content;
+            gap: 8px;
+            text-align: center;
+        }
+
+        .safe_key{
+            padding: 2px 16px;
+            border-radius: 50px;
+            border: 2px solid #fff;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .safe_key:hover{
+            background-color: #333;
+        }
+
+        .safe_key_enter,
+        .safe_key_clear,
+        .safe_key > div:first-child{
+            font-size: 0.6em;
+            white-space: pre;
+        }
+
+        .safe_key_enter,
+        .safe_key_clear{
+            font-weight: bold;
+        }
+
+
+
+
+        .lockedAnimation{
+            animation: 1s lockedTry;
+        }
+
+        @keyframes lockedTry {
+            0%{ transform: rotate(0deg); }
+            20%{ transform: rotate(-5deg); }
+            30%{ transform: rotate(0deg); }
+            40%{ transform: rotate(-5deg); }
+            100%{ transform: rotate(0deg); }
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="safe">
+            
+            <!-- FRONT DOOR -->
+            <div id="safe_door">
+                
+                <div id="safe_lever" onclick="openDoor()"></div>
+
+                <div id="safe_panel">
+
+                    <div id="safe_lcd">
+                        <div id="safe_lcd_content"> </div>
+                    </div>
+
+                    <div id="safe_keypad">
+                        <div class="safe_key"><div> </div><div>1</div></div>
+                        <div class="safe_key"><div>ABC</div><div>2</div></div>
+                        <div class="safe_key"><div>DEF</div><div>3</div></div>
+                        <div class="safe_key"><div>GHI</div><div>4</div></div>
+                        <div class="safe_key"><div>JQL</div><div>5</div></div>
+                        <div class="safe_key"><div>MNO</div><div>6</div></div>
+                        <div class="safe_key"><div>PQRS</div><div>7</div></div>
+                        <div class="safe_key"><div>TUV</div><div>8</div></div>
+                        <div class="safe_key"><div>WXYZ</div><div>9</div></div>
+                        <div class="safe_key safe_key_enter">ENTER</div>
+                        <div class="safe_key safe_key_zero">0</div>
+                        <div class="safe_key safe_key_clear">CLEAR</div>
+                    </div>
+
+                </div>
+
+            </div>
+            
+
+            <!-- BACK DOOR -->
+            <div id="safe_door_back" onclick="closeDoor()"></div>
+            
+            <!-- CONTENT -->
+            <div id="safe_content"><div></div></div>
+            
+        </div>
+
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        var interactionLocked = false;
+        var isLocked          = true;
+        const password        = '1234';
+        var   password_temp   = '';
+
+        function openDoor(){
+            if ( interactionLocked ) return;
+            
+            if ( isLocked){
+                interactionLocked = true;
+                safe_lever.classList.add('lockedAnimation');
+                
+                setTimeout(()=>{
+                    safe_lever.classList.remove('lockedAnimation');
+                    interactionLocked = false;
+                }, 500);
+                
+                return;
+            }
+            
+            interactionLocked = true;
+            safe_lever.style.transform = 'rotate(-90deg)';
+            setTimeout(()=>{
+                safe_door.classList.add('doorOpen');
+                setTimeout(()=>{
+                    interactionLocked = false;
+                }, 500);
+            }, 300);
+
+        }
+
+
+        
+
+        function closeDoor(){
+            if ( interactionLocked ) return;
+            interactionLocked = true;
+            isLocked = true;
+            safe_door.classList.remove('doorOpen');
+            setTimeout(()=>{
+                safe_lever.style.transform = '';
+                setTimeout(()=>{
+                    interactionLocked = false;
+                }, 300);
+            }, 500);
+        }
+
+
+        
+        document.querySelectorAll('.safe_key').forEach(safe_key => {
+            safe_key.onclick = () => {
+                if ( interactionLocked ) return;
+                const key = (safe_key.classList.length == 1)? safe_key.lastElementChild.innerHTML : safe_key.innerHTML;
+                console.log(key);
+
+                if ( !isNaN(key) ){
+                    if ( password_temp.length < 7 ){
+                        password_temp = password_temp.concat(key);
+                    } 
+                    safe_lcd_content.innerHTML = ('*').repeat(password_temp.length);
+                    return;
+                }
+
+                if ( key == 'ENTER' ){
+                    isLocked = password != password_temp;
+                }
+                
+                safe_lcd_content.innerHTML = ' ';
+                password_temp = '';
+
+            };
+        });
+
+         
+		
+		
+		 
+         
+
+        alert('password: ' + password);
+
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

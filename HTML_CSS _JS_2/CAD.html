@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+        html, body{
+            width: 100%;
+            height: 100%;
+        }
+
+         
+
+        #program{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+
+
+
+        /* TOOLS */
+        #tools{
+            background-color: #353535;
+            display: flex;
+        }
+
+
+        .tool-separator{
+            width: 2px;
+            background-color: #9e9e9e;
+            transform: scaleY(0.75);
+        }
+
+        .tool-item{
+            width: 32px;
+            height: 32px;
+            background-color: #353535;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .tool-active{
+            background-color: #616161;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        #screen-wrapper{
+            background-color: #212121;
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
+
+       
+
+        #project-screen{
+            background-color: #181818;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+
+        .point{
+            width: 8px;
+            height: 8px;
+            transform: translate(-4px, -4px);
+            background-color: red;
+            border-radius: 25px;
+            position: absolute;
+        }
+
+
+
+
+
+
+
+
+        #ruler-wrapper{
+            pointer-events: none;
+            padding: 8px;
+            border: 1px solid #fff;
+            background-color: rgb(33 33 33 / 50%);
+            border-radius: 8px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+    <div id="program">
+
+
+
+        <div id="tools">
+
+            <div class="tool-item tool-active" title="Mouse">
+                <svg style="transform: rotate(-90deg);" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cursor-fill" viewBox="0 0 16 16">
+                    <path d="M14.082 2.182a.5.5 0 0 1 .103.557L8.528 15.467a.5.5 0 0 1-.917-.007L5.57 10.694.803 8.652a.5.5 0 0 1-.006-.916l12.728-5.657a.5.5 0 0 1 .556.103z"/>
+                </svg>
+            </div>
+
+            <div class="tool-separator"></div>
+
+            <!-- <div class="tool-item" title="Borracha">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eraser-fill" viewBox="0 0 16 16">
+                    <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
+                </svg>
+            </div> -->
+
+            <div class="tool-item" title="Lápis">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                </svg>
+            </div>
+
+
+            <div class="tool-item" title="Retangulo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-square" viewBox="0 0 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                </svg>
+            </div>
+
+            <div class="tool-item" title="Circulo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                </svg>
+            </div>
+
+            <!-- <div class="tool-item" title="Pizza">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pie-chart-fill" viewBox="0 0 16 16">
+                    <path d="M15.985 8.5H8.207l-5.5 5.5a8 8 0 0 0 13.277-5.5zM2 13.292A8 8 0 0 1 7.5.015v7.778l-5.5 5.5zM8.5.015V7.5h7.485A8.001 8.001 0 0 0 8.5.015z"/>
+                </svg>
+            </div> -->
+
+
+            <!-- <div class="tool-separator"></div>
+
+            <div class="tool-item" title="Mover">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-move" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10zM.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708l-2-2zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8z"/>
+                  </svg>
+            </div>
+
+            <div class="tool-item" title="Girar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                  </svg>
+            </div> -->
+
+
+            <div class="tool-separator"></div>
+
+            <div class="tool-item" title="Trena">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-rulers" viewBox="0 0 16 16">
+                    <path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H4v-1h2v-1H2v-1h4V9H4V8h2V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1H1z"/>
+                </svg>
+            </div>
+
+             
+
+
+        </div>
+
+
+
+
+
+
+
+
+        <div id="screen-wrapper">
+
+             
+
+            <div id="project-screen">
+
+
+                <div id="ruler-wrapper">
+
+                    <div id="ruler-dist">000</div>
+                    <div id="ruler-angle">00.00°</div>
+
+                </div>
+
+
+                <div id="point-list">
+                    <!-- <div class="point"></div> -->
+                </div>
+                
+                <canvas id="project-canvas"></canvas>
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+    </div>
+    
+     
+
+
+    <script>
+
+
+        var tool_list = document.getElementById("tools").getElementsByClassName("tool-item");
+
+
+        
+
+
+
+        function getTool(){
+            for (let i = 0; i < tool_list.length; i++){
+                if ( tool_list[i].classList.contains("tool-active") ){
+                    return tool_list[i].title;
+                }
+            }
+            return null;
+        }
+
+
+        var ruler_wrapper = document.getElementById("ruler-wrapper");
+        var ruler_started = false;
+
+
+        var SHAPE_LINES = [];
+        var SHAPE_LINES_INDEX = -1;
+        var temp_points = []; 
+
+
+        var SHAPE_CIRCLE = [];
+        var temp_circle = {x: 0, y: 0, r: 0};
+        var circle_started = false;
+
+
+        var SHAPE_RECT = [];
+        var temp_rect = {x: 0, y: 0, w: 0, h:0};
+        var rect_started = false;
+
+
+        var mouse_position_click   = {x: 0, y: 0};
+        var mouse_position_start   = {x: 0, y: 0};
+        var mouse_position_current = {x: 0, y: 0};
+        var mouse_position_diff    = {x: 0, y: 0};
+
+
+
+
+
+
+        
+
+
+        var point_list = document.getElementById("point-list");
+        var project_screen = document.getElementById("project-screen");
+
+
+        var draw_pseudoLine = false;
+
+        var toolName = getTool();
+
+
+
+
+
+
+        for (let i = 0; i < tool_list.length; i++){
+            tool_list[i].onclick = ()=>{
+                for (let j = 0; j < tool_list.length; j++){
+                    tool_list[j].classList.remove('tool-active');
+                }
+                tool_list[i].classList.add('tool-active');
+                rect_started = circle_started = ruler_started;
+                temp_circle = {x: 0, y: 0, r: 0};
+                temp_rect = {x: 0, y: 0, w: 0, h:0};
+                temp_points = [];
+            }
+        }
+
+
+
+
+
+        project_screen.onclick = (evt)=>{
+
+
+            mouse_position_diff.x = 0;
+            mouse_position_diff.y = 0;
+
+            mouse_position_click = {
+                x: evt.clientX,
+                y: evt.clientY - document.getElementById("tools").offsetHeight
+            }
+
+
+
+            
+
+
+
+            if ( toolName == "Lápis" ){
+
+                temp_points.push({
+                    x: mouse_position_click.x,
+                    y: mouse_position_click.y
+                });
+
+                SHAPE_LINES_INDEX = SHAPE_LINES.length - 1;
+                
+                /*let point = document.createElement("div");
+                point.classList.add("point");
+                point.style.left = mouse_position_click.x + 'px';
+                point.style.top  = mouse_position_click.y + 'px';
+
+                point_list.appendChild( point );*/
+
+                console.log(temp_points);
+
+                draw_pseudoLine = true;
+            }
+
+
+
+
+            else if ( toolName == "Circulo" ){
+                
+
+                if ( circle_started ){
+                    console.log("end");
+                    SHAPE_CIRCLE.push({
+                        x: temp_circle.x,
+                        y: temp_circle.y,
+                        r: temp_circle.r
+                    });
+                }
+                else{
+                    console.log('start');
+                    temp_circle.x = mouse_position_click.x;
+                    temp_circle.y = mouse_position_click.y;
+                    
+                }
+                circle_started = !circle_started; 
+            }
+
+
+            else if ( toolName == "Retangulo" ){
+
+                if ( rect_started ){
+                    console.log("end");
+                    SHAPE_RECT.push({
+                        x: temp_rect.x,
+                        y: temp_rect.y,
+                        w: temp_rect.w,
+                        h: temp_rect.h,
+                    });
+                }
+                else{
+                    console.log("start");
+                    temp_rect.x = mouse_position_click.x;
+                    temp_rect.y = mouse_position_click.y;
+                }
+
+                rect_started = !rect_started;
+
+            }
+            
+
+
+
+
+
+            else if ( toolName == "Trena" ){
+
+
+                console.log('asd')
+                ruler_started = !ruler_started;
+            }
+            
+
+            
+
+        }
+
+
+        
+        window.onmousemove = (evt)=>{
+            mouse_position_current.x = evt.clientX;
+            mouse_position_current.y = evt.clientY - document.getElementById("tools").offsetHeight;
+
+            mouse_position_diff.x = mouse_position_current.x - mouse_position_click.x;
+            mouse_position_diff.y = mouse_position_current.y - mouse_position_click.y;
+
+            //console.log(mouse_position_diff.x, mouse_position_diff.y);
+
+
+            ruler_wrapper.style.left = mouse_position_current.x + 'px';
+            ruler_wrapper.style.top = (mouse_position_current.y-ruler_wrapper.offsetHeight-8) + 'px';
+
+            
+
+            
+            let dist = Math.hypot(mouse_position_diff.x, mouse_position_diff.y).toFixed(3);
+            if ( toolName == "Retangulo" ){
+                ruler_wrapper.children[0].innerHTML = 'Comprimento: ' + (temp_rect.w).toFixed(3) + '<br>Altura: ' + (temp_rect.h).toFixed(3) + '<br>Hipotenusa' + dist;
+            }else if ( toolName == "Circulo" ) {
+                ruler_wrapper.children[0].innerHTML = 'Diametro: ' + (dist*2).toFixed(3) + "<br>Raio: " + dist;
+            }
+            else if ( toolName == "Lápis" || toolName == "Trena" ){
+                ruler_wrapper.children[0].innerHTML = 'Comprimento: ' + (dist*2).toFixed(3);
+            }
+            
+            ruler_wrapper.children[1].innerHTML = 'Angulo: ' + (Math.atan2(mouse_position_diff.x, mouse_position_diff.y) * 180 / Math.PI).toFixed(2) + '°';
+            
+
+
+        }
+
+        
+
+        function removeRepeated(){
+
+        }
+
+
+
+
+        window.oncontextmenu = (evt)=>{
+            evt.preventDefault();
+
+            if ( toolName == "Lápis" ){
+                SHAPE_LINES.push( temp_points );
+                draw_pseudoLine = false;
+                temp_points = [];
+            }
+
+
+            else if ( toolName == "Circulo" ){
+
+            }
+
+            
+        }
+
+
+
+
+
+
+
+
+        function draw(){
+
+            toolName = getTool();
+            const ctx = document.getElementById("project-canvas").getContext("2d");
+
+            document.getElementById("project-canvas").setAttribute("width", project_screen.offsetWidth);
+            document.getElementById("project-canvas").setAttribute("height", project_screen.offsetHeight);
+
+
+            ctx.clearRect(0, 0, project_screen.offsetWidth, project_screen.offsetHeight); // clear canvas
+
+            ctx.strokeStyle  = "#fafafa";
+            
+            
+            /*ctx.moveTo(0, 0);
+            ctx.lineTo(200, 100);
+            ctx.stroke();
+
+            
+            ctx.beginPath();
+            ctx.arc(95, 50, 50, degToRad(0), degToRad(90));
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.rect(20, 20, 150, 100);
+            ctx.stroke();*/
+
+            /*for (let x = 0; x < temp_points.length; x++){
+                ctx.lineTo(temp_points[x].x, temp_points[x].y);
+                ctx.stroke();
+            }*/
+
+
+
+            for (let i = 0; i < SHAPE_LINES.length; i++){
+
+                for (let j = 0; j < SHAPE_LINES[i].length; j++){
+                    if ( j == 0 ){
+                        ctx.moveTo(SHAPE_LINES[i][j].x, SHAPE_LINES[i][j].y);
+                    }
+                    else{
+                        ctx.lineTo(SHAPE_LINES[i][j].x, SHAPE_LINES[i][j].y);
+                        ctx.stroke();
+                    }
+                    
+                } 
+
+            }
+
+
+            for (let i = 0; i < SHAPE_CIRCLE.length; i++){
+                ctx.beginPath();
+                ctx.arc(SHAPE_CIRCLE[i].x, SHAPE_CIRCLE[i].y, SHAPE_CIRCLE[i].r, 0, Math.PI*2);
+                ctx.stroke();
+            }
+
+
+
+            for (let i = 0; i < SHAPE_RECT.length; i++){
+                ctx.beginPath();
+                ctx.rect(SHAPE_RECT[i].x, SHAPE_RECT[i].y, SHAPE_RECT[i].w, SHAPE_RECT[i].h);
+                ctx.stroke();
+            }
+
+
+            
+
+            if ( toolName == "Lápis" ){
+                if ( draw_pseudoLine ){ 
+                    ctx.moveTo(mouse_position_click.x, mouse_position_click.y);
+                    ctx.lineTo(mouse_position_current.x, mouse_position_current.y);
+                    ctx.stroke();
+                }
+
+                temp_points.forEach((e,i)=>{
+                    ctx.lineTo(e.x, e.y);
+                    ctx.stroke();
+                    if (i >= temp_points.length-1){
+                        return;
+                    }
+                });
+            }
+
+
+
+            else if ( toolName == "Circulo" ){
+
+                if ( circle_started ){
+                    temp_circle.r = Math.hypot(mouse_position_diff.x, mouse_position_diff.y);
+                    ctx.beginPath();
+                    ctx.arc(temp_circle.x, temp_circle.y, temp_circle.r, 0, Math.PI*2);
+                    ctx.stroke();
+                }
+
+                
+            }
+
+
+
+            else if ( toolName == "Retangulo" ){
+
+                if ( rect_started ){
+                    temp_rect.w = mouse_position_diff.x;
+                    temp_rect.h = mouse_position_diff.y;
+                    
+                    ctx.beginPath();
+                    ctx.strokeStyle  = "#fff";
+                    ctx.rect(temp_rect.x, temp_rect.y, temp_rect.w, temp_rect.h);
+                    ctx.stroke();
+                }
+
+                
+            }
+
+
+
+
+
+
+            if ( rect_started||circle_started||ruler_started|| (toolName=="Lápis" && temp_points.length>0) ){
+
+                ctx.moveTo(mouse_position_click.x, mouse_position_click.y);
+                ctx.lineTo(mouse_position_current.x, mouse_position_current.y);
+                ctx.stroke();
+
+            }
+
+            ruler_wrapper.style.visibility = (rect_started||circle_started||ruler_started|| (toolName=="Lápis" && temp_points.length>0) )? 'visible' : 'hidden';
+            
+
+
+            window.requestAnimationFrame(draw);
+        }
+
+
+
+        function degToRad( value ){
+            return value / 180 * Math.PI;
+        }
+
+
+
+
+        draw();
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

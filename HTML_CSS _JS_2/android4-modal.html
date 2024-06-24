@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+        html, body{
+            width: 100%;
+            height: 100%;
+        }
+
+
+
+        
+        .modal-wrapper{
+            background-color: #212121;
+            width: 250px;
+            height: 150px;
+
+            display: flex;
+            flex-direction: column;
+
+            user-select: none;
+
+
+            position: absolute;
+            
+        }
+ 
+
+
+
+        .modal-header{
+            padding: 8px;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+
+        .modal-content{
+            padding: 8px;
+            height: 100%;
+            border-top: 2px solid #007bff;
+            border-bottom: 1px solid #353535;
+        }
+
+        .modal-footer{
+            display: flex;
+            justify-content: space-between;
+            align-items: center; 
+        }
+
+
+        .modal-footer-action{
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+
+            border: none;
+            background-color: inherit;
+            color: #fff;
+            font-size: 1em;
+        }
+
+
+        .modal-footer-action:disabled{
+            background-color: #353535;
+            color: #9e9e9e;
+        }
+
+
+        .modal-footer-action:first-child{
+            border-right: 1px solid #353535;
+        }
+
+        .modal-footer-action:active{
+            background-color: #353535;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+    <div class="modal-wrapper" id="modal-exit">
+
+        <div class="modal-header">Sair?</div>
+
+        <div class="modal-content">Deseja sair do jogo?</div>
+
+
+        <div class="modal-footer">
+            <button class="modal-footer-action">não</button>
+            <button class="modal-footer-action">sim</button>
+        </div>
+
+
+    </div>
+    
+    
+     
+
+
+    <script>
+
+
+
+        var modal_exit = document.getElementById("modal-exit");
+
+
+
+        var lastPosX;
+        var lastPosY;
+
+
+        var pressed = false;
+        
+
+       
+
+        ['touchstart', 'mousedown'].forEach((el)=>{
+
+
+            modal_exit.querySelector(".modal-header").addEventListener(el, (e)=>{
+             
+
+                if ( el == 'touchstart' ){
+                    lastPosX = e.touches[0].clientX;
+                    lastPosY = e.touches[0].clientY;
+                }
+                else{
+                    lastPosX = e.clientX;
+                    lastPosY = e.clientY;
+                }
+
+                
+    
+                pressed = true;
+            });
+
+
+        });
+
+
+
+
+
+        
+
+
+        ['touchmove', 'mousemove'].forEach((el)=>{
+
+            window.addEventListener(el, (e)=>{
+
+                if ( !pressed ) return;
+
+
+                let clientX = 0;
+                let clientY = 0;
+
+                if ( el == 'mousemove' ){
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                }
+                else{
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                }
+
+                
+
+                let newX = modal_exit.offsetLeft + ( clientX - lastPosX );
+                let newY = modal_exit.offsetTop + ( clientY - lastPosY );
+
+                lastPosX = clientX;
+                lastPosY = clientY;
+
+                if ( newX < 0 ){ newX = 0;}
+                else if ( newX > document.body.offsetWidth - modal_exit.offsetWidth ){ newX = document.body.offsetWidth - modal_exit.offsetWidth; }
+
+                if ( newY < 0 ){ newY = 0;}
+                else if ( newY > document.body.offsetHeight - modal_exit.offsetHeight ){ newY = document.body.offsetHeight - modal_exit.offsetHeight; }
+
+                modal_exit.style.left = ( newX ) + 'px';
+                modal_exit.style.top = ( newY ) + 'px';
+
+                });
+
+        });
+
+
+
+        
+
+
+        ['mouseup', 'touchend', 'touchcancel', 'blur'].forEach((e)=>{
+
+            window.addEventListener(e, ()=>{
+                pressed = false;
+            });
+
+        });
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
