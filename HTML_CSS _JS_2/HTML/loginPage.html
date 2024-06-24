@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+
+    <style>
+
+        body, html{
+            margin: 0 auto;
+        }
+
+        body{
+            padding-top: 50px;
+            box-sizing: border-box;
+
+            background-size: cover;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            background: white url("https://cdna.artstation.com/p/assets/images/images/019/252/726/large/sahil-singh-flat-tech.jpg?1562685016") center center no-repeat;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+        }
+
+
+        #loginContainer{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #fff;
+        }
+
+
+        /* input text | password */
+        #loginContainer input[type=text],input[type=password]{
+            margin-bottom: 15px;
+            border: 0;
+            padding: 3px;
+            border-bottom: 1px solid #727272;
+            background-color: transparent;
+            color: #fff;
+            outline: none;
+            transition: 200ms;
+        }
+
+        /* focus */
+        #loginContainer input[type=text]:focus, input[type=password]:focus{
+            border-bottom-color: #fff;
+        }
+
+        /* focus > placeholder */
+        #loginContainer input[type=text]:focus::placeholder{
+            visibility: hidden;
+        }
+        #loginContainer input[type=password]:focus::placeholder{
+            visibility: hidden;
+        }
+
+        /* selection */
+        #loginContainer input[type=text]:focus::selection{
+            background-color: #7b7b7b;
+        }
+        #loginContainer input[type=password]:focus::selection{
+            background-color: #7b7b7b;
+        }
+        
+        /* placeholder */
+        #loginContainer input::placeholder{
+            color: #000;
+            user-select: none;
+        }
+
+        /* submit button */
+        #submitButton{
+            width: 100%;
+            border: 0;
+            background-color: turquoise;
+            border-radius: 50px;
+            padding: 5px;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+        
+        /* submit button > hover */
+        #submitButton:hover{
+            background-color: #468982;
+        }
+
+        
+        #loginWraper{
+            background-color: #14141498;
+            padding: 80px 60px;
+            border-radius: 15px 50px ;
+        }
+
+        /* login error */
+        #submitError{
+            font-size: 0.6em;
+            text-align: center;
+            color: #ff7676;
+            margin-top: 5px;
+            white-space: pre;
+            user-select: none;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    
+    <div id="loginContainer">
+
+        <div id="loginWraper">
+            
+            <div id="usernameContainer">
+                <div class="textInput">Username</div>
+                <input type="text" id="usernameInput" name="username"  placeholder="type your username">
+            </div>
+
+            <div id="passwordCointainer">
+                <div class="textInput">Password</div>
+                <input type="password" id="passwordInput" name="password" placeholder="type your password">
+            </div>
+
+            <input id="submitButton" type="submit" value="Login" onclick="submitLogin()">
+
+
+            <div id="submitError"> </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <script>
+
+
+        function submitLogin( buttton ){
+            document.getElementById("submitError").style.userSelect = "initial";
+            document.getElementById("submitError").innerText = "incorrect username or password";
+        }
+
+
+
+        /* INTERNET CODE */
+        
+        /*passwordField = document.getElementById("passwordInput");
+        
+        passwordField.addEventListener( 'keydown', function( event ) {
+            var caps = event.getModifierState && event.getModifierState( 'CapsLock' );
+            console.log( caps ); // true when you press the keyboard CapsLock key
+        });*/
+
+        /* END */
+
+    </script>
+
+    
+</body>
+</html>

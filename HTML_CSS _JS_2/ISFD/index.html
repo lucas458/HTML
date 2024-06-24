@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B737 ISFD</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #000;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        .isdf_backlight #buttonList,
+        .isdf_backlight #ledIndicatorList{
+            color: #ffbf00;
+        }
+
+        #isdf , #frame{
+            width: 356px;
+            height: 356px;
+            position: relative;
+        }
+
+        #frame{
+            background-image: url("frame.png"); 
+            pointer-events: none;
+        }
+
+        #lcd{
+            width: 259px;
+            height: 259px;
+            background-color: #000;
+            overflow: hidden;
+            position: absolute;
+            left: 49px;
+            top: 49px;
+        }
+
+        .button{
+            width: 69px;
+            height: 21px;
+            font-weight: 500; 
+            cursor: pointer;
+            box-shadow: 0 0 3px 0 #000; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute; 
+           
+        }
+
+        .button:active{
+            box-shadow: none;
+        }
+
+        .buttonVertical{
+            width: 21px;
+            height: 69px;
+            font-size: 2em;
+            line-height: 0;
+            font-weight: initial;
+        }
+
+
+        #buttonAPP{
+            top: 6px;
+            left: 80px;
+        }
+        #buttonHPIN{
+            top: 6px;
+            left: 206px;
+        }
+        #buttonRST{
+            top: 328px;
+            left: 84px;
+        }
+
+        #buttonPlus{
+            top: 83px;
+            left: 8px;
+        }
+        #buttonMinus{
+            top: 203px;
+            left: 8px;
+        }
+
+
+
+
+        #knob{
+            width: 68px;
+            aspect-ratio: 1/1;
+            border-radius: 50%; 
+            cursor: pointer;
+            margin: 15px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+
+
+
+        .led{ 
+            height: 21px;
+            font-weight: 500; 
+            position: absolute;
+            top: 328px;
+        }
+
+        #ledATT{
+            left: 45px;
+        }
+        #ledBARO{
+            left: 220px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        /* LCD */
+        #upperIndicatorList{
+            width: 169px;
+            height: 27px; 
+            color: #0f0;
+            font-weight: 500; 
+            padding: 0 4px ;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: absolute;
+            left: 36px;
+        }
+
+
+
+
+        /* SPEED */
+        #speedContainer{
+            width: 34px;
+            height: 100%;
+            background-color: #545454;
+            overflow: hidden;
+            position: absolute;
+        }
+
+        #speedWrapper{
+            height: 122px;
+            transform: translateY(0px);
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-end;
+            gap: 22px;
+        }
+
+        #speedWrapper > div{
+            height: 2px;
+            background-color: #fff;
+            flex-shrink: 0;
+        }
+        .speedMark_mini{
+            width: 4px;
+        }
+
+        .speedMark_big{
+            width: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .speedDigit{
+            transform: translateX(-100%);
+            font-size: 14px;
+        }
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        /* ALTITUDE */
+        #altitudeContainer{
+            width: 52px;
+            height: 100%;
+            background-color: #545454;
+            overflow: hidden;
+            position: absolute;
+            right: 0;
+        }
+
+        #altitudeWrapper{
+            height: 122px;
+            transform: translateY(480px);
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-start;
+            gap: 22px;
+        }
+
+        #altitudeWrapper > div{
+            flex-shrink: 0;
+            height: 2px;
+        }
+
+        .altitudeMark{
+            width: 10px;
+            height: 2px;
+            background-color: #fff;
+        }
+        .altitudeVoidMark{
+            width: 100%;
+            display: flex;
+            text-align: right;
+            align-items: center;
+            line-height: 0;
+            
+        }
+        .altitudeDigit{
+            width: 100%;
+            padding: 0 2px;
+        }
+
+
+
+        
+
+        /* COMPASS */
+        #compassContainer{
+            width: 169px;
+            height: 37px;
+            overflow: hidden;
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            left: 36px;
+            bottom: 0;
+        }
+
+
+        #compass{
+            width: 414.68055555555554px;
+            height: 414.68055555555554px;
+            flex-shrink: 0;
+            transform: rotate(0deg);
+            background-color: #545454;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .compassMark_mini, .compassMark_big{
+            width: 3px;
+            height: 13px;
+            background-color: #fff;
+            transform-origin: center 207.34027777777777px;
+            transform: rotate(0deg);
+            position: absolute;
+            top: 0;
+        }
+
+        .compassMark_mini{
+            height: 8px; 
+        }
+        .compassMark_big{
+            display: flex;
+            justify-content: center;
+        }
+
+        .compassDigit_mini, .compassDigit_big{ 
+            transform: translateY(10px);
+        }
+        .compassDigit_big{
+            font-size: 1.5em;
+            transform: translateY(8px);
+        }
+
+
+
+        #compassMarkFixed{
+            transform: rotate(180deg) translateX(-0.5px);
+            z-index: 1;
+            position: absolute;
+            left: 130px;
+            top: 228px;
+        }
+        #compassMarkFixed svg{
+            position: absolute;
+            left: 0;
+        }
+
+
+
+
+
+        /* LOCALIZER */
+        #localizerContainer{
+            width: 125px;
+            height: 14px;
+            visibility: hidden;
+            background-color: #000;
+            z-index: 1;
+            position: absolute;
+            left: 22px;
+            bottom: 2px;
+        }
+
+        /* GLIDE SLOPE */
+        #glideSlopeContainer{
+            width: 14px;
+            height: 128px;
+            visibility: hidden;
+            background-color: #000;
+            z-index: 1;
+            position: absolute;
+            right: 14px;
+            top: 30px;
+        }
+
+
+        .glideLocalizerWrapper{
+            padding: 0 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; 
+            position: relative;
+        }
+
+        .glideLocalizerWrapper > div{
+            flex-shrink: 0;
+        }
+        .glideLocalizerBall{
+            width: 7px;
+            height: 7px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+        }
+        .glideLocalizerLine{
+            width: 2px;
+            height: 14px;
+            background-color: #fff;
+        }
+
+        .glideLocalizerCurrent{
+            width: 19px;
+            height: 14px;
+            margin: auto;
+            transform: translateX(0px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .glideLocalizerCurrent svg{
+            flex-shrink: 0;
+            color: #fe01cc; 
+        }
+        #localizerContainer svg{
+            transform: rotate(90deg);
+            
+        }
+
+        #glideSlopeContainer .glideLocalizerWrapper{
+            height: 100%;
+            flex-direction: column;
+            padding: 2px 0;
+          
+        }
+        #glideSlopeContainer .glideLocalizerLine{
+            width: 100%;
+            height: 2px;
+        }
+        #glideSlopeContainer .glideLocalizerCurrent{
+            width: 14px;
+            height: 19px;
+            margin: auto;
+            transform: translateY(0px);
+            position: absolute;
+            top: 0;
+            bottom: 0; 
+        }
+
+
+
+
+
+
+        /* Fixed Airplane Symbol */
+        #airplaneSymbolContainer{
+            width: 111px;
+            height: 20px;
+            transform: translate(-0.5px,-0.5px);
+            display: flex;
+            justify-content: space-between;
+            z-index: 1;
+            margin: auto;
+            position: absolute;
+            top: 90px;
+            left: 0;
+            right: 0;
+        }
+
+
+        #airplaneSymbolpoint{
+            width: 9px;
+            height: 9px;
+            border: 2px solid #fff;
+            background-color: #000;
+        }
+
+        .airplaneSymbolWing{
+            width: 39px;
+            height: 9px;
+            border: 2px solid #fff;
+            background-color: #000;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .airplaneSymbolWing > div{
+            width: 8px;
+            height: 13px;
+            border: 2px solid #fff;
+            background-color: #000;
+            position: relative;
+            top: 5px;
+            left: 2px;
+        }
+
+        .airplaneSymbolWing > div > div{
+            width: 4px;
+            height: 4px;
+            background-color: #000;
+            position: relative;
+            top: -3px;
+        }
+
+        .airplaneSymbolWing:last-child{
+            transform: scaleX(-100%) translateX(0.5px);
+        }
+
+
+
+
+
+
+
+
+
+
+
+        /* Roll Indicator */
+        #rollIndicatorContainer{
+            width: 149px;
+            height: 43px;
+            margin: auto;
+            z-index: 1;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+        }
+
+        .rollIndicatorMark_mini, .rollIndicatorMark_big, #rollIndicatorMark_center{
+            width: 2px;
+            background-color: #fff;
+            margin: auto;
+            transform-origin: center 100.59469696969697px;
+            transform: rotate(0deg);
+            position: absolute;
+            left: 0;
+            right: 0;
+        }
+
+
+        #rollIndicatorMark_center{
+            width: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        #rollIndicatorMark_center *{
+            flex-shrink: 0;
+            position: absolute;
+        }
+        #rollIndicatorMark_center > svg{
+            transform: rotate(180deg) translateY(2px);
+        }
+
+
+        #rollIndicatorMark_centerMoveable{
+            transform-origin: center 92px;
+            transform: rotate(0deg);
+        }
+
+        #rollIndicatorMark_centerMoveable{
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+
+
+        .rollIndicatorMark_mini{ 
+            height: 12px;
+        }
+        .rollIndicatorMark_big{ 
+            height: 24px;
+        }
+
+       
+
+
+
+
+        
+
+
+        /* Artifical Horizon */
+        #artificalHorizonContainer{
+            width: 169px;
+            height: 188px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 36px;
+            top: 27px;
+        }
+
+        #artificalHorizonWrapper{
+            width: calc(169px * 2);
+            height: calc(188px * 4);
+            flex-shrink: 0;
+            transform: rotate(0deg) translateY(0px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+
+        #artificalHorizonSky, #artificalHorizonGround{
+            width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+        }
+        #artificalHorizonSky{
+            background-color: #0065cd;
+            border-bottom: 1px solid #fff;
+        }
+        #artificalHorizonGround{
+            border-top: 1px solid #fff;
+            background-color: #653300;
+        }
+
+
+
+        #artificalHorizonMasked{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            width: 170px;
+            height: 160px;
+            position: absolute;
+            border-radius: 50% ;
+        }
+
+
+        #artificalHorizonLadderList{
+            padding: 0 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+
+            margin: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+        }
+
+        #artificalHorizonLadderList > div{
+            height: 2px;
+            background-color: #fff;
+            flex-shrink: 0;
+        }
+
+        .artificialHorizonMarkMini{
+            width: 23px;
+        }
+        .artificalHorizonMarkMedium{
+            width: 45px;
+        }
+        .artificialHorizonMarkBig{
+            width: 86px;
+            position: relative;
+        }
+
+        .artificialHorizonAngle{
+            margin: auto;
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: -20px;
+            bottom: 0;
+            top: 0;
+        }
+
+        .artificalHorizonMarkLine{
+            width: calc( 169px * 2 ); 
+            background-color: transparent !important;
+        }
+        
+
+
+
+
+
+
+
+
+
+
+        /* SPEED/ALTITUDE -- INDICATOR */
+
+        .indicatorDigitContainer{
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .indicatorDigitContainer:last-child{
+            overflow: visible;
+        }
+
+        .indicatorDigitContainer:last-child .indicatorDigitMasked{
+            transform: translateY(16px);
+        }
+
+        .indicatorDigitMasked{
+            height: 16px; 
+            line-height: 0.8;
+            transform: translateY(0px);
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .indicatorDigitMasked > div{
+            height: 16px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .digitBig{
+            font-size: 1.2em;
+        }
+
+        .digitLocked{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            color: #0f0;
+        }
+
+
+
+        #speedIndicatorContainer, #altitudeIndicatorContainer{
+            height: 36px;
+            background-color: #000;
+            overflow: hidden;
+            border: 2px solid #fff; 
+            display: flex;
+            justify-content: space-evenly; 
+            align-items: center;
+            position: absolute;
+            top: 103px;
+        }
+
+
+        /* SPEED INDICATOR */
+        #speedIndicatorContainer{
+            width: 42px;
+            left: -2px;
+        }
+        
+        /* ALTITUDE INDICATOR */
+        #altitudeIndicatorContainer{
+            width: 68px;
+            right: -2px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        /* --- FAILURES ---  */
+        .failure{
+            padding: 2px 3px;
+            background-color: #000;
+            border: 2px solid #ffbf00;
+            color: #ffbf00;
+            z-index: 1;
+            visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: absolute;
+        }
+        
+
+        /* AIRSPEED */
+        .airspeed_flag #speedIndicatorContainer > div,
+        .airspeed_flag #speedWrapper{
+            visibility: hidden;
+        }
+        .airspeed_flag #airspeedFailure{
+            visibility: visible;
+            left: 7px;
+            top: 16px;
+        }
+
+        
+
+
+        /* ALTITUDE */
+        .altitude_flag #altitudeIndicatorContainer > div,
+        .altitude_flag #altitudeWrapper{
+            visibility: hidden;
+        }
+        .altitude_flag #altitudeFailure{
+            padding: 2px 6px;
+            visibility: visible;
+            top: 16px;
+            right: 12px;
+        }
+
+
+        /* HEADING */
+        .heading_flag #compassContainer > div > div,
+        .heading_flag #compassMarkFixed{
+            visibility: hidden;
+        }
+
+        .heading_flag #headingFailure{
+            padding: 0 2px;
+            visibility: visible;
+            letter-spacing: 2px;
+            bottom: 17px;
+            left: 97px; 
+        }
+
+
+        /* LOCALIZER */
+        .localizer_flag #localizerContainer{
+            visibility: hidden !important;
+        }
+
+        .localizer_flag #localizerFailure{
+            height: 20px;
+            padding: 0 2px;
+            visibility: visible;
+            letter-spacing: 2px;
+            left: 38px;
+            bottom: 46px;
+        }
+
+
+        /* GLIDE SLOPE */
+        .glideslope_flag #glideSlopeContainer{
+            visibility: hidden !important;
+        }
+
+        .glideslope_flag #glideslopeFailure{
+            font-size: 0.7em;
+            padding: 0 4px;
+            visibility: visible;
+            top: 29px;
+            right: 56px;
+        }
+
+
+        /* ATTITUDE */
+        .attitude_flag #artificalHorizonContainer,
+        .attitude_flag #compassContainer,
+        .attitude_flag #compassMarkFixed,
+        .attitude_flag #upperIndicatorList,
+        .attitude_flag #headingFailure,
+        .attitude_flag #localizerFailure,
+        .attitude_flag #glideslopeFailure{
+            visibility: hidden !important;
+        }
+
+        .attitude_flag #attitudeFailure{
+            padding: 0;
+            padding-left: 4px;
+            letter-spacing: 4px;
+            visibility: visible;
+            left: 97px;
+            top: 32px;
+        }
+
+
+
+
+        /* --- MESSAGES --- */
+        .message{
+            padding: 2px 3px;
+            background-color: #000;
+            color: #ffbf00;
+            z-index: 1;
+            visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: absolute;
+        }
+        .messageBorder{
+            border: 2px solid #ffbf00;
+        }
+
+        #isdf[class*='Att'] #artificalHorizonContainer,
+        #isdf[class*='Att'] #compassContainer,
+        #isdf[class*='Att'] #compassMarkFixed,
+        #isdf[class*='Att'] #upperIndicatorList,
+        #isdf[class*='Att'] #headingFailure,
+        #isdf[class*='Att'] #localizerFailure,
+        #isdf[class*='Att'] #glideslopeFailure{
+            visibility: hidden !important;
+        }
+
+
+        /* UPPER MESSAGES */
+        #upperMessage{
+            padding: 3px 3px;
+            width: 173px; 
+            left: 34px;
+            top: 31px;
+        }
+
+        #isdf[class*='_message'] #upperMessage{
+            visibility: visible;
+        }
+
+        .AttRst_message #upperMessage::before{ content: 'ATT:RST'; }
+        .Att10_message #upperMessage::before{ content: 'ATT 10s'; }
+        .AttWait_message #upperMessage::before{ content: 'WAIT ATT'; }
+
+        /* INIIT 90s */
+        #init90Message{
+            padding: 0 5px;
+            left: 85px;
+            bottom: 90px;
+        }
+        #isdf[class*='_messageBorder'] #init90Message{
+            visibility: visible;
+        }
+        
+
+
+        .frame_hidden > div:not(#lcd){
+            visibility: hidden;;
+        }
+        
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+        
+
+        <div id="isdf">
+
+
+            <div id="lcd">
+
+
+                <div id="upperIndicatorList">
+                    <div class="upperIndicatorItem">APP</div>
+                    <div class="upperIndicatorItem">29.92 IN</div>
+                </div>
+
+
+                <div id="speedContainer">
+                    <div id="speedWrapper"></div>
+                </div>
+
+
+                <div id="altitudeContainer">
+                    <div id="altitudeWrapper"></div>
+                </div>
+                
+
+                <div id="compassContainer">
+                    <div id="compass"></div>
+                </div>
+                
+
+                <div id="compassMarkFixed">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="20"><path d="m80-160 400-640 400 640H80Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="20" fill="currentColor"><path d="m80-160 400-640 400 640H80Zm144-80h512L480-650 224-240Zm256-205Z"/></svg>
+                </div>
+
+
+                <div id="artificalHorizonContainer">
+                    <!-- FIXED -->
+
+                    <!-- Roll Indicator -->
+                    <div id="rollIndicatorContainer">
+                        <div class="rollIndicatorMark_mini" style="transform: rotate(-50deg);"></div>
+                        <div class="rollIndicatorMark_big" style="transform: rotate(-30deg) translateY(-50%);"></div>
+                        <div class="rollIndicatorMark_mini" style="transform: rotate(-20deg);"></div>
+                        <div class="rollIndicatorMark_mini" style="transform: rotate(-10deg);"></div>
+                        
+                        <!-- CENTER -->
+                        <div id="rollIndicatorMark_center">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="20" fill="currentColor"><path d="m80-160 400-640 400 640H80Z"/></svg>
+                            <div id="rollIndicatorMark_centerMoveable">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="20"><path d="m80-160 400-640 400 640H80Z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 -960 960 960" width="20" fill="currentColor"><path d="m80-160 400-640 400 640H80Zm144-80h512L480-650 224-240Zm256-205Z"/></svg>
+                            </div>
+                        </div>
+                        
+                        <div class="rollIndicatorMark_mini" style="transform: rotate(10deg);"></div>
+                        <div class="rollIndicatorMark_mini" style="transform: rotate(20deg);"></div>
+                        <div class="rollIndicatorMark_big" style="transform: rotate(30deg) translateY(-50%);"></div>
+                        <div class="rollIndicatorMark_mini" style="transform: rotate(50deg);"></div>
+                    </div>
+
+                    <!-- Localizer -->
+                    <div id="localizerContainer">
+                        <div class="glideLocalizerWrapper">
+                            <div class="glideLocalizerBall"></div>
+                            <div class="glideLocalizerBall"></div>
+                            <div class="glideLocalizerLine"></div>
+                            <div class="glideLocalizerBall"></div>
+                            <div class="glideLocalizerBall"></div>
+                        </div>
+                        <div class="glideLocalizerCurrent">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M2.45 7.4 7.2 1.067a1 1 0 0 1 1.6 0L13.55 7.4a1 1 0 0 1 0 1.2L8.8 14.933a1 1 0 0 1-1.6 0L2.45 8.6a1 1 0 0 1 0-1.2"/></svg>
+                        </div>
+                    </div>
+
+                    <!-- Glide Slope -->
+                    <div id="glideSlopeContainer">
+                        <div class="glideLocalizerWrapper">
+                            <div class="glideLocalizerBall"></div>
+                            <div class="glideLocalizerBall"></div>
+                            <div class="glideLocalizerLine"></div>
+                            <div class="glideLocalizerBall"></div>
+                            <div class="glideLocalizerBall"></div>
+                        </div>
+                        <div class="glideLocalizerCurrent">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M2.45 7.4 7.2 1.067a1 1 0 0 1 1.6 0L13.55 7.4a1 1 0 0 1 0 1.2L8.8 14.933a1 1 0 0 1-1.6 0L2.45 8.6a1 1 0 0 1 0-1.2"/></svg>
+                        </div>
+                    </div>
+
+                    <!-- Airplane Symbol -->
+                    <div id="airplaneSymbolContainer">
+                        <div class="airplaneSymbolWing">
+                            <div> <div></div> </div>
+                        </div>
+                        
+                        <div id="airplaneSymbolpoint"></div>
+
+                        <div class="airplaneSymbolWing">
+                            <div> <div></div> </div>
+                        </div>
+                    </div>
+                    
+
+                    <!-- MOVEABLE -->
+
+                    <!-- Artifical Horizon -->
+                    <div id="artificalHorizonWrapper">
+                        <div id="artificalHorizonSky"></div>
+                        <div id="artificalHorizonGround"></div>
+                    </div>
+
+                    <!-- Angle Atack Ladder -->
+                    <div id="artificalHorizonMasked">
+                        <div id="artificalHorizonLadderList"></div>
+                    </div>
+
+                </div>
+                
+
+
+
+                <!-- Fixed Speed Indicator -->
+                <div id="speedIndicatorContainer">
+                    <div class="indicatorDigitContainer">
+                        <div class="indicatorDigitMasked">
+                            <div class="digitBig">0</div>
+                            <div class="digitBig">1</div>
+                            <div class="digitBig">2</div>
+                            <div class="digitBig">3</div>
+                            <div class="digitBig">4</div>
+                            <div class="digitBig">5</div>
+                            <div class="digitBig">6</div>
+                            <div class="digitBig">7</div>
+                            <div class="digitBig">8</div>
+                            <div class="digitBig">9</div>
+                            <div class="digitBig">0</div>
+                        </div>
+                    </div>
+                    <div class="indicatorDigitContainer">
+                        <div class="indicatorDigitMasked">
+                            <div class="digitBig">0</div>
+                            <div class="digitBig">1</div>
+                            <div class="digitBig">2</div>
+                            <div class="digitBig">3</div>
+                            <div class="digitBig">4</div>
+                            <div class="digitBig">5</div>
+                            <div class="digitBig">6</div>
+                            <div class="digitBig">7</div>
+                            <div class="digitBig">8</div>
+                            <div class="digitBig">9</div>
+                            <div class="digitBig">0</div>
+                        </div>
+                    </div>
+                    <div class="indicatorDigitContainer">
+                        <div class="indicatorDigitMasked">
+                            <div class="digitBig">9</div>
+                            <div class="digitBig">0</div>
+                            <div class="digitBig">1</div>
+                            <div class="digitBig">2</div>
+                            <div class="digitBig">3</div>
+                            <div class="digitBig">4</div>
+                            <div class="digitBig">5</div>
+                            <div class="digitBig">6</div>
+                            <div class="digitBig">7</div>
+                            <div class="digitBig">8</div>
+                            <div class="digitBig">9</div>
+                            <div class="digitBig">0</div>
+                            <div class="digitBig">1</div>
+                        </div>
+                    </div>
+                     
+                </div>
+
+
+
+
+                <!-- Fixed Altitude Indicator -->
+                <div id="altitudeIndicatorContainer">
+                    <div class="indicatorDigitContainer">
+                        <div class="indicatorDigitMasked">
+                            <div >  <div class="digitLocked">░</div> </div>
+                            <div class="digitBig">1</div>
+                            <div class="digitBig">2</div>
+                            <div class="digitBig">3</div>
+                            <div class="digitBig">4</div>
+                            <div class="digitBig">5</div>
+                            <div class="digitBig">6</div>
+                            <div class="digitBig">7</div>
+                            <div class="digitBig">8</div>
+                            <div class="digitBig">9</div>
+                            <div class="digitBig">0</div>
+                        </div>
+                    </div>
+                    <div class="indicatorDigitContainer">
+                        <div class="indicatorDigitMasked">
+                            <div class="digitBig">0</div>
+                            <div class="digitBig">1</div>
+                            <div class="digitBig">2</div>
+                            <div class="digitBig">3</div>
+                            <div class="digitBig">4</div>
+                            <div class="digitBig">5</div>
+                            <div class="digitBig">6</div>
+                            <div class="digitBig">7</div>
+                            <div class="digitBig">8</div>
+                            <div class="digitBig">9</div>
+                            <div class="digitBig">0</div>
+                        </div>
+                    </div>
+                    <div class="indicatorDigitContainer">
+                        <div class="indicatorDigitMasked">
+                            <div>0</div>
+                            <div>1</div>
+                            <div>2</div>
+                            <div>3</div>
+                            <div>4</div>
+                            <div>5</div>
+                            <div>6</div>
+                            <div>7</div>
+                            <div>8</div>
+                            <div>9</div>
+                            <div>0</div>
+                        </div>
+                    </div>
+                    <div class="indicatorDigitContainer">
+                        <div class="indicatorDigitMasked">
+                            <div>80</div>
+                            <div>00</div>
+                            <div>20</div>
+                            <div>40</div>
+                            <div>60</div>
+                            <div>80</div>
+                            <div>00</div>
+                            <div>20</div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+                <!-- FAILURES -->
+                <div class="failure" id="airspeedFailure">S<br>P<br>D</div>
+                <div class="failure" id="altitudeFailure">A<br>L<br>T</div>
+                <div class="failure" id="headingFailure">HDG</div>
+                <div class="failure" id="localizerFailure">LOC</div>
+                <div class="failure" id="glideslopeFailure">G<br>/<br>S</div>
+                <div class="failure" id="attitudeFailure">ATT</div>
+                
+                <!-- MESSAGE: UPPER -->
+                <div class="message" id="upperMessage"></div>
+                <!-- MESSAGE: LOWER -->
+                <div class="message messageBorder" id="init90Message">INIT 90s</div>
+
+            </div>
+
+
+
+
+
+
+            
+
+
+
+
+
+            <div id="frame"></div>
+
+            <div id="buttonList">
+                <div class="button" id="buttonAPP" onclick="onClickButtonAPP()">APP</div>
+                <div class="button" id="buttonHPIN" onclick="onClickButtonHPIN()">HP/IN</div>
+                <div class="button" id="buttonRST" onclick="onClickButtonRST()">RST</div>
+                <div class="button buttonVertical" id="buttonPlus" onclick="onClickButtonPlus()">+</div>
+                <div class="button buttonVertical" id="buttonMinus" onclick="onClickButtonMinus()">-</div>
+            </div>
+
+            <div id="knob" onclick="onPushKnob()" onmousewheel="onRotateKnob(event)"></div>
+
+            <div id="ledIndicatorList">
+                <div class="led" id="ledATT">ATT</div>
+                <div class="led" id="ledBARO">BARO</div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+
+        // do not modify directly
+        var airplane = {
+            altitude: 0,
+            speed: 0,
+
+            orientation: {
+                pitch: 0,
+                roll: 0,
+                yaw: 0
+            }
+
+        };
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+        
+        function normalizeAngle( valueDeg ){
+            valueDeg = (valueDeg < 0)? 359-valueDeg : valueDeg%360;
+            return Math.clamp(valueDeg, 0, 359);
+        }
+
+        function getGraphOffetY( stepY = 25, thX = 90, thX2 = 100, valueX = 0 ){
+            const segmentIndex = Math.trunc(valueX / thX2);
+            let currentY = valueX % thX2;
+            currentY = (currentY <= thX)? thX : currentY;
+            return stepY * segmentIndex + map(currentY, thX, thX2, 0, stepY);
+        }
+
+
+
+
+
+        function generateCompass(){
+
+            compass.innerHTML = "";
+
+            for (let i = 0; i < 360/5; i++){
+                const isBigMark = i%2 == 0;
+                const angle = i * 5;
+                
+                const mark = document.createElement("div");
+                mark.classList.add(isBigMark? "compassMark_big" : "compassMark_mini" );
+                mark.style.transform = `rotate(${angle}deg)`;
+
+                if ( isBigMark ){
+                    const isBigDigit = angle%30 == 0;
+                    const valueDigit = i / 2;
+                    mark.innerHTML = `<div>${valueDigit}</div>`;
+                    mark.firstElementChild.classList.add(isBigDigit? "compassDigit_big" : "compassDigit_mini" );
+                }
+
+                compass.appendChild(mark);
+
+            }
+
+        }
+
+
+
+
+        function generateArtificalHorizonLadder(){
+ 
+            artificalHorizonLadderList.innerHTML = "";
+
+            for (let i = 0; i < 2; i++){
+
+                for (let j = 0; j < 9; j++){
+                    const value = (i == 0)? 100 - (j+1) * 10 : (j+1) * 10; 
+
+                    const artificialHorizonMarkBig = document.createElement("div");
+                    artificialHorizonMarkBig.classList.add("artificialHorizonMarkBig");
+                    artificialHorizonMarkBig.innerHTML = `<div class="artificialHorizonAngle">${value}</div>`;
+
+                    const artificialHorizonMarkMini = document.createElement("div");
+                    artificialHorizonMarkMini.classList.add("artificialHorizonMarkMini");
+
+                    const artificalHorizonMarkMedium = document.createElement("div");
+                    artificalHorizonMarkMedium.classList.add("artificalHorizonMarkMedium");
+
+                    if ( i == 0 ){
+                        artificalHorizonLadderList.appendChild( artificialHorizonMarkBig );
+                    }
+                    artificalHorizonLadderList.appendChild( artificialHorizonMarkMini.cloneNode() );
+                    artificalHorizonLadderList.appendChild( artificalHorizonMarkMedium );
+                    artificalHorizonLadderList.appendChild( artificialHorizonMarkMini.cloneNode() );
+                    if ( i == 1 ){
+                        artificalHorizonLadderList.appendChild( artificialHorizonMarkBig );
+                    }
+
+
+                }
+
+                if ( i == 0 ){ 
+                    const artificalHorizonMarkLine = document.createElement("div");
+                    artificalHorizonMarkLine.classList.add("artificalHorizonMarkLine");
+                    artificalHorizonLadderList.appendChild( artificalHorizonMarkLine );
+                }
+
+            }
+
+        }
+        
+
+
+
+        function generateSpeedStrip(){
+
+            speedWrapper.innerHTML = "";
+
+            for (let i = 0; i < 1000/20; i++){
+                const speedMark_big = document.createElement("div");
+                speedMark_big.classList.add("speedMark_big");
+                speedMark_big.innerHTML = `<div class="speedDigit">${i*20}</div>`;
+
+                const speedMark_mini = document.createElement("div");
+                speedMark_mini.classList.add("speedMark_mini");
+
+                speedWrapper.appendChild(speedMark_big);
+                speedWrapper.appendChild(speedMark_mini);
+
+            }
+
+            speedWrapper.lastElementChild.remove();
+
+        }
+
+
+
+
+        function generateAltitudeStrip(){
+            altitudeWrapper.innerHTML = "";
+
+            // NEGATIVE
+            for (let i = 0; i < 2000/200; i++){
+                const altitudeVoidMark = document.createElement("div");
+                altitudeVoidMark.classList.add("altitudeVoidMark");
+                altitudeVoidMark.innerHTML = `<div class="altitudeDigit">${-2000 + i * 200}</div>`;
+                
+
+                const altitudeMark = document.createElement("div");
+                altitudeMark.classList.add("altitudeMark");
+
+                altitudeWrapper.appendChild(altitudeVoidMark);
+                altitudeWrapper.appendChild(altitudeMark);
+            }
+
+            // POSITIVE
+            for (let i = 0; i < 60000/200+1; i++){
+                const altitudeVoidMark = document.createElement("div");
+                altitudeVoidMark.classList.add("altitudeVoidMark");
+                altitudeVoidMark.innerHTML = `<div class="altitudeDigit">${i*200}</div>`;
+                
+
+                const altitudeMark = document.createElement("div");
+                altitudeMark.classList.add("altitudeMark");
+
+                altitudeWrapper.appendChild(altitudeVoidMark);
+                altitudeWrapper.appendChild(altitudeMark);
+            }
+
+            altitudeWrapper.lastElementChild.remove();
+
+        }
+        
+
+        
+
+        function updatePtichRoll(){
+            artificalHorizonWrapper.style.transform = `rotate(${airplane.orientation.roll}deg) translateY(${ map(airplane.orientation.pitch, -90, 90, -360, 360) }px)`;
+            artificalHorizonLadderList.style.transform =  `rotate(${airplane.orientation.roll}deg) translateY(${ map(airplane.orientation.pitch, -90, 90, -360, 360) }px)`;
+            rollIndicatorMark_centerMoveable.style.transform = `rotate(${Math.clamp(airplane.orientation.roll>180?airplane.orientation.roll-360:airplane.orientation.roll, -50, 50)}deg)`;
+        }
+
+
+        function setPitch( valueDeg ){
+            valueDeg = Math.clamp(valueDeg, -90, 90);
+            airplane.orientation.pitch = valueDeg;
+            updatePtichRoll();
+        }
+
+
+        function setRoll( valueDeg ){
+            valueDeg = normalizeAngle(valueDeg);
+            airplane.orientation.roll = valueDeg;
+            updatePtichRoll();
+        }
+
+
+        function setYaw( valueDeg = 0 ){ 
+            valueDeg = normalizeAngle(valueDeg);
+            airplane.orientation.yaw = valueDeg;
+            compass.style.transform = `rotate(${360 - valueDeg}deg)`;
+        }
+
+
+        function setSpeed( value ){
+            value = Math.clamp(value, 0, 980);
+            airplane.speed = value;
+            
+            // INDICATOR
+            speedIndicatorContainer.querySelectorAll(".indicatorDigitMasked")[0].style.transform = `translateY(${ getGraphOffetY(16, 95, 100, airplane.speed % (100*10) )  }px)`;
+            speedIndicatorContainer.querySelectorAll(".indicatorDigitMasked")[1].style.transform = `translateY(${ getGraphOffetY(16, 8, 10, airplane.speed%100 )  }px)`;
+            speedIndicatorContainer.querySelectorAll(".indicatorDigitMasked")[2].style.transform = `translateY(${ getGraphOffetY(16, 0, 1, airplane.speed%10 ) + 16 }px)`;
+
+            // STRIP
+            speedWrapper.style.transform = `translateY(${ map(value, 0, 980, 0, 2352) }px)`;
+        }
+
+
+        function setAltitude( value ){
+            value = Math.clamp(value, -2000, 60000);
+            airplane.altitude = value;
+
+            const absoluteValue = Math.abs(airplane.altitude);
+            // INDICATOR
+            altitudeIndicatorContainer.querySelectorAll(".indicatorDigitMasked")[0].style.transform = `translateY(${ getGraphOffetY(16, 10000-5, 10000, absoluteValue % (10000*10) )  }px)`;
+            altitudeIndicatorContainer.querySelectorAll(".indicatorDigitMasked")[1].style.transform = `translateY(${ getGraphOffetY(16, 1000-5, 1000, absoluteValue % (1000*10) ) }px)`;
+            altitudeIndicatorContainer.querySelectorAll(".indicatorDigitMasked")[2].style.transform = `translateY(${ getGraphOffetY(16, 95, 100, absoluteValue % (100*10) )  }px)`;
+            altitudeIndicatorContainer.querySelectorAll(".indicatorDigitMasked")[3].style.transform = `translateY(${ getGraphOffetY(16, 0, 20, absoluteValue%100  ) + 16 }px)`;
+
+            // STRIP
+            if ( value >= 0 ){
+                altitudeWrapper.style.transform = `translateY(${ map(value, 0, 60000, 480, 14880) }px)`;
+                return;
+            }
+
+            altitudeWrapper.style.transform = `translateY(${ map(value, -2000, 0, 0, 480) }px)`;
+  
+        }
+
+
+
+
+        // LOCALIZER
+        function setLocalizer( percent = 0 ){
+            percent = Math.clamp(percent, -100, 100);
+            localizerContainer.querySelector(".glideLocalizerCurrent").style.transform = `translateX(${percent*64/100}px)`;
+        }
+
+        function setLocalizerVisibility( state ){
+            localizerContainer.style.visibility = state ? 'visible' : 'hidden';
+        }
+
+        function setLocalizerThumbVisibility( state ){
+            if ( state ){
+                setLocalizerVisibility(true);
+            }
+            localizerContainer.querySelector(".glideLocalizerCurrent").style.visibility = state ? 'visible' : 'hidden';
+        } 
+
+
+        // GLIDE SLOPE
+        function setGlideSlope( percent ){
+            percent = Math.clamp(percent, -100, 100);
+            glideSlopeContainer.querySelector(".glideLocalizerCurrent").style.transform = `translateY(${percent*64/100}px)`;
+        }
+        
+        function setGlideSlopeVisibility( state ){
+            glideSlopeContainer.style.visibility = state ? 'visible' : 'hidden';
+        }
+        
+        function setGlideSlopeThumbVisibility( state ){
+            if ( state ){
+                setGlideSlopeVisibility(true);
+            }
+            glideSlopeContainer.querySelector(".glideLocalizerCurrent").style.visibility = state ? 'visible' : 'hidden';
+        } 
+
+
+
+
+        // LEFT TEXT INDICATOR
+        function setIndicatorLeft( text = "" ){
+            upperIndicatorList.firstElementChild.innerHTML = text;
+        }
+
+        // RIGHT TEXT INDICATOR
+        function setIndicatorRight( text = "" ){
+            upperIndicatorList.lastElementChild.innerHTML = text;
+        }
+
+
+
+
+
+        // TOGGLE BACKLIGHT
+        function setBacklight( state ){
+            isdf.classList.toggle("isdf_backlight", state);
+        }
+
+
+
+
+
+        // FAILURES
+        function setFailureAirspeed( state ){
+            isdf.classList.toggle("airspeed_flag", state);
+        }
+        function setFailureLocalizer( state ){
+            isdf.classList.toggle("localizer_flag", state);
+        }
+        function setFailureGlideSlope( state ){
+            isdf.classList.toggle("glideslope_flag", state);
+        }
+        function setFailureAltitude( state ){
+            isdf.classList.toggle("altitude_flag", state);
+        }
+        function setFailureAttitude( state ){
+            isdf.classList.toggle("attitude_flag", state);
+        }
+        function setFailureHeading( state ){
+            isdf.classList.toggle("heading_flag", state);
+        }
+        
+
+
+        // MESSAGES: UPPER
+        function setMessageUpper( type = 0 ){
+            isdf.classList.remove("AttRst_message", "Att10_message", "AttWait_message");
+            switch (type) {
+                case 1:
+                    isdf.classList.add("AttRst_message");
+                    break;
+                case 2:
+                    isdf.classList.add("Att10_message");
+                    break;
+                case 3:
+                    isdf.classList.add("AttWait_message");
+                    break;
+                 
+            }
+        }
+
+
+        // MESSAGE: LOWER (INIT)
+        function setMessageInit( state ){
+            isdf.classList.toggle("AttInit90_messageBorder", state);
+        }
+
+
+
+        
+        
+
+
+        var keyController = {
+
+            // ROLL
+            ArrowLeft: {
+                pressed: false,
+                call: () => { setRoll(airplane.orientation.roll + 2); }
+            },
+            ArrowRight: {
+                pressed: false,
+                call: () => { setRoll(airplane.orientation.roll - 2); }
+            },
+
+            // PITCH
+            ArrowUp: {
+                pressed: false,
+                call: () => { setPitch(airplane.orientation.pitch - Math.cos(airplane.orientation.roll*Math.PI/180) ); }
+            },
+            ArrowDown: {
+                pressed: false,
+                call: () => {  setPitch(airplane.orientation.pitch + Math.cos(airplane.orientation.roll*Math.PI/180) );  }
+            },
+
+            // YAW
+            q: {
+                pressed: false,
+                call: () => { setYaw(airplane.orientation.yaw - 1); }
+            },
+            e: {
+                pressed: false,
+                call: () => { setYaw(airplane.orientation.yaw + 1); }
+            },
+
+            // SPEED
+            1: {
+                pressed: false,
+                call: () => { setSpeed(airplane.speed - 1); }
+            },
+            2: {
+                pressed: false,
+                call: () => { setSpeed(airplane.speed + 1); }
+            },
+            
+            // ALTITUDE
+            3: {
+                pressed: false,
+                call: () => { setAltitude(airplane.altitude - 1); }
+            },
+            4: {
+                pressed: false,
+                call: () => { setAltitude(airplane.altitude + 1); }
+            }, 
+
+        };
+
+
+
+         
+
+
+        onkeydown = onkeyup = onblur = (event) => {
+
+            if ( event.type == 'keydown' && !event.repeat ){
+                if ( event.key == ' ' ){
+                    setBacklight();
+                }else if ( event.key == 'Enter' ){
+                    isdf.classList.toggle("frame_hidden");
+                }
+            }
+
+            if ( keyController[event.key] != null ){
+                keyController[event.key].pressed = event.type == 'keydown';  
+            }
+        };
+
+
+        function update(){
+            Object.keys(keyController).forEach(key => keyController[key].pressed && keyController[key].call() );
+            requestAnimationFrame(update);
+        }
+
+
+
+        // Buttons
+        function onClickButtonAPP(){ console.log("APP"); }
+        function onClickButtonHPIN(){ console.log("HP/IN"); }
+        function onClickButtonRST(){ console.log("RST"); }
+        function onClickButtonPlus(){ console.log("Plus"); }
+        function onClickButtonMinus(){ console.log("Minus"); }
+
+        // Knob
+        function onPushKnob(){ console.log("click knob"); }
+        function onRotateKnob(event){ console.log("rotate knob", event.deltaY); }
+        
+        onload = () => {
+            generateAltitudeStrip();
+            generateSpeedStrip();
+            generateArtificalHorizonLadder();
+            generateCompass();
+
+            update();
+        };
+
+
+    </script>
+
+</body>
+</html>

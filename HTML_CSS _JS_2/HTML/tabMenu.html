@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pr-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        *{
+            margin: 0px;padding: 0px;
+        }
+
+        body{
+            background-color: #ddd;
+            font-family: Arial;
+        }
+
+        .tab_nav{
+            margin: 0 auto;
+            width: 600px;
+            height: 400px;
+            margin: 100px auto;
+            background-color: #fff;
+            position: relative;
+            
+        }
+
+        .tab_nav ul{
+            list-style: none;
+        }
+
+        .tab_nav ul li{
+            float: left;
+        }
+        
+        .tab_nav label{
+            width: 100px;
+            padding: 25px;
+            background-color: #363b48;
+            display: block;
+            color: #fff;
+            text-align: center;
+            
+        }
+        .tab_nav label:hover{
+            background-color: brown;
+        }
+
+        .btn_nav:checked ~ label{
+            background-color: #e54e43;
+        }
+        .btn_nav{
+            display: none;
+        }
+
+        .content{
+            border-top: 5px solid #e54e43;
+            background-color: #fff;
+            height: 320px;
+            width: 600px;
+            display: none;
+            position: absolute;
+            left: 0;
+        }
+
+        .btn_nav:checked ~ .content{
+            display: block;
+        }
+
+    </style>
+
+
+</head>
+<body>
+    
+
+    <div class="tab_nav">
+
+        <ul>
+            <li>
+                <input type="radio" name="tabs" class="btn_nav" id="nav_btn1" checked>
+                <label for="nav_btn1">TAB 1</label>
+                <div class="content">A</div>
+            </li>
+
+            <li>
+                <input type="radio" name="tabs" class="btn_nav" id="nav_btn2">
+                <label for="nav_btn2">TAB 2</label>
+                <div class="content">B</div>
+            </li>
+
+            <li>
+                <input type="radio" name="tabs" class="btn_nav" id="nav_btn3">
+                <label for="nav_btn3">TAB 3</label>
+                <div class="content">C</div>
+            </li>
+
+            <li>
+                <input type="radio" name="tabs" class="btn_nav" id="nav_btn4">
+                <label for="nav_btn4">TAB 4</label>
+                <div class="content">D</div>
+            </li>
+        </ul>
+
+        
+
+
+    </div>
+
+</body>
+</html>

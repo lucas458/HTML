@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 10px 0;
+            font-size: 0.8em;
+        }
+
+
+
+   
+ 
+        /* SCROLLER */
+
+        #scroller-letter{
+
+            user-select: none;
+            background-color: #fff;
+            color: #9e9e9e;
+            box-shadow: 0 0 2px 0 #000;
+            padding: 2px;
+            margin: 10px;
+            border-radius: 25px;
+            text-align: center;
+            position: fixed;
+            right: 0;
+            top: 0;
+
+            transition: 200ms;
+
+        }
+
+        #scroller-letter:active{
+            background-color: #eeeeee;
+        }
+
+
+
+       
+
+        .scroller-item:active{
+            color: #4caf50;
+        }
+
+        .scroller-fav:active{
+            color: #ff8f00;
+        }
+
+        .scroller-esp:active{
+            color: #dc3545;
+        }
+
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .screen{
+            margin-top: 20px;
+        }
+
+
+
+        /* SEPARATOR */
+        .sort-separator{
+            margin: 10px 25px;
+            font-weight: bold;
+            color: #9e9e9e;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+        .sort-label{
+            white-space: nowrap;
+        }
+        .sort-line{
+            height: 2px;
+            width: 100%;
+            margin-left: 5px;
+            background-color: #e0e0e0;
+        }
+
+
+
+
+
+
+        /* ITEM */
+        .item-wrapper{
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 8px 25px;
+            user-select: none;
+            transition: 1000ms;
+        }
+
+        .item-wrapper:active{
+            background-color: #e2e2e2;
+            transition: 200ms;
+        }
+
+
+        .item-image{
+            border-radius: 50%;
+            min-width: 32px;
+            overflow: hidden;
+            border: 1px solid #9e9e9e;
+             
+        }
+
+
+        .item-title{
+            width: 100%;
+            margin-left: 15px;
+            font-size: 1.2em;
+        }
+
+
+
+
+        
+
+         
+
+
+
+
+
+
+         
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <!-- DUMMY IMAGE -->
+    <!-- https://umstechlabs.com/wp-content/uploads/2018/01/dummy-image.jpg -->
+
+
+    <!-- SCROLLER -->
+    <div id="scroller-letter">
+
+        <div class="scroller-item scroller-fav">&star;</div>
+        <div class="scroller-item scroller-esp">&amp;</div>
+        
+        <div class="scroller-item">A</div>
+        <div class="scroller-item">B</div>
+        <div class="scroller-item">C</div>
+        <div class="scroller-item">D</div>
+        <div class="scroller-item">E</div>
+        <div class="scroller-item">F</div>
+        <div class="scroller-item">G</div>
+        <div class="scroller-item">H</div>
+        <div class="scroller-item">I</div>
+        <div class="scroller-item">J</div>
+        <div class="scroller-item">K</div>
+        <div class="scroller-item">L</div>
+        <div class="scroller-item">M</div>
+        <div class="scroller-item">N</div>
+        <div class="scroller-item">O</div>
+        <div class="scroller-item">P</div>
+        <div class="scroller-item">Q</div>
+        <div class="scroller-item">R</div>
+        <div class="scroller-item">S</div>
+        <div class="scroller-item">T</div>
+        <div class="scroller-item">U</div>
+        <div class="scroller-item">V</div>
+        <div class="scroller-item">W</div>
+        <div class="scroller-item">X</div>
+        <div class="scroller-item">Y</div>
+        <div class="scroller-item">Z</div>
+
+        <div class="scroller-item scroller-esp">#</div>
+
+    </div>
+
+
+
+
+    <div class="screen" id="screen-contacts">
+
+        <div class="screen-content">
+
+            <!-- LETRA A -->
+            <!-- <div class="sort-separator">
+                <span class="sort-label">A</span>
+                <div class="sort-line"></div>
+            </div> -->
+
+            <!-- ITEM  -->
+            <!-- <div class="item-wrapper">
+                <img class="item-image" width="32" height="32" src="https://dummyimage.com/600x600/FFFFFF/9e9e9e">
+                <div class="item-title">Alef</div>
+            </div> -->
+
+
+        </div>
+
+    </div>
+
+
+
+    
+
+
+
+    
+    <script>
+
+
+
+
+        var names = [];
+
+        var contatos = [
+
+
+            // FAVS
+            {"name":"Kimberly Lee", "fav": true, "img": ""},
+            {"name":"Mindy Russell", "fav": true, "img": ""},
+            {"name":"Sean Anderson", "fav": true, "img": ""},
+
+            // NORMAL
+            {"name":"Abby Christensen", "fav": false, "img": ""},
+            {"name":"Adi Thakkar", "fav": false, "img": ""},
+            {"name":"Adriana Valdivia", "fav": false, "img": ""},
+            {"name":"Amar Nwosu", "fav": false, "img": ""},
+            {"name":"Brad Otani", "fav": false, "img": ""},
+            {"name":"Brianna Levin", "fav": false, "img": ""},
+            {"name":"Bryan Fortana", "fav": false, "img": ""}
+
+        ];
+
+
+
+
+
+        // LISTAR CONTATOS
+        function listAllContacts(){
+
+
+
+            let content = document.querySelector("#screen-contacts .screen-content");
+
+
+            // GET ALL NAMES            
+            for ( let x = 0; x < contatos.length; x++ ){
+                names.push( contatos[x].name );
+            }
+
+            // SORT NAMES
+            names.sort();
+
+            // CLEAR ALL CONTENT
+            content.innerHTML = '';
+
+
+           
+            
+            
+
+            // LISTAR CONTATOS FAVORITOS
+            for ( let x = 0; x < contatos.length; x++ ){
+
+                let elementSort = document.createElement("div");
+                let elementItem = document.createElement("div");
+
+                elementSort.classList.add("sort-separator");
+                elementItem.classList.add("item-wrapper");
+                
+
+                // ADD SORT FAVORITO
+                if (x == 0){
+                    elementSort.innerHTML = `
+                        <span class="sort-label"><span style="color:#ff8f00">&starf;</span> FAVORITOS</span>
+                        <div class="sort-line"></div>
+                    `;
+                    content.appendChild(elementSort);
+                }
+
+                
+                // ADD ITEM FAVORITO
+                for ( let y = 0; y < contatos.length; y++ ){ 
+                    if ( contatos[x].name == names[y] && contatos[x].fav ){
+                        elementItem.innerHTML = `
+                            <img class="item-image" width="32" height="32" src="https://dummyimage.com/600x600/FFFFFF/9e9e9e">
+                            <div class="item-title">${names[y]}</div>
+                        `;
+                        content.appendChild(elementItem);
+                    }
+                }
+
+            }
+
+
+
+
+            // LISTAR CONTATOS NORMAIS -- A-Z
+            let sortLetter = '';
+
+            for ( let x = 0; x < contatos.length; x++ ){
+
+                let elementSort = document.createElement("div");
+                let elementItem = document.createElement("div");
+
+                elementSort.classList.add("sort-separator");
+                elementItem.classList.add("item-wrapper");
+                   
+
+                if ( names[x][0].toUpperCase() != sortLetter ){
+                    sortLetter = names[x][0].toUpperCase();
+                    console.log('----------- ' + sortLetter + ' -----------');
+
+                    elementSort.innerHTML = `
+                        <span class="sort-label">${sortLetter}</span>
+                        <div class="sort-line"></div>
+                    `;
+                    content.appendChild(elementSort);
+
+                }
+                
+                console.log( names[x] );
+
+                    
+                elementItem.innerHTML = `
+                    <img class="item-image" width="32" height="32" src="https://dummyimage.com/600x600/FFFFFF/9e9e9e">
+                    <div class="item-title">${names[x]}</div>
+                `;
+                content.appendChild(elementItem);
+                 
+
+               
+            }
+
+
+
+        }
+
+
+
+
+
+
+
+        // CLICK SCROLLER
+
+        var scroller_items = document.querySelectorAll(".scroller-item");
+
+
+        
+
+        for ( let x = 0; x < scroller_items.length; x++ ){
+
+            let sort_separator;
+
+            scroller_items[x].addEventListener("click", function(){
+
+                console.log( this.innerText );
+
+                // FAVORITE
+                if ( x == 0){
+                    sort_separator = document.querySelector(".sort-separator .sort-label span");
+
+                    // SCROOL TO FAV
+                    for (let y = 0; y < contatos.length; y++){
+                        if ( contatos[y].fav ){
+                            window.scrollTo(0,  sort_separator.offsetHeight );
+                            break;
+                        }
+                    } 
+
+                }
+
+                // LETTER
+                else{
+
+                    sort_separator = document.querySelectorAll(".sort-separator .sort-label");
+
+
+                    for ( let y = 1; y < sort_separator.length; y++){
+
+                        if ( sort_separator[y].innerText == this.innerText ){
+
+                            console.log("ScrollTo - ",this.innerText );
+
+                            sort_separator[y].scrollIntoView();
+                            
+                            break;
+                        }
+
+                    }
+                    
+
+                }
+
+
+
+                // VERICAR ITEM
+                
+
+
+
+                
+
+            });
+
+        }
+
+
+
+
+
+
+        listAllContacts();
+
+
+
+
+
+
+
+
+    </script>
+
+</body>
+</html>

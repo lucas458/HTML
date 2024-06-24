@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+
+        #ironaman_hud{
+            width: 882px;
+            height: 736px;
+            background-image: url("ironaman_hud.png");
+            position: relative;
+        }
+
+        #vs_bug{
+            width: 25px;
+            height: 37px;
+            background-image: url("vs_bug.png");
+            transform-origin: 961px 59px;
+            transform: rotate(0deg); 
+            position: absolute;
+            left: 230px;
+            top: 338px;
+        }
+
+
+
+        #right_bug{
+            width: 35px;
+            height: 76px;
+            background-image: url("right_bug.png");
+            transform: rotate(18deg);
+            position: absolute;
+            left: 277px;
+            top: 185px; 
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="ironaman_hud">
+            <div id="vs_bug"></div>
+
+            <div id="right_bug"></div>
+
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+        
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+        const DATES = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        const MONTHS = [
+            "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"
+        ];
+
+
+
+
+
+
+
+        var VerticalSpeed = 0;  // -2 to 1.5
+        var RightAileron  = 0;  // 0% to 100%
+
+
+
+        function setVerticalSpeedHUD( value = 0 ){
+            value = Math.clamp(value, -2, 1.5);
+
+            if (value > 0){
+                vs_bug.style.transform = `rotate(${ map(value, 0, 1.5, 0, 15.5) }deg)`;
+                return;
+            }
+            if ( value < 0 ){
+                vs_bug.style.transform = `rotate(${ map(value, -2, 0, -17, 0) }deg)`;
+                return;
+            }
+
+            vs_bug.style.transform = `rotate(0deg)`;
+
+
+        }
+
+
+
+        function RightAileronHud( value = 0 ){
+            value = Math.clamp(value, 0, 100);
+
+            
+            right_bug.style.transformOrigin = RightAileron < 90? '': '84px 27px';
+
+            if ( RightAileron < 90 ){
+                
+
+                let pos = map(value, 0, 90, 0, 222);
+
+                right_bug.style.transform = `rotate(18deg) translate(${pos}px, 0px)`;
+
+            }
+            else{
+                let pos = map(value, 90, 100, 0, 48.9) + 222;
+                pos = Math.clamp(pos, 0, 257);
+                right_bug.style.transform = `rotate(41deg) translate(${pos}px, -45px)`;
+            }
+
+        }
+
+
+        onkeydown = (event) => {
+
+            if ( event.key == 1 ){
+                VerticalSpeed = Math.clamp(VerticalSpeed - 0.1, -2, 1.5);
+                setVerticalSpeedHUD(VerticalSpeed);
+            }else if ( event.key == 2 ){
+                VerticalSpeed = Math.clamp(VerticalSpeed + 0.1, -2, 1.5);
+                setVerticalSpeedHUD(VerticalSpeed);
+            }
+            
+            
+            if ( event.key == 3 ){
+                RightAileron = Math.clamp(RightAileron - 1, 0, 100);
+                RightAileronHud(RightAileron);
+            }else if ( event.key == 4 ){
+                RightAileron = Math.clamp(RightAileron + 1, 0, 100);
+                RightAileronHud(RightAileron);
+            }
+
+        };
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista</title>
+
+
+    <style>
+
+
+
+
+
+
+        :root{
+
+            --header: #212121;
+            --bg-color: #181818;
+            --font-color: #fff;
+
+            --player-color: #202020;
+            --player-font: #000;
+
+            --player-kill-btn: #cddc39;
+
+            --element-active: #303030;
+
+            
+
+
+            
+
+        }
+
+        [data-theme="light"]{
+
+            --header: #fff;
+            --bg-color: #fff;
+            --font-color: #2a2a2a;
+
+            --player-color: #fff;
+            --player-font: #000;
+
+            --player-kill-btn: #cf6900;
+            
+            --element-active: #dbdbdb;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            background-color: var(--bg-color);
+            color: var(--font-color);
+            font-family: Arial, Helvetica, sans-serif;
+            user-select: none;
+        }
+
+
+
+        
+
+
+
+
+
+
+
+
+        /* SLIDE SCREEN */
+        #slideScreen{
+            overflow: hidden auto;
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-color: var(--header);
+            position: fixed;
+            z-index: 1;
+            left: -101%;
+            transition: 200ms;
+        }
+
+        #slideScreen header{
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+
+        #closeSlide{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5px 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 64px;
+            transition: 100ms;
+        }
+
+        #closeSlide:active{
+            background-color: var(--element-active);
+        }
+
+
+
+        .slide-button{
+            padding: 10px;
+        }
+        .slide-button:active{
+            background-color: var(--element-active);
+        }
+
+
+        #game-control{
+            display: flex;
+
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        #game-control > div{
+            width: 100%;
+            text-align: center;
+            margin: 5px;
+            border-radius: 8px;
+        }
+
+        #game-control > div:first-child{
+            background-color:#cd3545;
+        }
+        #game-control > div:last-child{
+            color: #000;
+            background-color: #cddc39;
+        }
+
+
+
+
+        
+        /* HISTORICO */
+
+        #history .slide-button{
+            border-top: 2px solid #acacac;
+        }
+
+
+
+        .playerParam{
+            margin-bottom: 5px;
+        }
+        
+        .playerParam span{
+            font-weight: bold;
+        }
+
+        .playerParam span:first-child{
+            color: #28a745;
+        }
+
+        .playerParam span:last-child{
+            color: #cd3545;
+        }
+
+        .playerParam span.player-suicide{
+            color: var(--player-kill-btn);
+        }
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* HEADER */
+
+        header{
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            background-color: var(--header);
+
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+
+
+        #moreButton{
+            margin: 5px 0;
+            width: 32px;
+            height: 32px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 64px;
+
+            transition: 100ms;
+        }
+        #moreButton:active{
+            background-color: var(--element-active);;
+        }
+
+
+
+
+
+
+
+
+
+
+        #inputs input{
+            border-radius: 15px;
+            padding: 5px 10px;
+            outline: none;
+            border: 0;
+            background-color: var(--element-active);
+            color: var(--font-color);
+
+            margin-bottom: 5px;
+            margin-right: 5px;
+        }
+
+        #inputs button, #pass button{
+            padding: 5px 10px;
+            border: 0;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+        }
+
+
+
+
+
+
+        #pass{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        #pass button{
+            background-color: #28a745;
+        }
+
+
+       
+
+
+        
+
+
+        #playerName{
+            white-space: nowrap;
+            font-weight: bold;
+            color: var(--player-kill-btn);
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .item{
+            background-color: var(--player-color);
+
+            display: flex;
+        }
+
+        .item > div{
+            padding: 10px;
+        }
+
+        .item-name{
+            overflow: hidden;
+            width: 100%;
+            text-overflow: ellipsis;
+        }
+
+        
+        .button-control{
+            transition: 100ms;
+        }
+        .button-control:active{
+            background-color: #353535;
+        }
+
+
+        .item-ok{
+            color: #28a745;
+        }
+
+        .item-kill{
+            color: var(--player-kill-btn);
+        }
+
+        .item-delete, .item-off{
+            color: #cd3545;
+        }
+       
+
+
+        .item-killed{
+            opacity: 0.5;
+        }
+
+
+        .item-active{
+            background-color: var(--element-active);
+        }
+        
+
+
+        .button-control-hide{
+            display: none;
+        }
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+    </style>
+
+</head>
+
+
+
+
+
+
+<body>
+
+
+
+
+
+
+
+    <!-- TELA LATERIAL -->
+
+    <div id="slideScreen">
+
+        <header>
+            <!-- SLIDE SCREEN -->
+            <div id="closeSlide">
+                <svg onclick="slideScreen(0)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z"/>
+                    <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z"/>
+                </svg>
+            </div>
+
+        </header>
+
+
+        
+
+        <div id="game-control">
+
+            <div class="slide-button" onclick="zerar()" style="color:#fff;">ZERAR</div>
+            <div class="slide-button" onclick="reviver()">REVIVER</div>
+
+        </div>
+
+
+        <div class="slide-button" onclick="toggleTheme(this)">TEMA: ESCURO</div>
+
+
+        <details>
+            <summary class="slide-button">HISTÓRICO</summary>
+
+            <div id="history">
+
+                <!-- <div class="slide-button">
+                    <div class="playerParam">
+                        <span>teste </span>&gt; <span>teste2</span>
+                    </div>
+                    <div class="playerTime">00:00</div>
+                </div> -->
+
+            </div>
+
+        </details>
+        
+
+
+
+    </div>
+
+
+
+
+
+
+    <!-- HEADER -->
+    <header>
+
+        <!-- SLIDE SCREEN -->
+        <div id="moreButton">
+            <svg onclick="slideScreen(1)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+            </svg>
+
+        </div>
+
+
+        <div id="inputs">
+            <input type="search" placeholder="Nome" id="inputName" >
+            <button onclick="genPlayer()">ADICIONAR</button>
+        </div>
+
+        
+        <div id="pass">
+            <div style="display: none;">Jogador:</div>
+            <button onclick="greenButton(this)" id="greenBtn">Iniciar</button>
+        </div>
+
+
+        <div id="playerName"> </div>
+    </header>
+
+
+
+
+    <!-- LISTA -->
+
+    <div id="list-itens">
+
+
+        <!-- ITEM -->
+        <!-- <div class="item"> -->
+
+            <!-- <div class="item-name">nome aqui</div> -->
+
+            <!-- KILL -->
+            <!-- <div class="item-kill button-control">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+            </div> -->
+            
+            <!-- DELETE -->
+            <!-- <div class="item-delete button-control">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+            </div> -->
+
+
+        <!-- </div> -->
+
+    </div>
+
+
+
+
+
+
+    <script>
+
+        inputName = document.getElementById("inputName");
+
+        list_itens = document.getElementById("list-itens");
+
+
+        var gameRunning = false;
+
+        var playerAtual = 0;
+
+        playerList = document.getElementsByClassName("item");
+
+
+        killHistory = document.getElementById("history");
+
+        
+
+
+        // ADD CLASS
+        //list_itens.children[0].classList.add("item-killed")
+
+
+        // DELETE ITEM
+        //list_itens.children[0].remove()
+
+
+
+
+
+
+        function toggleTheme(btn){
+
+            if ( document.documentElement.getAttribute("data-theme") == "dark" ){
+                document.documentElement.setAttribute("data-theme", "light");
+                console.log("tema CLARO");
+                btn.innerText = "TEMA: CLARO";
+            }
+            else{
+                document.documentElement.setAttribute("data-theme", "dark");
+                console.log("tema ESCURO");
+                btn.innerText = "TEMA: ESCURO";
+            }
+
+        }
+
+
+        
+
+
+
+
+
+
+        // ON INPUT
+        inputName.addEventListener("input", function(){
+
+            if ( this.value.length < 25 ){
+                console.log(this.value);
+            }
+            else{
+                this.value = this.value.slice(0,25);
+            }
+
+        });
+
+
+
+
+
+
+
+
+        // VIVER TODOS OS PLAYERs
+        function reviver(){
+            
+            if ( gameRunning ){
+                playerAtual = 0;
+
+                if ( playerList.length > 0 ){
+                    for ( let i = 0; i < playerList.length; i++ ){
+                        playerList[i].classList.remove("item-killed");
+                        playerList[i].children[1].style.visibility = "visible";
+                    }
+                    selectPlayer(0);
+                }
+            }
+
+            killHistory.innerHTML = "";
+
+            
+
+        }
+
+
+
+        // VAI PARA O ESTADO INICIAL
+        function zerar(){
+            playerAtual = 0;
+            gameRunning = false;
+
+            document.getElementById("inputs").style.display = "block";
+            inputName.value = "";
+
+            list_itens.innerHTML = "";
+
+            document.getElementById("greenBtn").innerText = "Iniciar";
+
+            document.getElementById("playerName").innerText = "";
+
+            document.querySelector("#pass div").style.display = "nonne";
+
+            killHistory.innerHTML = "";
+
+
+            for ( let i = 0; i < playerList.length; i++ ){
+                
+                playerList[i].children[1].style.visibility = "visible";
+            }
+
+        }
+
+
+
+
+
+
+
+        // INICIAR JOGO
+        function gameStart(){
+            gameRunning = true;
+            document.getElementById("inputs").style.display = "none";
+            document.querySelector("#pass div").style.display = "block"
+        }
+
+
+
+
+        // PASSAR A VEZ
+        function playerPass(){
+
+    
+            if ( playerAtual < playerList.length - 1 ){
+                playerAtual++;
+            }
+            else{
+                playerAtual = 0;
+            }
+
+            if ( isDied(playerAtual) ){
+                
+
+                if (isDiedAll()){
+                   
+                    for ( let i = 0; i < playerList.length; i++ ){
+                        playerList[i].classList.remove("item-active");
+                    }
+                    document.getElementById("playerName").innerText = "";
+                }
+                else{
+                    playerPass();
+                }
+
+            }
+            else{
+                selectPlayer(playerAtual);
+                
+
+            }
+
+ 
+        }
+
+
+
+
+        // ALL DEADS?
+        function isDiedAll(){
+
+            for ( let x = 0; x < playerList.length; x++){
+
+                if ( !isDied(x) ){
+                    return false;
+                }
+
+            }
+            return true;
+
+        }
+
+
+
+
+        // IS DIED?
+        function isDied( index ){
+
+            if ( playerList.length <= 0 ){return;}
+
+            for ( let i = 0; i < playerList[index].classList.length; i++ ){
+
+                if ( playerList[index].classList[i] == "item-killed" ){
+                    return true;
+                    continue;
+                }
+            }
+            return false;
+
+        }
+
+
+
+
+        // SELECT PLAYER
+        function selectPlayer( index ){
+
+            for ( let i = 0; i < playerList.length; i++ ){
+                playerList[i].classList.remove("item-active");
+            }
+            playerList[index].classList.add("item-active");
+            document.getElementById("playerName").innerText = playerList[playerAtual].innerText;
+
+
+        }
+
+
+
+
+
+
+
+
+        // BOTAO VERDE | INIT / PASSAR
+        function greenButton( btn ){
+
+            if ( gameRunning ){
+                playerPass();
+                //btn.innerText = "Passar";
+            }
+
+            else{
+
+                if ( playerList.length > 0 ){
+
+                    // SHOW KILL
+                    //document.getElementsByClassName("item")[0].children[1].style.display = "block"
+                    // HIDE DELETE
+                    //document.getElementsByClassName("item")[0].children[2].style.display = "none"
+
+                    for ( let i = 0; i < playerList.length; i++){
+                        playerList[i].children[1].style.display = "block";
+                        playerList[i].children[2].style.display = "none";
+                        
+                    }
+
+                    playerList[playerAtual].classList.add("item-active");
+                    document.getElementById("playerName").innerText = playerList[playerAtual].innerText;
+
+                    gameStart();
+                    btn.innerText = "Passar";
+                }
+
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        // DELETAR PLAYER
+        function deletePlayer( item ){
+
+            item.parentElement.remove();
+
+        }
+
+
+
+
+        // MATAR PLAYER
+        function killPlayer( item ){
+            var els = Array.prototype.slice.call( document.getElementsByClassName('item-kill'), 0 );
+            let killIndex = els.indexOf(event.currentTarget);
+            console.log("kill: " + killIndex);
+
+            item.parentElement.classList.add("item-killed");
+            playerList[killIndex].children[1].style.visibility = "hidden";
+
+            date = new Date();
+
+            dateHour = date.getHours();
+            dateMin = date.getMinutes();
+
+            dateHour = (dateHour < 10)? ('0'+dateHour): dateHour;
+            dateMin = (dateMin < 10)? ('0'+dateMin): dateMin;
+
+            let historyContent = document.createElement("div");
+
+            if ( playerAtual == killIndex ){
+                
+                console.log( playerList[playerAtual].innerText + " Se suicidou");
+
+                historyContent.innerHTML = `
+                <div class="slide-button">
+                    <div class="playerParam">
+                        <span>${playerList[playerAtual].innerText} </span> <span class="player-suicide">SUICÍDIO</span>
+                    </div>
+                    <div class="playerTime">${dateHour}:${dateMin}</div>
+                </div>
+                `;
+
+
+                playerList[playerAtual].classList.remove("item-active");
+                playerPass();
+            }
+
+            else{
+                console.log( playerList[playerAtual].innerText + " > " + playerList[killIndex].innerText);
+
+                historyContent.innerHTML = `
+                <div class="slide-button">
+                    <div class="playerParam">
+                        <span>${playerList[playerAtual].innerText} </span>&gt; <span>${playerList[killIndex].innerText}</span>
+                    </div>
+                    <div class="playerTime">${dateHour}:${dateMin}</div>
+                </div>
+                `;
+
+
+            }
+
+            killHistory.appendChild( historyContent );
+
+            
+        }
+
+
+
+        // GERAR PLAYER
+        function genPlayer(){
+
+            if ( inputName.value.length > 0 && !gameRunning ){
+
+                console.log("JOGADOR: " + inputName.value)
+
+                let player = document.createElement("div");
+
+
+
+                player.innerHTML =  `
+                <div class="item">
+                    <div class="item-name">${inputName.value}</div>
+                    <div class="item-kill button-control button-control-hide" onclick="killPlayer(this)" >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+                    </div>
+                    <div class="item-delete button-control" onclick="deletePlayer(this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+                    </div>
+                </div>
+                `;
+
+                list_itens.appendChild( player );
+
+                inputName.value = "";
+                
+
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // TOGGLE SLIDE SCREEN
+        function slideScreen( open ){
+
+            if ( open ){
+                document.getElementById("slideScreen").style.left = "0";
+            }
+            else{
+                document.getElementById("slideScreen").style.left = "-101%";
+            }
+
+        }
+
+
+
+
+    </script>
+
+
+
+
+</body>
+</html>
