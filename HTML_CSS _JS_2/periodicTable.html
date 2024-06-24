@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Periodic Table</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #000;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+        
+
+        .slot svg{ 
+            width: 56px;
+            height: 56px;
+        }
+
+        .slotContent{
+            width: 100%;
+            height: 100%;
+            color: #000;
+            font-weight: 500;
+            padding-top: 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: absolute;
+            top: 0;
+        }
+
+        .slotContentLetter{
+            font-weight: bold;
+        }
+
+        .slotContent div:not(.slotContentLetter){
+            font-size: 0.4em;
+        }
+
+        .slotGrid{
+            display: grid;
+        }
+
+        #mainGrid{
+            height: calc(56px * 7);
+        }
+
+        .slotGridRow{
+            display: grid;
+            grid-template-columns: repeat(18, 1fr);
+            grid-template-rows: 1fr;
+            position: relative;
+        }
+
+        #secundaryGrid .slotGridRow{
+            grid-template-columns: repeat(15, 1fr);
+        }
+
+        #labelsGrid .slotGridRow{
+            grid-template-columns: repeat(11, 1fr);
+        }
+        
+
+
+        .slot{
+            transition: 200ms;
+            transform: translate(0); 
+            position: relative;
+        }
+        .slot:not(.slotDummy):hover{
+            transform: scale(2);
+            transition: 100ms; 
+            z-index: 1;
+            filter: drop-shadow(3px 3px 2px #000000b3) drop-shadow(-3px 3px 2px #000000b3) drop-shadow(3px -3px 2px #000000b3) drop-shadow(-3px -3px 2px #000000b3);
+        }
+
+
+        .slotGridRow{
+            z-index: 1;
+        }
+        .slotGridRow:has(div:hover){
+            z-index: 99;
+        }
+
+
+
+        .slotDummy .slotContent{
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            font-size: 0.8em;
+        }
+
+
+        #labelsGrid .slotContentDummy{
+            font-size: 0.6em !important;
+        }
+        
+        #main_screen:has(#labelsGrid .slot[group="Alkali Metal"]:hover)     .slot:not([group="Alkali Metal"]),
+        #main_screen:has(#labelsGrid .slot[group="Alkaline Earth"]:hover)   .slot:not([group="Alkaline Earth"]),
+        #main_screen:has(#labelsGrid .slot[group="Transition Metal"]:hover) .slot:not([group="Transition Metal"]),
+        #main_screen:has(#labelsGrid .slot[group="Basic Metal"]:hover)      .slot:not([group="Basic Metal"]),
+        #main_screen:has(#labelsGrid .slot[group="Metalloid"]:hover)        .slot:not([group="Metalloid"]),
+        #main_screen:has(#labelsGrid .slot[group="Non Metal"]:hover)        .slot:not([group="Non Metal"]),
+        #main_screen:has(#labelsGrid .slot[group="Halogen"]:hover)          .slot:not([group="Halogen"]),
+        #main_screen:has(#labelsGrid .slot[group="Noble Gas"]:hover)        .slot:not([group="Noble Gas"]),
+        #main_screen:has(#labelsGrid .slot[group="Lanthanide"]:hover)       .slot:not([group="Lanthanide"]),
+        #main_screen:has(#labelsGrid .slot[group="Actinide"]:hover)         .slot:not([group="Actinide"]){
+            opacity: 0.2;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+    <div id="main_screen">
+        <div id="mainGrid" class="slotGrid"></div>
+        <div id="secundaryGrid" class="slotGrid"></div>
+        <div id="labelsGrid" class="slotGrid"></div>
+    </div>
+    
+
+
+    <script>
+        
+        const mainGrid = document.getElementById('mainGrid');
+        const secundaryGrid = document.getElementById('secundaryGrid');
+        const labelsGrid = document.getElementById('labelsGrid');
+
+        const colorByGroup = {
+            "Alkali Metal":     "#ac0533",
+            "Alkaline Earth":   "#ef3125",
+            "Transition Metal": "#fff000",
+            "Basic Metal":      "#00863f",
+            "Metalloid":        "#008c7f",
+            "Non Metal":        "#0174bd",
+            "Halogen":          "#7482bf",
+            "Noble Gas":        "#a64298",
+            "Lanthanide":       "#7ac141",
+            "Actinide":         "#5b8726"
+        };
+
+
+        const elementsList = {
+            // 1
+            Hydrogen: {
+                group: "Non Metal",
+                symbol: "H",
+                mass: 1.008,
+            },
+            Helium: {
+                group: "Noble Gas",
+                symbol: "He",
+                mass: 4.003
+            },
+            // 2
+            Lithium: {
+                group: "Alkali Metal",
+                symbol: "Li",
+                mass: 6.941
+            },
+            Beryllium: {
+                group: "Alkaline Earth",
+                symbol: "Be",
+                mass: 9.012
+            },
+            Boron: {
+                group: "Metalloid",
+                symbol: "B",
+                mass: 10.811
+            },
+            Carbon: {
+                group: "Non Metal",
+                symbol: "C",
+                mass: 10.811
+            },
+            Nitrogen: {
+                group: "Non Metal",
+                symbol: "N",
+                mass: 14.007
+            },
+            Oxygen: {
+                group: "Non Metal",
+                symbol: "O",
+                mass: 15.999
+            },
+            Flourine: {
+                group: "Halogen",
+                symbol: "F",
+                mass: 18.998
+            },
+            Neon: {
+                group: "Noble Gas",
+                symbol: "Ne",
+                mass: '20.180'
+            },
+            // 3
+            Sodium: {
+                group: "Alkali Metal",
+                symbol: "Na",
+                mass: '22.990'
+            },
+            Magnesium: {
+                group: "Alkaline Earth",
+                symbol: "Mg",
+                mass: 24.305
+            },
+            Aluminium: {
+                group: "Basic Metal",
+                symbol: "Al",
+                mass: 26.982
+            },
+            Silicon: {
+                group: "Metalloid",
+                symbol: "Si",
+                mass: 28.086
+            },
+            Phosphorus: {
+                group: "Non Metal",
+                symbol: "P",
+                mass: 30.974
+            },
+            Sulfur: {
+                group: "Non Metal",
+                symbol: "S",
+                mass: 32.066
+            },
+            Chlorine: {
+                group: "Halogen",
+                symbol: "Cl",
+                mass: 35.453
+            },
+            Argon: {
+                group: "Noble Gas",
+                symbol: "Ar",
+                mass: 39.948
+            },
+            // 4
+            Potassium: {
+                group: "Alkali Metal",
+                symbol: "K",
+                mass: 39.098
+            },
+            Calcium: {
+                group: "Alkaline Earth",
+                symbol: "Ca",
+                mass: 40.078
+            },
+            Scandium: {
+                group: "Transition Metal",
+                symbol: "Sc",
+                mass: 44.956
+            },
+            Titanium: {
+                group: "Transition Metal",
+                symbol: "Ti",
+                mass: 47.88
+            },
+            Vanadium: {
+                group: "Transition Metal",
+                symbol: "V",
+                mass: 50.942
+            },
+            Chromium: {
+                group: "Transition Metal",
+                symbol: "Cr",
+                mass: 51.996
+            },
+            Manganse: {
+                group: "Transition Metal",
+                symbol: "Mn",
+                mass: 54.938
+            },
+            Iron: {
+                group: "Transition Metal",
+                symbol: "Fe",
+                mass: 55.845
+            },
+            Cobalt: {
+                group: "Transition Metal",
+                symbol: "Co",
+                mass: 58.933
+            },
+            Nickel: {
+                group: "Transition Metal",
+                symbol: "Ni",
+                mass: 58.693
+            },
+            Copper: {
+                group: "Transition Metal",
+                symbol: "Cu",
+                mass: 63.546
+            },
+            Zinc: {
+                group: "Transition Metal",
+                symbol: "Zn",
+                mass: 65.38
+            },
+            Gallium: {
+                group: "Basic Metal",
+                symbol: "Ga",
+                mass: 69.723
+            },
+            Germanium: {
+                group: "Metalloid",
+                symbol: "Ge",
+                mass: 72.631
+            },
+            Arsenic: {
+                group: "Metalloid",
+                symbol: "As",
+                mass: 74.922
+            },
+            Selenium: {
+                group: "Non Metal",
+                symbol: "Se",
+                mass: 78.971
+            },
+            Bromine: {
+                group: "Halogen",
+                symbol: "Br",
+                mass: 79.904
+            },
+            Krypton: {
+                group: "Noble Gas",
+                symbol: "Kr",
+                mass: 84.798
+            },
+            Rubidium: {
+                group: "Alkali Metal",
+                symbol: "Rb",
+                mass: 84.468
+            },
+            Strontium: {
+                group: "Alkaline Earth",
+                symbol: "Sr",
+                mass: 87.62
+            },
+            Yttrium: {
+                group: "Transition Metal",
+                symbol: "Y",
+                mass: 88.906
+            },
+            Zincornium: {
+                group: "Transition Metal",
+                symbol: "Zr",
+                mass: 91.224
+            },
+            Niobium: {
+                group: "Transition Metal",
+                symbol: "Nb",
+                mass: 92.906
+            },
+            Molybdenum: {
+                group: "Transition Metal",
+                symbol: "Mo",
+                mass: 95.95
+            },
+            Technetium: {
+                group: "Transition Metal",
+                symbol: "Tc",
+                mass: 98.907
+            },
+            Ruthenium: {
+                group: "Transition Metal",
+                symbol: "Ru",
+                mass: 101.07
+            },
+            Rhodium: {
+                group: "Transition Metal",
+                symbol: "Rh",
+                mass: 102.906
+            },
+            Palladium: {
+                group: "Transition Metal",
+                symbol: "Pd",
+                mass: 106.42
+            },
+            Silver: {
+                group: "Transition Metal",
+                symbol: "Ag",
+                mass: 107.868
+            },
+            Cadmium: {
+                group: "Transition Metal",
+                symbol: "Cd",
+                mass: 112.414
+            },
+            Indium: {
+                group: "Basic Metal",
+                symbol: "In",
+                mass: 114.818
+            },
+            Tin: {
+                group: "Basic Metal",
+                symbol: "Sn",
+                mass: 118.711
+            },
+            Antimony: {
+                group: "Metalloid",
+                symbol: "Sb",
+                mass: '121.760'
+            },
+            Tellurium: {
+                group: "Metalloid",
+                symbol: "Te",
+                mass: 127.6
+            },
+            Iodine: {
+                group: "Halogen",
+                symbol: "I",
+                mass: 126.906
+            },
+            Xenom: {
+                group: "Noble Gas",
+                symbol: "Xe",
+                mass: 131.294
+            },
+            // 5
+            Cesium: {
+                group: "Alkali Metal",
+                symbol: "Cs",
+                mass: 132.905
+            },
+            Barium: {
+                group: "Alkaline Earth",
+                symbol: "Ba",
+                mass: 137.328
+            },
+            // 5-2 (57 to 71) Lanthanide
+            Lanthanum: {
+                group: "Lanthanide",
+                symbol: "La",
+                mass: 138.905
+            },
+            Cerium: {
+                group: "Lanthanide",
+                symbol: "Ce",
+                mass: 140.116
+            },
+            Praseodymium: {
+                group: "Lanthanide",
+                symbol: "Pr",
+                mass: 140.908
+            },
+            Neodymium: {
+                group: "Lanthanide",
+                symbol: "Nd",
+                mass: 114.243
+            },
+            Promethium: {
+                group: "Lanthanide",
+                symbol: "Pm",
+                mass: 144.913
+            },
+            Samarium: {
+                group: "Lanthanide",
+                symbol: "Sm",
+                mass: 150.36
+            },
+            Europium: {
+                group: "Lanthanide",
+                symbol: "Eu",
+                mass: 151.964
+            },
+            Gadolinium: {
+                group: "Lanthanide",
+                symbol: "Gd",
+                mass: 157.25
+            },
+            Terbium: {
+                group: "Lanthanide",
+                symbol: "Tb",
+                mass: 158.925
+            },
+            Dysprosium: {
+                group: "Lanthanide",
+                symbol: "Dy",
+                mass: '162.500'
+            },
+            Holmium: {
+                group: "Lanthanide",
+                symbol: "Ho",
+                mass: '164.930'
+            },
+            Erbium: {
+                group: "Lanthanide",
+                symbol: "Er",
+                mass: 167.259
+            },
+            Thulium: {
+                group: "Lanthanide",
+                symbol: "Tm",
+                mass: 168.934
+            },
+            Ytterbium: {
+                group: "Lanthanide",
+                symbol: "Yb",
+                mass: 173.055
+            },
+            Lutetium: {
+                group: "Lanthanide",
+                symbol: "Lu",
+                mass: 174.967
+            },
+            // 5-3
+            Hafnium: {
+                group: "Transition Metal",
+                symbol: "Hf",
+                mass: 178.49
+            },
+            Tantalum: {
+                group: "Transition Metal",
+                symbol: "Ta",
+                mass: 180.948
+            },
+            Tungsten: {
+                group: "Transition Metal",
+                symbol: "W",
+                mass: 183.84
+            },
+            Rhenium: {
+                group: "Transition Metal",
+                symbol: "Re",
+                mass: 186.207
+            },
+            Osmium: {
+                group: "Transition Metal",
+                symbol: "Os",
+                mass: 190.23
+            },
+            Iridium: {
+                group: "Transition Metal",
+                symbol: "Ir",
+                mass: 192.217
+            },
+            Platinum: {
+                group: "Transition Metal",
+                symbol: "Pt",
+                mass: 195.085
+            },
+            Gold: {
+                group: "Transition Metal",
+                symbol: "Au",
+                mass: 196.967
+            },
+            Mercury: {
+                group: "Transition Metal",
+                symbol: "Hg",
+                mass: 200.592
+            },
+            Thallium: {
+                group: "Basic Metal",
+                symbol: "Tl",
+                mass: 204.383
+            },
+            Lead: {
+                group: "Basic Metal",
+                symbol: "Pb",
+                mass: 207.2
+            },
+            Bismuth: {
+                group: "Basic Metal",
+                symbol: "Bi",
+                mass: '208.980'
+            },
+            Polonium: {
+                group: "Metalloid",
+                symbol: "Po",
+                mass: '[208.982]'
+            },
+            Astatine: {
+                group: "Halogen",
+                symbol: "At",
+                mass: 209.987
+            },
+            Radon: {
+                group: "Noble Gas",
+                symbol: "Rn",
+                mass: 222.018
+            },
+            // 6
+            Francium: {
+                group: "Alkali Metal",
+                symbol: "Fr",
+                mass: '223.020'
+            },
+            Radium: {
+                group: "Alkaline Earth",
+                symbol: "Ra",
+                mass: 226.025
+            },
+            // 6-2 (89 to 103) Actinide
+            Actinium: {
+                group: "Actinide",
+                symbol: "Ac",
+                mass: 227.028
+            },
+            Thorium: {
+                group: "Actinide",
+                symbol: "Th",
+                mass: 232.038
+            },
+            Protactinium: {
+                group: "Actinide",
+                symbol: "Pa",
+                mass: 231.036
+            },
+            Uranium: {
+                group: "Actinide",
+                symbol: "U",
+                mass: 238.029
+            },
+            Neptunium: {
+                group: "Actinide",
+                symbol: "Np",
+                mass: 237.048
+            },
+            Plutonium: {
+                group: "Actinide",
+                symbol: "Pu",
+                mass: 244.064
+            },
+            Americium: {
+                group: "Actinide",
+                symbol: "Am",
+                mass: 243.061
+            },
+            Cirium: {
+                group: "Actinide",
+                symbol: "Cm",
+                mass: '247.070'
+            },
+            Berkelium: {
+                group: "Actinide",
+                symbol: "Bk",
+                mass: '247.070'
+            },
+            Californium: {
+                group: "Actinide",
+                symbol: "Cf",
+                mass: '251.080'
+            },
+            Einsteinium: {
+                group: "Actinide",
+                symbol: "Es",
+                mass: '[254]'
+            },
+            Fermium: {
+                group: "Actinide",
+                symbol: "Fm",
+                mass: 257.095
+            },
+            Mendelevium: {
+                group: "Actinide",
+                symbol: "Md",
+                mass: 258.1
+            },
+            Nobelium: {
+                group: "Actinide",
+                symbol: "No",
+                mass: 259.101
+            },
+            Lawrencium: {
+                group: "Actinide",
+                symbol: "Lr",
+                mass: '[262]'
+            },
+            // 6-3
+            Rutherfordium: {
+                group: "Transition Metal",
+                symbol: "Rf",
+                mass: '[261]'
+            },
+            Dubnium: {
+                group: "Transition Metal",
+                symbol: "Db",
+                mass: '[262]'
+            },
+            Seaborgium: {
+                group: "Transition Metal",
+                symbol: "Sg",
+                mass: '[266]'
+            },
+            Bohrium: {
+                group: "Transition Metal",
+                symbol: "Bh",
+                mass: '[264]'
+            },
+            Hassium: {
+                group: "Transition Metal",
+                symbol: "Hs",
+                mass: '[269]'
+            },
+            Meitnerium: {
+                group: "Transition Metal",
+                symbol: "Mt",
+                mass: '[278]'
+            },
+            Darmstadtium: {
+                group: "Transition Metal",
+                symbol: "Ds",
+                mass: '[281]'
+            },
+            Roentgenium: {
+                group: "Transition Metal",
+                symbol: "Rg",
+                mass: '[280]'
+            },
+            Copernicium: {
+                group: "Transition Metal",
+                symbol: "Cn",
+                mass: '[285]'
+            },
+            Nihonium: {
+                group: "Basic Metal",
+                symbol: "Nh",
+                mass: '[286]'
+            },
+            Flerovium: {
+                group: "Basic Metal",
+                symbol: "Fl",
+                mass: '[289]'
+            },
+            Moscovium: {
+                group: "Basic Metal",
+                symbol: "Mc",
+                mass: '[289]'
+            },
+            Livermorium: {
+                group: "Basic Metal",
+                symbol: "Lv",
+                mass: '[293]'
+            },
+            Tennessine: {
+                group: "Halogen",
+                symbol: "Ts",
+                mass: '[294]'
+            },
+            Oganesson: {
+                group: "Noble Gas",
+                symbol: "Og",
+                mass: '[294]'
+            }
+
+        };
+        
+
+
+        
+
+        function generateSlotContent(number, letter, name, mass, group){
+            return `
+            <svg width="72" height="72" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="${colorByGroup[group]}"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg>
+            <div class="slotContent">
+                <div class="slotContentNumber">${number}</div>
+                <div class="slotContentLetter">${letter}</div>
+                <div class="slotContentName">${name}</div>
+                <div class="slotContentMass">${mass}</div>
+            </div>`;
+        }
+
+
+        function generateSlotContentByIndexElement( index = 1 ){
+            const name = Object.keys(elementsList)[index - 1];
+            const element = elementsList[name];
+            return generateSlotContent(index, element.symbol, name, element.mass, element.group);
+        }
+
+
+        function getGroupByIndex( index = 1 ){
+            const name = Object.keys(elementsList)[index - 1];
+            const element = elementsList[name];
+            return element.group;
+        }
+
+
+        function generateMainGrid(){
+            mainGrid.innerHTML = '';
+            let index = 0;
+
+            // 1
+            let slotGridRow = document.createElement('div');
+            slotGridRow.classList.add('slotGridRow');
+            for (let i = 0; i < 3; i++){
+                const slot = document.createElement('div');
+                slot.classList.add('slot');
+
+                if ( i == 1 ){
+                    slot.classList.add('slotSpan');
+                    slot.style.gridColumn = 'auto / span 16';
+                }else{
+                    slot.innerHTML = generateSlotContentByIndexElement(++index);
+                    slot.setAttribute('group', getGroupByIndex(index));
+                }
+
+                slotGridRow.append(slot);
+            }
+
+            mainGrid.appendChild(slotGridRow);
+
+
+            // 2 & 3
+            for (let x = 0; x < 2; x++){
+                slotGridRow = document.createElement('div');
+                slotGridRow.classList.add('slotGridRow');
+
+                for (let i = 0; i < 9; i++){
+                    const slot = document.createElement('div');
+                    slot.classList.add('slot');
+
+                    if ( i == 2 ){
+                        slot.classList.add('slotSpan');
+                        slot.style.gridColumn = 'auto / span 10';
+                    }else{
+                        slot.innerHTML = generateSlotContentByIndexElement(++index);
+                        slot.setAttribute('group', getGroupByIndex(index));
+                    }
+
+                    slotGridRow.append(slot);
+                }
+
+                mainGrid.appendChild(slotGridRow);
+            }
+            
+
+            // 4 to 7
+            for (let x = 0; x < 4; x++){
+                slotGridRow = document.createElement('div');
+                slotGridRow.classList.add('slotGridRow');
+
+                for (let i = 0; i < 18; i++){
+                    const slot = document.createElement('div');
+                    slot.classList.add('slot');
+
+                    if ( x == 2 && i == 2 ){
+                        slot.classList.add('slotDummy');
+                        slot.innerHTML = `
+                        <svg width="72" height="72" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="${colorByGroup['Lanthanide']}"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg>
+                        <div class="slotContent slotContentDummy">57-71</div>`;
+                        slot.setAttribute('group', 'Lanthanide');
+                    }else if ( x == 3 && i == 2 ){
+                        slot.classList.add('slotDummy');
+                        slot.innerHTML = `
+                        <svg width="72" height="72" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="${colorByGroup['Actinide']}"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg>
+                        <div class="slotContent slotContentDummy">89-103</div>`;
+                        slot.setAttribute('group', 'Actinide');
+                    }else{
+                        index++;
+                        if ( index == 57 ) index = 72;
+                        else if ( index == 89 ) index = 104;
+                        slot.innerHTML = generateSlotContentByIndexElement(index);
+                        slot.setAttribute('group', getGroupByIndex(index));
+                    }
+                    
+                    slotGridRow.append(slot);
+                }
+
+                mainGrid.appendChild(slotGridRow);
+            }
+
+        }
+
+
+
+
+        function generateSecundaryGrid(){
+            secundaryGrid.innerHTML = '';
+            let index = 56;
+
+            // 8 & 9
+            for (let x = 0; x < 2; x++){
+                slotGridRow = document.createElement('div');
+                slotGridRow.classList.add('slotGridRow');
+
+                for (let i = 0; i < 15; i++){
+                    if ( x == 1 && i == 0 ) index = 88;
+
+                    const slot = document.createElement('div');
+                    slot.classList.add('slot'); 
+                    slot.innerHTML = generateSlotContentByIndexElement(++index);
+                    slot.setAttribute('group', getGroupByIndex(index));
+                    slotGridRow.append(slot);
+                }
+                secundaryGrid.appendChild(slotGridRow);
+            }
+
+        }
+
+
+
+
+        function generateLabelsGrid(){
+            labelsGrid.innerHTML = '';
+            slotGridRow = document.createElement('div');
+            slotGridRow.classList.add('slotGridRow');
+            const names = Object.keys(colorByGroup);
+
+            for (let i = 0; i < names.length; i++){
+                const slot = document.createElement('div');
+                slot.classList.add('slot', 'slotDummy');
+
+                slot.innerHTML = `
+                <svg width="72" height="72" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="${colorByGroup[names[i]]}"><path fill-rule="evenodd" d="M8.5.134a1 1 0 0 0-1 0l-6 3.577a1 1 0 0 0-.5.866v6.846a1 1 0 0 0 .5.866l6 3.577a1 1 0 0 0 1 0l6-3.577a1 1 0 0 0 .5-.866V4.577a1 1 0 0 0-.5-.866L8.5.134z"/></svg>
+                <div class="slotContent slotContentDummy"> ${ names[i].replaceAll(' ', '<br>') } </div>`;
+
+                slotGridRow.append(slot);
+                slot.setAttribute('group', names[i]);
+            }
+            labelsGrid.appendChild(slotGridRow);
+        }
+
+
+        generateMainGrid(); 
+        generateSecundaryGrid();
+        generateLabelsGrid();
+
+        document.querySelectorAll('.slotGrid').forEach((e, i) => {
+            e.querySelectorAll('.slotGridRow').forEach((el, idx) => {
+                el.style.transform = `translate(${idx%2==0? 0 : 28}px, ${idx * -14}px)`;
+            });
+        });
+
+    </script>
+
+</body>
+</html>

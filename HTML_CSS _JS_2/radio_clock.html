@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+
+    <style>
+
+        body{ 
+            margin: 0; 
+            background-color: #000; 
+			user-select: none;  
+        }
+
+        body, .square{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body{
+            min-height: 100vh;
+        }
+
+        .square{
+            background-image: url("https://imagenspng.com/wp-content/uploads/wpdm-cache/molde-relogio-png-Fundo-transparente-gratis-1-900x0.png");
+            background-size: 100%;
+            border-radius: 50%;
+            width: 100vmin;
+            height: 100vmin;
+            position: relative;
+        }
+
+        .pointer{
+            width: 30vmin;
+            height: 2vmin;
+            background-color: #000;
+            border-radius: 8px;
+            transform-origin: left center;
+            margin: auto;
+            position: absolute;
+            left: 50vmin;
+            top: 0;
+            bottom: 0;
+        }
+
+        #pointer_minutes{
+            width: 40vmin;
+        }
+
+        #pointer_secounds{
+            height: 1vmin;
+            background-color: red;
+        }
+
+        #ball{
+            width: 5vmin;
+            height: 5vmin;
+            border-radius: 50%;
+            background-color: #000;
+            box-shadow: 0 0 5px 0 #000;
+            margin: auto;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="square">
+        <div class="pointer" id="pointer_minutes"></div>
+        <div class="pointer" id="pointer_hours"></div>
+        <div class="pointer" id="pointer_secounds"></div>
+        <div id="ball"></div>
+    </div>
+    
+    <script>
+        
+        function setPointer(title, angle , id){
+            let e = document.getElementById(id);
+            e.style.transform = `rotate(${angle-90}deg)`;
+            e.title = title;
+        }
+
+        function updateClock(){
+            let time = new Date();
+            let h = time.getHours();
+            let m = time.getMinutes();
+            let s = time.getSeconds();
+            document.title = time.toLocaleTimeString();
+            setPointer(s, s * 6, 'pointer_secounds');
+            setPointer(m, m * 6, 'pointer_minutes');
+            setPointer(h, h * 15, 'pointer_hours');
+        }
+
+        onload = updateClock;
+        setInterval(updateClock, 100);
+
+    </script>
+
+</body>
+</html>

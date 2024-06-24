@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+        }
+
+
+
+
+
+       
+        #mapa{
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+
+
+
+
+        #controle{
+            padding: 8px;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+        .radio-item{
+            display: flex;
+            align-items: center;
+            margin: 4px 0;
+        }
+
+        .radio-item input{
+            display: none;
+        }
+
+        .radio-item > span{
+            margin: 0 4px;
+        }
+
+        .radio-item div{
+            border-radius: 50%;
+        }
+
+        .radio-item > div{
+            width: 16px;
+            height: 16px;
+            border: 1px solid #fff;
+            padding: 3px;
+        }
+ 
+        .radio-item > div > div{
+            width: 100%;
+            height: 100%;
+            background-color: #007bff;
+            transform: scale(0);
+            transition: 250ms;
+        }
+
+
+        .radio-item input:checked ~ div > div{
+            transform: scale(1);
+        }
+
+
+
+
+
+
+
+
+        #conteudo{
+            /* position: relative; */
+            width: 100%;
+            height: 100%;
+        }
+
+
+
+
+
+
+
+        .player-item, .marker-item, .objective-item{
+            width: 32px;
+            height: 32px; 
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        .player-item{
+            transform: rotate(-45deg) translate(-15%,15%);
+            transform-origin: center center;
+        }
+
+        
+
+
+        .player-item, .marker-item{
+            color: #007bff;
+        }
+
+
+
+
+        .objective-item{
+            color: #fff;
+        }
+        .objective-active{
+            color: orange !important;
+        }
+
+
+
+
+
+
+
+        #mouse-wrapper{
+            width: 48px;
+            height: 48px;
+            /* border-radius: 10px; */
+            border: 1px solid #fff;
+            background-color: transparent;
+            transform: rotate(0deg);
+            /* animation: rotateMouse 2s linear infinite; */
+            pointer-events: none;
+
+            display: none;
+            transition: 250ms;
+
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        @keyframes rotateMouse {
+            from{
+                transform: rotate(0deg);
+            }
+            to{
+                transform: rotate(360deg);
+            }
+        }
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+    <div id="mapa">
+
+
+        <div id="controle">
+            
+
+            <div id="radio-wrapper">
+
+                <label class="radio-item">
+                    <input type="radio" name="tipo" checked>
+                    <div><div></div></div>
+                    <span>Player</span>
+                </label>
+
+                <label class="radio-item">
+                    <input type="radio" name="tipo">
+                    <div><div></div></div>
+                    <span>Marker</span>
+                </label>
+
+                <label class="radio-item">
+                    <input type="radio" name="tipo">
+                    <div><div></div></div>
+                    <span>Objective</span>
+                </label>
+
+            </div>
+
+
+        </div>
+
+
+        <div id="conteudo">
+            <div class="player-list">
+                <!-- <div class="player-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/></svg>
+                </div> -->
+            </div>
+    
+            <div class="marker-list">
+                <!-- <div class="marker-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>
+                </div> -->
+            </div>
+    
+            <div class="objective-list">
+                <!-- <div class="objective-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+                </div>
+    
+                <div class="objective-item objective-active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+                </div> -->
+            </div>
+
+
+            <div id="mouse-wrapper"></div>
+
+            
+        </div>
+
+        
+
+
+
+    </div>
+
+
+
+
+
+
+
+    <script>
+
+
+
+        var conteudo            = document.getElementById("conteudo");
+
+        var lista_player        = document.querySelector('.player-list');
+        var marker_player       = document.querySelector('.marker-list');
+        var objective_player    = document.querySelector('.objective-list');
+
+        var mouse_wrapper       = document.getElementById('mouse-wrapper');
+
+
+        var lista_radio         = document.getElementsByName('tipo');
+        var index_radio         = 0;
+
+        lista_radio.forEach((e, i)=>{
+
+            e.addEventListener('change', ()=>{
+                console.log(i);
+                index_radio = i;
+            });
+
+        });
+
+
+
+
+        window.addEventListener('mousemove', (e)=>{
+
+            // mouse_wrapper.style.left = (e.clientX - mouse_wrapper.offsetWidth/2) + 'px';
+            // mouse_wrapper.style.top = (e.clientY - mouse_wrapper.offsetHeight/2) + 'px';
+
+
+        });
+
+
+
+
+
+        conteudo.addEventListener("click", (e)=>{
+            e.stopImmediatePropagation();
+
+            console.log(e.clientX, e.clientY);
+
+
+
+            let item = document.createElement('div');
+
+            
+
+
+            if ( index_radio == 0 ){
+
+                if ( document.querySelector("#conteudo > .player-list").children.length <= 0 ){
+                    item.classList.add('player-item');
+                    item.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/></svg>`;
+                    document.querySelector("#conteudo > .player-list").appendChild(item);
+                }
+                else{
+                    document.querySelector("#conteudo > .player-list").children[0].style.left = (e.offsetX - document.querySelector("#conteudo > .player-list").children[0].offsetWidth/2) + 'px';
+                    document.querySelector("#conteudo > .player-list").children[0].style.top  = (e.offsetY + 86 - document.querySelector("#conteudo > .player-list").children[0].offsetHeight/2) + 'px';
+                }
+
+            }
+
+            else if ( index_radio == 1 ){
+                item.classList.add('marker-item');
+                item.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>`;
+                document.querySelector("#conteudo > .marker-list").appendChild(item);
+            }
+
+            else if ( index_radio == 2 ){
+                item.classList.add('objective-item');
+                item.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>`;
+                document.querySelector("#conteudo > .objective-list").appendChild(item);
+            }
+
+
+            item.addEventListener('mouseenter', ()=>{
+                console.log('x');
+
+
+                mouse_wrapper.style.left = (item.offsetLeft - 8) + 'px';
+                mouse_wrapper.style.top = (item.offsetTop - 8) + 'px';
+                mouse_wrapper.style.display = 'block';
+
+
+                if ( item.classList.contains('objective-item') ){
+
+
+                    for ( let i = 0; i < document.querySelector("#conteudo > .objective-list").children.length; i++ ){
+                        document.querySelector("#conteudo > .objective-list").children[i].classList.remove('objective-active');
+                    }
+
+                    item.classList.add('objective-active');
+
+
+                }
+
+
+            });
+
+
+            item.style.left = (e.offsetX - item.offsetWidth/2) + 'px';
+            item.style.top  = (e.offsetY + 86 - item.offsetHeight/2) + 'px';
+            
+
+
+        });
+
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da forca</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #2a2a89;
+        }
+
+
+
+
+
+
+        #popup-wrapper{
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            background-color: transparent; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #popup-content{
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: 200ms;
+            width: fit-content;
+            text-align: center;
+            transform: translate(100%) skewX(-20deg);
+            background-color: #607d8b;
+            color: #fff;
+            padding: 8px;
+            box-shadow: 0 0 8px 1px #000;
+            opacity: 0;
+        }
+
+        #popup-content > div{
+            transform: skewX(0);
+        }
+
+        .popup{
+            animation: popupAnimate 2s reverse;
+        }
+ 
+
+
+        @keyframes popupAnimate {
+            25%{transform: translateX(0) skewX(-20deg);}
+            70%{transform: scale(1.2) skewX(-20deg);}
+            90%{transform: skewX(-20deg);}
+            100%{opacity: 1;}
+        }
+
+
+       
+
+
+
+
+
+
+
+
+        /* ICONES SVG WRAPPER */
+        .icon{
+            display: flex;
+        }
+
+
+
+
+        /* CHECKBOX */
+        .ui-check > input{
+            display: none;
+        }
+
+        .ui-check > div{
+            background-color: #2a2a89;
+            color: #e0e0e0;
+            padding: 4px;
+            margin: 4px 0;
+            border-radius: 4px;
+        }
+
+        .ui-check > input:checked ~ div{
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+
+
+
+
+
+
+        /* MODAL */
+
+        .screen-modal{
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: transparent;
+            backdrop-filter: blur(3px);
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            display: none;
+            position: fixed;
+        }
+
+        .modal-window:focus-within{
+            height: 90%;
+        }
+
+        .modal-window{
+            margin: auto;
+            width: 70%;
+            height: 50%;
+            max-width: 320px;
+            border-radius: 8px;
+            background-color: #23236c;
+            color: #fff;
+            transition: 200ms;
+            transform: scale(0);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+        
+
+        .modal-window > div{
+            padding: 8px;
+        }
+
+
+
+        .modal-header{
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .modal-content{
+            overflow: auto;
+            height: 100%;
+            border-top: 2px solid #9e9e9e;
+            border-bottom: 2px solid #9e9e9e;
+        }
+
+        .modal-footer{
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .modal-button{
+            margin: 0 4px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #fff;
+        }
+
+        .ui-red{
+            background-color: #dc3545;
+        }
+        .ui-green{
+            background-color: #28a745;
+        }
+
+
+        
+
+        
+
+        
+
+        /* MODAL -- EDITAR NOME */
+        .input-wrapper{
+            margin-bottom: 16px;
+        }
+       
+
+        .input-title{
+            color: #c9c9c9;
+        }
+
+        .input-content{
+            outline: none;
+            width: 100%;
+            color: #fff;
+            background-color: inherit;
+            border: none;
+            border-bottom: 2px solid #9e9e9e;
+            padding: 4px;
+            transition: 200ms;
+        }
+        .input-content:focus{
+            border-color: #007bff;
+        }
+
+        .input-msg{
+            font-size: 0.9em;
+            color: #ffa826;
+            visibility: hidden;
+        }
+
+
+
+
+
+
+
+        /* MODAL -- GERAR PALAVRA */
+        #atual-player{
+            margin-bottom: 8px;
+        }
+
+
+
+
+
+
+
+
+        /* TELA LATERAL -- CLASS */
+        .screen-side{
+            left: -100%;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            background-color: inherit;
+            backdrop-filter: blur(5px);
+            transition: 250ms left;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+        .screen-side-content{
+            height: 100%;
+            overflow: auto;
+            padding-bottom: 128px;
+        }
+
+
+
+
+        header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #007bff;
+        }
+
+
+
+
+
+
+
+
+
+        /* MENU LATERAL -- MAIN */
+        .menu-item{
+            display: flex;
+            align-items: center;
+            font-size: 1.2em;
+            padding: 10px 8px;
+            background-color: inherit;
+            color: #fff;
+            transition: 200ms;
+        }
+
+        .menu-item .icon{
+            margin-right: 5px;
+        }
+
+        .menu-item:active{
+            transition: 0s;
+            background-color: #232383;
+        }
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* TELA -- ESTATISTICAS */
+
+        #estatisticas-legenda{
+            background-color: #23236c;
+            box-shadow: 0 0 5px 0 #000;
+            margin-bottom: 8px;
+            position: sticky;
+            top: 0;
+        }
+
+        #estatisticas-legenda > div{
+            padding: 8px;
+            color: #fff;
+        }
+
+
+
+        /* RESSUMO */
+        #estatistica-summary{
+            margin-bottom: 16px;
+        }
+
+        .estatistica-summary-wrapper{
+            padding: 8px;
+            background-color: #23236c;
+            margin: 0 4px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+        }
+
+        .estatistica-summary-group{
+            border-bottom: 1px solid #9e9e9e;
+            color: #9e9e9e;
+            font-weight: bold;
+            padding-bottom: 4px;
+            margin-bottom: 8px;
+        }
+        .estatistica-summary-group > span{
+            padding: 4px;
+            background-color: red;
+        }
+
+        .estatistica-summary-item{
+            color: #fff;
+            padding: 4px;
+            padding-left: 0;
+        }
+
+
+
+
+
+
+
+
+        /* GRAFICOS */
+        .estatistica-wrapper{
+            padding: 8px;
+            margin: 0 8px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px 0 #000;
+            background-color: inherit;
+            margin-bottom: 16px;
+        }
+
+        .estatistica-title{
+            text-align: center;
+            padding: 4px;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+
+        .estatistica-barWrapper{
+            background-color: #ff5722;
+            height: 16px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .estatistica-barFill{
+            background-color: #ffc107;
+            height: 100%;
+            width: 25%;
+        }
+
+
+
+
+        .estatistica-value{
+            padding: 0 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .estatistica-value > div{
+            border-radius: 4px;
+            margin-top: 4px;
+            padding: 4px;
+        }
+        
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+        /* TELA MAIN */
+        
+        /* SCORE BOARD */
+        #gameScoreboard{
+            color: #fff;
+            display: flex;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .gameScoreboard-col{
+            width: 100%;
+            text-align: center;
+        }
+
+        .gameScoreboard-row{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4px;
+        }
+
+        .gameScoreboard-row > div{
+            margin: 0 8px;
+        }
+
+
+        .gameScoreboard-col:first-child{
+            background-color: #28a745;
+            transform: skewX(20deg) translateX(-10px);
+        }
+
+        .gameScoreboard-col:last-child{
+            background-color: #28a745;
+            transform: skewX(-20deg) translateX(10px);
+        }
+
+        .gameScoreboard-player{
+            border: 2px solid transparent;
+        }
+
+        .gameScoreboard-selected{
+            border-color: #fff;
+        }
+
+
+
+
+
+
+
+        /* TENTATIVAS */
+        #gameLife{
+            color: #fff;
+            font-weight: bold;
+            padding: 8px;
+        }
+
+        /* DICA */
+        #gameTip, #gameTip2{
+            padding: 4px;
+            color: #9e9e9e;
+            word-break: break-all;
+        }
+
+        #gameTip2{
+            padding-left: 0;
+            margin-bottom: 8px;
+        }
+
+
+
+
+
+
+
+
+        /* PALAVRA */
+        #gameWord{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 16px 0;
+        }
+
+
+        .wordBox{
+            font-size: 1.2em;
+            padding: 0 8px;
+            margin: 4px;
+            border-bottom: 2px solid #9e9e9e;
+            width: 30px;
+            white-space: pre;
+            color: #fff;
+        }
+
+
+
+
+
+
+
+
+        /* TECLADO */
+        #keyboard{
+            max-width: 100%;
+        }
+
+        #keyboard-row{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+
+        .keyboard-key{
+            width: 27px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .key-ok{
+            background-color: #28a745;
+        }
+        
+        .key-wrong{
+            background-color: #dc3545;
+        }
+
+
+
+
+
+        /* ADIVINHAR PALAVRA */
+        #adivinhar{
+            padding: 8px;
+            text-align: center;
+            background-color: #ffc107;
+            margin: 16px 8px;
+            border-radius: 8px;
+            display: none;
+        }
+
+
+
+
+
+
+
+
+        #game-timer-adivinhar{
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+
+
+
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+
+    <div id="popup-wrapper" style="display: none;">
+        <div id="popup-content" class="">
+            <div></div>
+            <div>+30</div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    <!-- MENU LATERAL (SIDE MAIN) -->
+    <div id="side-menu" class="screen-side">
+
+        <header>
+            <!-- CLOSE MENU LATERAL -->
+            <div class="icon" onclick="toggleSideMenu(false)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="M24 40 8 24 24 8 26.1 10.1 13.7 22.5H40V25.5H13.7L26.1 37.9Z"/></svg>
+            </div>
+            
+        </header>
+        
+
+
+        <div class="screen-side-content">
+            
+            <div id="menu-list">
+
+                <!-- ITEM -->
+                <div class="menu-item" onclick="toggleModalEdit(true)">
+                    <div class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                        </svg>
+                    </div>
+                    <div>EDITAR NOME</div>
+                </div>
+
+                <!-- ITEM -->
+                <div class="menu-item" onclick="toggleStatisticas(true)">
+                    <div class="icon" style="color: #4caf50;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bar-chart-line-fill" viewBox="0 0 16 16">
+                            <path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2z"/>
+                        </svg>
+                    </div>
+                    <div>ESTATÍSTICAS</div>
+                </div>
+
+
+                <!-- ITEM -->
+                <div class="menu-item" onclick="toggleModalReset(true)">
+                    <div class="icon" style="color: #dc3545;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-octagon-fill" viewBox="0 0 16 16">
+                            <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z"/>
+                        </svg>
+                    </div>
+                    <div>RESETAR</div>
+                </div>
+
+                
+
+            </div>
+
+        </div>
+
+         
+
+
+    </div>
+
+
+
+
+
+    
+    <!-- MENU -- EDITAR NOMES (MODAL) -->
+    <div class="screen-modal" id="modal-edit">
+
+        <div class="modal-window">
+
+            <div class="modal-header">Editar Nome</div>
+
+
+            <div class="modal-content">
+                
+                
+                <!-- NOME 1 -->
+                <div class="input-wrapper">
+                    <div class="input-title">Player 1</div>
+                    <input type="text" class="input-content" maxlength="10" placeholder="Digite o nome">
+                    <div class="input-msg">preencher campo</div>
+                </div>
+
+                <!-- NOME 2 -->
+                <div class="input-wrapper">
+                    <div class="input-title">Player 2</div>
+                    <input type="text" class="input-content" maxlength="10" placeholder="Digite o nome">
+                    <div class="input-msg">preencher campo</div>
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="modal-button ui-red" onclick="toggleModalEdit(false)">CANCELAR</div>
+                <div class="modal-button ui-green" onclick="setNewName()">SALVAR</div>
+            </div>
+
+        </div>
+
+        
+
+    </div>
+
+
+
+
+
+
+
+    <!-- MENU -- ESTATÍSTICAS (TELA) -->
+    <div class="screen-side" id="screen-estatisticas">
+
+        <header>
+            <!-- CLOSE MENU LATERAL -->
+            <div class="icon" onclick="toggleStatisticas(false)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="M24 40 8 24 24 8 26.1 10.1 13.7 22.5H40V25.5H13.7L26.1 37.9Z"/></svg>
+            </div>
+        </header>
+
+
+
+        <div class="screen-side-content">
+
+            <!-- LEGENDA -->
+            <div id="estatisticas-legenda">
+                <div style="color: #ffc107;">• Player 1</div>
+                <div style="color: #ff5722;">• Player 2</div>
+            </div>
+
+
+
+            <div id="estatistica-summary">
+
+                <!-- ITEM -->
+                <div class="estatistica-summary-wrapper">
+                    <div class="estatistica-summary-group">Partidas: 0</div>
+                    <div class="estatistica-summary-item">Total Vitórias 0</div>
+                    <div class="estatistica-summary-item">Total Perdida 0</div>
+                </div>
+
+                <!-- ITEM -->
+                <div class="estatistica-summary-wrapper">
+                    <div class="estatistica-summary-group">Letras: 0</div>
+                    <div class="estatistica-summary-item">Total Vitórias 0</div>
+                    <div class="estatistica-summary-item">Total Perdida 0</div>
+                </div>
+
+                <!-- ITEM -->
+                <div class="estatistica-summary-wrapper">
+                    <div class="estatistica-summary-group">Palavras Adivinhadas: 0</div>
+                    <div class="estatistica-summary-item">Total Vitórias 0</div>
+                    <div class="estatistica-summary-item">Total Perdida 0</div>
+                </div>
+
+                <!-- ITEM -->
+                <div class="estatistica-summary-wrapper">
+                    <div class="estatistica-summary-group">Pontos: 0</div>
+                    <div class="estatistica-summary-item"> <span>Player 1</span> <span style="color: #ffc107;">0</span> </div>
+                    <div class="estatistica-summary-item"> <span>Player 2</span> <span style="color: #ff5722;">0</span> </div>
+                </div>
+
+                
+            </div>
+
+
+            <!-- CONTENT LIST -->
+            <div id="estatistica-list">
+
+                <!-- ITEM -->
+                <div class="estatistica-wrapper">
+                    <div class="estatistica-title">Partidas Ganhas</div>
+                    <div class="estatistica-barWrapper">
+                        <div class="estatistica-barFill"></div>
+                    </div>
+                    <div class="estatistica-value">
+                        <div style="color: #ffc107;">0</div>
+                        <div style="color: #ff5722;">0</div>
+                    </div>
+                </div>
+
+                <!-- ITEM -->
+                <div class="estatistica-wrapper">
+                    <div class="estatistica-title">Letras Acertadas</div>
+                    <div class="estatistica-barWrapper">
+                        <div class="estatistica-barFill"></div>
+                    </div>
+                    <div class="estatistica-value">
+                        <div style="color: #ffc107;">0</div>
+                        <div style="color: #ff5722;">0</div>
+                    </div>
+                </div>
+
+                <!-- ITEM -->
+                <div class="estatistica-wrapper">
+                    <div class="estatistica-title">Palavras Adivinhadas</div>
+                    <div class="estatistica-barWrapper">
+                        <div class="estatistica-barFill"></div>
+                    </div>
+                    <div class="estatistica-value">
+                        <div style="color: #ffc107;">0</div>
+                        <div style="color: #ff5722;">0</div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            
+
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <!-- MENU -- RESETAR (MODAL) -->
+    <div class="screen-modal" id="modal-reset">
+
+        <div class="modal-window">
+
+            <div class="modal-header">Resetar</div>
+
+
+            <div class="modal-content">
+                
+                <div>Marque os itens que deseja RESETAR</div>
+
+                <!-- PLAYER 1 -->
+                <label class="ui-check">
+                    <input type="checkbox" name="resetCheck">
+                    <div>Player 1</div>
+                </label>
+
+                <!-- PLAYER 2 -->
+                <label class="ui-check">
+                    <input type="checkbox" name="resetCheck">
+                    <div>Player 2</div>
+                </label>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="modal-button ui-red" onclick="toggleModalReset(false)">CANCELAR</div>
+                <div class="modal-button ui-green" onclick="resetPlayer()">OK</div>
+            </div>
+
+        </div>
+
+        
+    </div>
+
+
+
+
+
+
+    <!-- MODAL -- GERAR PALAVRA -->
+    <div class="screen-modal" id="modal-generate">
+
+        <div class="modal-window">
+
+            <div class="modal-header">Criar Palavra</div>
+
+            <div class="modal-content">
+                
+                <div id="atual-player">Player 1</div>
+                
+                <div class="input-wrapper">
+                    <div class="input-title">PALAVRA</div>
+                    <input type="text" class="input-content" maxlength="32" placeholder="Digite aqui">
+                    <div class="input-msg">preencher campo</div>
+                </div>
+
+                <div class="input-wrapper">
+                    <div class="input-title">DICA</div>
+                    <input type="text" class="input-content" maxlength="100" placeholder="Digite aqui">
+                    <div class="input-msg">preencher campo</div>
+                </div>
+
+                
+
+
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="modal-button ui-red" onclick="toggleModalGenerate(false)">FECHAR</div>
+                <div class="modal-button ui-green" onclick="createPlayerWord()">CRIAR</div>
+            </div>
+
+        </div>
+
+        
+    </div>
+
+
+
+
+
+
+
+    <!-- MODAL -- ADIVINHAR -->
+    <div class="screen-modal" id="modal-adivinhar">
+
+        <div class="modal-window">
+
+            <div class="modal-header">Adivinhar</div>
+
+
+            <div class="modal-content">
+
+                <div id="game-timer-adivinhar">15:00</div>
+                
+                <div id="gameTip2">Dica:</div>
+
+                <div class="input-wrapper">
+                    <div class="input-title">PALAVRA</div>
+                    <input type="text" class="input-content" maxlength="100" placeholder="Digite aqui">
+                    <div class="input-msg">preencher campo</div>
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="modal-button ui-red" onclick="adivinharWord()">APOSTAR</div>
+            </div>
+
+        </div>
+
+        
+    </div>
+
+
+
+
+
+    <header>
+
+        <!-- ABRIR MENU LATERAL -->
+        <div class="icon" onclick="toggleSideMenu(true)">
+            <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="M6 36V33H42V36ZM6 25.5V22.5H42V25.5ZM6 15V12H42V15Z"/></svg>
+        </div>
+
+
+        <!-- OPEN GERAR PALAVRA -->
+        <div class="icon" onclick="toggleModalGenerate(true)" id="playButton">
+            <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48"><path d="M16 37.85V9.85L38 23.85ZM19 23.85ZM19 32.4 32.45 23.85 19 15.3Z"/></svg>
+        </div>
+        
+
+    </header>
+
+
+
+
+
+    <section>
+
+        
+
+        <!-- SCOREBOARD -->
+        <div id="gameScoreboard">
+
+           <!-- PLAYER 1 -->
+            <div class="gameScoreboard-col gameScoreboard-player gameScoreboard-selected">
+                <div class="gameScoreboard-row" style="transform: skewX(-20deg);">
+                    <div>0</div>
+                </div>
+                <div class="gameScoreboard-row" style="transform: skewX(-20deg);">Player 1</div>
+            </div>
+
+            <!-- TIMER -->
+            <div class="gameScoreboard-col" id="game-timer">
+                <div class="gameScoreboard-row" style="color: #9e9e9e;">TEMPO</div>
+                <div class="gameScoreboard-row">0:00</div>
+            </div>
+
+            <!-- PLAYER 2 -->
+            <div class="gameScoreboard-col gameScoreboard-player">
+                <div class="gameScoreboard-row" style="transform: skewX(20deg);">
+                    <div>0</div>
+                </div>
+                <div class="gameScoreboard-row" style="transform: skewX(20deg);">Player 2</div>
+            </div>
+
+        </div>
+
+        
+
+        <!-- TENTATIVAS -->
+        <div id="gameLife">Tentativas: 7</div>
+
+        <!-- DICA -->
+        <div id="gameTip">Dica:</div>
+
+
+        <!-- SPAÇO DAS LETRAS -->
+        <div id="gameWord">
+            <!-- <div class="wordBox"></div> -->    
+        </div>
+
+
+        
+        <!-- TECLADO -->
+        <div id="keyboard">
+            <div id="keyboard-row">
+                <div class="keyboard-key">A</div>
+                <div class="keyboard-key">B</div>
+                <div class="keyboard-key">C</div>
+                <div class="keyboard-key">D</div>
+                <div class="keyboard-key">E</div>
+                <div class="keyboard-key">F</div>
+                <div class="keyboard-key">G</div>
+                <div class="keyboard-key">H</div>
+                <div class="keyboard-key">I</div>
+                <div class="keyboard-key">J</div>
+                <div class="keyboard-key">K</div>
+                <div class="keyboard-key">L</div>
+                <div class="keyboard-key">M</div>
+                <div class="keyboard-key">N</div>
+                <div class="keyboard-key">O</div>
+                <div class="keyboard-key">P</div>
+                <div class="keyboard-key">Q</div>
+                <div class="keyboard-key">R</div>
+                <div class="keyboard-key">S</div>
+                <div class="keyboard-key">T</div>
+                <div class="keyboard-key">U</div>
+                <div class="keyboard-key">V</div>
+                <div class="keyboard-key">W</div>
+                <div class="keyboard-key">X</div>
+                <div class="keyboard-key">Y</div>
+                <div class="keyboard-key">Z</div>
+            </div>
+        </div>
+
+
+
+        <div id="adivinhar" onclick="toggleModalAdivinhar(true)">ADIVNHAR</div>
+        
+
+    </section>
+
+
+
+
+
+    <script>
+
+        // SCORE ON: WIN
+        const SCORE_WIN_LETTER  = 30;   // ACERTOU A LETRA
+        const SCORE_WIN         = 60;   // GANHOU A PARTIDA
+        const SCORE_WIN_WORD    = 120;  // ADIVNHOU A PALAVRA
+
+        // SCORE ON: LOSE
+        const SCORE_LOSE_LETTER = 5;    // ERROU A LETRA
+        const SCORE_LOSE        = 30;   // PERDEU A PARTIDA
+        const SCORE_LOSE_WORD   = 180;  // ERROU NO (ADIVNHA PALAVRA)
+
+        // SCORE ON: TIMEOUT
+        const SCORE_LOSE_WORD_TIMEOUT = 180;    // ACABOU O TEMPO DE ADIVINHAR
+
+
+
+        var GAME_RUNNING = false;   // estado do jogo
+        var GAME_WORD = '';         // palavra
+        var GAME_LIFE = 7;          // numero de tentativas
+
+
+        // TEMPO PADRAO
+        var GAME_TIME = 150;         // 150 secs master timer
+        var GAME_SEC_TIME = 15*1000; // 15 ms secundary timer
+
+
+        // TEMPO ATUAL
+        var GAME_TIME_ACT = GAME_TIME;          // master timer atual
+        var GAME_SEC_TIME_ACT = GAME_SEC_TIME;  // secundary timer atual
+
+
+        var PLAYER_INDEX = 0;       // vez de jogador X
+
+        var GAME_WORD_FLAG = false;
+
+
+
+        // SET INTERVAL ID
+        var TIMER_ID_MASTER = null;
+        var TIMER_ID_SECUNDARY = null;
+
+
+
+        var lista_players = [
+
+            // PLAYER 1
+            {
+                'nome': 'Player 1',
+
+                'win': 0,
+                'won': 0,
+                'score': 0,
+
+                'win_letter': 0,
+                'won_letter': 0,
+
+                'win_word': 0,
+                'won_word': 0
+            },
+
+            // PLAYER 2
+            {
+                'nome': 'Player 2',
+
+                'win': 0,
+                'won': 0,
+                'score': 0,
+
+                'win_letter': 0,
+                'won_letter': 0,
+
+                'win_word': 0,
+                'won_word': 0
+            }
+        ];
+        
+
+        // RESET STATE
+        var reseted_player = {
+            'nome': 'Player 1',
+
+            'win': 0,
+            'won': 0,
+            'score': 0,
+
+            'win_letter': 0,
+            'won_letter': 0,
+
+            'win_word': 0,
+            'won_word': 0
+        };
+
+
+
+
+
+
+        // GET LIST LOCAL DATA
+        var formatterNumber = new Intl.NumberFormat({'style':'decimal'});
+        
+
+
+
+        // SEGUNDOS PARA TIME FORMAT (xx:yy)
+        function toTime( value ){
+            if (value == null){value = 0;}
+            let sec = parseInt( value % 60 );
+            let min = parseInt( value / 60 % 100);
+            sec = (sec < 10)? ('0'+sec) : sec;
+            return (`${min}:${sec}`);
+        }
+
+
+        // MS PARA TIME FORMAT
+        function toTimeMs( value ){
+            if (value == null){value = 0;}
+            let sec = parseInt( value / 1000 );
+            let ms = parseInt( value % 1000 / 10 );
+            ms = (ms < 10)? ('0'+ms) : ms;
+            return (`${sec}:${ms}`);
+        }
+
+
+
+
+
+        // MASTER TIMER
+        function timerCounting(){
+
+            if ( GAME_TIME_ACT > 0 ){
+                GAME_TIME_ACT--;
+                document.querySelectorAll("#game-timer div")[1].innerText = toTime(GAME_TIME_ACT);
+            }
+
+            if ( GAME_TIME_ACT == 0 ){
+                clearInterval(TIMER_ID_MASTER);
+                document.getElementById("adivinhar").style.display = "none";
+                console.warn("TIMEOUT (MASTER)");
+                //showPopup("ACABOU O TEMPO");
+                showPopup('ACABOU O TEMPO', ('-'+SCORE_LOSE), 'red', ()=>{
+                    toggleModalGenerate(true);
+                });
+
+                // LOSE: TIME OUT
+                lista_players[PLAYER_INDEX].won += 1;
+                lista_players[PLAYER_INDEX].score -= SCORE_LOSE;
+                console.log(`%c-${SCORE_LOSE} SCORE`, 'color: #dc3545; font-size: 1.2em;');
+            }
+
+        }
+
+
+        // SECUNDARY TIMER
+        function secundaryTimerCounting(){
+
+            if ( GAME_SEC_TIME_ACT > 0 ){
+                GAME_SEC_TIME_ACT -= 10;
+                document.querySelector("#game-timer-adivinhar").innerText = toTimeMs(GAME_SEC_TIME_ACT);
+            }
+
+            if ( GAME_SEC_TIME_ACT == 0 ){
+                clearInterval(TIMER_ID_SECUNDARY);
+                toggleModalAdivinhar(false);
+                console.warn("TIMEOUT (SECUNDARY)");
+
+                //showPopup("ACABOU O TEMPO");
+                showPopup('ACABOU O TEMPO', ('-'+SCORE_LOSE_WORD_TIMEOUT), 'red', ()=>{
+                    toggleModalGenerate(true);
+                });
+
+
+                // LOSE: TIME OUT
+                //lista_players[PLAYER_INDEX].won += 1;
+                lista_players[PLAYER_INDEX].score -= SCORE_LOSE_WORD_TIMEOUT;
+                console.log(`%c-${SCORE_LOSE_WORD_TIMEOUT} SCORE`, 'color: #dc3545; font-size: 1.2em;');
+
+                
+            }
+
+        }
+        
+
+       
+        
+        // ON/OFF -- MASTER TIMER
+        function toggleTimerMaster( state ){
+
+            document.querySelectorAll("#game-timer div")[1].innerText = toTime(GAME_TIME_ACT);
+
+            if ( state ){
+                TIMER_ID_MASTER = setInterval( timerCounting, 1000);
+            }
+            else{
+                clearInterval(TIMER_ID_MASTER);
+            }
+
+        }
+
+
+        // ON/OFF -- SECUNDARY TIMER
+        function toggleTimerSecundary( state ){
+
+            document.querySelector("#game-timer-adivinhar").innerText = toTime(GAME_TIME_ACT);
+
+            if ( state ){
+                TIMER_ID_SECUNDARY = setInterval( secundaryTimerCounting, 1);
+            }
+            else{
+                clearInterval(TIMER_ID_SECUNDARY);
+            }
+
+        }
+
+
+
+
+
+
+        // SELECIONAR JOGADOR QUE VAI JOGAR
+        function alterPlayer(){
+
+            PLAYER_INDEX = (PLAYER_INDEX)?0:1;
+
+            document.querySelectorAll("#gameScoreboard > .gameScoreboard-player")[0].classList.remove('gameScoreboard-selected');
+            document.querySelectorAll("#gameScoreboard > .gameScoreboard-player")[1].classList.remove('gameScoreboard-selected')
+
+            if ( !PLAYER_INDEX ){
+                document.querySelectorAll("#gameScoreboard > .gameScoreboard-player")[0].classList.add('gameScoreboard-selected');
+            }
+
+            else{
+                document.querySelectorAll("#gameScoreboard > .gameScoreboard-player")[1].classList.add('gameScoreboard-selected');
+            }
+
+            console.warn("player  " + PLAYER_INDEX);
+            
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        // GERAR PALAVRA
+        function gerarWord( text, dica ){
+
+            clearInterval(TIMER_ID_MASTER);
+
+            resetKeyboard();
+
+            GAME_LIFE = 7;
+            document.getElementById("gameLife").innerText = 'Tentativas ' + GAME_LIFE;
+
+            GAME_WORD = text.toUpperCase();
+
+            document.getElementById("gameTip").innerText = 'Dica: ' + dica;
+
+            container = document.getElementById("gameWord");
+            container.innerHTML = '';
+
+            for ( let i = 0; i < GAME_WORD.length; i++ ){
+                let item = document.createElement('div');
+                item.classList.add('wordBox');
+                item.innerHTML = ' ';
+                container.appendChild(item);
+            }
+
+            GAME_RUNNING = true;        // RUN GAME
+
+            document.getElementById("adivinhar").style.display = "block";
+
+            GAME_TIME_ACT = GAME_TIME;  // reset timer value
+            toggleTimerMaster(true);    // ligar timer
+
+            
+        }
+        
+
+
+
+
+        // GET ARRAY INDEX LETTER
+        function getIndexLetter( value ){
+            let list = [];
+            for (let i = 0; i < GAME_WORD.length; i++){
+                if ( GAME_WORD[i].toUpperCase() == value.toUpperCase() ){
+                    list.push(i);
+                }
+            }
+            return list;
+        }
+
+
+
+
+        // KEY CLICK
+        function keyboardClick( key ){
+
+            
+            console.log(`CLICK TECLA[${key}]`);
+
+            if ( GAME_RUNNING ){
+                
+
+                document.querySelectorAll("#keyboard-row .keyboard-key").forEach((e,i) => {
+
+                    if ( key == e.innerText ){
+                        let list = getIndexLetter(key);
+                        
+                        // A TECLA JA FOI CLICADA?
+                        if ( !e.classList.contains('key-ok') && !e.classList.contains('key-wrong') ){
+
+                            if ( GAME_LIFE > 0 ){
+
+                                // ACERTOU LETRA
+                                if ( list.length > 0 ){
+                                    console.log("CORRETO");
+                                    e.classList.add('key-ok');
+
+                                    // SCORE POR ACERTAR LETRA
+                                    lista_players[PLAYER_INDEX].score += SCORE_WIN_LETTER;
+                                    console.log(`%c+${SCORE_WIN_LETTER} SCORE`, 'color: #28a745; font-size: 1.2em;');
+                                    // ADD +1 NUMERO DE LETRAS ACERTADAS
+                                    lista_players[PLAYER_INDEX].win_letter += 1;
+
+
+                                    // COLOCAR LETRA NO(S) ESPAÇO(S)
+                                    for (const iterator of list) {
+                                        document.querySelectorAll("#gameWord .wordBox")[iterator].innerText = e.innerText;
+                                        document.querySelectorAll("#gameWord .wordBox")[iterator].style.borderColor = '#28a745';
+                                    }
+
+                                    // ACERTOU TUDO?
+                                    let tempWord = '';
+                                    for (let j = 0; j < GAME_WORD.length; j++){
+                                        tempWord += document.querySelectorAll("#gameWord .wordBox")[j].innerText;
+                                    }
+
+                                    // ON WIN -- ACERTOU TODAS AS LETRAS
+                                    if ( GAME_WORD == tempWord ){
+                                        toggleTimerMaster(false);   // desligar timer
+                                        document.getElementById("adivinhar").style.display = "none";
+                                        console.warn("WINNER");
+                                        GAME_RUNNING = false;
+
+                                        lista_players[PLAYER_INDEX].win += 1;   // add win
+                                        lista_players[PLAYER_INDEX].score += SCORE_WIN;
+                                        console.log(`%c+${SCORE_WIN} SCORE`, 'color: #28a745; font-size: 1.2em;');
+                                        
+                                        //showPopup('VENCEDOR');
+                                        showPopup('VENCEDOR', ('+'+SCORE_WIN), 'lime', ()=>{
+                                            toggleModalGenerate(true);
+                                        });
+                                        refreshValues();
+                                        alterPlayer();
+                                    }
+
+
+                                }
+
+                                // ERROU
+                                else{
+                                    console.log("ERRADO");
+                                    e.classList.add('key-wrong');
+
+
+                                    // PERDER 1x VIDA
+                                    if ( GAME_LIFE > 0 ){
+                                        GAME_LIFE--;
+
+                                        // PERDER SCORE AO ERRAR LETRA
+                                        lista_players[PLAYER_INDEX].score -= SCORE_LOSE_LETTER;
+                                        console.log(`%c-${SCORE_LOSE_LETTER} SCORE`, 'color: #dc3545; font-size: 1.2em;');
+                                        // ADD +1 NUMERO DE LETRAS ERRADAS
+                                        lista_players[PLAYER_INDEX].won_letter += 1;
+
+                                        document.getElementById("gameLife").innerText = 'Tentativas: ' + GAME_LIFE;
+                                        
+                                    }
+
+                                    // GAME OVER -- PERDEU TODAS AS CHANCHES
+                                    if ( GAME_LIFE == 0 ){
+                                        toggleTimerMaster(false);   // desligar timer
+                                        console.warn("GAME OVER");
+
+                                        lista_players[PLAYER_INDEX].won += 1;
+                                        lista_players[PLAYER_INDEX].score -= SCORE_LOSE;
+                                        console.log(`%c-${SCORE_LOSE} SCORE`, 'color: #dc3545; font-size: 1.2em;');
+                                        
+
+                                        //showPopup("PERDEU");
+                                        showPopup('PERDEU', ('-'+SCORE_LOSE), 'red', ()=>{
+                                            toggleModalGenerate(true);
+                                        });
+
+                                        alterPlayer();
+                                    }
+                                }
+                            }
+
+                            
+                        }
+                        else{
+                            console.warn('JA FOI CLICADA');
+                        }
+
+
+                        
+                        
+                    }
+                });
+
+
+            }
+
+
+        }
+
+
+
+
+        document.querySelectorAll("#keyboard-row .keyboard-key").forEach((e) => {
+            
+
+            e.addEventListener('click', () => {
+                keyboardClick( e.innerText );
+            });
+        });
+
+
+
+
+        // RESETAR TECLADO (CORES PADRAO)
+        function resetKeyboard(){
+            document.querySelectorAll("#keyboard-row .keyboard-key").forEach((e) => {
+                e.classList = 'keyboard-key';
+            });
+        }
+
+        
+
+             
+        
+
+
+
+
+
+
+
+
+
+        
+        // SCOREBOARD -- REFRESH
+        function refreshValues(){
+            // Player 1
+            document.querySelectorAll(".gameScoreboard-player > div")[1].innerText = lista_players[0].nome;
+            document.querySelectorAll(".gameScoreboard-player div")[0].innerText = lista_players[0].win;
+            // Player 2
+            document.querySelectorAll(".gameScoreboard-player > div")[3].innerText = lista_players[1].nome;
+            document.querySelectorAll(".gameScoreboard-player div")[2].innerText = lista_players[1].win;
+        }
+        refreshValues();
+
+
+
+
+
+
+        
+
+        // CALCULAR ESTATISTICAS
+        function calcularEstatisticas(){    
+
+
+            document.querySelectorAll("#estatisticas-legenda div")[0].innerText = '• ' + lista_players[0].nome;
+            document.querySelectorAll("#estatisticas-legenda div")[1].innerText = '• ' + lista_players[1].nome;
+
+            let wrapperItem = document.querySelectorAll("#estatistica-list .estatistica-wrapper");
+            let wrapperSummary = document.querySelectorAll(".estatistica-summary-wrapper");
+
+
+            /* SUMMARY */
+
+            // PARTIDAS
+            wrapperSummary[0].querySelector(".estatistica-summary-group").innerText = 'Partidas: ' + formatterNumber.format(lista_players[0].win + lista_players[0].won + lista_players[1].win + lista_players[1].won);
+            wrapperSummary[0].querySelectorAll(".estatistica-summary-item")[0].innerText = 'Total Vitórias ' + formatterNumber.format(lista_players[0].win + lista_players[1].win);
+            wrapperSummary[0].querySelectorAll(".estatistica-summary-item")[1].innerText = 'Total Perdas ' + formatterNumber.format(lista_players[0].won + lista_players[1].won);
+
+
+            // LETRAS
+            wrapperSummary[1].querySelector(".estatistica-summary-group").innerText = 'Letras: ' + formatterNumber.format(lista_players[0].win_letter + lista_players[0].won_letter + lista_players[1].win_letter + lista_players[1].won_letter);
+            wrapperSummary[1].querySelectorAll(".estatistica-summary-item")[0].innerText = 'Total Acertos ' + formatterNumber.format(lista_players[0].win_letter + lista_players[1].win_word);
+            wrapperSummary[1].querySelectorAll(".estatistica-summary-item")[1].innerText = 'Total Erros ' + formatterNumber.format(lista_players[0].won_letter + lista_players[1].won);
+
+            // PALAVRAS ADIVINHADAS
+            wrapperSummary[2].querySelector(".estatistica-summary-group").innerText = 'Palavras Adivinhadas: ' + formatterNumber.format(lista_players[0].win_word + lista_players[0].won_word + lista_players[1].win_word + lista_players[1].won_word);
+            wrapperSummary[2].querySelectorAll(".estatistica-summary-item")[0].innerText = 'Total Acertos ' + formatterNumber.format(lista_players[0].win_word + lista_players[1].win_word);
+            wrapperSummary[2].querySelectorAll(".estatistica-summary-item")[1].innerText = 'Total Erros ' + formatterNumber.format(lista_players[0].won_word + lista_players[1].won_word);
+
+
+            // SCORE
+            wrapperSummary[3].querySelector(".estatistica-summary-group").innerText = 'Pontos: ' + formatterNumber.format(lista_players[0].score + lista_players[1].score);
+
+            wrapperSummary[3].querySelectorAll(".estatistica-summary-item span")[0].innerText = lista_players[0].nome;
+            wrapperSummary[3].querySelectorAll(".estatistica-summary-item span")[1].innerText = formatterNumber.format(lista_players[0].score);
+
+            wrapperSummary[3].querySelectorAll(".estatistica-summary-item span")[2].innerText = lista_players[1].nome;
+            wrapperSummary[3].querySelectorAll(".estatistica-summary-item span")[3].innerText = formatterNumber.format(lista_players[1].score);
+
+
+
+
+
+
+            /* Partidas Ganhas */
+            // BAR
+            let percent = lista_players[0].win / (lista_players[0].win + lista_players[1].win) * 100;
+            if ( !isFinite(percent) ){percent = 0; wrapperItem[0].querySelector(".estatistica-barWrapper").style.backgroundColor = "#9e9e9e"; }
+            else{wrapperItem[0].querySelector(".estatistica-barWrapper").style.backgroundColor = "#ff5722";}
+            wrapperItem[0].querySelector(".estatistica-barFill").style.width = percent + '%';
+            // VALUES
+            wrapperItem[0].querySelectorAll(".estatistica-value > div")[0].innerText = formatterNumber.format(lista_players[0].win);
+            wrapperItem[0].querySelectorAll(".estatistica-value > div")[1].innerText = formatterNumber.format(lista_players[1].win);
+
+
+            /* Letras Acertadas */
+            // BAR
+            percent = lista_players[0].win_letter / (lista_players[0].win_letter + lista_players[1].win_letter) * 100;
+            if ( !isFinite(percent) ){percent = 0; wrapperItem[1].querySelector(".estatistica-barWrapper").style.backgroundColor = "#9e9e9e"; }
+            else{wrapperItem[1].querySelector(".estatistica-barWrapper").style.backgroundColor = "#ff5722";}
+            wrapperItem[1].querySelector(".estatistica-barFill").style.width = percent + '%';
+            // VALUES
+            wrapperItem[1].querySelectorAll(".estatistica-value > div")[0].innerText = formatterNumber.format(lista_players[0].win);
+            wrapperItem[1].querySelectorAll(".estatistica-value > div")[1].innerText = formatterNumber.format(lista_players[1].win);
+
+
+            /* Palavras Adivinhadas */
+            // BAR
+            percent = lista_players[0].win_word / (lista_players[0].win_word + lista_players[1].win_word) * 100;
+            if ( !isFinite(percent) ){percent = 0; wrapperItem[2].querySelector(".estatistica-barWrapper").style.backgroundColor = "#9e9e9e"; }
+            else{wrapperItem[2].querySelector(".estatistica-barWrapper").style.backgroundColor = "#ff5722";}
+            wrapperItem[2].querySelector(".estatistica-barFill").style.width = percent + '%';
+            // VALUES
+            wrapperItem[2].querySelectorAll(".estatistica-value > div")[0].innerText = formatterNumber.format(lista_players[0].win);
+            wrapperItem[2].querySelectorAll(".estatistica-value > div")[1].innerText = formatterNumber.format(lista_players[1].win);
+
+        }
+
+
+
+        
+
+
+
+
+
+
+        // RESETAR PLAYER SELECIONADO
+        function resetPlayer(){
+
+
+            // RESET PLAYER 1
+            if ( document.querySelectorAll('#modal-reset input')[0].checked ){
+                console.warn("PLAYER 1: RESETED");
+                lista_players[0] = Object.assign({},reseted_player);
+            }
+
+            // RESET PLAYER 2
+            if ( document.querySelectorAll('#modal-reset input')[1].checked ){
+                console.warn("PLAYER 2: RESETED");
+                lista_players[1] = Object.assign({},reseted_player);
+                lista_players[1].nome = "Player 2";
+            }
+
+
+            if ( document.querySelectorAll('#modal-reset input')[0].checked || document.querySelectorAll('#modal-reset input')[1].checked ){
+                refreshValues();            // refresh scoreboard
+                toggleModalReset(false);    // close modal
+
+                // UNCHECK
+                document.querySelectorAll('#modal-reset input')[0].checked = false;
+                document.querySelectorAll('#modal-reset input')[1].checked = false;
+            }
+
+            
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // EDITAR NOMES
+        function setNewName(){
+
+            let input1 = document.querySelectorAll("#modal-edit input")[0];
+            let input2 = document.querySelectorAll("#modal-edit input")[1];
+
+            // Player 1
+            if ( input1.value.length > 0 ){
+                document.querySelectorAll("#modal-edit .input-msg")[0].style.visibility = 'hidden';
+                
+            }
+            else{
+                document.querySelectorAll("#modal-edit .input-msg")[0].innerText = "preencher campo";
+                document.querySelectorAll("#modal-edit .input-msg")[0].style.visibility = 'visible';
+            }
+
+            // Player 2
+            if ( input2.value.length > 0 ){
+                document.querySelectorAll("#modal-edit .input-msg")[1].style.visibility = 'hidden';
+                
+            }
+            else{
+                document.querySelectorAll("#modal-edit .input-msg")[1].innerText = "preencher campo";
+                document.querySelectorAll("#modal-edit .input-msg")[1].style.visibility = 'visible';
+            }
+
+
+
+            // MESMO NOME?
+            if ( input1.value == input2.value ){
+                document.querySelectorAll("#modal-edit .input-msg")[0].innerText = "não pode conter o mesmo nome";
+                document.querySelectorAll("#modal-edit .input-msg")[1].innerText = "não pode conter o mesmo nome";
+
+                document.querySelectorAll("#modal-edit .input-msg")[0].style.visibility = 'visible';
+                document.querySelectorAll("#modal-edit .input-msg")[1].style.visibility = 'visible';
+
+            }
+            else{
+                lista_players[0].nome = input1.value;
+                lista_players[1].nome = input2.value;
+
+                //input1.value = input2.value = '';
+
+                toggleModalEdit(false);
+                
+            }
+
+            refreshValues();
+
+        }
+
+
+
+
+
+
+
+
+
+
+        // APERTOU (CRIAR) PARA GERAR PALAVRA
+        function createPlayerWord(){
+
+            let input1 = document.querySelectorAll("#modal-generate input")[0];
+            input1.value = input1.value.toUpperCase();
+
+            let input2 = document.querySelectorAll("#modal-generate input")[1];
+
+
+            let flag1 = true;
+
+
+            // PALAVRA
+            if ( input1.value.length > 0 ){
+                document.querySelectorAll("#modal-generate .input-msg")[0].style.visibility = 'hidden';
+                
+                for ( let i = 0; i < input1.value.length; i++ ){
+
+                    if ( input1.value.charCodeAt(i) < 65 || input1.value.charCodeAt(i) > 90 ){
+                        console.warn('NUMBER e/ou SYMBOLS');
+                        document.querySelectorAll("#modal-generate .input-msg")[0].innerText = "Apenas texto";
+                        document.querySelectorAll("#modal-generate .input-msg")[0].style.visibility = 'visible';
+                        flag1 = false;
+                        break;
+                    }
+                }
+                
+            }
+            else{
+                document.querySelectorAll("#modal-generate .input-msg")[0].innerText = "preencher campo";
+                document.querySelectorAll("#modal-generate .input-msg")[0].style.visibility = 'visible';
+            }
+
+
+            // DICA
+            if ( input2.value.length > 0 ){
+                document.querySelectorAll("#modal-generate .input-msg")[1].style.visibility = 'hidden';
+
+
+                // CRIAR PALAVRA
+                if ( flag1 ){
+                    console.warn("PALAVRA GERADA");
+                    gerarWord(input1.value, input2.value);
+                    toggleModalGenerate(false);
+                    input1.value = input2.value = '';
+                }
+                
+            }
+            else{
+                document.querySelectorAll("#modal-generate .input-msg")[1].innerText = "preencher campo";
+                document.querySelectorAll("#modal-generate .input-msg")[1].style.visibility = 'visible';
+            }
+
+
+            
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // ON -- APOSTAR CLICK
+        function adivinharWord(){
+
+
+
+            console.warn("ADIVINHAR");
+
+            toggleModalAdivinhar(false);
+
+
+            let inputAdivinhar = document.querySelector("#modal-adivinhar input").value.toUpperCase();
+
+            
+            // ACERTOU
+            if ( inputAdivinhar == GAME_WORD ){
+                toggleTimerMaster(false);   // desligar timer
+                console.warn("WINNER");
+                GAME_RUNNING = false;
+
+                lista_players[PLAYER_INDEX].win += 1;   // add win
+                lista_players[PLAYER_INDEX].score += SCORE_WIN;
+                console.log(`%c+${SCORE_WIN} SCORE`, 'color: #28a745; font-size: 1.2em;');
+                
+                //showPopup('VENCEDOR');
+                showPopup('VENCEDOR', ('+'+SCORE_WIN), 'lime', ()=>{
+                    toggleModalGenerate(true);
+                });
+                refreshValues();
+                alterPlayer();
+
+                //GAME_WORD_FLAG = true;
+                document.getElementById("adivinhar").style.display = "none";
+            }
+
+            // ERROU
+            else{
+                //GAME_WORD_FLAG = false;
+                //lista_players[PLAYER_INDEX].score -= SCORE_LOSE_WORD_TIMEOUT;
+                //console.log(`%c-${SCORE_LOSE_WORD_TIMEOUT} SCORE`, 'color: #dc3545; font-size: 1.2em;');
+                //showPopup('ERROU');
+                showPopup('ERROU', ('-'+SCORE_LOSE_WORD_TIMEOUT), 'red', ()=>{});
+            }
+
+
+            toggleTimerSecundary(false);
+            GAME_SEC_TIME_ACT = GAME_SEC_TIME;
+
+
+            document.querySelector("#modal-adivinhar input").value = '';
+
+            
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+        
+
+        // ABRIR/FECHAR -- TELA MENU LATERAL
+        function toggleSideMenu( state ){
+            if ( state ){
+                document.getElementById("side-menu").style.left = '0';
+            }
+            else{
+                document.getElementById("side-menu").style.left = '-100%';
+            }
+        }
+
+
+        // ABRIR/FECHAR -- TELA estatisticas
+        function toggleStatisticas( state ){
+            if ( state ){
+                calcularEstatisticas();
+                document.getElementById("screen-estatisticas").style.left = '0';
+            }
+            else{
+                document.getElementById("screen-estatisticas").style.left = '-100%';
+            }
+        }
+
+
+
+
+
+
+        // ABRIR/FECHAR -- MODAL RESETAR
+        function toggleModalReset( state ){
+
+            if ( state ){
+                document.querySelector("#modal-reset").style.display = "flex";
+                setTimeout(() => {
+                    document.querySelector("#modal-reset .modal-window").style.transform = 'scale(1)';
+                }, 100);
+                
+            }
+            else{
+                
+                document.querySelector("#modal-reset .modal-window").style.transform = 'scale(0)';
+                setTimeout(() => {
+                    document.querySelector("#modal-reset").style.display = "none";
+                }, 100);
+            }
+
+        }
+
+
+
+
+        // ABRIR/FEHCAR -- MODAL EDIT
+        function toggleModalEdit( state ){
+            if ( state ){
+
+                document.querySelectorAll("#modal-edit .input-title")[0].innerText = lista_players[0].nome;
+                document.querySelectorAll("#modal-edit .input-title")[1].innerText = lista_players[1].nome;
+
+
+
+                document.querySelector("#modal-edit").style.display = "flex";
+                setTimeout(() => {
+                    document.querySelector("#modal-edit .modal-window").style.transform = 'scale(1)';
+                }, 100);
+                
+            }
+            else{
+                
+                document.querySelectorAll("#modal-edit input")[0].value = '';
+                document.querySelectorAll("#modal-edit input")[1].value = '';
+
+                document.querySelector("#modal-edit .modal-window").style.transform = 'scale(0)';
+                setTimeout(() => {
+                    document.querySelector("#modal-edit").style.display = "none";
+                }, 100);
+            }
+        }
+
+        
+
+
+
+
+        function toggleModalGenerate( state ){
+
+            if ( state ){
+
+                document.getElementById("atual-player").innerText = lista_players[(!PLAYER_INDEX)?1:0].nome;
+
+                document.querySelector("#modal-generate").style.display = "flex";
+                setTimeout(() => {
+                    document.querySelector("#modal-generate .modal-window").style.transform = 'scale(1)';
+                }, 100);
+                
+            }
+            else{
+                
+                document.querySelector("#modal-generate .modal-window").style.transform = 'scale(0)';
+                setTimeout(() => {
+                    document.querySelector("#modal-generate").style.display = "none";
+                }, 100);
+            }
+
+        }
+        
+        
+        // DEBUG
+        //toggleModalGenerate(1);
+
+
+
+
+        function toggleModalAdivinhar( state ){
+            if ( state ){
+
+                document.querySelector("#modal-adivinhar").style.display = "flex";
+                setTimeout(() => {
+                    document.querySelector("#modal-adivinhar .modal-window").style.transform = 'scale(1)';
+                    toggleTimerMaster(false);
+                    toggleTimerSecundary(true);
+                }, 100);
+                
+            }
+            else{
+                
+                document.querySelector("#modal-adivinhar .modal-window").style.transform = 'scale(0)';
+                setTimeout(() => {
+                    document.querySelector("#modal-adivinhar").style.display = "none";
+                    
+
+                    if ( GAME_WORD_FLAG ){
+                        GAME_WORD_FLAG = false;
+                        console.warn("WIN ADIVINHADO");
+
+                    }else{
+                        toggleTimerMaster(true);
+                    }
+
+                }, 100);
+            }
+        }
+
+
+
+
+
+        // MOSTAR POPUP
+        function showPopup( msg, msg2, color1, callback=null ){
+
+            if (msg == null){msg='';}
+            if (msg2 == null){msg2='';}
+
+            document.querySelectorAll("#popup-content div")[1].style.color = color1;
+
+            document.querySelectorAll("#popup-content div")[0].innerText = msg;
+            document.querySelectorAll("#popup-content div")[1].innerText = msg2;
+
+            document.getElementById("popup-wrapper").style.display = "flex";
+
+            document.querySelector("#popup-content").classList.add("popup");
+            
+
+            document.querySelector("#popup-content").addEventListener("animationend", () => {
+                document.querySelector("#popup-content").classList.remove("popup");
+                document.getElementById("popup-wrapper").style.display = "none";
+
+                if ( callback != null ){
+                    callback();
+                }
+
+            });
+
+
+
+        }
+        
+
+        
+        
+
+
+    </script>
+
+
+
+</body>
+</html>

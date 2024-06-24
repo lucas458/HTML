@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+    crossorigin=""/>
+
+
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+    crossorigin=""></script>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+        #map{
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+        
+
+
+
+        .barWrapper{
+            
+            height: 4px;
+            background-color: #bdbdbd;
+        }
+
+        .barFill{
+            width: 20%;
+            height: 100%;
+            background-color: blue;
+            
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    
+
+
+
+
+    <div id="map">
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <script>
+
+
+        // GERAR MAPA
+        var map = L.map('map').setView([-5.825, -35.21], 15);
+        var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+
+        // AREA DE QUALQUER FORMATO
+        var area = L.polygon([
+            [-5.8261201902709665, -35.21006584167481],
+            [-5.831286100154015, -35.211954116821296],
+            [-5.833847690721354, -35.212211608886726],
+            [-5.831158020318584, -35.218734741210945],
+            [-5.824284359608435, -35.21457195281983],
+        ]).bindPopup(`
+            <div>meu HTML</div>
+            <div class="barWrapper"><div class="barFill"></div></div>
+        `).addTo(map);
+
+
+        // CIRCULO
+        var circulo = L.circle([-5.8172825317829515, -35.21783351898194], {
+            color: '#00f',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 100
+        }).bindPopup("area de teste").addTo(map);
+
+
+        // LINHA
+        var linha = L.polyline([
+            [-5.8236012582952466, -35.21985054016114],
+            [-5.8198441862274946, -35.218691825866706],
+            [-5.819118385319841, -35.2128553390503] 
+        ], {
+            color: "#0f0",
+            weight: 8
+        }).bindPopup("click na linha").addTo(map);
+
+
+        // CRIAR MARCADOR -- QUANDO CLICA
+        map.on('click', (e)=>{
+            let cord = e.latlng;
+            console.log(`[${cord.lat}, ${cord.lng}]`);
+            let marker = L.marker(e.latlng).bindPopup("click no MARKER").addTo(map);
+        });
+
+
+
+        
+
+
+
+
+         
+
+
+
+
+        
+
+    </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none; 
+            overflow: hidden;
+            scroll-behavior: none;
+        }
+
+
+
+
+        button{
+            padding: 8px 16px;
+            margin: 8px;
+            border-radius: 8px;
+            border: 1px solid #28a745;
+            outline: none;
+            background-color: #00000000;
+            color: #fff;
+            font-size: 1.2em;
+        }
+
+
+        .wrapper{
+            opacity: 1;
+            background-color: #000;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: none;
+        }
+
+        .container{ 
+            width: calc(100% * 3);
+            height: 100%; 
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            overflow: hidden;
+            position: absolute;
+        }
+
+        .image_wrapper{
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .image_wrapper img{
+            width: 100%;
+            max-height: 100%;
+        }
+
+        
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+    <h1>teste de slider</h1>
+
+    <button onclick="openSlider()">abrir</button>
+
+    
+    
+    <div class="wrapper" id="image_slider">
+
+        <div class="container" >
+            
+            <div class="image_wrapper">
+                <img src="https://www.1zoom.me/prev/303/302250.jpg"/>
+            </div>
+    
+            <div class="image_wrapper">
+                <img src="https://images.wallpapersden.com/image/download/landscape-pixel-art_bGhnaGeUmZqaraWkpJRrZWWtbWVl.jpg"/>
+            </div>
+    
+            <div class="image_wrapper">
+                <img src="https://i.pinimg.com/originals/2c/c0/f7/2cc0f796f3cb5866918ae958f7bf5513.jpg"/>
+            </div>
+    
+        </div>
+    </div>
+
+
+
+
+    
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+
+
+        function openSlider(){
+            document.getElementById("image_slider").style.opacity = 1;
+            document.getElementById("image_slider").firstElementChild.style.top = 0;
+            document.getElementById("image_slider").firstElementChild.style.left = 0;
+            document.getElementById("image_slider").style.display = 'block';
+        }
+
+
+
+        var touch_initX = 0;
+        var touch_initY = 0;
+
+        var can_slideX = false;
+        var can_slideY = false;
+
+        document.querySelectorAll("#image_slider .image_wrapper").forEach(e => {
+
+            e.parentElement.style.width = (100 * e.parentNode.children.length) + '%';
+            e.parentElement.style.gridTemplateColumns = `repeat(${e.parentNode.children.length}, 1fr)`;
+
+            e.ontouchstart = (event) => {
+                touch_initX = event.touches[0].clientX - e.parentElement.offsetLeft;
+                touch_initY = event.touches[0].clientY - e.parentElement.offsetTop;
+            };
+
+
+            e.ontouchmove = (event) => {
+
+                let touchX = event.touches[0].clientX - touch_initX;
+                let touchY = event.touches[0].clientY - touch_initY;
+                let index  = Math.round( Math.abs(e.parentElement.offsetLeft) / screen.availWidth);
+                e.parentElement.style.transition = '';
+
+                if ( Math.abs(touchX + 360 * index) > 10 && !can_slideY || can_slideX ){
+                    can_slideX = true;
+                    can_slideY = false;
+                    touchX = Math.clamp(touchX, -(e.parentElement.offsetWidth - screen.availWidth), 0);
+                    e.parentElement.style.left = touchX + 'px';
+                }
+                else if ( Math.abs(touchY) > 10 && !can_slideX ){
+                    can_slideX = false;
+                    can_slideY = true;
+                    e.parentElement.style.top = touchY + 'px';
+                    e.parentElement.parentElement.style.opacity = 1 - (Math.abs(touchY)/(screen.availHeight/3));
+                }
+
+            };
+
+
+
+            e.ontouchend = (event) => {
+                
+                e.parentElement.style.transition = '200ms';
+                let index = Math.round( Math.abs(e.parentElement.offsetLeft) / screen.availWidth);
+                e.parentElement.style.left = (index * -screen.availWidth) + 'px';
+
+                if ( can_slideY ){
+
+                    if ( Math.abs(e.parentElement.offsetTop) > screen.availHeight/3 ){
+                        e.parentElement.style.top = ( (e.parentElement.offsetTop>0)? 100 : -100 ) + '%';
+                        setTimeout(()=>{
+                            e.parentElement.parentElement.style.display = 'none';
+                        }, 200);
+                    }else{
+                        e.parentElement.parentElement.style.opacity = 1;
+                        e.parentElement.style.top = 0;
+                    }
+
+                }
+                
+                can_slideX = false;
+                can_slideY = false;
+
+            };
+            
+            
+        });
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

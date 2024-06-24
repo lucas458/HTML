@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+
+
+        #menu{
+
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            position: fixed;
+            align-items: center;
+            justify-items: center;
+
+        }
+
+
+        .slot_icon_wrapper{
+            width: 96px;
+            aspect-ratio: 1/1; 
+            padding: 8px;
+            border: 5px solid transparent;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .slot_icon{
+            width: 100%;
+            height: 100%;
+            background-color: rebeccapurple;
+            border-radius: 50%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+
+        .slot_active .slot_icon_wrapper{
+            border: 5px solid orangered;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    
+
+    <div id="menu">
+
+        <!-- <div class="slot slot_active">
+            <div class="slot_icon_wrapper">
+                <div class="slot_icon"></div>
+            </div>
+        </div> -->
+        
+
+    </div>
+
+
+     
+
+
+    <script>
+
+        
+
+        var menu = document.getElementById("menu");
+
+        var currentAppIndex = 0;
+        var currentAppRow = 0; 
+
+
+        const GRID = 9;
+        const COLUMN = 3;
+
+        
+        var APPS = [
+
+            {
+                "name": "A"
+            },
+            {
+                "name": "B"
+            },
+            {
+                "name": "C"
+            },
+            {
+                "name": "D"
+            },
+            {
+                "name": "E"
+            },
+            {
+                "name": "F"
+            },
+            {
+                "name": "G"
+            },
+            {
+                "name": "H"
+            },
+            {
+                "name": "I"
+            },
+            {
+                "name": "J"
+            },
+            {
+                "name": "K"
+            },
+            {
+                "name": "L"
+            },
+            {
+                "name": "M"
+            },
+            {
+                "name": "N"
+            },
+            {
+                "name": "O"
+            },
+            {
+                "name": "P"
+            },
+            {
+                "name": "Q"
+            },
+            {
+                "name": "R"
+            },
+            {
+                "name": "S"
+            },
+            {
+                "name": "T"
+            },
+            {
+                "name": "U"
+            }
+
+        ];
+        
+
+
+
+
+
+        function selectByIndex( index = 0 ){
+
+
+
+            document.querySelectorAll('.slot_active').forEach((e)=>{
+                e.classList.remove('slot_active');
+            });
+
+
+            if ( menu.children[index] ){
+                menu.children[index].classList.add('slot_active');
+            }
+            else{
+                menu.children[0].classList.add('slot_active');
+            }
+
+
+        }
+
+
+        
+
+        
+        function genApps( offsetRow = 0 ){
+
+
+            menu.innerHTML = '';
+
+
+            let start = offsetRow * 3;
+            let end   = start + 9;
+
+            
+
+            for (let i = start; i < end; i++){
+
+                if ( i >= APPS.length ){ 
+                    break;
+                }
+
+                let slot = document.createElement("div");
+                slot.classList.add("slot");
+                slot.innerHTML = `
+                <div class="slot_icon_wrapper">
+                    <div class="slot_icon">${APPS[i].name}</div>
+                </div>
+                `;
+
+                menu.appendChild(slot);
+
+
+            }
+             
+
+        }
+
+
+
+        genApps(currentAppRow);
+        selectByIndex(currentAppIndex);
+
+
+
+
+
+
+
+        window.onkeydown = (evt) => {
+
+            const key = evt.keyCode;
+
+ 
+            // LEFT
+            if ( key == 37 ){
+                if ( currentAppIndex > 0 ){
+                    currentAppIndex--;
+                }
+                else if ( currentAppRow > 0 ){
+                    currentAppRow--;
+                    currentAppIndex += COLUMN-1;
+                    genApps(currentAppRow);
+                }
+            }
+
+
+
+            // UP
+            else if ( key == 38 ){
+                if ( currentAppIndex > 0 ){
+                    currentAppIndex -= COLUMN;
+                }
+                else if( currentAppRow > 0 ){
+                    currentAppRow--;
+                    genApps(currentAppRow);
+                }
+            }
+
+
+
+            // RIGHT
+            else if ( key == 39 ){
+
+                if ( currentAppIndex < GRID-1 ){
+                    currentAppIndex++;
+                }
+                else if ( currentAppRow < (APPS.length % GRID+1) ){
+                    currentAppRow++;
+                    currentAppIndex -= COLUMN-1;
+                    genApps(currentAppRow);
+                }
+            }
+
+
+            // DOWN
+            else if ( key == 40 ){ 
+                if ( currentAppIndex < GRID-COLUMN ){
+                    currentAppIndex += COLUMN;
+                }
+                else if ( currentAppRow < (APPS.length % GRID+1) ){
+                    currentAppRow++; 
+                    genApps(currentAppRow);
+                }
+            }
+
+            selectByIndex(currentAppIndex);
+
+
+        };
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

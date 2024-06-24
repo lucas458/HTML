@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+
+        #graphContainer{
+            position: relative;
+        }
+
+
+        #graphAverage{
+            width: 100%;
+            height: 2px;
+            border-top: 1px dashed #fff;
+            pointer-events: none;
+            z-index: 1;
+            position: absolute;
+            bottom: 20px;
+        }
+
+
+        #graphAverage:has(#graphAverageValue:empty){
+            opacity: 0;
+        }
+
+
+        #graphAverageValue{
+            width: fit-content;
+            margin: 2px 0;
+            padding-right: 8px;
+            transform: translate(-100%, -75%);
+        }
+
+
+        
+        #graphColumns{
+            display: flex;
+            gap: 16px;
+
+        }
+
+
+        .graphItemWrapper{
+            width: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+
+        .graphTooltip{
+            min-width: 35px;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 0.8em;
+            border-radius: 4px;
+            padding: 4px;
+            padding-bottom: 0;
+            background-color: #000;
+            transform: translateY( calc(-100% - 10px) );
+            transition: 200ms;
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+        }
+
+
+        .graphTooltip::after{
+            content: '';
+            display: block;
+            width: 0px;
+            border: 8px solid transparent;
+            border-top-color: #000;
+            transform: translateY(100%);
+            border-bottom: none;
+            margin: auto;
+        }
+
+
+        .graphItemWrapper:hover .graphTooltip:not(:empty){
+            opacity: 1;
+        }
+
+
+        
+        .graphItemWrapperSelected .graphLabel{
+            color: #ddd;
+            font-weight: 500;
+        }
+
+        .graphTrack{
+            width: 16px;
+            height: 100px;
+            background-color: #353535;
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        .graphFill{
+            width: 100%;
+            height: 100%;
+            background-color: #007bff;
+            transform: translateY(100%);
+            border-radius: 50px;
+        }
+
+
+        .graphLabel{
+            height: 20px;
+            font-size: 0.8em;
+            color: #9e9e9e;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="graphContainer">
+
+            <div id="graphAverage"><div id="graphAverageValue"></div></div>
+
+            <div id="graphColumns">
+                <div class="graphItemWrapper">
+                    <div class="graphTooltip"></div> 
+                    <div class="graphTrack"> <div class="graphFill"></div> </div>
+                    <div class="graphLabel">Dom</div>
+                </div>
+                <div class="graphItemWrapper">
+                    <div class="graphTooltip"></div>
+                    <div class="graphTrack"> <div class="graphFill"></div> </div>
+                    <div class="graphLabel">Seg</div>
+                </div>
+                <div class="graphItemWrapper">
+                    <div class="graphTooltip"></div>
+                    <div class="graphTrack"> <div class="graphFill"></div> </div>
+                    <div class="graphLabel">Ter</div>
+                </div>
+                <div class="graphItemWrapper">
+                    <div class="graphTooltip"></div>
+                    <div class="graphTrack"> <div class="graphFill"></div> </div>
+                    <div class="graphLabel">Qua</div>
+                </div>
+                <div class="graphItemWrapper">
+                    <div class="graphTooltip"></div>
+                    <div class="graphTrack"> <div class="graphFill"></div> </div>
+                    <div class="graphLabel">Qui</div>
+                </div>
+                <div class="graphItemWrapper">
+                    <div class="graphTooltip"></div>
+                    <div class="graphTrack"> <div class="graphFill"></div> </div>
+                    <div class="graphLabel">Sex</div>
+                </div>
+                <div class="graphItemWrapper">
+                    <div class="graphTooltip"></div>
+                    <div class="graphTrack"> <div class="graphFill"></div> </div>
+                    <div class="graphLabel">Sáb</div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        }; 
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+        function pad( v = 0 ){
+            if ( v < 10 ) return '0' + v;
+            return v.toString();
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+        
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+        const DATES = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        const MONTHS = [
+            "JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"
+        ];
+
+
+
+
+
+
+
+
+
+        var WEEKDATABASE = {  
+            weekday: [128, 256, 4520, 960, 256, 1024, 2540]
+        };
+
+
+        function selectByDay( day = 0 ){
+            document.querySelectorAll('.graphItemWrapperSelected').forEach(e => e.classList.remove('graphItemWrapperSelected'));
+            if ( day >= 0 && day <= 6 ){
+                document.querySelectorAll('.graphItemWrapper')[day].classList.add('graphItemWrapperSelected');
+            }
+        }
+        
+
+        function secToTime( sec = 0 ){
+            const h = parseInt(sec / 3600);
+            const m = parseInt(sec / 60 % 60);
+            if ( h > 0 ) return `${h}h ${m}m`;
+            if ( m > 0 ) return m + 'm';
+            return sec + 's';
+        }
+
+
+        function update(){
+            const currentDate = new Date();
+            const weekdayTotal = WEEKDATABASE.weekday.reduce((a, b) => a + b, 0);
+            const weekdayAverage = weekdayTotal / WEEKDATABASE.weekday.length;
+            selectByDay(currentDate.getDay());
+
+            graphAverage.style.bottom   = weekdayTotal > 0 ? `calc(${weekdayAverage * 100 / weekdayTotal}% + 20px)` : '';
+            graphAverageValue.innerHTML = weekdayTotal > 0 ? secToTime(weekdayAverage) : '';
+
+            document.querySelectorAll('.graphItemWrapper').forEach((e, i) => {
+                const weekdayValue = WEEKDATABASE.weekday[i];
+                const elementTooltip = e.querySelector('.graphTooltip');
+                const elementFill = e.querySelector('.graphFill');
+                elementTooltip.innerHTML = weekdayValue > 0 ? secToTime(weekdayValue) : '';
+                elementFill.style.transform = weekdayTotal > 0 ? `translateY(${100 - weekdayValue / weekdayTotal * 100}%)` : '';
+            });
+
+        }
+
+
+        onload = update;
+        setInterval(update, 1000);
+        
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #455A64;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        /* width */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 50px;
+        }
+        
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #262a41; 
+            border-radius: 50px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover{
+            background: #262a40e6;
+        }
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+
+
+        #container{
+            width: 800px;
+            height: 480px;
+            /* background-color: red; */
+            display: flex;
+            box-shadow: 0 0 10px 2px #546E7A;
+            /* transform: perspective(800px) rotateY(10deg); */
+            transition: 100ms;
+        }
+
+        #contentLeft{
+            width: 320px;
+            height: 100%;
+            flex-shrink: 0;
+            background-color: #606fee;
+            border-right: 2px solid #7b8099;
+            padding: 16px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        
+
+
+
+
+
+
+        /* MAIN CONTROL */
+        #mainControl{
+            padding: 0 16px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        
+
+
+        #mainControlButtonGroup{
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* CONTROL BUTTON */
+        .mainControlButton{
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            border-radius: 50%;
+            /* background-color: #1dd1a1; */
+            box-shadow: 0 0 5px 0 #616161;
+            border: 1px solid #fff;
+            transition: 200ms;
+        }
+        .mainControlButton:hover{
+            transition: 50ms;
+            transform: scale(1.2);
+        }
+
+
+
+
+        /* CLOCK */
+        #clockValue{
+            font-size: 1.2em;
+            font-weight: 500;
+            color: #f5f5f5;
+        }
+
+
+
+
+        /* WAETHER */
+        #waetherWrapper{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #waetherIcon{
+            width: 96px;
+            height: 96px;
+        }
+        #waetherIcon img{
+            width: 100%;
+            height: 100%;
+        }
+
+        #waetherTemperature{ 
+            font-size: 1.4em;
+            margin-top: 8px;
+            font-weight: 500;
+            white-space: pre;
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+        #waetherTemperature:hover{
+            background-color: #fff;
+            color: #606fee;
+        }
+
+        #waetherDescription{
+            font-size: 0.9em;
+            font-weight: 300;
+            color: #e0e0e0;
+            white-space: pre;
+        }
+
+
+
+
+        #container p{
+            width: 100%;
+            padding: 0 16px;
+            margin: 24px 0;
+        }
+
+
+
+
+
+
+        /* EVENTS */
+        #eventListWrapper{
+            width: 100%;
+            padding-left: 16px;
+            margin-right: 8px; 
+            overflow: hidden;
+            height: 100%;
+            position: relative;
+        }
+
+        #eventList{
+            height: 100%;
+            padding-bottom: 25%;
+            overflow: hidden scroll;
+            padding-right: 8px;
+        }
+
+        #eventListShadow{
+            width: calc(100% - 26px);
+            height: 100%;
+            pointer-events: none;
+            background: linear-gradient(0deg, #606fee, #00000000 50%);
+            /* background-color: red; */
+            z-index: 2;
+            position: absolute;
+            top: 0;
+        }
+
+        .event{
+            display: flex;
+            align-items: baseline;
+            gap: 16px;
+            margin-bottom: 32px;
+            padding: 8px 8px;
+            border-radius: 8px;
+        }
+        
+        .event:hover{
+            background-color: #fefefe;
+            color: #606fee;
+        }
+
+        .event:hover .eventTime{
+            background-color: #606fee;
+            color: #fefefe;
+        } 
+
+
+        .eventTime{
+            width: 56px;
+            flex-shrink: 0;
+            border-radius: 50px;
+            font-size: 0.9em;
+            font-weight: 500;
+            text-align: center;
+            background-color: #fefefe;
+            color: #606fee;
+            position: relative;
+        }
+
+
+        .event:not(:last-child) .eventTime::after{
+            content: '';
+            display: block;
+            width: 1px;
+            height: 48px;
+            background-color: #fff;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+        }
+
+        
+
+
+        .eventLabel{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 0.9em;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #contentRight{
+            width: 100%;
+            height: 100%;
+            background-color: #303658;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        #calendarControllerWrapper{
+            /* width: 100%; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #calendarController{
+            /* background-color: blue; */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+
+            /* width: 320px; */
+        }
+
+        .calendarControllerButton{
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            /* background-color: tomato; */
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            transition: 200ms;
+        }
+        .calendarControllerButton:hover{
+            background-color: #262a41;
+            transform: scale(1.2);
+           
+        }
+
+
+
+
+
+        #calendarControllerContent{
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        #calendarContentMonthWrapper,
+        #calendarContentYearWrapper{
+            font-size: 1.7em;
+            font-weight: 500;
+            padding: 2px;
+            position: relative;
+        }
+
+         
+        #calendarContentMonthValue{
+            width: 150px;
+            padding: 2px;
+            text-align: center;
+        }
+        #calendarContentYearWrapper{
+            width: 70px;
+            text-align: center;
+        }
+
+        #calendarContentMonthValue:hover,
+        #calendarContentYearWrapper:hover,
+        #calendarContentYearWrapper:focus-within{
+            background-color: #262a41;
+            border-radius: 8px;
+        }
+
+
+        #calendarContentMonthList{
+            z-index: 1;
+            background-color: #262a41;
+            border-radius: 8px;
+            /* opacity: 0.2; */
+            display: none;
+            text-align: center;
+            padding: 4px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .calendarContentMonthListOpen #calendarContentMonthList{
+            display: block;
+        }
+
+        .calendarContentMonthItem{
+            border-radius: 4px;
+            margin-bottom: 4px;
+            transition: 200ms;
+        }
+        .calendarContentMonthItem:last-child{
+            margin: 0;
+        }
+
+        .calendarContentMonthItemSelected,
+        .calendarContentMonthItem:hover{
+            background-color: #606fee;
+            transform: scale(0.95);
+        }
+
+
+        
+
+        #calendarContentYearInput{
+            white-space: nowrap;
+            overflow: hidden;
+            outline: none;
+            caret-color: red;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* CALENDAR */
+        #mainCalendar{
+            /* margin-top: 32px; */
+            padding: 0 64px;
+        }
+
+        #mainCalendarWeekdayContainer,
+        #mainCalendarGrid{
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            justify-items: center;
+        }
+
+        #mainCalendarWeekdayContainer{
+            /* font-size: 1.2em; */
+            margin-bottom: 40px;
+            font-weight: 500;
+            color: #dbdbdb;
+        }
+
+        #mainCalendarGrid{
+            grid-template-rows: repeat(6, 1fr);
+            font-weight: 500;
+            /* row-gap: 16px; */
+
+        }
+
+        .date{ 
+            width: 100%;
+            aspect-ratio: 1/1;
+            color: #fefefe;
+            /* background-color: red; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            border-radius: 50%;
+            position: relative;
+        }
+
+
+        .dateBefore,
+        .dateAfter{
+            color: #9e9e9e;
+        }
+
+
+        .dateSelected{
+            position: relative;
+        }
+
+        .dateCurrent::after{
+            content: '';
+            display: block;
+            width: 100%;
+            height: 100%;
+            outline: 1px solid #fff;
+            border-radius: 50%;
+            z-index: 2;
+            position: absolute;
+        }
+        
+
+        .dateSelected,
+        .date:hover{ 
+            background-color: #262a41;
+        }
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+
+
+        <div id="container">
+
+            <!-- LEFT -->
+            <div id="contentLeft">
+
+                <!-- MAIN CONTROL -->
+                <div id="mainControl">
+
+                    <div id="mainControlButtonGroup">
+
+                        <!-- ADD -->
+                        <div class="mainControlButton">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                            </svg>
+                        </div>
+                        <!-- LIST CREATED EVENTS -->
+                        <div class="mainControlButton">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z"/>
+                                <path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z"/>
+                                <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z"/>
+                            </svg>
+                        </div>
+                        <!-- SETTINGS -->
+                        <div class="mainControlButton">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                            </svg>
+                        </div>
+
+                    </div>
+                    
+
+                    <!-- CLOCK -->
+                    <div id="clockValue">00:00</div>
+                    
+                </div>
+
+                
+                <!-- WAETHER -->
+                <div id="waetherWrapper">
+                    <div id="waetherIcon"></div>
+                    <div id="waetherTemperature"> </div>
+                    <div id="waetherDescription"> </div>
+                </div>
+                
+                <p>Suas tarefas para hoje:</p>
+                
+                <!-- EVENTS -->
+                <div id="eventListWrapper">
+
+                    <div id="eventListShadow"></div>
+
+                    <div id="eventList">
+
+                        <!-- ITEM -- EVENT -->
+                        <div class="event">
+                            <div class="eventTime">09:00</div>
+                            <div class="eventLabel">Send a message to James</div>
+                        </div> 
+                        <!-- ITEM -- EVENT -->
+                        <div class="event">
+                            <div class="eventTime">09:00</div>
+                            <div class="eventLabel">Send a message to James</div>
+                        </div> 
+                        <!-- ITEM -- EVENT -->
+                        <div class="event">
+                            <div class="eventTime">09:00</div>
+                            <div class="eventLabel">Send a message to James</div>
+                        </div> 
+                        <!-- ITEM -- EVENT -->
+                        <div class="event">
+                            <div class="eventTime">09:00</div>
+                            <div class="eventLabel">Send a message to James</div>
+                        </div> 
+                        <!-- ITEM -- EVENT -->
+                        <div class="event">
+                            <div class="eventTime">09:00</div>
+                            <div class="eventLabel">Send a message to James</div>
+                        </div> 
+                        <!-- ITEM -- EVENT -->
+                        <div class="event">
+                            <div class="eventTime">09:00</div>
+                            <div class="eventLabel">Send a message to James</div>
+                        </div> 
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT -->
+            <div id="contentRight">
+
+                <!-- CONTROLLER -->
+                <div id="calendarControllerWrapper">
+                    
+                    <div id="calendarController">
+                        
+                        <div class="calendarControllerButton">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                            </svg>
+                        </div>
+    
+                        <div id="calendarControllerContent">
+                            
+                            <!-- MONTH -- calendarContentMonthListOpen -->
+                            <div id="calendarContentMonthWrapper">
+                                <div id="calendarContentMonthValue">JANEIRO</div>
+                                <div id="calendarContentMonthList">
+                                    <div class="calendarContentMonthItem calendarContentMonthItemSelected">JANEIRO</div>
+                                    <div class="calendarContentMonthItem">FEVEREIRO</div>
+                                    <div class="calendarContentMonthItem">MARÇO</div>
+                                    <div class="calendarContentMonthItem">ABRIL</div>
+                                    <div class="calendarContentMonthItem">MAIO</div>
+                                    <div class="calendarContentMonthItem">JUNHO</div>
+                                    <div class="calendarContentMonthItem">JULHO</div>
+                                    <div class="calendarContentMonthItem">AGOSTO</div>
+                                    <div class="calendarContentMonthItem">SETEMBRO</div>
+                                    <div class="calendarContentMonthItem">OUTUBRO</div>
+                                    <div class="calendarContentMonthItem">NOVEMBRO</div>
+                                    <div class="calendarContentMonthItem">DEZEMBRO</div>
+                                </div>
+                            </div>
+
+                            <!-- YEAR -->
+                            <div id="calendarContentYearWrapper">
+                               <div id="calendarContentYearInput" contenteditable="true" inputmode="number">2018</div>
+                            </div>
+
+                        </div>
+    
+                        <div class="calendarControllerButton">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+                <!-- CALENDAR -->
+                <div id="mainCalendar">
+
+                    <div id="mainCalendarWeekdayContainer">
+                        <div class="mainCalendarWeekday">DOM</div>
+                        <div class="mainCalendarWeekday">SEG</div>
+                        <div class="mainCalendarWeekday">TER</div>
+                        <div class="mainCalendarWeekday">QUA</div>
+                        <div class="mainCalendarWeekday">QUI</div>
+                        <div class="mainCalendarWeekday">SEX</div>
+                        <div class="mainCalendarWeekday">SÁB</div>
+                    </div>
+
+                    <div id="mainCalendarGrid"></div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+        function removeSpaces( str = '' ){
+            return (str.replace(/  +/g, ' ')).trim();
+        }
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        }; 
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+        function pad( v = 0 ){
+            if ( v < 10 ) return '0' + v;
+            return v.toString();
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+        
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+        const DATES    = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        const WEEKDAYS = ["DOMINGO", "SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO"];
+        const MONTHS   = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
+
+
+
+
+        var currentDateView = new Date();
+        const mainCalendarGrid = document.getElementById('mainCalendarGrid');
+
+
+
+        const selectorColorsList = [
+            "#ff6b6b", // red
+            "#1dd1a1", // green
+            "#efc228", // yellow
+        ];
+
+
+        function getSelectedMonth(){
+            return Array.from(calendarContentMonthList.children).indexOf(document.querySelector('.calendarContentMonthItemSelected'));
+        }
+        
+
+
+
+        function updateMainClock( dateTime ){
+            const h = pad( dateTime.getHours() );
+            const m = pad( dateTime.getMinutes() );
+            clockValue.innerHTML = `${h}:${m}`;
+        }
+
+
+
+
+        function dateOnClick( event ){
+            const element = event.target;
+            document.querySelectorAll('.dateSelected').forEach(e => e.classList.remove('dateSelected'));
+            element.classList.add('dateSelected');
+
+            let tempMonth = currentDateView.getMonth();
+
+            if ( element.classList.contains('dateBefore') ){
+                tempMonth--;
+                console.log(element.innerHTML + '/' + (currentDateView.getMonth()+1) + '/' + currentDateView.getFullYear());
+            }else if ( element.classList.contains('dateAfter') ){
+                tempMonth++;
+                console.log(element.innerHTML + '/' + (currentDateView.getMonth()+1) + '/' + currentDateView.getFullYear());
+            }else{
+                console.log(element.innerHTML + '/' + (currentDateView.getMonth()+1) + '/' + currentDateView.getFullYear());
+            }
+
+
+
+            if ( tempMonth != currentDateView.getMonth() ){
+                currentDateView = new Date(currentDateView.getFullYear(), tempMonth);
+                generateCalendar(currentDateView.getMonth(), currentDateView.getFullYear(), element.innerHTML);
+            }
+
+
+            // DEBUG
+            if ( event.shiftKey && event.ctrlKey ){
+                element.style.borderRadius = '0';
+            }else if ( event.shiftKey ){
+                element.style.borderRadius = '50px 0 0 50px';
+            }else if ( event.ctrlKey ){
+                element.style.borderRadius = '0 50px 50px 0';
+            }else{
+                element.style.borderRadius = '50px';
+            }
+            element.style.backgroundColor = selectorColorsList[0];
+
+
+        }
+
+
+
+        // function dateOnDoubleClick( event ){
+        //     const element = event.target;
+        //     console.log('double');
+        // }
+        
+
+
+
+
+        function generateCalendar( month = 0, year = 2000, forceDay = 0 ){
+            mainCalendarGrid.innerHTML = '';
+            month = Math.clamp(month, 0, 11);
+            year = Math.clamp(year, 0, 9999);
+            calendarContentMonthValue.innerHTML = MONTHS[month];
+            calendarContentYearInput.innerHTML = year;
+
+            const currentDate       = new Date();
+            const date              = new Date(year, month,   1);
+            const maxMonthBefore    = new Date(year, month,   0).getDate();
+            const maxMonth          = new Date(year, month+1, 0).getDate();
+            let size                = date.getDay();
+
+            for (let i = 0; i < size; i++){
+                const date = document.createElement('div');
+                date.classList.add('date', 'dateBefore');
+                date.innerHTML = i - size + maxMonthBefore + 1;
+                date.onclick = dateOnClick;
+                mainCalendarGrid.appendChild(date);
+            }
+            
+            for (let i = 1; i <= maxMonth; i++){
+                const date = document.createElement('div');
+                date.classList.add('date');
+                date.innerHTML = i;
+                date.onclick = dateOnClick;
+                // date.ondblclick = dateOnDoubleClick;
+
+                if ( currentDate.getDate() == i && currentDate.getMonth() == month && currentDate.getFullYear() == year ){
+                    date.classList.add('dateCurrent', 'dateSelected');
+                }else if ( forceDay == i ){
+                    date.classList.add('dateSelected');
+                }
+
+                mainCalendarGrid.appendChild(date);
+
+            }
+
+            size += maxMonth;
+
+            for (let i = 1; i <= 42 - size; i++){
+                const date = document.createElement('div');
+                date.classList.add('date', 'dateAfter');
+                date.innerHTML = i;
+                date.onclick = dateOnClick;
+                mainCalendarGrid.appendChild(date);
+            }
+            
+        }
+        
+
+
+
+
+        function getDataFromLocation(lat, lon){
+            const http = new XMLHttpRequest();
+
+            http.onreadystatechange = () => {
+
+                if ( http.status == 200 && http.readyState == 4 ){
+                    const wheaterData = JSON.parse(http.responseText);
+                    console.log(wheaterData);
+
+                    if ( wheaterData.weather != null ){
+                        if ( wheaterData.weather.length > 0 ){
+                            waetherDescription.innerHTML = wheaterData.weather[0].description.toUpperCase();
+                            waetherIcon.innerHTML = `<img src="${getIconByCode(wheaterData.weather[0].icon, true)}">`;
+                        }
+                    }
+
+                    if ( wheaterData.main != null ){
+                        waetherTemperature.innerHTML = parseInt(wheaterData.main.temp) + ' °C';
+                    }
+
+                }
+
+            };
+
+            http.open("GET", `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=pt_br&appid=82005d27a116c2880c8f0fcb866998a0`);
+            http.send();
+        }
+
+
+
+
+
+        function getIconByCode(code, bigIcon = false){
+            return bigIcon ? `https://openweathermap.org/img/wn/${code}@2x.png` : `https://openweathermap.org/img/wn/${code}.png`;
+        }
+        
+
+
+
+
+
+        calendarContentMonthValue.onclick = calendarContentMonthList.onmouseleave = (event) => {
+            calendarContentMonthWrapper.classList.toggle('calendarContentMonthListOpen', event.type == 'click');
+        };
+
+
+
+
+        document.querySelectorAll('.calendarContentMonthItem').forEach((e, i) => {
+            e.onclick = () => {
+                document.querySelectorAll('.calendarContentMonthItemSelected').forEach(el => el.classList.remove('calendarContentMonthItemSelected'));
+                e.classList.add('calendarContentMonthItemSelected');
+                calendarContentMonthValue.innerHTML = e.innerHTML;
+                calendarContentMonthWrapper.classList.remove('calendarContentMonthListOpen');
+
+                generateCalendar(i, calendarContentYearInput.innerHTML);
+            };
+        });
+        
+
+
+
+        calendarContentYearInput.oninput = () => {
+            const value = calendarContentYearInput.innerHTML;
+            if ( value.length <= 0 ) return;
+
+            try{
+                const newValue = calendarContentYearInput.innerHTML.match(/\d+/g).join('');
+                calendarContentYearInput.innerHTML = newValue == 0? '' : newValue.substr(0, 4);
+                document.execCommand('selectAll', false, null);
+                document.getSelection().collapseToEnd();
+            }catch(e){
+                calendarContentYearInput.innerHTML = '';
+            }
+
+        };
+
+
+
+
+        calendarContentYearInput.onkeydown = (event) => {
+            if ( event.key == 'Enter' ){
+                currentDateView = new Date(calendarContentYearInput.innerHTML, currentDateView.getMonth());
+                generateCalendar(getSelectedMonth(), currentDateView.getFullYear());
+            }
+        };
+        
+
+
+
+        document.querySelectorAll('.calendarControllerButton').forEach((e, i) => {
+            e.onclick = () => {
+                const tempMonth = currentDateView.getMonth() + (i == 0? -1 : 1);
+                currentDateView = new Date(currentDateView.getFullYear(), tempMonth);
+                generateCalendar(currentDateView.getMonth(), currentDateView.getFullYear());
+            };
+        });
+        
+
+
+        onmousemove = (event) => {
+            const initX = main_screen.offsetWidth / 2;
+            const initY = main_screen.offsetHeight / 2;
+            const diffX = -map( Math.clamp(event.clientX - initX + 8, -100, 100), -100, 100, -4, 4);
+            const diffY = map( Math.clamp(event.clientY - initY + 8, -100, 100), -100, 100, -4, 4); 
+            container.style.transform = `perspective(800px) rotateY(${diffX}deg) rotateX(${diffY}deg)`;
+        };
+        
+
+
+        
+        onload = () => { 
+            updateMainClock(currentDateView);
+            generateCalendar(currentDateView.getMonth(), currentDateView.getFullYear());
+            getDataFromLocation(-23.5475, -46.63611); // São Paulo, Brazil
+        };
+
+
+        setInterval(()=>{
+            const currentDateTimeByUpdater = new Date();
+            updateMainClock(currentDateTimeByUpdater);
+        }, 500);
+        
+
+
+
+    </script>
+
+
+</body>
+</html>

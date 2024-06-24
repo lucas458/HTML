@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raio do Arco</title>
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+        
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+		
+		#container{
+			width: 200px;
+		}
+		
+		input, button{
+			width: 100%;
+			padding: 8px 10px;
+			margin-bottom: 4px;
+		} 
+
+        p:has(span:empty){
+            visibility: hidden;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+    <div id="main_screen">
+			
+		<div id="container">
+			<input type="number" id="inputAltura" placeholder="Altura">
+			<input type="number" id="inputBase" placeholder="Base">
+			<button onclick="calcular()">calcular</button>
+			<p>Raio: <span id="saida"></span> </p>
+		</div>
+		
+         
+    </div>
+    
+
+    <script>
+
+        function getRaio(altura, base){
+            return (altura**2 + (base/2)**2) / (2*altura);
+        }
+
+        function calcular(){
+            altura = parseFloat(inputAltura.value);
+            base = parseFloat(inputBase.value);
+            saida.innerHTML = getRaio(altura, base);
+        }
+
+    </script>
+
+
+</body>
+</html>

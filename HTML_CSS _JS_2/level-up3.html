@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XP/LEVEL SYSTEM</title>
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+        header{
+            background-color: #181818;
+            padding: 8px;
+            box-shadow: 0 0 5px 0 #000;
+            position: sticky;
+            top: 0;
+            
+        }
+
+        header  button{
+            background-color: inherit;
+            border: 1px solid #28a745;
+            color: #28a745;
+            outline: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-right: 8px;
+            transition: 200ms;
+        }
+
+        .add:active{
+            transition: 1ms;
+            background-color: #28a745;
+            color: #fff;
+        }
+        #clear{
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+        #clear:active{
+            transition: 1ms;
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+
+
+
+
+
+        #input-wrapper{
+           margin-top: 8px;
+        }
+
+        #input-wrapper > input{
+            border: 0;
+            border-bottom: 1px solid #353535;
+            padding: 4px;
+            background-color: inherit;
+            color: #fff;
+            outline: none;
+            transition: 100ms;
+        }
+        #input-wrapper >input:focus{
+            border-color: #007bff;
+        }
+
+        #input-wrapper > button{
+            color: #007bff;
+            border-color: #007bff;
+        }
+
+
+
+
+
+
+
+
+        .item{
+            padding: 8px 4px;
+        }
+        .item > span{
+            padding: 4px 8px;
+            background-color: #353535;
+            border-radius: 4px;
+            color: #fefefe;
+        }
+
+
+        #barTrack{
+            width: 100%;
+            height: 4px;
+            background-color: #353535;
+        }
+        #barFill{
+            width: 0;
+            height: 100%;
+            background-color: #007bff;
+            animation: shadowPulse 5s infinite;
+        }
+
+
+
+        @keyframes shadowPulse {
+            
+            25%{
+                box-shadow: 0 0 5px #00f;
+            }
+            50%{
+                box-shadow: 0 0 0px #00f;
+            }
+            75%{
+                box-shadow: 0 0 5px #00f;
+            }
+
+        }
+
+
+
+
+
+        #values-container{
+            display: flex;
+            padding: 5px 4px;
+            padding-bottom: 0;
+        }
+        #values-container > div{
+            flex: 1;
+        }
+        #values-container>div:last-child{
+            text-align: right;
+        }
+
+
+
+
+
+
+
+
+
+
+        .item-info{
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #353535;
+        }
+
+
+        .item-info-icon{
+            display: flex;
+            color: #007bff;
+            margin-right: 8px;
+        }
+
+
+
+    </style>
+
+    
+</head>
+
+
+
+
+
+<body>
+
+    
+
+
+
+
+
+
+    <header>
+        <button onclick="addXp(1)" class="add">+1</button>
+        <button onclick="addXp(5)" class="add">+5</button>
+        <button onclick="addXp(10)" class="add">+10</button>
+        <button onclick="clearInfos()" id="clear">Limpar</button>
+
+        
+        <div id="input-wrapper">
+            <input type="number" id="inputXP" min="0" placeholder="valor do XP">
+            <button onclick="sendXP()">Enviar</button>
+        </div>
+
+
+        <div id="summary">
+
+            
+            <div class="item">LEVEL <span id="value_level">0</span> </div>
+
+            
+
+            <div id="containerProgress">
+
+                <div id="barTrack"> <div id="barFill"></div> </div>
+
+                <div id="values-container">
+                    <div id="value_xp_actual">0</div>
+                    <div id="value_xp_max">0</div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+    </header>
+
+
+
+
+
+
+
+
+
+
+
+
+    <section id="history">
+
+
+        <!-- ITEM -->
+        <!-- <div class="item-info">
+            <div class="item-info-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                </svg>
+            </div>
+            <div class="item-info-text">ASd asdasd asdasd </div>
+        </div> -->
+ 
+
+
+
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script>
+
+
+
+        var PLAYER_XP = 0;
+        var PLAYER_LEVEL = 0;
+        
+
+
+
+
+        var LIST_LEVELS = [50, 150, 300, 450];
+
+
+
+
+
+        function addXp( value ){
+
+
+            
+            if ( value > 0 ){
+                value = parseInt(value);
+            }
+            else{
+                return;
+            }
+            
+
+
+
+            
+            
+            // END LEVEL?
+            if ( PLAYER_LEVEL >= LIST_LEVELS.length-1 ){
+                if ( PLAYER_XP+value >= LIST_LEVELS[PLAYER_LEVEL] ){
+                    PLAYER_XP = LIST_LEVELS[PLAYER_LEVEL];
+                    console.warn("UP MAX");
+                }else{
+                    PLAYER_XP += value;
+
+
+
+                    addInfo(`Ganhou +${value} XP`);
+                }
+            }
+
+
+            else{
+
+
+                let TEMP_XP = value;
+
+
+                
+                let diff_type = (PLAYER_XP+TEMP_XP)-LIST_LEVELS[PLAYER_LEVEL];
+
+                // UP LEVEL
+                if ( diff_type == 0 ){
+                    console.log("UP ");
+                    PLAYER_LEVEL++;
+                     
+                    PLAYER_XP = 0;
+                    addInfo(`Subiu para o LEVEL ${PLAYER_LEVEL}`);
+                }
+
+                // ADD XP
+                else if ( diff_type < 0 ){
+                    
+                    console.log("ADD NORMAL")
+                    PLAYER_XP += TEMP_XP;
+                    addInfo(`Ganhou +${TEMP_XP} XP`);
+                }
+
+
+                // UP LEVEL & ADD XP TO NEXT LEVEL
+                else{
+
+                    console.log("UP LOOP");
+
+                    TEMP_XP -=  (LIST_LEVELS[PLAYER_LEVEL] - PLAYER_XP);
+                    PLAYER_XP = 0;
+                    PLAYER_LEVEL++;
+                    addInfo(`Subiu para o LEVEL ${PLAYER_LEVEL}`);
+
+                    console.log("TEMP LOOP", TEMP_XP);
+
+                    
+                    if ( TEMP_XP > 0 ){
+
+
+                        if ( PLAYER_LEVEL >= LIST_LEVELS.length-1 ){
+                            
+                            if ( TEMP_XP >= LIST_LEVELS[LIST_LEVELS.length-1] ){
+                                TEMP_XP = LIST_LEVELS[LIST_LEVELS.length-1];
+                            }
+
+                        }
+                        
+                        addXp( TEMP_XP );
+                        
+
+                        
+                    } 
+
+
+                }
+
+
+                
+                 
+
+
+            }
+
+            updateScreen();
+        }
+
+
+
+
+
+
+
+
+
+
+
+        function sendXP(){
+
+            let inputXP = document.getElementById("inputXP");
+
+            
+            if ( inputXP.value > 0 ){
+                
+                addXp( inputXP.value | 0 );
+                inputXP.value = ''
+            }
+
+
+
+        }
+
+
+
+
+
+        function updateScreen(){
+
+            // LEVEL
+            document.getElementById("value_level").innerText = PLAYER_LEVEL + 0;
+            
+            // PROGRESS
+            document.getElementById("barFill").style.width = `${PLAYER_XP/LIST_LEVELS[PLAYER_LEVEL]*100}%`;
+
+            // VALUES: XP
+            document.getElementById("value_xp_actual").innerText = PLAYER_XP;
+            document.getElementById("value_xp_max").innerText = LIST_LEVELS[PLAYER_LEVEL];
+
+
+        }
+
+        updateScreen();
+
+
+
+
+
+
+
+
+
+
+        function clearInfos(){
+            document.getElementById("history").innerHTML = '';
+            navigator.vibrate(300);
+        }
+
+
+        function addInfo( msg ){
+
+            let item = document.createElement("div");
+            item.classList.add("item-info");
+            item.innerHTML = `
+            <div class="item-info-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                </svg>
+            </div>
+            <div class="item-info-text">${msg}</div>
+            `;
+
+
+            document.getElementById("history").appendChild( item );
+            navigator.vibrate(250);
+            window.scroll({top: document.body.scrollHeight, behavior: 'smooth'});
+
+        }
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

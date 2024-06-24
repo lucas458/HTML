@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+
+        .led-red > div{
+            background-color: #f00;
+        }
+        .led-red .led-dome{
+            box-shadow: 0 0 8px 0 #f00;
+        }
+
+
+
+
+        .led-green > div{
+            background-color: #0f0;
+        }
+        .led-green .led-dome{
+            box-shadow: 0 0 8px 0 #0f0;
+        }
+
+
+
+        .led-blue > div{
+            background-color: #00f;
+        }
+        .led-blue .led-dome{
+            box-shadow: 0 0 8px 0 #00f;
+        }
+
+
+
+
+        #led-list{
+            display: flex;
+        }
+         
+        .led{
+            width: fit-content;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: 4px;
+        }
+
+
+        .led-dome{
+            width: 24px;
+            height: 32px;
+            background-color: transparent;
+            border-radius: 25px 25px 0 0;
+            box-shadow: 0 0 8px 0 transparent;
+        }
+
+        .led-base{
+            width: 34px;
+            height: 8px;
+            background-color: transparent; 
+        }
+
+
+
+
+ 
+        .led-off > div{
+            background-color: #353535 !important;
+            box-shadow: 0 0 5px 0 transparent !important;
+        }
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    <div id="led-list">
+
+        <div class="led led-red led-off">
+            <div class="led-dome"></div>
+            <div class="led-base"></div>
+        </div>
+
+        <div class="led led-green led-off">
+            <div class="led-dome"></div>
+            <div class="led-base"></div>
+        </div>
+
+        <div class="led led-blue led-off">
+            <div class="led-dome"></div>
+            <div class="led-base"></div>
+        </div>
+
+        <div class="led led-red led-off">
+            <div class="led-dome"></div>
+            <div class="led-base"></div>
+        </div>
+
+        <div class="led led-green led-off">
+            <div class="led-dome"></div>
+            <div class="led-base"></div>
+        </div>
+
+        <div class="led led-blue led-off">
+            <div class="led-dome"></div>
+            <div class="led-base"></div>
+        </div>
+
+        
+
+        
+
+    </div>
+
+    
+    
+    <input type="range" id="adc" min="0" max="1000" value="0">
+
+
+     
+
+
+    <script>
+
+
+        
+
+        var adc = document.getElementById("adc");
+        var leds = document.querySelectorAll('#led-list .led');
+
+        adc.addEventListener('input', (e)=>{
+            console.log(e.target.value);
+
+            let level = e.target.value * leds.length / e.target.max;
+
+
+            leds.forEach((e, i)=>{
+
+                if ( i < level ){
+                    e.classList.remove('led-off');
+                }
+                else{
+                    e.classList.add('led-off');
+                }
+
+            });
+
+
+        });
+
+
+
+
+    </script>
+
+
+</body>
+</html>

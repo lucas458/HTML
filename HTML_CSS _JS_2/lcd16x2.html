@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+         
+
+        #lcd-wrapper{
+            background-color: #1f7a34;
+            padding: 32px;
+            width: fit-content;
+        } 
+
+        #lcd-frame{
+            background-color: #303030;
+            padding: 16px;
+        }
+
+        #lcd-screen{
+            background-color: #87ad34;
+            padding: 8px;
+        }
+
+ 
+
+
+        .lcd-row{
+            margin-bottom: 8px;
+            display: flex;
+        }
+        .lcd-row:last-child{
+            margin: 0;
+        }
+
+        .character{
+            margin: 2px;
+
+            width: calc( 8px * 5 );
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+
+        .pixel{
+            background-color: #7c9e31;
+            width: 8px;
+            height: 8px;
+        }
+
+        .pixel-dark{
+            background-color: #181818;
+        }
+
+        
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+ 
+    <div id="lcd-wrapper">
+
+        <div id="lcd-frame">
+
+            <div id="lcd-screen">
+                <!-- <div class="lcd-row">
+                    <div class="character">
+                        <div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div>
+                        <div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div>
+                        <div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div>
+                        <div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div>
+                        <div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div>
+                        <div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div>
+                        <div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div>
+                        <div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div>
+                    </div>
+                </div> -->
+            </div>
+
+        </div>
+
+    </div>
+    
+     
+
+
+    <script>
+
+
+
+
+        var LCD_WIDTH = 16;
+        var LCD_HEIGHT = 4;
+
+
+
+        function gerarTela(c, l, dotChar){
+
+
+
+            LCD_WIDTH = c;
+            LCD_HEIGHT = l;
+
+            document.getElementById("lcd-screen").innerHTML = '';
+
+
+            for (let linha = 0; linha < l; linha++){
+
+                let row = document.createElement('div');
+                row.classList.add('lcd-row');
+
+                for (let coluna = 0; coluna < c; coluna++){
+
+
+                    let character = document.createElement('div');
+                    character.classList.add('character');
+
+                    for (let pixel = 0; pixel < dotChar; pixel++){
+
+                        let pixelElement = document.createElement('div');
+                        pixelElement.classList.add('pixel');
+
+                        character.appendChild(pixelElement);
+
+                    }
+
+
+                    row.appendChild(character);
+                    //lcdRow[linha].appendChild(character);
+                    
+                }
+
+                document.getElementById("lcd-screen").appendChild(row);
+
+            }
+
+
+
+        }
+
+
+        
+
+
+
+
+
+
+
+
+        function lcdPutChar( posX, posY, charCode ){
+
+
+            let characterWrapper = document.getElementById("lcd-screen").children[posY].children[posX];
+
+            charCode -= 32;
+
+            if ( CGRAM[charCode] == null ){
+                return false;
+            }
+
+
+            for ( let y = 0; y < 5; y++ ){
+
+                for ( let x = 0; x < 8; x++ ){
+
+
+                    if ( CGRAM[charCode][y] & 1 << (7-x) ){
+                        characterWrapper.children[ (y%5) + x * 5 ].classList.add("pixel-dark");
+                    }
+                    else{
+                        characterWrapper.children[ (y%5) + x * 5 ].classList.remove("pixel-dark");
+                    }
+                    
+
+                }
+
+            }
+
+
+        }
+
+
+        
+
+
+
+
+        const CGRAM = [
+            [0x00,0x00,0x00,0x00,0x00],// ' ' -- ESPAÇO
+            [0x00,0x00,0x79,0x00,0x00],// !
+            [0x00,0x70,0x00,0x70,0x00],// "
+            [0x14,0x7F,0x14,0x7F,0x14],// #
+            [0x12,0x2A,0x7F,0x2A,0x24],// $
+            [0x62,0x64,0x08,0x13,0x23],// %
+            [0x36,0x49,0x55,0x22,0x05],// &
+            [0x00,0x50,0x60,0x00,0x00],// '
+            [0x00,0x1C,0x22,0x41,0x00],// (
+            [0x00,0x41,0x22,0x1C,0x00],// )
+            [0x14,0x08,0x3E,0x08,0x14],// *
+            [0x08,0x08,0x3E,0x08,0x08],// +
+            [0x00,0x05,0x06,0x00,0x00],// ,
+            [0x08,0x08,0x08,0x08,0x08],// -
+            [0x00,0x03,0x03,0x00,0x00],// .
+            [0x02,0x04,0x08,0x10,0x20],// /
+            
+            // NUMEROS 0-9
+            [0x3E,0x45,0x49,0x51,0x3E],// 0
+            [0x00,0x21,0x7F,0x01,0x00],// 1
+            [0x21,0x43,0x45,0x49,0x31],// 2
+            [0x42,0x41,0x51,0x69,0x46],// 3
+            [0x0C,0x14,0x24,0x7F,0x04],// 4
+            [0x72,0x51,0x51,0x51,0x4E],// 5
+            [0x1E,0x29,0x49,0x49,0x06],// 6
+            [0x40,0x47,0x48,0x50,0x60],// 7
+            [0x36,0x49,0x49,0x49,0x36],// 8
+            [0x30,0x49,0x49,0x4A,0x3C],// 9
+            
+            // CARACTES ESPECIAIS
+            [0x00,0x36,0x36,0x00,0x00],// :
+            [0x00,0x35,0x36,0x00,0x00],// ;
+            [0x08,0x14,0x22,0x41,0x00],// <
+            [0x14,0x14,0x14,0x14,0x14],// =
+            [0x00,0x41,0x22,0x14,0x08],// >
+            [0x20,0x40,0x45,0x48,0x30],// ?
+            [0x26,0x49,0x4F,0x41,0x3E],// @
+            
+            // LETRAS MAISCULAS A-Z
+            [0x3F,0x44,0x44,0x44,0x3F],// A
+            [0x7F,0x49,0x49,0x49,0x36],// B
+            [0x3E,0x41,0x41,0x41,0x22],// C
+            [0x7F,0x41,0x41,0x22,0x1C],// D
+            [0x7F,0x49,0x49,0x49,0x41],// E
+            [0x7F,0x48,0x48,0x48,0x40],// F
+            [0x3E,0x41,0x49,0x49,0x2F],// G
+            [0x7F,0x08,0x08,0x08,0x7F],// H
+            [0x00,0x41,0x7F,0x41,0x00],// I
+            [0x02,0x01,0x41,0x7E,0x40],// J
+            [0x7F,0x08,0x14,0x22,0x41],// K
+            [0x7F,0x01,0x01,0x01,0x01],// L
+            [0x7F,0x20,0x18,0x20,0x7F],// M
+            [0x7F,0x10,0x08,0x04,0x7F],// N
+            [0x3E,0x41,0x41,0x41,0x3E],// O
+            [0x7F,0x48,0x48,0x48,0x30],// P
+            [0x3E,0x41,0x45,0x42,0x3D],// Q
+            [0x7F,0x48,0x4C,0x4A,0x31],// R
+            [0x31,0x49,0x49,0x49,0x46],// S
+            [0x40,0x40,0x7F,0x40,0x40],// T
+            [0x7E,0x01,0x01,0x01,0x7E],// U
+            [0x7C,0x02,0x01,0x02,0x7C],// V
+            [0x7E,0x01,0x0E,0x01,0x7E],// W
+            [0x63,0x14,0x08,0x14,0x63],// X
+            [0x70,0x08,0x07,0x08,0x70],// Y
+            [0x43,0x45,0x49,0x51,0x61],// Z
+            
+            // CARACTES ESPECIAIS
+            [0x00,0x7F,0x41,0x41,0x00],// [
+            [0x20,0x10,0x08,0x04,0x02],// "\"
+            [0x00,0x41,0x41,0x7F,0x00],// ]
+            [0x10,0x20,0x40,0x20,0x10],// ^
+            [0x01,0x01,0x01,0x01,0x01],// _ under line
+            [0x00,0x80,0x20,0x40,0x00],// ` crase
+            
+            // LETRAS MINUSCULAS a-z
+            [0x02,0x15,0x15,0x15,0x0F],// a
+            [0x7F,0x09,0x11,0x11,0x0E],// b
+            [0x0E,0x11,0x11,0x11,0x02],// c
+            [0x0E,0x11,0x11,0x09,0x7F],// d
+            [0x0E,0x15,0x15,0x15,0x0C],// e
+            [0x08,0x3F,0x48,0x40,0x20],// f
+            [0x18,0x25,0x25,0x25,0x3E],// g
+            [0x7F,0x08,0x10,0x10,0x0F],// h
+            [0x00,0x11,0x5F,0x01,0x00],// i
+            [0x02,0x01,0x11,0x5E,0x00],// j
+            [0x7F,0x04,0x0A,0x11,0x00],// k
+            [0x00,0x41,0x7F,0x01,0x00],// l
+            [0x1F,0x10,0x0C,0x10,0x0F],// m
+            [0x1F,0x08,0x10,0x10,0x0F],// n
+            [0x0E,0x11,0x11,0x11,0x0E],// o
+            [0x1F,0x14,0x14,0x14,0x08],// p
+            [0x08,0x14,0x14,0x0C,0x1F],// q
+            [0x1F,0x08,0x10,0x10,0x08],// r
+            [0x09,0x15,0x15,0x15,0x02],// s
+            [0x10,0x7E,0x11,0x01,0x02],// t
+            [0x1E,0x01,0x01,0x02,0x1F],// u
+            [0x1C,0x02,0x01,0x02,0x1C],// v
+            [0x1E,0x01,0x06,0x01,0x1E],// w
+            [0x11,0x0A,0x04,0x0A,0x11],// x
+            [0x18,0x05,0x05,0x05,0x1E],// y
+            [0x11,0x13,0x15,0x19,0x11],// z
+            
+            // CARACTES ESPECIAIS
+            [0x00,0x08,0x36,0x41,0x00],// {
+            [0x00,0x00,0x7F,0x00,0x00],// |
+            [0x00,0x41,0x36,0x08,0x00],// }
+            
+            [0x70,0x50,0x70,0x00,0x00],// º        0x7E   // RESERVADO
+            [0x08,0x1C,0x2A,0x08,0x08],// <- seta  0x7F   // RESERVADO
+            [0x08,0x08,0x2A,0x1C,0x08],// -> seta  0x80   // RESERVADO
+
+
+        ];
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+        
+        function lcdPrint( text ){
+
+
+
+            for ( let i = 0; i < text.length; i++ ){
+
+
+                let x = 0;
+                let y = 0
+
+                lcdPutChar( i%16, i/16|0, text.charCodeAt(i) );
+
+                if ( i >= LCD_WIDTH*LCD_HEIGHT ){
+                    break;
+                }
+
+            }
+
+
+        }
+
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        gerarTela(LCD_WIDTH, LCD_HEIGHT, 5*8);
+        
+        
+        
+        /////////////////////////////////////
+
+        
+        lcdPrint("--- LCD 16x2 ---HTML, CSS e JS!");
+
+
+        //lcdPutChar( 0, 0, '0'.charCodeAt(0) );
+
+
+    </script>
+
+
+</body>
+</html>

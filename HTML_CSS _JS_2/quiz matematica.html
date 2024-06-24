@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Da Matemática</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        button{
+            border: none;
+            outline: none;
+        }
+ 
+        .screen{
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #016dbd, #011d4e);
+            position: fixed;
+        }
+
+
+
+
+        #screen_game_menu{
+            width: 32px;
+            height: 32px;
+            margin: 16px;
+            background-color: transparent; 
+            color: #fff;
+            z-index: 1;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        #screen_game_menu:active{
+            opacity: 0.8;
+        }
+
+ 
+        #screen_game_progressTrack{
+            width: 50%;
+            height: 10px;
+            border: 1px solid #fff;
+            margin: auto;
+            position: absolute;
+            bottom: 16px;
+            right: 0;
+            left: 0;
+        }
+        #screen_game_progressFill{
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+        }
+
+        @keyframes timerAnimation {
+            from {width: 100%;}
+            to {width: 0%;}
+        }
+
+
+
+        #game_screen_scroller{
+            height: 100%;
+            transition: 200ms;
+            position: relative;
+            top: -200%;
+        }
+
+
+        .game_screen_container{
+            padding-top: 16px;
+            height: 100%;
+        }
+
+
+        .game_screen_title{
+            width: 75%;
+            max-width: calc(100% - 80px*2);
+            margin: auto;
+            margin-bottom: 24px;
+            background-color: #fff;
+            color: #000;
+            font-weight: 600; 
+            height: 56px;
+            border-radius: 8px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: xx-large;
+            line-height: 0;
+            box-shadow: #06233d -8px 8px 4px 0px;
+        }
+
+        .game_screen_answer_container{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 24px 0;
+            margin: 8px 0;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .game_screen_answer_button{
+            width: 128px;
+            height: 56px;
+            border-radius: 8px 0;
+            font-size: x-large;
+            font-weight: 600;
+            background-color: #fff;
+            color: #000;
+            box-shadow: #06233d -5px 5px 4px 0px;
+            transition: 200ms;
+        }
+
+        .game_screen_answer_button:active{
+            opacity: 0.8;
+            transition: 1ms;
+            box-shadow: #06233d 0px 0px 4px 0px;
+            background-color: #ec7d30 !important;
+        } 
+
+
+
+
+
+
+
+        #screen_menu{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+        }
+
+        #menu_button_list{ 
+            width: fit-content;
+            display: flex;
+            flex-direction: column; 
+            gap: 10px;
+        }
+
+        .menu_toggle_button input{
+            display: none;
+        }
+
+        .menu_toggle_wrapper{
+            height: 48px;
+            background-color: #007bff;
+            color: #fff;
+            box-shadow: 0 0 5px 0 #000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            padding-left: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .menu_toggle_content{
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .menu_toggle_check{
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0b74e5;
+            color: #fff;
+            visibility: hidden;
+        }
+
+
+        .menu_toggle_button input:checked ~ .menu_toggle_wrapper .menu_toggle_check{
+            visibility: visible !important;
+        }
+
+
+
+
+
+        #gameInit{
+            padding: 8px 16px;
+            background-color: #28a745;
+            border-radius: 8px;
+        }
+        #gameInit:active{
+            opacity: 0.8;
+        }
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    <div class="screen" id="screen_game">
+
+        <button id="screen_game_menu" onclick="onClickGameMenu()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+                <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+            </svg>
+        </button>
+
+        <div id="screen_game_progressTrack">
+            <div id="screen_game_progressFill"></div>
+        </div>
+
+        <div id="game_screen_scroller">
+            <!-- CONTAINER -->
+            <div class="game_screen_container">
+                <div class="game_screen_title">000 X 000</div>
+                <div class="game_screen_answer_container">
+                    <button class="game_screen_answer_button">000</button>
+                    <button class="game_screen_answer_button">000</button>
+                    <button class="game_screen_answer_button">000</button>
+                    <button class="game_screen_answer_button">000</button>
+                </div>
+            </div>
+            <!-- CONTAINER -->
+            <div class="game_screen_container">
+                <div class="game_screen_title">000 X 001</div>
+                <div class="game_screen_answer_container">
+                    <button class="game_screen_answer_button">000</button>
+                    <button class="game_screen_answer_button">000</button>
+                    <button class="game_screen_answer_button">000</button>
+                    <button class="game_screen_answer_button">000</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <div class="screen" id="screen_menu">
+        
+
+        <div id="menu_button_list">
+
+            <!-- TOGGLE BUTTON -->
+            <label class="menu_toggle_button">
+                <input type="checkbox" name="gameType" value="+"> 
+                <div class="menu_toggle_wrapper">
+                    <div class="menu_toggle_content">ADIÇÃO</div>
+                    <div class="menu_toggle_check">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg>
+                    </div> 
+                </div> 
+            </label>
+            <!-- TOGGLE BUTTON -->
+            <label class="menu_toggle_button">
+                <input type="checkbox" name="gameType" value="-"> 
+                <div class="menu_toggle_wrapper">
+                    <div class="menu_toggle_content">SUBTRAÇÃO</div>
+                    <div class="menu_toggle_check">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg>
+                    </div> 
+                </div> 
+            </label>
+            <!-- TOGGLE BUTTON -->
+            <label class="menu_toggle_button">
+                <input type="checkbox" name="gameType" value="X"> 
+                <div class="menu_toggle_wrapper">
+                    <div class="menu_toggle_content">MULTIPLICAÇÃO</div>
+                    <div class="menu_toggle_check">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg>
+                    </div> 
+                </div> 
+            </label>
+            <!-- TOGGLE BUTTON -->
+            <label class="menu_toggle_button">
+                <input type="checkbox" name="gameType" value="÷"> 
+                <div class="menu_toggle_wrapper">
+                    <div class="menu_toggle_content">DIVISÃO</div>
+                    <div class="menu_toggle_check">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16"><path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/></svg>
+                    </div> 
+                </div> 
+            </label>
+
+        </div>
+
+        <div id="gameInit" onclick="onClickGameInit()">INICIAR</div>
+
+    </div>
+
+     
+
+
+    <script>
+        
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        }; 
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        } 
+
+
+
+
+
+        const game_screen_scroller = document.getElementById("game_screen_scroller");
+        const screen_game_progressFill = document.getElementById("screen_game_progressFill");
+        let gameParameters = null;
+
+        let selectedTypes = [];
+        let locked = true;
+
+
+
+        function generateRandomGameParameters( type = '+', min = 0, max = 100 ){
+
+            let a = getRandomInt(min, max);
+            let b = getRandomInt(min, max);
+            
+            let obj =  {
+                question: [a, b],
+                asnwer: 0,
+                type: type,
+                list: []
+            }
+
+            let tempList = []; 
+            
+            switch (type) {
+                case '+': 
+                    obj.asnwer = a + b;
+                    break;
+                case '-': 
+                    obj.asnwer = a - b;
+                    break;
+                case 'X':      
+                    obj.asnwer = a * b;
+                    break;
+                case '÷': 
+                    while ( parseInt(a/b) != a/b ){
+                        a = getRandomInt(min, max);
+                        b = (min <= 0)? getRandomInt(1, max) : getRandomInt(min, max);
+                    }
+                    obj.asnwer = a / b; 
+                    break;
+            }
+
+
+            obj.question = [a, b];
+            tempList.push(obj.asnwer);    
+
+            for (let i = 0; i < 3; i++){
+
+                let value = getRandomInt(0, 100);
+                
+                while ( obj.list.indexOf(value) >= 0 ){
+                    value = getRandomInt(0, 100);
+                }
+
+                tempList.push(value);
+            }
+
+ 
+            tempList = shuffleArray(tempList);
+            obj.list = tempList;
+
+            return obj;
+
+        }   
+
+
+
+        
+        
+
+
+        function nextQuestion(){
+            
+            screen_game_progressFill.style.animation = '';
+            const currentGameContainer = document.querySelectorAll('.game_screen_container')[1];
+
+            const currentType = selectedTypes[ getRandomInt(0, selectedTypes.length) ];
+            gameParameters = generateRandomGameParameters(currentType, 0, 10+1);
+
+            currentGameContainer.querySelector(".game_screen_title").innerHTML = `${gameParameters.question[0]} ${gameParameters.type} ${gameParameters.question[1]}`;
+
+            gameParameters.list.forEach((e, i) => {
+                currentGameContainer.querySelectorAll(".game_screen_answer_button")[i].innerHTML = e;
+            });
+
+            game_screen_scroller.style.transition = '200ms';
+            game_screen_scroller.style.top = '-100%';
+
+            setTimeout(()=>{
+                console.warn("END ANIMATION");
+                document.querySelectorAll(".game_screen_answer_button").forEach(e => e.style.background = '');
+                game_screen_scroller.insertBefore(document.querySelectorAll('.game_screen_container')[1], document.querySelector('.game_screen_container'));
+                game_screen_scroller.style.transition = '0s';
+                game_screen_scroller.style.top = '0'; 
+                screen_game_progressFill.style.animation = 'timerAnimation 10s linear';
+                
+                locked = false;
+            }, 200);
+
+        }
+        
+
+
+        function onClickAnswerButton(button){
+            if ( locked ) return;
+            locked = true; 
+            const selectedValue = button.innerHTML;
+            const isCorrect = gameParameters.asnwer == selectedValue;
+            button.style.background = (isCorrect)? 'linear-gradient(45deg, #28a745, #1B5E20)' : 'linear-gradient(45deg, #EF5350, #B71C1C)';
+            !isCorrect && navigator.vibrate(100);
+            setTimeout(nextQuestion, 500);
+        }
+
+
+        function onClickGameInit(){
+            updateSelectedTypes();
+            if ( selectedTypes.length == 0 ) return;
+            screen_menu.style.display = 'none';
+            nextQuestion();
+        }
+
+
+        function onClickGameMenu(){
+            screen_menu.style.display = '';
+            screen_game_progressFill.style.animation = '';
+            game_screen_scroller.style.top = ''; 
+        }
+
+
+
+        function updateSelectedTypes(){
+            selectedTypes = []; 
+            menu_button_list.querySelectorAll('input:checked').forEach(el => {
+                selectedTypes.push(el.value);
+            }); 
+        } 
+
+
+        document.querySelectorAll(".game_screen_answer_button").forEach(button => {
+            button.onclick = (event) => { 
+                onClickAnswerButton(button);
+            };
+        });
+
+
+
+        screen_game_progressFill.onanimationend = () => {
+            console.warn("TIMEOUT");
+            navigator.vibrate(100);
+            nextQuestion();
+        };
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

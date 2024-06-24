@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+        html, body{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+
+         
+
+        .screen{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+        }
+
+
+
+        #tela-main{
+            background-color: #212121;
+        }
+
+        #tela-notification{
+            
+            
+        }
+
+
+
+
+        #tela-main-header{
+            height: 25px;
+            /* background-color: yellow; */
+        }
+
+
+
+
+        #notification-window{
+            height: 100%;
+            background-color: rgba(0,0,0, 0.5);
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 0;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+        #notification-header{
+            overflow: hidden;
+            height: 0;
+        }
+        
+        #notification-footer{
+            width: 100%;
+            height: 25px;
+            background-color: #1c2428;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #787878;
+            font-family: auto;
+        }
+
+
+
+
+
+
+
+        
+
+        #notification-controls{
+            border-bottom: 1px solid #000;
+            display: flex;
+            overflow-x: auto;
+        }
+
+        .control-wrapper{
+            text-align: center;
+            /* min-width: fit-content; */
+            /* max-width: 32px; */
+            padding: 8px;
+            border-right: 1px solid #000;
+            background-color: #112631;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            width: calc(100% / 5);
+            min-width: 50px !important;
+
+        }
+        .control-wrapper:last-child{
+            border: none;
+        }
+
+        
+        .control-icon{
+            color: #526573;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .control-label{
+            font-size: small;
+            margin: 8px 16px;
+            white-space: nowrap;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .control-state{
+            width: 100%;
+            height: 4px;
+            background-color: #526573;
+           
+        }
+
+
+
+
+        .control-active .control-state{
+            background-color: #b2f900;
+        }
+
+
+        .control-active .control-icon{
+            color: #b2f900;
+        }
+
+
+
+
+
+
+        #notification-clear{
+            padding: 2px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #293945;
+            color: #adc1d6;
+        }
+
+        #notification-clear-button{
+            padding: 5px 32px;
+            box-shadow: 0 0 5px 0 #000;
+            color: #dbdbdb;
+        }
+        #notification-clear-button:active{
+            background-color: #465968;
+        }
+
+
+        #notification-list{
+            overflow: auto;
+            height: 100%;
+            padding-bottom: 50px;
+        }
+
+
+
+
+
+
+
+        #notification-summary{
+            font-size: larger;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            color: #d7d7d7;
+            background: linear-gradient(180deg, #212121, #000000fc);
+        }
+
+        #notification-summary-right{
+            display: flex;
+            align-items: center;
+        }
+
+        #notification-summary-date{
+            color: #1589d7;
+        }
+
+        
+        #notification-summary-divison{
+            width: 2px;
+            height: 35px;
+            margin: 0 8px;
+            background-color: #526573;
+        }
+
+
+        #notification-summary-options{
+            display: flex;
+            
+        }
+
+
+
+
+
+
+
+
+
+
+        .notification-item{
+            padding: 16px;
+            border-bottom: 1px solid #091a23;
+            display: flex;
+            align-items: center;
+            color: #cccccc;
+        }
+
+
+        .notification-item-icon{
+            margin-right: 16px;
+        }
+
+        .notification-item-content-wrapper{
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .notification-item-content{
+            font-size: large;
+            
+        }
+
+
+        .notification-item-subContent-wrapper{
+            display: flex;
+            justify-content: space-between;
+            color: #9a9a9a;
+        }
+
+        .notification-item-subContent{
+            overflow: hidden;
+            margin-right: 4px;
+        }
+
+
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+
+    <div class="screen" id="tela-notification">
+
+        <div id="notification-window">
+
+            <!-- CONTENT -->
+            <div id="notification-header">
+                
+
+                <!-- CONTROLS -->
+                <div id="notification-controls">
+
+                    <!-- ITEM -->
+                    <div class="control-wrapper">
+                        <div class="control-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M15.384 6.115a.485.485 0 0 0-.047-.736A12.444 12.444 0 0 0 8 3C5.259 3 2.723 3.882.663 5.379a.485.485 0 0 0-.048.736.518.518 0 0 0 .668.05A11.448 11.448 0 0 1 8 4c2.507 0 4.827.802 6.716 2.164.205.148.49.13.668-.049z"/>
+                                <path d="M13.229 8.271a.482.482 0 0 0-.063-.745A9.455 9.455 0 0 0 8 6c-1.905 0-3.68.56-5.166 1.526a.48.48 0 0 0-.063.745.525.525 0 0 0 .652.065A8.46 8.46 0 0 1 8 7a8.46 8.46 0 0 1 4.576 1.336c.206.132.48.108.653-.065zm-2.183 2.183c.226-.226.185-.605-.1-.75A6.473 6.473 0 0 0 8 9c-1.06 0-2.062.254-2.946.704-.285.145-.326.524-.1.75l.015.015c.16.16.407.19.611.09A5.478 5.478 0 0 1 8 10c.868 0 1.69.201 2.42.56.203.1.45.07.61-.091l.016-.015zM9.06 12.44c.196-.196.198-.52-.04-.66A1.99 1.99 0 0 0 8 11.5a1.99 1.99 0 0 0-1.02.28c-.238.14-.236.464-.04.66l.706.706a.5.5 0 0 0 .707 0l.707-.707z"/>
+                            </svg>
+                        </div>
+                        <div class="control-label">Wi-Fi</div>
+                        <div class="control-state"></div>
+                    </div>
+
+                    <!-- ITEM -->
+                    <div class="control-wrapper">
+                        <div class="control-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="m8.543 3.948 1.316 1.316L8.543 6.58V3.948Zm0 8.104 1.316-1.316L8.543 9.42v2.632Zm-1.41-4.043L4.275 5.133l.827-.827L7.377 6.58V1.128l4.137 4.136L8.787 8.01l2.745 2.745-4.136 4.137V9.42l-2.294 2.274-.827-.827L7.133 8.01ZM7.903 16c3.498 0 5.904-1.655 5.904-8.01 0-6.335-2.406-7.99-5.903-7.99C4.407 0 2 1.655 2 8.01 2 14.344 4.407 16 7.904 16Z"/>
+                            </svg>
+                        </div>
+                        <div class="control-label">Bluetooth</div>
+                        <div class="control-state"></div>
+                    </div>
+
+                    <!-- ITEM -->
+                    <div class="control-wrapper">
+                        <div class="control-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+                            </svg>
+                        </div>
+                        <div class="control-label">GPS</div>
+                        <div class="control-state"></div>
+                    </div>
+
+                    <!-- ITEM -->
+                    <div class="control-wrapper">
+                        <div class="control-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M10 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4zM6 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H6z"/>
+                                <path d="M8 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM1.599 4.058a.5.5 0 0 1 .208.676A6.967 6.967 0 0 0 1 8c0 1.18.292 2.292.807 3.266a.5.5 0 0 1-.884.468A7.968 7.968 0 0 1 0 8c0-1.347.334-2.619.923-3.734a.5.5 0 0 1 .676-.208zm12.802 0a.5.5 0 0 1 .676.208A7.967 7.967 0 0 1 16 8a7.967 7.967 0 0 1-.923 3.734.5.5 0 0 1-.884-.468A6.967 6.967 0 0 0 15 8c0-1.18-.292-2.292-.807-3.266a.5.5 0 0 1 .208-.676zM3.057 5.534a.5.5 0 0 1 .284.648A4.986 4.986 0 0 0 3 8c0 .642.12 1.255.34 1.818a.5.5 0 1 1-.93.364A5.986 5.986 0 0 1 2 8c0-.769.145-1.505.41-2.182a.5.5 0 0 1 .647-.284zm9.886 0a.5.5 0 0 1 .648.284C13.855 6.495 14 7.231 14 8c0 .769-.145 1.505-.41 2.182a.5.5 0 0 1-.93-.364C12.88 9.255 13 8.642 13 8c0-.642-.12-1.255-.34-1.818a.5.5 0 0 1 .283-.648z"/>
+                            </svg>
+                        </div>
+                        <div class="control-label">Vibrate</div>
+                        <div class="control-state"></div>
+                    </div>
+
+                    <!-- ITEM -->
+                    <div class="control-wrapper">
+                        <div class="control-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                            </svg>
+                        </div>
+                        <div class="control-label">Screen<br>rotation</div>
+                        <div class="control-state"></div>
+                    </div>
+
+
+                </div>
+
+
+
+
+
+
+
+                <!-- SIM-CARD, DATE|OPTIONS -->
+                <div id="notification-summary">
+
+                    <div id="notification-summary-left">T-Mobile</div>
+
+                    <div id="notification-summary-right"> 
+
+                        <div id="notification-summary-date">06/18/2012</div>
+
+                        <div id="notification-summary-divison"></div>
+
+                        <div id="notification-summary-options">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                            </svg>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CLEAR NOTIFICATIONS -->
+                <div id="notification-clear">
+                    <div>Notifications</div>
+                    <div id="notification-clear-button" onclick="deleteNotifications()">Clear</div>
+                </div>
+
+
+
+
+                <!-- NOTIFICATION ITENS -->
+                <div id="notification-list">
+
+                    <!-- ITEM -->
+                    <!-- <div class="notification-item notification-deletable">
+
+                        <div class="notification-item-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"/>
+                            </svg>
+                        </div>
+
+                        <div class="notification-item-content-wrapper">
+                            <div class="notification-item-content">New Voicemail</div>
+                            <div class="notification-item-subContent-wrapper">
+                                <div class="notification-item-subContent">Dial +1-805-637-7243</div>
+                                <div class="notification-item-timestamp">1:40 PM</div>
+                            </div>
+                        </div>
+
+                    </div> -->
+
+                </div>
+
+
+
+
+            </div>
+
+
+            <!-- FOOTER -->
+            <div id="notification-footer">=</div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+    <div class="screen" id="tela-main">
+
+        <div id="tela-main-header">xxxx</div>
+        <div id="tela-main-footer"></div>
+
+    </div>
+
+
+
+
+
+    
+
+
+
+
+     
+
+
+    <script>
+
+
+        var notification_hold = false;
+
+
+        var notification_list = document.getElementById("notification-list");
+
+
+        var notification_window = document.getElementById("notification-window");
+        var notification_header = document.getElementById("notification-header");
+
+        var tela_notification = document.getElementById("tela-notification");
+
+
+        document.getElementById("tela-main-header").ontouchstart = (evt)=>{
+
+            notification_hold = true; 
+            tela_notification.style.zIndex = 1;
+            notification_window.style.transition = 'none';
+            notification_header.style.transition = 'none';
+
+        };
+
+
+
+
+        document.getElementById("tela-main-header").ontouchend = (evt)=>{
+            notification_hold = false;
+
+            notification_window.style.transition = '300ms';
+            notification_header.style.transition = '300ms';
+
+            if ( document.body.offsetHeight/2 > notification_window.offsetHeight ){
+                console.log('A');
+                notification_window.style.height = "0%";
+                notification_header.style.height = "0%";
+            }
+            else{
+                console.log('B');
+                notification_window.style.height = "100%";
+                notification_header.style.height = "100%";
+            }
+
+            setTimeout(()=>{
+                
+
+                if ( document.body.offsetHeight/2 > notification_window.offsetHeight ){
+                    tela_notification.style.zIndex = 0;
+                }
+
+            }, 300);
+
+        };
+
+
+
+
+
+        document.getElementById("notification-footer").ontouchstart = (evt)=>{
+            notification_hold = true;
+            notification_window.style.transition = 'none';
+            notification_header.style.transition = 'none';
+        }
+
+
+        document.getElementById("notification-footer").ontouchend = (evt)=>{
+            notification_hold = false;
+            notification_window.style.transition = '300ms';
+            notification_header.style.transition = '300ms';
+
+
+            if ( document.body.offsetHeight/2 > notification_window.offsetHeight ){
+                console.log('A2');
+                notification_window.style.height = "0%";
+                notification_header.style.height = "0%";
+            }
+            else{
+                console.log('B2');
+                notification_window.style.height = "100%";
+                notification_header.style.height = "100%";
+            }
+
+            setTimeout(()=>{
+                if ( document.body.offsetHeight/2 > notification_window.offsetHeight ){
+                    tela_notification.style.zIndex = 0;
+                }
+            }, 300);
+
+        }
+
+
+
+        window.onblur = ()=>{
+            notification_hold = false;
+            setTimeout(()=>{
+                if ( document.body.offsetHeight/2 > notification_window.offsetHeight ){
+                    tela_notification.style.zIndex = 0;
+                }
+            }, 300);
+        }
+        
+
+
+        window.ontouchstart = ()=>{
+        }
+
+
+        window.ontouchmove = (evt)=>{
+
+
+
+            if ( notification_hold ){
+                let notification_y = 25 + evt.touches[0].clientY;
+                notification_y = clamp(evt.touches[0].clientY, 0, document.body.offsetHeight);
+                notification_window.style.height = notification_y + 'px';
+                notification_header.style.height = notification_y + 'px'; 
+            }
+
+            
+
+        }
+
+
+
+
+
+
+
+        function clamp(value, min, max){
+            if ( value < min ) return min;
+            if ( value > max ) return max;
+            return value;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        var control_wrapper = document.getElementById("notification-controls").getElementsByClassName("control-wrapper");
+
+
+
+        for (let i = 0; i < control_wrapper.length; i++){
+            control_wrapper[i].onclick = ()=>{
+                control_wrapper[i].classList.toggle("control-active");
+            }
+        }
+
+
+
+
+
+
+
+        var notification_touch_start = {x: 0, y: 0};
+        var notification_touch_press = false;
+        var notification_touch_canMove = true;
+
+
+        document.getElementById("notification-list").onscroll = ()=>{
+            notification_touch_canMove = false;
+        }
+
+
+        window.ontouchend = ()=>{
+            notification_touch_press = false;
+        }
+
+
+        function addNotificationItem( icon, title, content, time, canDelete = true ){
+
+            
+            let item = document.createElement('div');
+            item.classList.add("notification-item");
+
+            if ( canDelete ){
+                item.classList.add("notification-deletable");
+            }
+
+
+
+            item.innerHTML = `
+            <div class="notification-item-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"/>
+                </svg>
+            </div>
+
+            <div class="notification-item-content-wrapper">
+                <div class="notification-item-content">${title}</div>
+                <div class="notification-item-subContent-wrapper">
+                    <div class="notification-item-subContent">${content}</div>
+                    <div class="notification-item-timestamp">${time}</div>
+                </div>
+            </div>
+            `;
+
+
+            notification_list.prepend(item);
+
+
+
+            OnMove();
+
+            
+
+
+        }
+
+
+
+
+
+
+
+
+        function OnMove(){
+            for (let idx = 0; idx < notification_list.children.length; idx++){
+
+                // click
+                notification_list.children[idx].onclick = ()=>{
+                    console.log("click", idx);
+                }
+
+                let diffX = 0;
+
+
+                // touchstart
+                notification_list.children[idx].ontouchstart = (evt)=>{
+                    console.log("start", idx);
+                    notification_touch_press = true;
+                    notification_touch_start.x = evt.touches[0].clientX;
+                    notification_touch_start.y = evt.touches[0].clientY;
+                    
+                    notification_list.children[idx].style.transition = "none";
+                }
+
+                // touchend
+                notification_list.children[idx].ontouchend = ()=>{
+                    notification_list.children[idx].style.transition = "300ms";
+                    
+                    
+                    if ( notification_list.children[idx].classList.contains("notification-deletable") ){
+                        
+                        if ( Math.abs(diffX) > document.body.offsetWidth/2 ){
+                            console.log("delete");
+
+                            notification_list.children[idx].style.transform = `translateX(${(diffX>0)?100:-100}%)`; 
+                            notification_list.children[idx].remove();
+                            OnMove();
+                            
+                            
+
+                        }
+                        else{
+                            notification_list.children[idx].style.transform = `translateX(0)`;
+                            notification_list.children[idx].style.opacity = 1;
+                        }
+
+                    }
+                    else{
+                        notification_list.children[idx].style.transform = `translateX(0)`;
+                        
+                    }
+
+                    notification_touch_canMove = true;
+
+                }
+
+
+
+                // touchmove
+                notification_list.children[idx].ontouchmove = (evt)=>{
+
+                    if ( notification_touch_press && notification_touch_canMove && notification_list.children[idx] ){
+                        diffX = evt.touches[0].clientX - notification_touch_start.x;
+                        
+
+
+                        if ( notification_list.children[idx].classList.contains("notification-deletable") ){
+                            notification_list.children[idx].style.transform = `translateX(${diffX}px)`;
+
+                            
+
+                            notification_list.children[idx].style.opacity = 1 - (Math.abs(diffX) / (document.body.offsetWidth/2));
+
+
+                        }
+
+
+                        else{
+                            let tempX = diffX / 10;
+                            if ( tempX < -50 ){
+                                tempX = -50;
+                            }
+                            else if ( tempX > 50 ){
+                                tempX = 50;
+                            }
+
+                            notification_list.children[idx].style.transform = `translateX(${tempX}px)`;
+                        }
+
+
+                    }
+                    
+                    
+                }
+
+                }
+        }
+
+
+
+
+
+
+
+
+
+
+        addNotificationItem(null, "teste", "batata code", "12:00 AM", true);
+        addNotificationItem(null, "teste", "batata code", "12:00 AM", true);
+        addNotificationItem(null, "teste", "batata doce", "2:00 AM", false);
+
+
+
+
+
+
+
+
+
+        function deleteNotifications(){
+            
+            let delete_list = notification_list.querySelectorAll(".notification-deletable");
+
+            let speed = 0;
+
+
+            notification_touch_canMove = false; 
+
+
+
+            for (let i = 0; i < delete_list.length; i++){
+                
+                
+                speed = (delete_list.length<=1)? 250 : i * 250;
+
+                setTimeout(()=>{
+
+                    delete_list[delete_list.length-i-1].style.transition = "300ms";
+                    delete_list[delete_list.length-i-1].style.transform = "translateX(100%)";
+
+                    setTimeout(()=>{
+                        console.log('delete');
+                        delete_list[delete_list.length-i-1].remove();
+                        
+                    }, speed);
+
+                }, speed);
+
+                speed -= 5;
+
+                if ( speed < 50 && i > 0 ){
+                    speed = 50;
+                }
+            }
+
+            
+            notification_touch_canMove = true;
+            OnMove();
+
+
+        }
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

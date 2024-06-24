@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        html, body{
+            width: 100%;
+            height: 100%;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+        #lcd{
+             
+            image-rendering: pixelated;
+        }
+
+
+
+        #wrapper{
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        #text{
+
+            margin-top: 256px;
+            position: fixed;
+            z-index: 2;
+            background-color: royalblue;
+            width: 100%;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    <div id="wrapper">
+
+        <canvas id="lcd"></canvas>
+        <div id="text"></div>
+
+    </div>
+
+    
+
+
+
+
+    <script>
+
+        var text = document.getElementById("text");
+
+
+        var canvas  = document.getElementById("lcd");
+        var context = canvas.getContext("2d");
+
+
+
+
+        var radar = {
+            x: 96,
+            y: 64,
+            width: 128,
+            height: 64
+        };
+
+
+
+        var car = {
+            x: 0,
+            y: 0,
+            width: 32,
+            height: 32
+        }
+
+
+
+
+
+
+
+        var TIMER_STOPWATCH = null;
+        var TIMER_STOPWATCH_VALUE = 0;
+        var TIMER_STOPWATCH_TIMEOUT = false;
+
+
+
+
+        function update(){
+
+
+            canvas.width  = document.body.offsetWidth;
+            canvas.height = document.body.offsetHeight;
+
+
+
+            // clear screen
+            context.fillStyle = "#f0f";
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+
+
+            // radar
+            
+
+            if ( check_hitbox({x:car.x,y:car.y,width:car.width,height:car.height}, {x:radar.x,y:radar.y,width:radar.width,height:radar.height}) ){
+
+
+                if ( !TIMER_STOPWATCH_TIMEOUT ){
+
+ 
+
+                    if ( TIMER_STOPWATCH == null ){
+                        TIMER_STOPWATCH = setInterval(()=>{
+                            TIMER_STOPWATCH_VALUE += 10;
+                            
+                        }, 10);
+                    }
+
+
+                    if ( TIMER_STOPWATCH_VALUE >= 1500 && !TIMER_STOPWATCH_TIMEOUT ){
+                        console.log("TIMEOUT");
+                        text.innerText = "TIMEOUT";
+                        TIMER_STOPWATCH_TIMEOUT = true;
+                    }
+
+                }
+
+
+
+                
+
+                
+            }
+
+            else{
+
+                
+
+                
+                context.fillStyle = "#f00";
+
+                clearInterval(TIMER_STOPWATCH);
+                TIMER_STOPWATCH = null;
+                
+
+                if ( TIMER_STOPWATCH_VALUE > 0 && !TIMER_STOPWATCH_TIMEOUT ){
+
+                    let vm = radar.width / TIMER_STOPWATCH_VALUE;
+                    vm = vm.toFixed(2);
+
+                    console.log( `${TIMER_STOPWATCH_VALUE}ms | vel. = ${vm}` );
+
+                    text.innerText = `${TIMER_STOPWATCH_VALUE}ms | vel. = ${vm}`;
+                }
+
+                TIMER_STOPWATCH_TIMEOUT = false;
+
+                
+
+                TIMER_STOPWATCH_VALUE = 0;
+            }
+
+            context.fillRect(radar.x, radar.y, radar.width, radar.height);
+
+            // carro
+            context.fillStyle = "#0f0";
+            context.fillRect(car.x, car.y, car.width, car.height);
+
+
+
+            
+
+
+            requestAnimationFrame(update);
+        }
+
+        update();
+
+
+
+
+
+
+
+
+
+        var speed = 5;
+
+        function get_input( key ){
+
+
+            //console.log( key.keyCode );
+
+
+
+            // left
+            if ( key.keyCode == 37 ){
+                car.x -= speed;
+            }
+
+            // up
+            else if ( key.keyCode == 38 ){
+                car.y -= speed;
+            }
+
+            // right
+            else if ( key.keyCode == 39 ){
+                car.x += speed;
+            }
+
+            // down
+            else if ( key.keyCode == 40 ){
+                car.y += speed;
+            }
+
+
+        }
+
+
+
+        var KEYBOARD_TIMER = null;
+
+
+
+
+
+        window.addEventListener("keydown", (e)=>{
+
+            if ( KEYBOARD_TIMER == null ){
+
+
+                KEYBOARD_TIMER = setInterval(()=>{
+                    get_input(e);
+                }, 20);
+            }
+
+        });
+
+
+
+
+        ["keyup", "blur"].forEach((e)=>{
+            window.addEventListener(e, ()=>{
+                clearInterval(KEYBOARD_TIMER);
+                KEYBOARD_TIMER = null;
+            });
+        });
+
+
+
+
+        function check_hitbox(rect1, rect2){
+            return (rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x && rect1.y < rect2.y + rect2.height && rect1.y + rect1.height > rect2.y);
+        }
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

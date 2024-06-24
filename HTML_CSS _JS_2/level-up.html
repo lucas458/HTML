@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #212121;
+            user-select: none;
+        }
+
+
+        header{
+            position: sticky;
+            top: 0;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+ 
+
+        #valor, #valor_temp, #valor_level{
+            padding: 8px;
+            background-color: #181818;
+            color: #9e9e9e;
+        }
+
+
+        #valor::before{
+            content: 'TOTAL ';
+        }
+        #valor_temp::before{
+            content: 'VALOR ';
+        }
+
+        #valor_level::before{
+            content: 'LEVEL ';
+        }
+
+
+        #buttons-wrapper{
+            background-color: #181818;
+            border-top: 1px solid #353535;
+        }
+        #controls{
+            padding: 8px;
+            display: flex; 
+        }
+
+        #controls>*{
+            width: 100%;
+            margin-right: 8px;
+        }
+
+        #buttons-wrapper button{
+            background-color: red;
+            border: 1px solid #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            outline: none;
+            transition: 200ms;
+        }
+
+
+        #controls button:nth-child(1){
+            background-color: #28a745;
+        }
+
+        #controls button:nth-child(2){
+            background-color: #ffc107;
+        }
+
+        #controls button:last-child{
+            background-color: #dc3545;
+        }
+
+        #controls button:hover{
+            background-color: #181818;
+            color: #9e9e9e;
+            transition: 1ms;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        #notify_title{
+            padding: 8px;
+            background-color: #9e9e9e;
+            
+        }
+
+
+
+
+
+
+
+        .item{
+            display: flex;
+            padding: 8px;
+            background-color: #353535;
+            color: #fff;
+            border-top: 1px solid #fff;
+        }
+        .item:last-child{
+            border-bottom: 1px solid #fff;
+        }
+        
+
+        .icon{
+            display: flex;
+            margin-right: 8px;
+            
+            width: 16px;
+            height: 16px;
+        }
+
+
+        .item-info .icon{
+            color: #007bff;
+        }
+
+        .item-star .icon{
+            color: #ffc107;
+        }
+
+        
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+
+    <header>
+        <div id="valor">0</div>
+        <div id="valor_temp">0</div>
+        <div id="valor_level">0</div>
+        <div id="barTrack"> <div id="barFill"></div> </div>
+
+        <div id="buttons-wrapper" style="display: flex; align-items: center;">
+
+            <div id="controls">
+                <button>Add +1</button>
+                <button>Add +5</button>
+                <button>Add +10</button>
+            </div>
+
+            <button style="background-color: #353535; color:#fff" onclick="clearNotify()">Limpar Lista</button>
+        </div>
+        
+
+    </header>
+    
+   
+    
+    <p id="notify_title">NOTIFICAÇÕES (0)</p>
+    
+    <div id="notify">
+    </div>
+
+
+
+
+
+    <script>
+
+
+
+
+        var VALOR = 0;
+        var TEMP_VALOR = 0;
+        var VALOR_PER_LEVEL = 10;
+        var LEVEL = 0;
+
+        var buttons_value = [1,5,10];
+
+
+        document.querySelectorAll("#controls > button").forEach((e,i)=>{
+
+            
+
+            e.addEventListener('click', ()=>{
+                add(buttons_value[i]);
+            });
+
+        });
+
+
+
+        
+
+        function add(value){
+
+            if ( value > 0 ){
+                VALOR += parseInt(value);
+                TEMP_VALOR += parseInt(value);
+                
+
+                if ( TEMP_VALOR >= VALOR_PER_LEVEL ){
+                    TEMP_VALOR = 0;
+                    LEVEL++;
+                    console.log("up");
+                    addNotify('up', `Ganhou <span style="color:#007bff;">${parseInt(value)}</span> Pontos e Subiu para o level <span style="color:#0f0;">${LEVEL}</span> `);
+                }
+
+                else{
+                    console.log("add +", parseInt(value));
+                    addNotify('add', `Ganhou <span style="color:#007bff;">${parseInt(value)}</span> Pontos`);
+                }
+
+
+            }
+
+
+            document.getElementById("valor").innerHTML = VALOR;
+            document.getElementById("valor_temp").innerHTML = TEMP_VALOR;
+            document.getElementById("valor_level").innerHTML = LEVEL;
+
+
+
+            document.getElementById("notify_title").innerText = `NOTIFICAÇÕES (${document.getElementById("notify").children.length})`;
+            document.querySelector('html').scrollTop = document.body.scrollHeight
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        function clearNotify(){
+            document.getElementById("notify").innerHTML = '';
+            document.getElementById("notify_title").innerText = `NOTIFICAÇÕES (0)`;
+        }
+
+
+
+
+        function addNotify( type, msg ){
+
+
+            let item = document.createElement("div");
+            item.classList.add("item");
+
+
+            if ( type == "up" ){
+                item.classList.add("item-star");
+
+                item.innerHTML = `
+                <div class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                    </svg>
+                </div>
+                <div class="message">${msg}</div>
+                `;
+
+            }
+
+
+
+
+
+            else if ( type == "add" ){
+
+
+                item.classList.add("item-info");
+
+                item.innerHTML = `
+                <div class="icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                    </svg>
+                </div>
+                <div class="message">${msg}</div>
+                `;
+
+            }
+
+
+
+            document.getElementById("notify").appendChild(item);
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+    </script>
+
+</body>
+</html>

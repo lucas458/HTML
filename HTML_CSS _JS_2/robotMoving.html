@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #616161;
+            color: #fff;
+			user-select: none;
+        }
+		
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+        #path{
+            width: 500px;
+            height: 0; 
+            border: 1px solid #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        #enemy{
+            position: absolute;
+        }
+        #enemy img{
+            width: 64px;
+            transition: 50ms;
+        }
+        
+        .inverted img{
+            transform: scaleX(-100%);
+        }
+        
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="path">
+            <div id="enemy"> <img src="https://openclipart.org/image/2000px/204082"> </div>
+        </div>
+
+    </div>
+    
+
+
+    <script>
+        
+        var angle = 0;
+
+        function update(){
+            angle = (angle + 1) % 360;
+            const angleRad = angle * Math.PI / 180;
+
+            enemy.classList.toggle('inverted', angle < 270 && angle > 90);
+            enemy.style.transform = `translateX(${Math.sin(angleRad) * (path.offsetWidth/2)}px)`;
+			
+            requestAnimationFrame(update);
+        }
+
+        onload = update;
+
+    </script>
+
+
+</body>
+</html>

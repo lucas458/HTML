@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            flex-direction: column;
+        }
+
+
+        #content{
+            width: 500px;
+            height: 500px;
+            background-color: #666;
+            position: relative;
+            overflow: hidden;
+            background-image: url("https://global.discourse-cdn.com/infiniteflight/original/4X/6/b/e/6be613d9a24d1ab2c369d232c20d3fa67d3630b3.gif");
+        }
+
+
+
+        #artificial_horizon{
+            width: 256px;
+            height: 256px;
+            background-color: #000;
+            border-radius: 25px;
+            position: absolute;
+            left: 115px;
+            top: 80px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            /* opacity: 0.5; */
+            overflow: hidden;
+        }
+
+
+
+        #artificial_horizon_moveable{
+            /* transform: translateY(0px) rotate(0deg); */
+            transform-origin: center center;
+        }
+ 
+
+
+        #artificial_horizon_air{
+            background-color: #0099ff;
+        }
+        #artificial_horizon_ground{
+            background-color: #944400;
+        }
+
+        #artificial_horizon_air, #artificial_horizon_ground{
+            width: 512px;
+            height: 1024px;
+        }
+
+
+
+        #artificial_horizon_info{
+            /* background-color: rebeccapurple; */
+            width: 256px;
+            height: 256px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: auto;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .line,
+        .small_line,
+        .medium_line,
+        .horizon_line{
+            height: 2px;
+            background-color: #fff; 
+             
+        }
+
+
+        .line,
+        .small_line,
+        .medium_line,
+        .horizon_line,
+        .markLine{ 
+            margin: 8px 0;
+            flex-shrink: 0;
+        }
+        
+
+        .markLine{
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            line-height: 0;
+        }
+        .markLine .line{
+            width: 80px;
+            margin: 0 4px;
+        }
+
+
+        .small_line{
+            width: 20px;
+        }
+
+
+        .medium_line{
+            width: 40px;
+        }
+
+
+        .horizon_line{
+            width: 512px;
+        }
+
+
+
+
+
+
+
+        #artificial_horizon_fixed{
+            width: 100%;
+            height: 100%;
+            /* background-color: red;  */
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+
+
+
+        #center_mark{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+
+        #mark_ball{
+            width: 8px;
+            height: 8px;
+            border-radius: 8px; 
+            background-color: #fff;
+            position: absolute;
+        }
+
+
+
+
+        #mark_left{
+            display: flex;
+            margin-right: 151px;
+            margin-top: 14px;
+            position: absolute;
+        }
+        
+        #mark_left div{
+            background-color: #fff;
+            height: 5px;
+            width: 46px;
+        }
+        
+        #mark_left div:last-child{
+            width: 6px;
+            height: 16px;
+            background-color: #fff;
+        }
+
+
+         
+
+
+        #mark_right{
+            display: flex;
+            margin-left: 155px;
+            margin-top: 14px;
+            position: absolute;
+        }
+
+        #mark_right div{
+            background-color: #fff;
+            height: 5px;
+            width: 46px;
+        }
+        
+        #mark_right div:first-child{
+            width: 6px;
+            height: 16px;
+            background-color: #fff;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #heading{
+            width: 350.055px;
+            height: 350.055px;
+            background-color: #000;
+            /* opacity: 0.5; */
+            border-radius: 50%;
+            position: absolute;
+            top: 403.630px;
+            left: 68.153px;
+            transform-origin: center center;
+            transform: rotate(0deg);
+        }
+
+
+
+        .heading_mark{
+            width: 8px; 
+            height: 2px;
+            background-color: #fff;
+            margin: auto;
+            transform: rotate(90deg) translateX(-173px);
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .heading_mark_small{
+            height: 2px;
+        }
+
+        .heading_mark_medium{ 
+            width: 11px;
+            transform: rotate(90deg) translateX(-171px);
+        }
+
+
+        
+
+        .heading_mark_big{
+            display: flex;
+            width: 12px;
+            transform: rotate(90deg) translateX(-171px);
+        }
+        .heading_mark_big div{   
+            transform: rotate(-90deg);
+        }
+
+
+
+        .heading_mark_bigMark{
+            width: 15px;
+        }
+
+
+        #heading_selected{
+            width: 24px;
+            height: 8px;
+            background-color: #ffc107;
+            margin: auto;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+ 
+
+        <div id="content">
+
+
+
+
+            <div id="heading">
+
+                <div id="heading_selected" style="transform: rotate(90deg) translateX(-171px);"></div>
+
+                <div class="heading_mark heading_mark_big" style="transform: rotate(90deg) translateX(-171px);"><div>0</div></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(95.5deg) translateX(-173px);"></div>
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(100.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(105.5deg) translateX(-173px);"></div> 
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(110.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(115.5deg) translateX(-173px);"></div>
+
+
+                <div class="heading_mark heading_mark_big" style="transform: rotate(120.5deg) translateX(-171px);"><div>3</div></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(125.5deg) translateX(-173px);"></div>
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(130.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(135.5deg) translateX(-173px);"></div> 
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(140.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(145.5deg) translateX(-173px);"></div>
+
+
+
+                <div class="heading_mark heading_mark_big" style="transform: rotate(150.5deg) translateX(-171px);"><div>6</div></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(155.5deg) translateX(-173px);"></div>
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(160.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(165.5deg) translateX(-173px);"></div> 
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(170.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(175.5deg) translateX(-173px);"></div>
+
+
+
+                <div class="heading_mark heading_mark_big" style="transform: rotate(180.5deg) translateX(-171px);"><div>9</div></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(185.5deg) translateX(-173px);"></div>
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(190.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(195.5deg) translateX(-173px);"></div> 
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(200.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(205.5deg) translateX(-173px);"></div>
+
+
+                <div class="heading_mark heading_mark_big" style="transform: rotate(210.5deg) translateX(-171px);"><div>12</div></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(215.5deg) translateX(-173px);"></div>
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(220.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(225.5deg) translateX(-173px);"></div> 
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(230.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(235.5deg) translateX(-173px);"></div>
+
+
+
+                <div class="heading_mark heading_mark_big" style="transform: rotate(240.5deg) translateX(-171px);"><div>15</div></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(245.5deg) translateX(-173px);"></div>
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(250.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(255.5deg) translateX(-173px);"></div> 
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(260.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(265.5deg) translateX(-173px);"></div>
+
+
+
+                <div class="heading_mark heading_mark_big" style="transform: rotate(270.5deg) translateX(-171px);"><div>18</div></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(275.5deg) translateX(-173px);"></div>
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(280.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(285.5deg) translateX(-173px);"></div> 
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(290.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(295.5deg) translateX(-173px);"></div>
+
+
+
+
+                <div class="heading_mark heading_mark_big" style="transform: rotate(300.5deg) translateX(-171px);"><div>21</div></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(305.5deg) translateX(-173px);"></div>
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(310.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(315.5deg) translateX(-173px);"></div> 
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(320.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(325.5deg) translateX(-173px);"></div>
+
+
+
+                <div class="heading_mark heading_mark_big" style="transform: rotate(330.5deg) translateX(-171px);"><div>24</div></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(335.5deg) translateX(-173px);"></div>
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(340.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(345.5deg) translateX(-173px);"></div> 
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(350.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(355.5deg) translateX(-173px);"></div>
+
+
+                <div class="heading_mark heading_mark_big" style="transform: rotate(360.5deg) translateX(-171px);"><div>27</div></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(365.5deg) translateX(-173px);"></div>
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(370.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(375.5deg) translateX(-173px);"></div> 
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(380.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(385.5deg) translateX(-173px);"></div>
+
+
+
+                <div class="heading_mark heading_mark_big" style="transform: rotate(390.5deg) translateX(-171px);"><div>30</div></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(395.5deg) translateX(-173px);"></div>
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(400.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(405.5deg) translateX(-173px);"></div> 
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(410.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(415.5deg) translateX(-173px);"></div>
+
+
+                <div class="heading_mark heading_mark_big" style="transform: rotate(420.5deg) translateX(-171px);"><div>33</div></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(425.5deg) translateX(-173px);"></div>
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(430.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(435.5deg) translateX(-173px);"></div> 
+                <div class="heading_mark heading_mark_medium" style="transform: rotate(440.5deg) translateX(-171px);"></div>
+                <div class="heading_mark heading_mark_small" style="transform: rotate(445.5deg) translateX(-173px);"></div>
+ 
+
+            </div>
+
+
+
+
+
+            <div id="artificial_horizon">
+
+                <div id="artificial_horizon_moveable">
+                    
+                    <div id="artificial_horizon_air"></div>
+                    <div id="artificial_horizon_ground"></div>
+
+                    <div id="artificial_horizon_info">
+
+                        <div class="markLine">
+                            <div class="value">90</div>
+                            <div class="line"></div>
+                            <div class="value">90</div>
+                        </div>
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        
+                        <div class="markLine">
+                            <div class="value">80</div>
+                            <div class="line"></div>
+                            <div class="value">80</div>
+                        </div>
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        
+                        <div class="markLine">
+                            <div class="value">70</div>
+                            <div class="line"></div>
+                            <div class="value">70</div>
+                        </div>
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        
+                        <div class="markLine">
+                            <div class="value">60</div>
+                            <div class="line"></div>
+                            <div class="value">60</div>
+                        </div>
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        
+                        <div class="markLine">
+                            <div class="value">50</div>
+                            <div class="line"></div>
+                            <div class="value">50</div>
+                        </div>
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        
+                        <div class="markLine">
+                            <div class="value">40</div>
+                            <div class="line"></div>
+                            <div class="value">40</div>
+                        </div>
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        
+                        <div class="markLine">
+                            <div class="value">30</div>
+                            <div class="line"></div>
+                            <div class="value">30</div>
+                        </div>
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        
+                        <div class="markLine">
+                            <div class="value">20</div>
+                            <div class="line"></div>
+                            <div class="value">20</div>
+                        </div>
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        
+                        <div class="markLine">
+                            <div class="value">10</div>
+                            <div class="line"></div>
+                            <div class="value">10</div>
+                        </div>
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+
+
+
+
+                        <!-- HORION LINE -->
+                        <div class="horizon_line"></div>
+                        
+
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        <div class="markLine">
+                            <div class="value">10</div>
+                            <div class="line"></div>
+                            <div class="value">10</div>
+                        </div>
+                        
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        <div class="markLine">
+                            <div class="value">20</div>
+                            <div class="line"></div>
+                            <div class="value">20</div>
+                        </div>
+                        
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        <div class="markLine">
+                            <div class="value">30</div>
+                            <div class="line"></div>
+                            <div class="value">30</div>
+                        </div>
+                        
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        <div class="markLine">
+                            <div class="value">40</div>
+                            <div class="line"></div>
+                            <div class="value">40</div>
+                        </div>
+                        
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        <div class="markLine">
+                            <div class="value">50</div>
+                            <div class="line"></div>
+                            <div class="value">50</div>
+                        </div>
+                        
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        <div class="markLine">
+                            <div class="value">60</div>
+                            <div class="line"></div>
+                            <div class="value">60</div>
+                        </div>
+                        
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        <div class="markLine">
+                            <div class="value">70</div>
+                            <div class="line"></div>
+                            <div class="value">70</div>
+                        </div>
+                        
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        <div class="markLine">
+                            <div class="value">80</div>
+                            <div class="line"></div>
+                            <div class="value">80</div>
+                        </div>
+                        
+                        <div class="small_line"></div>
+                        <div class="medium_line"></div>
+                        <div class="small_line"></div>
+                        <div class="markLine">
+                            <div class="value">90</div>
+                            <div class="line"></div>
+                            <div class="value">90</div>
+                        </div>
+
+                    </div>
+
+
+ 
+                </div>
+
+
+
+
+
+
+
+
+
+                <div id="artificial_horizon_fixed">
+                    
+                    <div id="center_mark">
+
+                        <div id="mark_left">
+                            <div></div>
+                            <div></div>
+                        </div>
+
+                        <div id="mark_ball"></div>
+
+                        <div id="mark_right">
+                            <div></div>
+                            <div></div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+ 
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+
+
+        var artificial_horizon_moveable = document.getElementById("artificial_horizon_moveable");
+
+        var currentPitch = 0;
+        var currentRoll = 0; 
+        var currentYaw  = 0;
+
+        function updateHorizon(){
+            let tempAngle = map(currentPitch, -90, 90, -648, 648);
+            artificial_horizon_moveable.style.transform = `translateY(${tempAngle}px) rotate(${-currentRoll}deg)`; 
+            artificial_horizon_moveable.style.transformOrigin = `center ${artificial_horizon_moveable.offsetHeight/2 - tempAngle}px`;
+        }
+
+
+ 
+
+
+
+
+
+        const controller = {
+
+            'ArrowUp': {
+                pressed: false,
+                call: ()=>{
+                    currentPitch = Math.clamp(currentPitch - Math.cos(currentRoll*Math.PI/180), -90, 90);
+                    updateHorizon();
+                }
+            },
+
+
+            'ArrowDown': {
+                pressed: false, call: ()=>{
+                    currentPitch = Math.clamp(currentPitch + Math.cos(currentRoll*Math.PI/180), -90, 90);
+                    updateHorizon();
+                }
+            },
+
+
+            'ArrowLeft': {
+                pressed: false, call: ()=>{
+                    currentRoll -= 2;
+                    if(currentRoll < 0){
+                        currentRoll = 360;
+                    }
+                    updateHorizon()
+                }
+            },
+
+
+            'ArrowRight': {
+                pressed: false, 
+                call: ()=>{
+                    currentRoll = (currentRoll+2) % 360;
+                    updateHorizon();
+                }
+            },
+
+            'q': {
+                pressed: false, 
+                call: ()=>{
+                    currentYaw -= 2;
+                    if(currentYaw < 0){
+                        currentYaw = 360;
+                    }
+                    heading.style.transform = `rotate(${currentYaw}deg)`;
+                }
+            },
+
+
+            'e': {
+                pressed: false, 
+                call: ()=>{
+                    currentYaw = (currentYaw+2) % 360;
+                    heading.style.transform = `rotate(${currentYaw}deg)`;
+                }
+            },
+
+        };
+
+
+        onkeydown = onkeyup = (event) => {
+            if ( controller[event.key] ){
+                controller[event.key].pressed = event.type == "keydown";
+            }
+        };
+
+
+
+
+        function checkPressKeys(){
+            Object.keys(controller).forEach(key => {
+                controller[key].pressed && controller[key].call();
+            });
+        }
+
+
+        function update(){
+            
+            checkPressKeys();
+
+            requestAnimationFrame(update);
+        }
+
+
+
+        onload = update;
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

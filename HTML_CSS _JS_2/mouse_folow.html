@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+        html, body{
+            width: 100%;
+            height: 100%;
+        }
+
+
+
+         
+        #wrapper{
+            width: 64px;
+            height: 64px;
+            background-color: #353535;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 3px 0 #000;
+            
+            margin: auto;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+
+        #wrapper > div{
+            width: 4px;
+            height: 16px;
+            background-color: #9e9e9e;
+            margin: auto;
+            border-radius: 16px;
+            position: absolute;
+            left: 0;
+            right: 0;
+
+
+        }
+
+
+
+
+
+
+        #bullet{
+            width: 4px;
+            height: 16px;
+            background-color: red;
+            
+            border-radius: 16px; 
+            
+             
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+    <div id="wrapper">
+        <div></div>
+    </div>
+
+
+
+    <div id="bullet"></div>
+
+     
+
+
+    <script>
+
+
+        
+
+
+        var wrapper = document.getElementById("wrapper");
+        var bullet = document.getElementById("bullet");
+
+
+
+        var bullet_flag = true;
+
+        function setBulletPosition(x, y){
+
+
+
+
+            if ( x == null || y == null ){
+                bullet.style.left = ( document.body.offsetWidth / 2 - ( bullet.offsetWidth / 2 ) ) + 'px';
+                bullet.style.top = ( document.body.offsetHeight / 2 - ( bullet.offsetHeight / 2 ) ) + 'px';
+            }
+            else{
+                if ( bullet_flag ){
+                    bullet_flag = false;
+                    bullet.style.transition = '300ms';
+                    bullet.style.left = ( x - ( bullet.offsetWidth / 2 ) ) + 'px';
+                    bullet.style.top  = ( y - ( bullet.offsetHeight / 2 ) ) + 'px';
+                    setTimeout(()=>{
+                        bullet.style.transition = 'none';
+                        setBulletPosition(); 
+                        bullet_flag = true;
+                    }, 800);
+                }
+                
+            } 
+
+            
+
+
+            console.log(x, y);
+
+        }
+        setBulletPosition();
+
+
+
+        let mouseX;
+        let mouseY;
+
+        window.onmousemove = (e)=>{
+            
+
+            // X, Y -- MOUSE
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+
+
+            // X, Y -- CAIXA (PIVOT NO CENTRO)
+            let box_X = wrapper.offsetLeft + ( wrapper.offsetWidth / 2 );
+            let box_Y = wrapper.offsetTop + ( wrapper.offsetHeight / 2 ); 
+
+
+            let diffX = Math.abs( mouseX - box_X );
+            let diffY = Math.abs( mouseY - box_Y );
+
+
+            
+            // DISTANCIA DO MOUSE EM RELAÇÂO À CAIXA
+            let distance = Math.hypot(diffX, diffY);
+
+            // ANGULO
+            let angle = diffX / distance;
+            angle = Math.asin(angle) * 180 / Math.PI;
+
+
+            
+
+            // QUADRANTE: B
+            if ( mouseX - box_X >= 0 && mouseY - box_Y >= 0 ){
+                angle = (90-angle) + 90;
+            }
+
+            // QUADRANTE: C
+            else if ( mouseX - box_X < 0 && mouseY - box_Y >= 0 ){
+                angle += 180;
+            }
+
+            // QUADRANTE: D
+            else if ( mouseX - box_X < 0 && mouseY - box_Y < 0 ){
+                angle = (90 - angle) + 270;
+            }
+
+            
+
+            wrapper.style.transform = `rotate(${angle}deg)`;
+
+            if ( bullet_flag ){
+                bullet.style.transform = `rotate(${angle}deg)`;
+            }
+            
+
+            
+
+        };
+
+
+
+        window.onclick = (e)=>{
+
+            
+            
+            setBulletPosition(e.clientX, e.clientY);
+
+            
+
+
+        };
+
+
+
+
+    </script>
+
+
+</body>
+</html>

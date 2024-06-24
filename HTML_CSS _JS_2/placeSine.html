@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+        #wrapper{
+            width: 512px;
+            height: 512px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #212121;
+        }
+        #container{
+            width: 32px;
+            height: 32px;
+            background-color: #000;
+            position: relative;
+        }
+
+        .item{
+            width: 16px;
+            height: 16px;
+            background-color: royalblue;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 50%;
+        }
+
+
+        input[type="range"]{
+            width: 50%;
+            margin-top: 8px;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    <div id="main_screen">
+
+        <div id="wrapper">
+            <div id="container"></div>
+        </div>
+
+        <input type="range" min="32" max="512" value="0" oninput="onChangeWidth(this)">
+        <input type="range" min="32" max="512" value="0" oninput="onChangeHeight(this)">
+        <input type="range" min="0" max="48" value="0" oninput="onChangeValue()" id="countRange">
+
+    </div>
+
+
+     
+
+
+    <script>
+
+        const container = document.getElementById("container");
+
+        function onChangeWidth(e){
+            container.style.width = e.value + 'px'; 
+            onChangeValue();
+        }
+        function onChangeHeight(e){
+            container.style.height = e.value + 'px'; 
+            onChangeValue();
+        }
+
+        function onChangeValue(){
+            const value = parseInt(countRange.value);
+            generateItems(value);
+        }
+         
+
+        function generateItems( amount = 0 ){
+             
+            container.innerHTML = "";
+
+            for (let i = 0; i < amount; i++){
+                const item = document.createElement("div");
+                item.classList.add("item");
+                container.appendChild(item);
+
+                const x = (container.offsetWidth-16) / (amount-1) * i;
+                const y = Math.cos(360 / (amount-1) * i * Math.PI / 180) * (container.offsetHeight/2-8) + (container.offsetHeight/2-8); 
+
+                item.style.left = x + "px";
+                item.style.top  = y + "px";
+                
+            } 
+
+        }
+        
+
+        
+
+    </script>
+
+
+</body>
+</html>

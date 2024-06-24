@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+        #listItems{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .item{ 
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+
+        }
+
+        .itemLabel{
+            padding: 4px 16px;
+        }
+        .itemIcon{
+            width: 16px;
+            height: 16px;
+            transform: scale(0);
+            transition: 300ms;
+        }
+
+
+        .itemSelected .itemLabel{
+            background: linear-gradient(90deg ,transparent, #555, transparent);
+        }
+        .itemSelected .itemIcon{
+            transform: scale(1);
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+        <div id="listItems"></div>
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+        const listItems = document.getElementById('listItems');
+
+        const LIST_ELEMENTS = [
+            'Uva', 'Laranja', 'Maçã', 'Banana', 'Limão'
+        ];
+
+        const keyMap = {
+            ArrowUp: () => {
+                let index = getCurrentIndex() - 1;
+                if ( index < 0 ){
+                    index = listItems.children.length - 1;
+                }
+                setCurrentByIndex(index);
+            },
+            ArrowDown: () => {
+                let index = (getCurrentIndex() + 1) % listItems.children.length;
+                setCurrentByIndex(index);
+            },
+            Enter: () => { 
+                const index = getCurrentIndex();
+                onSelectItem(listItems.children[index], index);
+            }
+        };
+
+
+
+        function getCurrentIndex(){ 
+            return Array.from(listItems.children).indexOf(document.querySelector('.itemSelected'));
+        }
+
+        function setCurrentByIndex( index = 0 ){
+            index = Math.clamp(index, 0, listItems.children.length);
+            document.querySelectorAll('.itemSelected').forEach(e => e.classList.remove('itemSelected'));
+            listItems.children[index].classList.add('itemSelected');
+        }
+
+        function onSelectItem( itemElement, itemIndex ){
+            alert( 'Index: ' + itemIndex + '\nName: ' + itemElement.querySelector('.itemLabel').innerHTML );
+        }
+
+
+
+        LIST_ELEMENTS.forEach((name, index) => {
+            const item = document.createElement('div');
+            item.classList.add('item');
+            if ( index == 0 ){
+                item.classList.add('itemSelected');
+            }
+
+            item.innerHTML = `
+            <div class="itemIcon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg>
+            </div>
+            <div class="itemLabel">${name}</div>
+            <div class="itemIcon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/></svg>
+            </div>`;
+
+            listItems.appendChild(item);
+
+        });
+        
+
+        document.querySelectorAll('.item').forEach((item, index) => {
+            item.onmouseenter = () => {
+                setCurrentByIndex(index);
+            };
+
+            item.onclick = () => {
+                onSelectItem(item, index);
+            };
+        });
+        
+
+        onkeydown = (event) => {
+            if ( event.repeat ) return;
+            keyMap[event.key] != null && keyMap[event.key]();
+        };
+
+    </script>
+
+
+</body>
+</html>

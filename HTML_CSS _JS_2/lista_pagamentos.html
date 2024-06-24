@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamentos</title>
+
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            user-select: none;
+        }
+
+
+
+        
+
+
+
+        /* POPUP */
+        #popup{
+             
+            padding: 0 8px;
+            width: 100%;
+            margin-bottom: 50px;
+            z-index: 1;
+            position: fixed;
+            bottom: 0;
+        }
+        #popupMSG{
+            border-radius: 8px;
+            width: 100%;
+            padding: 6px;
+            text-align: center;
+            background-color: #6c757d;
+            color: #fff;
+            box-shadow: 0 0 5px 1px #000;
+            display: none;
+            transition: 50ms;
+        }
+
+
+
+
+        /* PRESS EFFECT */
+        .button-press{
+            transition: 500ms;
+        }
+        .button-press:active{
+            transition: 1ms;
+            opacity: 0.5;
+        }
+
+
+
+
+
+        
+        /* MODAL */
+        .modal-wrapper{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0000ff6c;
+            backdrop-filter: blur(2px);
+            position: fixed;
+
+            display: none;
+        }
+
+        .modal-window{
+            width: 80%;
+            min-height: 50%;
+            max-height: 70%;
+            height: 50%;
+            /* background-color: red; */
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+
+
+        .modal-window > div{
+            padding: 8px;
+        }
+
+
+
+        /* MODAL & SCREEN */
+        .modal-header, .screen-header{
+            background-color: #2196f3;
+        }
+
+        .modal-content, .screen-content{
+            height: 100%;
+            background-color: #fff;
+        }
+
+        .modal-footer, .screen-footer{
+            background-color: darkgreen;
+        }
+
+
+
+
+
+
+        /* SCREEN */
+        .screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: fixed;
+        }
+
+
+        .screen-header{
+
+        }
+
+        .screen-content{
+            overflow: hidden auto;
+            padding: 8px;
+            padding-bottom: 90px;
+        }
+
+        .screen-footer{
+            bottom: 0;
+            width: 100%;
+            position: fixed;
+            padding: 4px 0;
+            backdrop-filter: blur(3px);
+            box-shadow: 0 0 5px 0;
+            background: inherit;
+            transition: 500ms;
+            height: 40px;            
+        }
+
+        /* ADD ITEM WINDOW */
+        .footer-content{
+            display: flex;
+            justify-content: center;
+        }
+
+
+
+        /* create wrapper */
+        .create-wrapper{
+            width: 100%;
+			height: calc(100% - 40px);
+            /* background-color: red; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+        .create-window{
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            color: #000;
+            box-shadow: 0 0 5px 0 #000;
+            border-radius: 10px;
+            padding: 8px;
+            overflow: hidden auto;
+        }
+
+
+
+        /* ADD ITEM */
+
+        .addInput{
+            padding: 8px;
+            width: 100%;
+        }
+
+        #valuePerPeson{
+            margin: 8px 0;
+        }
+
+
+        .payment-wrapper{
+            margin-top: 8px;
+        }
+        
+        .payment-mode input{
+            display: none;
+        }
+
+        .payment-mode > div{
+            padding: 8px;
+            background-color: #9e9e9e;
+            color: #000; 
+        }
+
+        .payment-mode input:checked ~ div{
+            background-color: #007bff;
+            color: #fff;
+        }
+
+
+
+        #craate-button{
+            width: 100%;
+            text-align: center;
+            padding: 8px;
+            background-color: #28a745;
+            border-radius: 8px;
+            color: #fff;
+            margin-top: 16px;
+        }
+
+
+
+
+
+
+        
+        
+
+
+
+
+
+        /* ADD & OPTIONS */
+        #add-button, #options-button{
+            width: 32px;
+            height: 32px;
+            margin: 0 auto;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #add-button{
+            background-color: #28a745;
+            transition: 500ms;
+            margin-bottom: 8px;
+        }
+
+        #options-button{
+            border-radius: 0;
+            margin: 0;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        /* WIDGETs */
+        .ui-widget{
+            width: 100%;
+            height: fit-content;
+            border-radius: 10px;
+            background-color: #fff;
+            /* padding: 8px 15px; */
+            box-shadow: 0 0 5px 0 #000;
+            margin-bottom: 16px;
+            overflow: hidden;
+            border: 2px solid #2196f3;
+            border-top: 10px solid #2196f3;
+        }
+
+
+        
+
+        /* MODO: COLUNA */
+        .ui-widget-type-col{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ui-widget-col{
+            padding: 8px 15px;
+        }
+        
+
+
+        /* MODO: LINHA */
+        .ui-widget-type-row{
+            
+        }
+
+        .ui-widget-row{
+            padding: 8px;
+            background-color: #fff;
+        }
+
+
+
+
+
+        /* EXTRAS */
+        .ui-widget-header{
+            border-bottom: 1px solid #9e9e9e;
+            color: #9e9e9e;
+        }
+
+        .ui-widget-all{
+            border-top: 1px solid #9e9e9e;
+            text-align: center;
+            color: #212121;
+        }
+
+
+
+
+        
+
+
+        #resumo-cash > div:first-child{
+            font-size: 2em;
+        }
+
+        .font-light{
+            font-size: initial;
+            color: #9e9e9e;
+        }
+        .font-dark{
+            color: #454c67;
+        }
+        
+
+        
+
+
+
+
+        #resumo-cash > div:last-child{
+            
+        }
+
+
+
+
+
+        #lista-devedores, #lista-pagantes, #lista-parcial{
+            color: #616161;
+        }
+
+        #lista-devedores{border-color: #dc3545;}
+        #lista-pagantes{border-color: #28a745;}
+        #lista-parcial{border-color: #ffc107;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* LISTA & MENU */
+        #screen-list .screen-header > div,
+        #screen-menu .screen-header > div{
+            width: 32px;
+            height: 32px;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #screen-list{
+            display: none;
+        }
+
+
+        #screen-list .screen-content{
+            padding-bottom: 90px;
+        }
+
+
+
+        #screen-list .screen-footer{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            font-size: 1.2em;
+            height: auto;
+            background-color: #fff;
+        }
+
+
+
+
+        .paid-ok{
+            border-color: #28a745;
+        }
+        .paid-no{
+            border-color: #dc3545;
+        }
+        .paid-warn{
+            border-color: #ffc107;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        
+
+        /* MENU LATERAL */
+        #screen-menu{
+            left: -100%;
+            transition: 300ms;
+        }
+
+        #screen-menu > .screen-content{
+            padding: 0;
+        }
+
+
+        .menu-button{
+            padding: 8px;
+            color: #424242;
+            transition: 300ms;
+             
+            display: flex;
+            align-items: center;
+        }
+        .menu-button:active{
+            background-color: #e0e0e0;
+            transition: 1ms;
+        }
+        
+
+
+        .menu-button-icon{
+            width: 32px;
+            height: 32px;
+            margin-right: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+    <!-- POP-UP -->
+    <div id="popup">
+        <div id="popupMSG">A operação foi cancelada pelo usuário do aplicativo de pagamento</div>
+    </div>
+
+
+
+
+    
+
+    <!-- MODAL -- ADICIONAR PESSOA -->
+    <div class="modal-wrapper">
+        <div class="modal-window">
+            <div class="modal-header">HEADER</div>
+            <div class="modal-content">BATATA</div>
+            <div class="modal-footer">FOOTER</div>
+        </div>
+    </div>
+
+
+
+
+    <!-- TELA LOGIN -->
+
+
+    
+
+
+
+
+    <!-- TELA PRINCIPAL (SUMARIO) -->
+    <div class="screen" id="screen-summary">
+
+        <!-- OPTIONS -->
+        <div class="screen-header">
+            <div id="options-button" class="button-press" onclick="toggleScreenMenu(true)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>
+            </div>
+        </div>
+
+
+
+
+        <!-- CONTENTs -->
+        <div class="screen-content">
+
+            <!-- RESUMO DE CASH -->
+            <div class="ui-widget ui-widget-type-col" id="resumo-cash" onclick="openListAll()">
+
+                <!-- ARRECADADO -->
+                <div class="ui-widget-col">
+                    <div class="font-light">TOTAL ARRECADADO</div>
+                    <span class="font-light">R$</span>
+                    <span class="font-dark">0</span><span class="font-light">,00</span>
+                </div>
+
+                <!-- PENDENTE -->
+                <div class="ui-widget-col">    
+                    <div style="color: #007bff;">• Pedente</div>
+                    <div>
+                        <span class="font-dark">R$ 0</span><span class="font-light">,00</span>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <!-- DEVEDORES (NAO PAGOS) -->
+            <div class="ui-widget ui-widget-type-row" id="lista-devedores">
+                <div class="ui-widget-row ui-widget-header">Não Pagos • 0</div>
+
+                <div class="list-summary">
+                    <div class="ui-widget-row">Nome aqui</div>
+                    <div class="ui-widget-row">Nome aqui</div>
+                    <div class="ui-widget-row">Nome aqui</div>
+                </div>
+
+                <div class="ui-widget-row ui-widget-all button-press" onclick="openListNotPaid()">ABRIR</div>
+            </div>
+
+            <!-- INOMPLETO (PARCIAL) -->
+            <div class="ui-widget ui-widget-type-row" id="lista-parcial">
+                <div class="ui-widget-row ui-widget-header">Incompleto • 0</div>
+                
+                <div class="list-summary">
+                    <div class="ui-widget-row">Nome aqui</div>
+                    <div class="ui-widget-row">Nome aqui</div>
+                    <div class="ui-widget-row">Nome aqui</div>
+                </div>
+
+                <div class="ui-widget-row ui-widget-all button-press" onclick="openListPartial()">ABRIR</div>
+            </div>
+
+
+
+            <!-- PAGANTES (PAGOS) -->
+            <div class="ui-widget ui-widget-type-row" id="lista-pagantes">
+                <div class="ui-widget-row ui-widget-header">Pagos • 0</div>
+                
+                <div class="list-summary">
+                    <div class="ui-widget-row">Nome aqui</div>
+                    <div class="ui-widget-row">Nome aqui</div>
+                    <div class="ui-widget-row">Nome aqui</div>
+                </div>
+
+                <div class="ui-widget-row ui-widget-all button-press" onclick="openListPaid()">ABRIR</div>
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+
+
+        <!-- ADD MORE -->
+        <div class="screen-footer">
+            
+            <!-- ADD BUTTON -->
+            <div id="add-button" class="button-presss" onclick="toggleScreenAddItem()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/></svg>
+            </div>
+
+            <!-- ADD WRAPPER -->
+            <div class="footer-content">
+
+                <div class="create-wrapper">
+                    <div class="create-window">
+
+                        <!-- DADOS -->
+                        <div class="create-content">
+                            
+                            <!-- NOME -->
+                            <input class="addInput" type="text" placeholder="Nome">
+                            
+                            <div id="valuePerPeson">Valor Por Pessoa <div>R$ 000,00</div> </div>
+
+                            <!-- VALOR -->
+                            <div id="modoUnico">
+                                <input class="addInput" type="number" min="0" placeholder="Valor">
+                            </div>
+
+                            <!-- VALOR DUPLO -->
+                            <div id="modoMisto"  style="display: none;">
+                                <input class="addInput" type="number" min="0" placeholder="Valor 1">
+                                <input class="addInput" type="number" min="0" placeholder="Valor 2">
+                            </div>
+
+                            
+                            <!-- PAGAMENTO -->
+                            <div class="payment-wrapper">
+
+                                <div>Metodo</div>
+
+                                <label class="payment-mode">
+                                    <input type="radio" name="paymentAdd" checked>
+                                    <div>dinheiro</div>
+                                </label>
+
+                                <label class="payment-mode">
+                                    <input type="radio" name="paymentAdd">
+                                    <div>transferência</div>
+                                </label>
+
+                                <label class="payment-mode">
+                                    <input type="radio" name="paymentAdd">
+                                    <div>ambos</div>
+                                </label>
+
+                            </div>
+
+
+                            <!-- CRIAR -->
+                            <div id="craate-button">CRIAR</div>
+
+
+
+                        </div>
+
+                         
+
+                        
+                    </div>
+                    
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+    <!-- FULL LIST SCROLL -->
+    <div class="screen" id="screen-list">
+
+        <div class="screen-header">
+            <div class="button-press" onclick="closeList()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                </svg>
+            </div>
+        </div>
+
+
+        <!-- LISTA -->
+        <div class="screen-content">
+            
+
+            <!-- PAGO FULL | pagante -->
+            <div class="ui-widget ui-widget-type-col paid-ok paid-full">
+                <!-- NOME/METODO -->
+                <div class="ui-widget-col">
+                    <div class="font-light">NOME AQUI</div>
+                    <div>PIX</div>
+                </div>
+                <!-- VALOR -->
+                <div class="ui-widget-col">
+                    <div class="font-dark">R$ 0,00</div>
+                </div>
+            </div>
+
+
+
+
+
+            <!-- PAGO FULL | não é pagante -->
+            <div class="ui-widget ui-widget-type-col paid-ok paid-nonPayable">
+                <!-- NOME/METODO -->
+                <div class="ui-widget-col">
+                    <div class="font-light">NOME AQUI</div>
+                    <div>PIX</div>
+                    <div class="font-dark">NOME AQUI</div>
+                </div>
+                <!-- VALOR -->
+                <div class="ui-widget-col">
+                    <div class="font-dark">R$ 0,00</div>
+                </div>
+            </div>
+
+
+
+
+            <!-- INCOMPLETO -->
+            <div class="ui-widget ui-widget-type-col paid-warn paid-notComplete">
+                <!-- NOME/METODO -->
+                <div class="ui-widget-col">
+                    <div class="font-light">NOME AQUI</div>
+                    <div>CASH</div>
+                </div>
+                <!-- VALOR -->
+                <div class="ui-widget-col">
+                    <div class="font-light">pagou</div>
+                    <div class="font-dark">R$ 0,00</div>
+                    <div class="font-light">devendo</div>
+                    <div class="font-dark">R$ 0,00</div>
+                </div>
+            </div>
+
+
+
+
+
+            <!-- NÃO PAGO -->
+            <div class="ui-widget ui-widget-type-col paid-no paid-notPaid">
+                <!-- NOME/METODO -->
+                <div class="ui-widget-col">
+                    <div class="font-light">NOME AQUI</div>
+                </div>
+                <!-- VALOR -->
+                <div class="ui-widget-col">
+                    <div class="font-light">devendo</div>
+                    <div class="font-dark">R$ 0,00</div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+        <!-- LEGENDE DE CORES -->
+        <div class="screen-footer">
+
+            <div>
+                <div style="color: #28a745;">• Pago</div>
+                <div style="color: #dc3545;">• Devendo</div>
+            </div>
+            
+            <div>
+                <div style="color: #ffc107;">• Incompleto</div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <!-- MENU LATERAL -->
+    <div class="screen" id="screen-menu">
+
+        <div class="screen-header">
+            <div class="button-press" onclick="toggleScreenMenu(false)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+                </svg>
+            </div>
+        </div>
+
+        
+        <div class="screen-content">
+
+            <!-- HISTORICO -->
+            <div class="menu-button">
+                <div class="menu-button-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+                        <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
+                        <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z"/>
+                        <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                    </svg>
+                </div>
+                <div>HISTÓRICO</div>
+            </div>
+            
+            <!-- OPÇÕES -->
+            <div class="menu-button">
+                <div class="menu-button-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                    </svg>
+                </div>
+                <div>OPÇÕES</div>
+            </div>
+
+            <!-- MUDAR SENHA -->
+            <div class="menu-button">
+                <div class="menu-button-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                    </svg>
+                </div>
+                <div>MUDAR SENHA</div>
+            </div>
+
+            <!-- LOGOUT -->
+            <div class="menu-button">
+                <div class="menu-button-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/>
+                        <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                    </svg>
+                </div>
+                <div>LOGOUT</div>
+            </div>
+
+            <!-- RESETAR -->
+            <div class="menu-button" style="color: #dc3545; margin-top: 8px;">
+                <div class="menu-button-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-octagon-fill" viewBox="0 0 16 16">
+                        <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z"/>
+                    </svg>
+                </div>
+                <div>RESETAR</div>
+            </div>
+        </div>
+
+    </div>
+
+
+    
+
+    
+
+
+
+    <script>
+    
+        // ELEMENTOS
+        // var resumo_cash     = document.getElementById("resumo-cash");
+        // var lista_devedores = document.getElementById("lista-devedores");
+        // var lista_pagantes  = document.getElementById("lista-pagantes");
+
+
+
+        
+
+
+
+        // STATES
+        var NEW_ITEM_STATE = false;
+
+        
+
+
+
+
+        // Get Random Number by Value Interval
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+
+        // FORMATAR NUMERO EM DINHEIRO
+        var formatter = new Intl.NumberFormat('pt-br', {
+            style: 'currency',
+            currency: 'BRL',
+        });
+
+
+
+
+
+
+        /* METODOS DE PAGAMENTOS */
+            // pix               (digital)      - ok
+            // dinheiro          (cash)         - ok
+            // misto (pix+cash)  (mixed)        - ok
+        
+
+        /* ESTADOS */
+            // pagou                   (ok)               - ok
+            // pagou incompleto        (notComplete)      - warn
+            // pagou incompleto misto  (notCompleteMixed) - warn
+            // não pagou               (notPaid)          - alert
+
+
+        var lista_pessoas = [
+            {'nome': 'nome0', 'val': '0', 'tipo': 'digital', 'state': 'ok', 'stamp': '2022-05-30T16:57:54.596Z'},
+            {'nome': 'nome1', 'val': '5', 'tipo': 'digital', 'state': 'ok', 'stamp': '2022-05-30T16:57:54.596Z'},
+            {'nome': 'nome2', 'val': '10', 'tipo': 'digital', 'state': 'ok', 'stamp': '2022-05-30T16:57:54.596Z'},
+            {'nome': 'nome3', 'val': '10', 'tipo': 'digital', 'state': 'ok', 'stamp': '2022-05-30T16:57:54.596Z'},
+            {'nome': 'nome4', 'val': '10', 'tipo': 'digital', 'state': 'ok', 'stamp': '2022-05-30T16:57:54.596Z'},
+            {'nome': 'nome5', 'val': '10', 'tipo': 'digital', 'state': 'ok', 'stamp': '2022-05-30T16:57:54.596Z'},
+            {'nome': 'nome6', 'val': '10', 'tipo': 'digital', 'state': 'ok', 'stamp': '2022-05-30T16:57:54.596Z'},
+            {'nome': 'nome7', 'val': '10', 'tipo': 'digital', 'state': 'ok', 'stamp': '2022-05-30T16:57:54.596Z'},
+            {'nome': 'nome8', 'val': '10', 'tipo': 'digital', 'state': 'ok', 'stamp': '2022-05-30T16:57:54.596Z'},
+            {'nome': 'nome9', 'val': '10', 'tipo': 'digital', 'state': 'ok', 'stamp': '2022-05-30T16:57:54.596Z'},
+            {'nome': 'nomeA', 'val': '10', 'tipo': 'digital', 'state': 'ok', 'stamp': '2022-05-30T16:57:54.596Z'},
+            {'nome': 'nomeB', 'val': '10', 'tipo': 'digital', 'state': 'ok', 'stamp': '2022-05-30T16:57:54.596Z'},
+            
+        ];
+
+        // 
+        var TOTAL_ARRECADADO = 0;
+        var VALOR_CAMPO = 120;
+        var VALOR_POR_PESSOA = VALOR_CAMPO / lista_pessoas.length;
+        
+
+
+
+
+        
+
+
+
+
+
+
+
+        /* SORT */
+        function sortFunction(a, b) {
+
+            if (a.nome.toLocaleUpperCase() === b.nome.toLocaleUpperCase()) {
+                return 0;
+            }
+            else {
+                return (a.nome.toLocaleUpperCase() < b.nome.toLocaleUpperCase()) ? -1 : 1;
+            }
+        }
+
+
+
+        // SORT: A-Z
+        function sortByNameAZ(){
+            lista_pessoas.sort(sortFunction);
+        }
+        
+
+
+
+
+
+
+
+
+
+
+        // CALCULAR GANHOS E PEDENTE
+        function calcular(){
+
+            let tempGanhos = 0;
+            let tempPedente = 0;
+
+            VALOR_POR_PESSOA = VALOR_CAMPO / lista_pessoas.length;
+            document.querySelector("#valuePerPeson div").innerText = formatter.format(VALOR_POR_PESSOA);
+
+            
+            for ( let i = 0; i < lista_pessoas.length; i++ ){
+
+
+                if ( lista_pessoas[i].val == 0 ){
+                    lista_pessoas[i].state = 'notPaid';
+                }
+
+
+                // PAGAMENTO PARCIAL
+                if ( lista_pessoas[i].state == 'notComplete' || lista_pessoas[i].state == 'notCompleteMixed') {
+                    //tempPedente += VALOR_POR_PESSOA - lista_pessoas[i].val;
+                    tempGanhos += parseFloat(lista_pessoas[i].val);
+                    console.log(`'${lista_pessoas[i].nome}' PAGOU ${formatter.format(lista_pessoas[i].val)} E DEVE ${formatter.format(VALOR_POR_PESSOA - lista_pessoas[i].val)}`);
+                }
+
+
+                // PAGANTE
+                else if ( lista_pessoas[i].state != 'notPaid' ){
+                    if ( lista_pessoas[i].val < VALOR_POR_PESSOA ){
+                        lista_pessoas[i].state = 'notComplete';
+                        console.log("--- RECALCULAR ---");
+                        calcular();
+                    }
+
+                    tempGanhos += parseFloat(lista_pessoas[i].val);
+                    console.log(`'${lista_pessoas[i].nome}' PAGOU ${formatter.format(lista_pessoas[i].val)}`);
+                }
+
+                // NÃO PAGOU
+                else{
+                    //tempPedente += parseFloat(VALOR_POR_PESSOA);
+                    console.log(`'${lista_pessoas[i].nome}' DEVE ${formatter.format(VALOR_POR_PESSOA)}`);
+                }
+
+            }
+
+            console.log({tempGanhos, tempPedente});
+
+            tempPedente = VALOR_CAMPO - tempGanhos;
+
+            // TOTAL ARRECADADO
+            editTotal( (tempGanhos|0), (tempGanhos - (tempGanhos|0)) );
+            // PEDENTE
+            editPending( (tempPedente|0), (tempPedente - (tempPedente|0)) );
+
+
+        }
+
+         
+
+
+
+
+
+
+
+
+
+
+
+
+         
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+        // GERAR LISTA:
+        // 'all'        - tudo
+        // 'ok'         - pagos
+        // 'notPaid'    - nao pagos
+        // 'incomplete' - parcialmete pago
+
+        function gerarLista( filter ){
+
+            calcular();
+
+            let lista = document.querySelector("#screen-list .screen-content");
+            lista.innerHTML = '';
+            
+            
+
+            for ( let i = 0; i < lista_pessoas.length; i++ ){
+
+                let item = document.createElement('div');
+
+                // É (int)? -- passar a ter um '.0' no final
+                if ( lista_pessoas[i].val == parseInt(lista_pessoas[i].val) ){
+                    lista_pessoas[i].val = parseInt(lista_pessoas[i].val) + '.0';
+                }
+                
+
+                switch (lista_pessoas[i].state){
+
+                    
+
+                    // FULL | SOZINHO
+                    case 'ok':
+                        if ( lista_pessoas[i].state != filter && filter != 'all'){continue;}
+
+                        item.classList = 'ui-widget ui-widget-type-col paid-ok paid-full';
+                        item.innerHTML = `
+                         
+                        <div class="ui-widget-col">
+                            <div class="font-light">${lista_pessoas[i].nome}</div>
+                            <div>${lista_pessoas[i].tipo}</div>
+                        </div>
+                        
+                        <div class="ui-widget-col">
+                            <div class="font-dark">${formatter.format(lista_pessoas[i].val)}</div>
+                        </div>
+                        `;
+                        break;
+                    
+                    
+                    
+
+                    
+                    // PARCIAL
+                    case 'notComplete': case 'notCompleteMixed':
+                        if ( 'incomplete' != filter && filter != 'all'){continue;}
+                        
+                        
+
+                        item.classList = 'ui-widget ui-widget-type-col paid-warn paid-notComplete';
+                        item.innerHTML = `
+                        
+                        <div class="ui-widget-col">
+                            <div class="font-light">${lista_pessoas[i].nome}</div>
+                            <div>${lista_pessoas[i].tipo}</div>
+                        </div>
+                         
+                        <div class="ui-widget-col">
+                            <div class="font-light">pagou</div>
+                            <div class="font-dark">${formatter.format(lista_pessoas[i].val)}</div>
+                            <div class="font-light">devendo</div>
+                            <div class="font-dark">${formatter.format(VALOR_POR_PESSOA - lista_pessoas[i].val)}</div>
+                        </div>
+                        `;
+                        break;
+
+
+
+                    
+                    // NÃO PAGO
+                    case 'notPaid':
+                        if ( lista_pessoas[i].state != filter && filter != 'all'){continue;}
+
+                        item.classList = 'ui-widget ui-widget-type-col paid-no paid-notPaid';
+                        item.innerHTML = `
+                        
+                        <div class="ui-widget-col">
+                            <div class="font-light">${lista_pessoas[i].nome}</div>
+                        </div>
+                         
+                        <div class="ui-widget-col">
+                            <div class="font-light">devendo</div>
+                            <div class="font-dark">${formatter.format(VALOR_POR_PESSOA)}</div>
+                        </div>
+                        `;
+                        break;
+
+                }
+
+
+                lista.appendChild(item);
+
+
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // GERAR RESUMO: NÃO PAGOS | PARCIAL
+        function gerarResumo(){
+
+            calcular();
+
+
+            // NAO PAGOS
+            let listaNotPaid = document.getElementById('lista-devedores');
+            let foundNotPaid = 0;
+
+            // PARCIAL
+            let listaPartial = document.getElementById('lista-parcial');
+            let foundPartial = 0;
+
+            // PAGOS
+            let listaPaid = document.getElementById('lista-pagantes');
+            let foundPaid = 0;
+
+
+
+
+            // ESCONDER BOTAO : (MOSTRAR TUDO)
+            //listaNotPaid.querySelector('.ui-widget-all').style.display = 'none';
+            //listaPartial.querySelector('.ui-widget-all').style.display = 'none';
+            //listaPaid.querySelector('.ui-widget-all').style.display = 'none';
+
+
+            // ESCONDER RESUMO
+            listaNotPaid.style.display = 'none';
+            listaPartial.style.display = 'none';
+            listaPaid.style.display = 'none';
+
+
+            // CONTEUDO PADRAO (NADA AQUI)
+            listaNotPaid.querySelector('.list-summary').innerHTML = '';
+            listaPartial.querySelector('.list-summary').innerHTML = '';
+            listaPaid.querySelector('.list-summary').innerHTML = '';
+            
+
+
+
+            // LOOP
+            lista_pessoas.forEach((e, i) => {
+                
+                let item = document.createElement('div');
+                item.classList.add('ui-widget-row');
+                item.innerText = e.nome;
+
+                // PAGO
+                if ( e.state == 'ok' ){
+                    foundPaid++;
+                    listaPaid.style.display = 'block';
+                    if ( foundPaid <= 3 ){
+                        listaPaid.querySelector('.list-summary').appendChild(item);
+                    }
+                }
+
+
+
+                // NAO PAGO
+                else if ( e.state == 'notPaid' ){
+                    foundNotPaid++;
+                    listaNotPaid.style.display = 'block';
+                    if ( foundNotPaid <= 3 ){
+                        listaNotPaid.querySelector('.list-summary').appendChild(item);
+                    }
+                }
+
+
+
+                // PARCIALMENTE PAGO
+                else{
+                    foundPartial++;
+                    listaPartial.style.display = 'block';
+                    if ( foundPartial <= 3 ){
+                        listaPartial.querySelector('.list-summary').appendChild(item);
+                    }
+                }
+
+
+
+            });
+
+            
+            //console.warn( `${foundPaid} | ${foundNotPaid} | ${foundPartial}` );
+            
+            listaNotPaid.querySelector('.ui-widget-header').innerText = 'Não Pagos • ' + foundNotPaid;
+            listaPartial.querySelector('.ui-widget-header').innerText = 'Incompleto • ' + foundPartial;
+            listaPaid.querySelector('.ui-widget-header').innerText = 'Pagos • ' + foundPaid;
+
+        }
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // FECHAR LISTA
+        function closeList(){
+            console.log('fechar lista');
+            document.getElementById("screen-list").style.display = 'none';
+        }
+
+
+
+        // ABRIR LISTA: TUDO
+        function openListAll(){
+            console.log('abrir lista: TUDO');
+            document.getElementById("screen-list").style.display = 'block';
+            gerarLista('all');
+        }
+
+
+        // ABRIR LISTA: NÃO PAGOS
+        function openListNotPaid(){
+            console.log('abrir lista: NÃO-PAGOS');
+            document.getElementById("screen-list").style.display = 'block';
+            gerarLista('notPaid');
+        }
+
+
+        // ABRIR LISTA: PAGOS
+        function openListPaid(){
+            console.log('abrir lista: PAGOS');
+            document.getElementById("screen-list").style.display = 'block';
+            gerarLista('ok');
+        }
+
+
+
+        // ABRIR LISTA: PARCIAL
+        function openListPartial(){
+            console.log('abrir lista: PARCIAL');
+            document.getElementById("screen-list").style.display = 'block';
+            gerarLista('incomplete');
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // EDITAR O TOTAL ARRECADADO
+        function editTotal( value1, value2 ){
+            let intValue = value1;
+            let fltValue = value2;
+            
+            fltValue = (fltValue < 10)? ('0'+fltValue) : fltValue;
+
+            document.querySelectorAll('#resumo-cash .ui-widget-col span')[1].innerText = intValue;
+            document.querySelectorAll('#resumo-cash .ui-widget-col span')[2].innerText = ',' + fltValue;
+        }
+
+
+        // EDITAR O VALOR PENDENTE
+        function editPending( value1, value2 ){
+            let intValue = value1;
+            let fltValue = value2;
+
+            fltValue = (fltValue < 10)? ('0'+fltValue) : fltValue;
+            
+            document.querySelectorAll('#resumo-cash .ui-widget-col')[1].querySelectorAll('span')[0].innerText = 'R$ ' + intValue;
+            document.querySelectorAll('#resumo-cash .ui-widget-col')[1].querySelectorAll('span')[1].innerText = ',' + fltValue;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // ABRIR/FECHAR -- ADD SCREEN
+        function toggleScreenAddItem(){
+
+            NEW_ITEM_STATE = !NEW_ITEM_STATE;
+
+            if ( NEW_ITEM_STATE ){
+                
+                document.querySelector("#screen-summary .screen-footer").style.height = '100%';
+                document.querySelector("#screen-summary .screen-footer").style.backgroundColor = '#607d8b6b';
+                document.getElementById("add-button").style.transform = 'rotate(45deg)';
+                document.getElementById("add-button").style.backgroundColor = '#dc3545';
+
+            }
+            else{
+                document.querySelector("#screen-summary .screen-footer").style.height = '40px';
+                document.querySelector("#screen-summary .screen-footer").style.backgroundColor = 'inherit';
+                document.getElementById("add-button").style.transform = 'rotate(0deg)';
+                document.getElementById("add-button").style.backgroundColor = '#28a745';
+            }
+
+        }
+
+
+
+
+        
+
+
+        // mostrar mensagem POPUP
+        function popupMessage( text, duration ){
+
+            let el = document.getElementById("popupMSG");
+            el.innerText = text;
+            el.style.display = 'block';
+
+            setTimeout(function(){
+                el.style.display = 'none';
+            }, duration);
+
+        }
+
+
+
+
+
+
+
+
+        // ABRIR/FECHAR -- MENU LATERAL
+        function toggleScreenMenu( state ){
+
+            if ( state ){
+                document.getElementById("screen-menu").style.left = '0%';
+            }
+            else{
+                document.getElementById("screen-menu").style.left = '-100%';
+            }
+
+        }
+
+
+
+
+
+
+
+        // INIT
+        gerarResumo();
+
+
+
+
+
+
+    </script>
+    
+
+</body>
+</html>

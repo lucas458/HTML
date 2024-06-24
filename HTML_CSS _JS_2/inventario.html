@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+        .screen{
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+
+            position: fixed;
+        }
+
+
+        .screen-content{
+            height: 100%;
+        }
+
+
+
+
+
+
+        .slot{
+            
+            min-width: 32px;
+            height: 32px;
+
+            margin: 1px;
+
+
+
+
+            background-color: #212121;
+
+
+            transition: 100ms;
+        }
+
+        .slot:hover{
+            background-color: #353535;
+            /* transform: scale(1.2); */
+        }
+
+
+
+
+
+        .screen-content{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        #slot-wrapper{
+            width: calc( (32px + 1px * 2) * 9 );
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            align-items: center;
+            align-content: center;
+        }
+
+
+        .screen-footer{
+            display: flex;
+            justify-content: center;
+        }
+
+        
+        .item{
+            background-image: url('https://static.wikia.nocookie.net/minecraft_gamepedia/images/4/44/InvSprite.png/revision/latest?cb=20220729155858&cb=20220729155858&amp;cb=20220729155858&amp;amp;cb=20220729155858&amp;amp;amp;format=original&amp;amp;amp;format=original&amp;amp;format=original&amp;format=original&format=original');
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+
+
+            background-position-x: calc(-32px * 0);
+            background-position-y: calc(-32px * 0);
+            image-rendering: pixelated;
+
+            text-shadow: 0 0 2px #000;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            font-family: monospace;
+            user-select: none;
+
+        }
+
+        .object-grass{ background-position: calc(-32px * 20) calc(-32px * 30); }
+        .object-wood{ background-position: calc(-32px * 6) calc(-32px * 28); }
+        .object-cookie{ background-position: calc(-32px * 3) calc(-32px * 100); }
+
+        
+
+        /* .item-stack64{} */
+
+
+
+        #temp_item{
+            width: 32px;
+            height: 32px;
+            /* background-color: red; */
+
+            pointer-events: none;
+
+            position: absolute;
+            left: 0;
+            top: 0;
+
+            /* display: none; */
+        }
+
+
+
+        #item_content{ 
+            /* background-color: red; */
+            background-color: #1a0c1ae2;
+            border: 2px solid #2f076f;
+            padding: 2px 4px;
+            border-radius: 4px;
+             
+
+            display: none;
+
+            pointer-events: none;
+
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+    <div class="screen" id="screen-main">
+
+        <!-- HEADER -->
+        <!-- <div class="screen-header"></div> -->
+
+        <div id="temp_item"></div>
+        <div id="item_content">asd</div>
+
+
+
+        <!-- CONTENT -->
+        <div class="screen-content">
+
+
+            <div id="slot-wrapper">
+                <div class="slot"> <div class="item item-stack64 object-grass">2</div> </div>
+                <div class="slot"> <div class="item item-stack64 object-wood">5</div> </div>
+                <div class="slot"> <div class="item item-stack64 object-grass">63</div> </div>
+                <div class="slot"> <div class="item item-stack64 object-wood">3</div> </div>
+                <div class="slot"> <div class="item item-stack64 object-cookie">19</div> </div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+                <div class="slot"></div>
+            </div>
+
+
+            
+
+
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="screen-footer">
+
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <script>
+
+
+
+        
+
+
+
+
+
+
+
+        var temp_item = document.getElementById("temp_item");
+        var item_content = document.getElementById("item_content");
+
+
+
+ 
+
+        var slots = document.querySelectorAll(".slot").forEach((e,i)=>{
+
+
+
+            e.addEventListener("click", ()=>{
+                console.log("click at: ", i);
+
+
+                // SLOT VAZIO
+                if ( e.innerHTML.trim().length == 0 ){
+                    console.log("slot vazio");
+                    // COLOCAR ITEM NO SLOT VAZIO
+                    if ( temp_item.innerHTML.trim().length > 0 ){
+                        e.innerHTML = temp_item.innerHTML.trim();
+                        temp_item.innerHTML = '';
+                        item_content.style.display = 'block';
+                    }
+                }
+
+                else{
+
+                    if ( temp_item.innerHTML.trim().length > 0 ){
+                        
+                        if ( e.children[0].classList.toString() == temp_item.children[0].classList.toString() ){
+                            console.log("somar");
+
+                            if ( temp_item.children[0].classList.contains("item-stack64") ){
+
+                                if ( parseInt(temp_item.children[0].innerText) + parseInt(e.children[0].innerText) > 64 ){
+                                    console.log("remains");
+
+                                    let qty_slot = parseInt(e.children[0].innerText);
+                                    let qty_temp = parseInt(temp_item.children[0].innerText);
+                                    let remains = 64 - qty_temp;
+
+                                    temp_item.children[0].innerText = parseInt(temp_item.children[0].innerText) + remains;
+                                    e.children[0].innerText = parseInt(e.children[0].innerText) - remains;
+                                }
+                                else{
+                                    e.children[0].innerText = parseInt(temp_item.children[0].innerText) + parseInt(e.children[0].innerText);
+                                    temp_item.innerHTML = '';
+                                }
+                            }
+                        }
+                        else{
+                            console.log("swap");
+                            let temp_item_content = temp_item.innerHTML;
+                            temp_item.innerHTML = e.innerHTML;
+                            e.innerHTML = temp_item_content;
+                        }
+
+                    }
+
+                    // CLICK NO ITEM
+                    else{
+                        let item_qty = e.children[0].innerText;
+                        console.log("slot usado", item_qty + " itens");
+                        let temp_item_content = e.innerHTML.trim();
+                        e.innerHTML = '';
+                        temp_item.innerHTML = temp_item_content;
+                    }
+
+                }
+
+
+            });
+
+            
+
+            e.addEventListener("contextmenu", (evt)=>{
+                evt.preventDefault();
+                console.log("contex at: ", i);
+
+
+                // dividir
+                if ( temp_item.innerHTML.trim().length == 0 && e.innerHTML.trim().length > 0 && e.children[0].innerText > 1 ){
+                    let temp_item_content = e.innerHTML.trim();
+                    e.children[0].innerText = parseInt(e.children[0].innerText / 2);
+                    temp_item.innerHTML = temp_item_content;
+                    temp_item.children[0].innerText = temp_item.children[0].innerText - e.children[0].innerText;
+                }
+
+                // colocar 1
+                else{
+                     
+                    if ( e.innerHTML.trim().length > 0 ){
+
+                        if ( temp_item.children[0].classList.toString() == e.children[0].classList.toString() ){
+                            console.log("somar force");
+
+                            let max_size = 0;
+                            
+                            if ( e.children[0].classList.contains('item-stack64') ){
+                                max_size = 64;
+                            }
+
+                            else if ( e.children[0].classList.contains('item-stack16') ){
+                                max_size = 16
+                            }
+
+                            if ( parseInt(e.children[0].innerText) < max_size ){
+                                temp_item.children[0].innerText -= 1;
+                                e.children[0].innerText = parseInt(e.children[0].innerText) + 1;
+                                if ( temp_item.children[0].innerText <= 0 ){
+                                    temp_item.innerHTML = '';
+                                }
+                            }
+                            
+                        }
+
+                        else{
+                            let temp_item_content = temp_item.innerHTML;
+                            temp_item.innerHTML = e.innerHTML;
+                            e.innerHTML = temp_item_content;
+                        }
+
+                    }
+
+                     
+
+
+                    else{
+                        if ( e.innerHTML.trim().length <= 0 ){
+                            console.log("add1 force");
+                            e.innerHTML = temp_item.innerHTML;
+                            e.children[0].innerText = 1;
+                            temp_item.children[0].innerText -= 1;
+                            if ( temp_item.children[0].innerText <= 0 ){
+                                temp_item.innerHTML = '';
+                            }
+                        }
+                        else{
+                            console.log("swap force");
+                            let temp_item_content = temp_item.innerHTML;
+                            temp_item.innerHTML = e.innerHTML;
+                            e.innerHTML = temp_item_content;
+                        }
+                    }
+                }
+
+                
+ 
+                
+
+                return false;
+            });
+
+
+
+            e.addEventListener("mouseenter", (evt)=>{
+                console.log("mouseIN at: ", i);
+                
+                if ( e.innerHTML.trim().length > 0 ){
+                    if ( e.children[0].classList.contains("object-grass") ){
+                        item_content.innerText = 'Bloco de grama';
+                    }
+                    else if ( e.children[0].classList.contains("object-wood") ){
+                        item_content.innerText = 'Tábuas de carvalho';
+                    }
+                    else if ( e.children[0].classList.contains("object-cookie") ){
+                        item_content.innerText = 'Biscoito';
+                    }
+                    item_content.style.display = 'block';
+                }
+                
+            });
+
+
+            e.addEventListener("mouseleave", (evt)=>{
+                console.log("mouseOUT at: ", i);
+                item_content.style.display = 'none';
+            });
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+        window.addEventListener("mousemove", (e)=>{
+
+            temp_item.style.left = (e.clientX - 16) + 'px';
+            temp_item.style.top = (e.clientY - 16) + 'px';
+
+
+            item_content.style.left = ( e.clientX - (-item_content.offsetWidth+item_content.offsetWidth) ) + 'px';
+            item_content.style.top  = ( e.clientY - (item_content.offsetHeight) ) + 'px';
+
+
+        });
+
+
+
+
+
+    </script>
+
+
+
+
+</body>
+</html>

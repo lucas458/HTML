@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nokia SMS</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body{
+            
+			
+            background-color: #000;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        #screen{
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+
+            position: fixed;
+        }
+
+
+        
+
+
+
+
+
+        #content{
+            height: 100%; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        #header{
+            background-color: #000;
+            display: flex;
+            justify-content: space-between;
+            padding: 4px;
+            font-size: 1.2em;
+        }
+
+        #letter{
+            font-weight: bold;
+        }
+
+
+
+        .wrapper{
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        .wrapper_active{
+            display: block;
+        }
+
+
+        #text{
+            background-color: #fff;
+            color: #000;
+            font-size: 1.2em;
+            padding: 4px;
+            width: 100%;
+            height: 100%;
+            outline: none;
+            caret-color: #f00;
+            resize: none;
+            border: none;
+        }
+
+
+
+
+
+
+
+
+
+
+        #grid_menu{
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+
+            padding: 16px;
+        }
+
+        .slot{
+            font-size: 1.4em;
+            text-align: center; 
+        }
+
+        .slot_selected{
+            background-color: orangered;
+        }
+
+
+
+
+
+
+
+
+
+        /* LABEL */
+        #label_wrapper{
+            display: flex;
+            justify-content: space-between;
+        }
+        .label_content{
+            padding: 0 6px;
+        }
+        .label_content:nth-child(even){
+            font-weight: bold;
+            font-size: 1.2em;
+            visibility: hidden;
+        }
+
+
+
+
+
+
+        #super_keyboard{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            justify-items: center;
+            align-items: center;
+        }
+
+        .super_keyboard_column{
+            padding: 8px;
+        }
+
+
+        #directional_wrapper{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            align-items: center;
+            padding: 0;
+        }
+
+        
+        #directional_wrapper .directional_button{
+            padding: 8px 16px; 
+            margin: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;  
+        }
+
+        .super_keyboard_column:nth-child(odd){
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;  
+        }
+
+
+
+        .directional_button:active,
+        .super_keyboard_column:nth-child(odd):active{
+            background-color: #111;
+        }
+
+        
+        
+
+
+
+
+
+        #keyboard{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+        }
+
+
+        .key{
+            font-size: 2em;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            padding: 8px;
+            justify-items: center;
+            align-items: center;
+        }
+
+        .key span{
+            font-size: 0.8em; 
+        }
+
+
+        .key:active{
+            background-color: #111;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="screen">
+
+
+        <div id="content">
+
+            <div id="header">
+                <div id="left"> &#9998; <span id="letter">abc</span> </div>
+                <div id="right">0/918</div>
+            </div>
+
+
+            <div class="wrapper wrapper_active">
+                <textarea id="text" maxlength="0" autofocus inputmode="none"></textarea>
+            </div>
+
+
+            <div class="wrapper">
+
+                <div id="grid_menu"></div>
+
+            </div>
+
+            
+
+        </div>
+
+
+
+
+
+        <!-- LABEL -->
+        <div id="label_wrapper">
+            <div class="label_content">Limpar</div>
+            
+            <div class="label_content">Selecionar</div>
+            
+            <div class="label_content">Apagar</div>
+        </div>
+
+
+        <!-- CONTROL KEYBOARD -->
+        <div id="super_keyboard">
+            
+            <!-- LEFT -->
+            <div class="super_keyboard_column" onclick="softKey('left');text.focus();">—</div>
+
+            <!-- DIRECTIONAL -->
+            <div class="super_keyboard_column" id="directional_wrapper">
+
+                <div class="directional_column"> <div class="directional_button" onclick="directionKey('left');text.focus();">&LeftArrow;</div> </div>
+                
+                <div class="directional_column"> 
+                    <div class="directional_button" onclick="directionKey('up');text.focus();">&uparrow;</div>
+                    <div class="directional_button" onclick="selectClick();text.focus();">&cir;</div>
+                    <div class="directional_button" onclick="directionKey('down');text.focus();">&DownArrow;</div>
+                </div>
+
+                <div class="directional_column"> <div class="directional_button" onclick="directionKey('right');text.focus();">&RightArrow;</div> </div>
+
+            </div>
+            
+            <!-- RIGHT -->
+            <div class="super_keyboard_column" onclick="softKey('right');text.focus();">—</div>
+
+        </div>
+        
+
+
+        <!-- KEYBOARD -->
+        <div id="keyboard">
+
+            <div class="key" key="1" key-list=".,'?!&quot;1-()@/:_">1</div>
+            <div class="key" key="2" key-list="abc2áãâàç">2 <span>abc</span> </div>
+            <div class="key" key="3" key-list="def3éê"><span>def</span> 3 </div>
+            
+            <div class="key" key="4" key-list="ghi4í">4 <span>ghi</span> </div>
+            <div class="key" key="5" key-list="jkl5">5 <span>jkl</span> </div>
+            <div class="key" key="6" key-list="mno6óõô"><span>mno</span> 6 </div>
+
+            <div class="key" key="7" key-list="pqrs7">7 <span>pqrs</span> </div>
+            <div class="key" key="8" key-list="tuv8úü">8 <span>tuv</span> </div>
+            <div class="key" key="9" key-list="wxyz9"><span>wxyz</span> 9 </div>
+
+            <div class="key" key="*" >* <span>+</span> </div>
+            <div class="key" key="0" key-list=" 0↵">0 <span>&bbrk;</span> </div>
+            <div class="key" key="#" ><span>&DoubleUpArrow;</span> # </div>
+
+
+            
+        </div>
+
+
+    </div>
+
+
+ 
+
+
+     
+
+
+    <script>
+
+
+
+         
+
+        var key             = document.querySelectorAll(".key");
+        var text            = document.getElementById("text");
+        var letter          = document.getElementById("letter");
+        var grid_menu       = document.getElementById("grid_menu");
+        var label_wrapper   = document.getElementById("label_wrapper");
+
+        
+        
+        const MAX_LENGTH    = 256;
+
+        var LETTER_INDEX    = 0;
+        var LETTER_MODE     = 0;
+        var LETTER_TIMER    = null;
+        var LETTER_CURRENT  = '';
+
+
+        text.maxLength = MAX_LENGTH;
+        document.getElementById("right").innerHTML = '0/' + MAX_LENGTH;
+
+
+
+        String.prototype.replaceAt = function(index, replacement) {
+            if (index >= this.length) {
+                return this.valueOf();
+            }
+            
+            return this.substring(0, index) + replacement + this.substring(index + 1);
+        }
+        
+
+
+
+
+
+
+
+        const SPECIAL_CHAR = [
+            ".,\'?!\"-()@/:_;+&%*=<>£€$¥☼[]{}\\~^`¡¿§#| \n",
+            ".,\'?!\"-()@/:_;+&%*=<>£€$¥₹☼[]{}\\~^`¡¿§#| \n"
+        ];
+
+
+
+
+
+
+
+        key.forEach((e,i)=>{
+
+            e.onclick = () => {
+
+                const key = e.getAttribute("key");
+                let screenCurrent = getCurrentWrapper();
+
+                if ( key == "*" && screenCurrent == 0 ){
+                    setScreen(1, (LETTER_MODE == 2)?1:0);
+                }
+
+                else if ( key == "#" && screenCurrent == 0 ){
+                    clearTimeout(LETTER_TIMER);
+                    LETTER_TIMER = null;
+                    toggleLetterMode();
+                }
+
+                else{
+                    
+                    if ( text.value.length < MAX_LENGTH && screenCurrent == 0 ){
+
+
+                        if ( LETTER_MODE == 2 ){
+                            putchar( key );
+                        }
+
+                        else{
+                            
+                            if ( LETTER_CURRENT != e.getAttribute('key') ){
+                                LETTER_CURRENT = e.getAttribute('key');
+                                LETTER_INDEX = 0;
+                                clearTimeout(LETTER_TIMER);
+                                LETTER_TIMER = null; 
+                                text.value = text.value.replaceAll('↵', '\n');
+                            }
+    
+                            const letter = e.getAttribute('key-list')[LETTER_INDEX];
+                            LETTER_INDEX = (LETTER_INDEX+1) % e.getAttribute('key-list').length;
+                            
+
+                            if ( LETTER_TIMER ){
+                                clearTimeout(LETTER_TIMER);
+                                LETTER_TIMER = null;
+                                let str = text.value;
+
+                                if ( LETTER_MODE == 0 ){
+                                    str = str.replaceAt(str.length-1, letter);
+                                }else{
+                                    str = str.replaceAt(str.length-1, letter.toUpperCase() );
+                                }
+                                text.value = str; 
+                            }
+                            
+                            else{ 
+                                if ( LETTER_MODE == 0 ){
+                                    putchar( letter );
+                                }else{
+                                    putchar( letter.toUpperCase() );
+                                }
+                            }
+
+                            LETTER_TIMER = setTimeout(()=>{
+                                LETTER_INDEX = 0;
+                                LETTER_TIMER = null;
+                                text.value = text.value.replaceAll('↵', '\n');
+                            }, 1000);
+
+                        }
+                        
+                    }
+
+                    document.getElementById("right").innerHTML = (text.value.length) + '/' + MAX_LENGTH;
+                    
+
+                }
+                 
+                text.focus();
+                
+                
+            };
+
+        });
+
+
+
+
+        text.oninput = () => {
+            document.getElementById("right").innerHTML = (text.value.length) + '/' + MAX_LENGTH;
+            text.focus();
+        };
+
+
+
+
+
+
+
+        function putchar( char ){
+            text.value += char;
+            document.getElementById("right").innerHTML = (text.value.length) + '/' + MAX_LENGTH;
+            text.focus();
+        }
+
+
+         
+
+
+
+        function toggleLetterMode(){
+             
+            LETTER_MODE = (LETTER_MODE+1) % 3;
+
+            switch (LETTER_MODE) {
+                case 0:
+                    letter.innerHTML = 'abc';
+                    break;
+                case 1:
+                    letter.innerHTML = 'ABC';
+                    break;
+                case 2:
+                    letter.innerHTML = '123';
+            } 
+
+        }
+
+
+
+
+
+
+        function getCurrentSelectedSymbol(){
+
+            for (let i = 0; i < grid_menu.children.length; i++){
+                if ( grid_menu.children[i].classList.contains("slot_selected") ){
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+
+
+
+        function setCurrentSymbol( index = 0 ){
+
+            grid_menu.querySelectorAll(".slot_selected").forEach(e => {
+                e.classList.remove("slot_selected");
+            });
+
+            grid_menu.children[index].classList.add("slot_selected");
+
+        }
+
+
+
+
+
+        function getCurrentWrapper(){
+
+            let list = document.querySelectorAll("#content .wrapper");
+
+            for (let i = 0; i < list.length; i++){
+                if ( list[i].classList.contains("wrapper_active") ){
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+
+
+
+
+
+        function directionKey( key ){
+
+
+            if ( grid_menu.children.length <= 0 ){
+                return;
+            }
+
+            let currentIndex = getCurrentSelectedSymbol();
+            let x = Math.trunc(currentIndex % 7);
+            let y = Math.trunc(currentIndex / 7);
+
+
+            if (key == 'right'){
+                currentIndex = (currentIndex+1) % grid_menu.children.length;
+            }
+            else if ( key == 'left' ){
+                currentIndex--;
+                if (currentIndex < 0){
+                    currentIndex = grid_menu.children.length - 1;
+                }
+            }
+            else if ( key == 'down' ){
+                y = (y+1) % Math.trunc(grid_menu.children.length / 7+1); 
+                currentIndex = x + y * 7;
+                if ( currentIndex >= grid_menu.children.length){
+                    currentIndex = x + 0 * 7;
+                }
+            }
+            else if ( key == 'up' ){
+
+                y--;
+                if (y < 0){
+                    y = Math.trunc(grid_menu.children.length / 7);
+                }
+                if ( x + y * 7 >= grid_menu.children.length){
+                    y = Math.trunc(grid_menu.children.length / 7) - 1;
+                }
+
+                currentIndex = x + y * 7;
+
+            }
+
+
+            
+            setCurrentSymbol(currentIndex); 
+
+        }
+
+
+
+
+
+
+
+        function selectClick(){
+
+            if ( grid_menu.children.length <= 0 || getCurrentWrapper() == 0 || text.value.length >= MAX_LENGTH ){
+                setScreen(0);
+                
+                return;
+            }
+
+            const key = grid_menu.children[getCurrentSelectedSymbol()].innerText;
+            setScreen(0); 
+
+            if ( key == '⎵' ){
+                putchar(' '); 
+            }
+            else if ( key == '↵' ){
+                putchar('\n');
+            }
+            else{
+                putchar(key);
+            }
+            
+        }
+
+
+
+
+
+        function softKey( key ){
+
+            let screenCurrent = getCurrentWrapper();
+
+            if ( key == 'left' ){
+                text.value = '';
+            }
+            else if ( key == 'right' ){
+
+                if ( screenCurrent == 0 ){
+                    text.value = text.value.slice(0, text.value.length-1);
+                }else{
+                    setScreen(0);
+                    text.focus();
+                }
+            }
+            
+            document.getElementById("right").innerHTML = (text.value.length) + '/' + MAX_LENGTH;
+        }
+
+
+
+
+
+
+
+        function setScreen( index = 0, gridType = 0 ){
+
+            document.querySelectorAll("#content .wrapper").forEach(e => {
+                e.classList.remove("wrapper_active");
+            });
+
+            label_wrapper.children[0].style.visibility = (index==0)? 'visible' : 'hidden';
+            label_wrapper.children[1].style.visibility = (index==1)? 'visible' : 'hidden';
+            
+            label_wrapper.children[2].innerHTML = (index==0)? 'Apagar' : 'Voltar';
+
+            genGrid(gridType);
+            setCurrentSymbol(0);
+            document.querySelectorAll("#content .wrapper")[index].classList.add("wrapper_active");
+
+        }
+
+
+
+
+
+
+
+
+
+        function genGrid( screen = 0 ){
+            grid_menu.innerHTML = '';
+
+            for (let i = 0; i < SPECIAL_CHAR[screen].length; i++){
+
+                const char = SPECIAL_CHAR[screen][i];
+                let slot = document.createElement('div');
+                slot.classList.add("slot");
+                
+
+                if ( char == " " ){
+                    slot.innerHTML = "&bbrk;"
+                }
+                else if ( char == "\n" ){
+                    slot.innerHTML = "&crarr;";
+                }
+                else{
+                    slot.innerHTML = char;
+                }
+
+                grid_menu.appendChild(slot);
+
+            }
+
+
+        }
+
+        
+
+
+
+
+
+
+    </script>
+
+
+</body>
+</html>

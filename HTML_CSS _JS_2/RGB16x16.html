@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Art 16x16</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+
+
+
+
+
+        #tooltip{
+            padding: 4px 0;
+            background-color: #353535;
+            /* padding: 8px 10px; */
+            box-shadow: 0 0 5px 0 #000;
+            pointer-events: none;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            position: absolute;
+        }
+
+        #tooltip > div{
+            white-space: nowrap;
+        }
+
+        .tooltip-value{
+            width: 100%;
+            padding: 0 4px;
+        }
+
+
+         
+
+
+
+
+
+
+        #color-picker-wrapper{
+            width: 100%;
+            height: 100%;
+            background-color: #000000bf;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            position: fixed;
+        }
+
+        #color-picker-window{
+            aspect-ratio: 1 / 1;
+            height: 70%;
+            background-color: #212121;
+            box-shadow: 0 0 5px 0 #000;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+
+
+        #color-picker-values{
+            display: flex;
+            justify-content: center;
+            margin: 8px 0;
+        }
+        .color-picker-box{
+            width: 64px;
+            height: 64px;
+            background-color: red;
+            border: 1px solid #fff;
+            margin: 1px;
+        }
+
+        .color-picker-box > input{
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 0;
+        }
+
+
+
+        .color-picker-header{
+            padding: 8px;
+        }
+
+        .color-picker-content{
+            height: 100%;
+            border-top: 1px solid #555;
+            border-bottom: 1px solid #555;
+        }
+
+
+
+        .color-picker-footer{
+            display: flex;
+        }
+        .color-picker-button{
+            width: 100%;
+            border: none;
+            padding: 8px;
+            background-color: inherit;
+            color: #fff;
+        }
+        .color-picker-button:first-child{
+            border-right: 1px solid #555;
+        }
+        .color-picker-button:hover{
+            background-color: #353535;
+        }
+
+
+
+
+
+
+
+
+
+        
+        #tooltip-color{
+            width: 32px;
+            height: 32px;
+            border: 1px solid #fff;
+            padding: 3px;
+            margin-top: 8px;
+        }
+
+        #tooltip-color > div{
+            width: 100%;
+            height: 100%;
+            background-color: #181818;
+        }
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        #container{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+        }
+
+
+        #tela{
+            aspect-ratio: 1 / 1;
+            height: 100%;
+            background-color: #000;
+        }
+
+
+
+        .pixel-row{
+            display: flex;
+        }
+
+        .pixel{
+            aspect-ratio: 1 / 1;
+            width: calc( 100% / 16 );
+            background-color: #353535;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .pixel-row .pixel{
+            margin-right: 1px;
+            margin-bottom: 1px;
+        }
+        .pixel-row .pixel:last-child{
+            margin-right: 0;
+        }
+
+        .pixel-row:last-child .pixel{
+            margin-bottom: 0;
+        }
+
+
+         
+
+        .pixel:hover{
+            box-shadow: inset 0 0 5px 0 #000;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+    <div id="color-picker-wrapper">
+
+        <div id="color-picker-window">
+
+            
+
+            <div class="color-picker-header">Escolher Cor</div>
+
+            <div class="color-picker-content">
+
+                <div id="color-picker-values">
+
+                    <label class="color-picker-box">
+                        <input type="color">
+                    </label>
+
+                    <div class="color-picker-box"></div>
+
+                </div>
+    
+                 
+
+            </div>
+
+            <div class="color-picker-footer">
+                <button class="color-picker-button" onclick="document.getElementById('color-picker-wrapper').style.display = 'none';">Fecher</button>
+                <button class="color-picker-button" onclick="savePixel()">Salvar</button>
+            </div>
+            
+
+            
+
+
+        </div>
+
+    </div>
+    
+
+    
+    <div id="container">
+
+        <div id="tooltip">
+            <div class="tooltip-value">X: <span>00</span></div>
+            <div class="tooltip-value" style="border-bottom: 1px solid #fff;">Y: <span>00</span></div>
+            <div id="tooltip-color"> <div></div> </div>
+        </div>
+
+
+        <div id="tela">
+
+            <!-- <div class="pixel-row">
+                <div class="pixel"></div>
+            </div> -->
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+
+
+
+
+        var tela = document.getElementById('tela');
+
+        var PIXEL_INDEX = -1;
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+        }
+
+
+        function gerarLinha(){
+
+            
+            let linha = document.createElement('div');
+            linha.classList.add('pixel-row');
+
+
+            
+
+            for (let i = 0; i < 16; i++){
+                let item = document.createElement('div');
+                item.classList.add('pixel');
+
+                // let cores = ['red', 'green', 'blue', 'orange', 'cyan', 'purple'];
+                // item.style.backgroundColor = cores[ getRandomInt(0, cores.length) ];
+
+                linha.appendChild(item);
+            }
+
+            tela.appendChild(linha);
+
+        }
+
+
+
+
+
+        function gerarTela(){
+            for (let i = 0; i < 16; i++){
+                gerarLinha();
+            }
+
+
+            let pixel = document.querySelectorAll('.pixel');
+
+            for (let i = 0; i < 16*16; i++){
+                
+                pixel[i].addEventListener('mouseenter', ()=>{
+                    let x = i % 16;
+                    let y = Math.trunc(i / 16);
+                    let color = window.getComputedStyle(pixel[i]).backgroundColor;
+                    setTooltip(x, y, color);
+                });
+
+                pixel[i].addEventListener('click', ()=>{
+                    console.log('index', i);
+                    PIXEL_INDEX = i;
+                    let color = window.getComputedStyle(pixel[i]).backgroundColor;
+                    document.querySelector("#color-picker-values").children[1].style.backgroundColor = color;
+                    document.getElementById('color-picker-wrapper').style.display = 'flex';
+                    
+                });
+                
+            }
+
+        }
+
+
+        gerarTela();
+
+
+        
+
+
+        function savePixel(){
+            console.log('salvar');
+            
+
+
+            let pixel = document.querySelectorAll('.pixel');
+            pixel[PIXEL_INDEX].style.backgroundColor = document.querySelector("#color-picker-values input").value;
+
+
+            document.getElementById('color-picker-wrapper').style.display = 'none';
+        }
+
+
+
+        
+
+
+
+
+
+        var tooltip = document.getElementById("tooltip");
+
+        window.addEventListener("mousemove", (evt)=>{
+
+
+            let posX = evt.clientX;
+            posX -= tela.offsetLeft;
+
+
+            let posY = evt.clientY;
+            posY -= tooltip.offsetHeight;
+
+            if ( posX < 0 ) posX = 0;
+            if ( posY < 0 ) posY = evt.clientY;
+
+            if ( posX + tooltip.offsetWidth >= tela.offsetWidth ){
+                posX = tela.offsetWidth - tooltip.offsetWidth;
+            }
+ 
+
+             
+
+            tooltip.style.left = (posX + tela.offsetLeft) + 'px';
+            tooltip.style.top  = (posY) + 'px';
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        tela.addEventListener('mouseleave', ()=>{
+            tooltip.style.display = 'none';
+        });
+
+
+        tela.addEventListener('mouseenter', ()=>{
+            tooltip.style.display = 'flex';
+        });
+
+
+
+
+
+
+
+
+
+        function setTooltip(x, y, color){
+
+            if ( x < 10 ) x = '0' + x;
+            if ( y < 10 ) y = '0' + y;
+            tooltip.children[0].firstElementChild.innerText = x;
+            tooltip.children[1].firstElementChild.innerText = y;
+            tooltip.children[2].firstElementChild.style.backgroundColor = color;
+
+        }
+
+
+
+
+    </script>
+
+
+</body>
+</html>

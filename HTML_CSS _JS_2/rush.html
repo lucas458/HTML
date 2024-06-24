@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+        }
+        
+
+        
+
+
+        #lcd{
+            background-color: #000;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            image-rendering: pixelated;
+        }
+
+
+
+    </style>
+
+</head>
+
+
+
+
+<body>
+    
+
+
+
+
+    <canvas id="lcd"></canvas>
+
+    
+
+
+
+
+    <script>
+
+        
+
+
+
+
+        var canvas = document.getElementById("lcd");
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        
+        var contex = canvas.getContext('2d');
+
+
+
+
+
+
+
+        var PLAYER = {
+
+            x:0,
+            y:0,
+            width:24,
+            height:24,
+
+            life: 5,
+            max_life: 5,
+
+            hasHammer: false,
+            hasColdHammer: false,
+            hasHook: false,
+
+            isGrounded: true,   // (false) se tive na agua
+            isMoving: false,
+            
+
+            speed: 4,
+            fancing: 0
+
+        };
+
+
+
+
+
+        var MAP_LIST = [
+            [
+                {
+                    diamonds_purple: 10,
+                    diamonds_red: 1,
+
+                    map_width: 15,
+                    map_height: 15,
+
+                    map:[
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                        0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,
+                        0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                    ]
+
+                }
+            ]
+
+        ]
+
+
+
+
+        var GAME = {
+            level: 0,
+            map:0,
+
+            hitbox_list: []
+        }
+
+
+        function update(){
+
+            // CLEAR
+            contex.clearRect(0, 0, canvas.width, canvas.height);
+            
+
+            // GEN MAP
+
+            for ( let i = 0; i < 15; i++){
+                for (let j = 0; j < 15; j++) {
+                    
+                    
+                    
+                    let index = (i * 15) + j;
+                    let value = MAP_LIST[GAME.map][GAME.level].map[index];
+
+                    if ( value == 0 ){
+                        contex.fillStyle = "green";
+                    }
+                    else if (value == 1){
+                        contex.fillStyle = "brown";
+                        GAME.hitbox_list.push({
+                            x: j*24,
+                            y: i*24
+                        });
+                    }
+
+
+
+                    
+                    contex.fillRect(j*24, i*24, 24, 24);
+
+
+
+                }
+            }
+
+
+
+
+
+
+
+            // GEN PLAYER
+
+
+            contex.fillStyle = "#fff";
+            contex.fillRect(PLAYER.x, PLAYER.y, PLAYER.width, PLAYER.height);
+
+
+            
+
+
+
+
+            requestAnimationFrame(update);
+        }
+
+        update();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+         
+
+        function isColliding( ref ){
+            for (let i = 0; i < GAME.hitbox_list.length; i++){
+                if ( checkCollisionRect(ref.x, ref.y, ref.width, ref.height, GAME.hitbox_list[i].x, GAME.hitbox_list[i].y, 24, 24) ){
+                    console.log("xx");
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+
+
+        function moveToDirection( direction ){
+
+
+            
+
+
+            
+
+
+
+            switch ( direction ) {
+                case 'right':
+                     
+
+
+                    let temp_player = {
+                        x: PLAYER.x + PLAYER.speed,
+                        y: PLAYER.y,
+                        with: PLAYER.width,
+                        height: PLAYER.height
+                    };
+                    
+                    let index = isColliding(temp_player);
+
+                    if ( index >= 0 ){
+                        PLAYER.x = 0;
+                    }else{
+                        PLAYER.x += PLAYER.speed;
+                    }
+
+
+
+                    break;
+                case 'left':
+                    PLAYER.x -= PLAYER.speed;
+                    break;
+                case 'down':
+                    PLAYER.y += PLAYER.speed;
+                    break;
+                case 'up':
+                    PLAYER.y -= PLAYER.speed
+                    break;
+            }
+
+
+
+            if ( PLAYER.x < 0 ){
+                PLAYER.x = 0;
+            }
+            if ( PLAYER.x > canvas.width - PLAYER.width){
+                PLAYER.x = canvas.width - PLAYER.width;
+            }
+            if ( PLAYER.y < 0 ){
+                PLAYER.y = 0;
+            }
+            if ( PLAYER.y > canvas.height - PLAYER.height ){
+                PLAYER.y = canvas.height - PLAYER.height;
+            }
+
+
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+        function checkCollisionRect(x1, y1, w1, h1, x2, y2, w2, h2){
+            return (x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2);
+        }
+
+
+
+
+
+
+
+
+
+
+        var TIMER_KEYBOARD = null;
+
+        var CLICK_FLAG = false;
+
+
+        function getInput(keyCode){
+
+
+             
+
+            //console.log(keyCode)
+
+            if ( keyCode == 37 ){
+                console.log("LEFT"); 
+                moveToDirection('left');
+            }
+
+            else if ( keyCode == 38){
+                console.log("UP");
+                moveToDirection('up');
+            }
+            
+            else if ( keyCode == 39){
+                console.log("RIGHT");
+                moveToDirection('right');
+            }
+            
+            else if ( keyCode == 40 ){
+                console.log("DOWN");
+                moveToDirection('down');
+            }
+
+            else if ( keyCode == 81 ){
+                if ( !CLICK_FLAG ){
+                    CLICK_FLAG = true;
+                    console.log("KILL");
+                }
+            }
+
+
+            if ( keyCode == 32 ){
+                
+                if ( !CLICK_FLAG ){
+                    CLICK_FLAG = true;
+                    console.log("HAMMER/HOOK");
+                }
+            }
+
+
+            if ( keyCode == 80 ){
+                if ( !CLICK_FLAG ){
+                    CLICK_FLAG = true;
+                    console.log("PAUSE");
+                }
+            }
+
+
+        }
+
+
+        window.addEventListener("keydown", (e)=>{
+            if (TIMER_KEYBOARD == null){
+                TIMER_KEYBOARD = setInterval(()=>{
+                    getInput(e.keyCode);
+                }, 20);
+            }
+        });
+
+
+
+         
+
+
+
+        ['keyup', 'blur'].forEach((e)=>{
+            window.addEventListener(e, ()=>{
+                clearInterval(TIMER_KEYBOARD);
+                TIMER_KEYBOARD = null;
+                CLICK_FLAG = false;
+            });
+        });
+
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+
+
+
+    </script>
+
+</body>
+</html>

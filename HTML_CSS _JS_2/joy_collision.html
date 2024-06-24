@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{ 
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+            overflow: hidden;
+        }
+
+
+
+
+        #screen{
+            width: 100%;
+            height: 100%; 
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+ 
+
+        #box{
+            width: 16px;
+            height: 16px; 
+            display: flex;
+            position: relative;
+            /* background-color: red; */
+            left: calc(50% - 8px);
+            top: calc(50% - 8px);
+        }
+
+        .rigid{
+            width: 64px;
+            height: 32px;
+            display: flex;
+            color: #ffc107;
+            background-color: rebeccapurple;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+        #list{ 
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+
+
+        #joystick_wrapper{
+            opacity: 0.8;
+            width: 64px;
+            height: 64px;
+            background-color: #222;
+            border-radius: 50%;
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        #joystick_thumb{
+            width: 32px;
+            height: 32px;
+            background-color: #9e9e9e;
+            border-radius: 50%;
+            position: relative;
+            left: calc(50% - 16px);
+            top: calc(50% - 16px);
+        }
+ 
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+    <div id="screen">
+
+        <div id="box">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Z"/></svg>
+        </div>
+
+        <div id="list"></div>
+
+    </div>
+    
+
+
+    <div id="joystick_wrapper">
+        <div id="joystick_thumb"></div>
+    </div>
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+        
+
+        var box             = document.getElementById("box");
+        var list            = document.getElementById("list");
+
+        var joystick_wrapper = document.getElementById("joystick_wrapper");
+        var joystick_thumb   = document.getElementById("joystick_thumb");
+        var joystick_canMove = false;
+        var joystick_value   = {x: 0, y: 0};
+        var joystick_angle   = 0;
+
+
+        window.ontouchstart = (event) => {
+            joystick_canMove = true;
+            joystick_wrapper.style.display = 'block';
+            joystick_wrapper.style.left = Math.clamp(event.touches[0].clientX - joystick_wrapper.offsetWidth/2, 0, screen.availWidth - joystick_wrapper.offsetWidth) + 'px';
+            joystick_wrapper.style.top = Math.clamp(event.touches[0].clientY - joystick_wrapper.offsetHeight/2, 0, screen.availHeight - joystick_wrapper.offsetHeight) + 'px';
+        };
+
+
+        window.ontouchmove = (event) => {
+            if ( joystick_canMove ){
+                let radius = joystick_wrapper.offsetWidth/2;
+                let joystick_position = {
+                    x: event.touches[0].clientX - (joystick_wrapper.offsetLeft + radius),
+                    y: event.touches[0].clientY - (joystick_wrapper.offsetTop + radius)
+                }; 
+                let angle = Math.atan2(joystick_position.x, joystick_position.y);
+                let dist  = Math.min(radius ,Math.hypot(joystick_position.x, joystick_position.y));
+                let posX  = Math.sin(angle) * dist;
+                let posY  = Math.cos(angle) * dist; 
+                joystick_value = {
+                    x: posX / radius,
+                    y: posY / radius
+                };
+                joystick_angle = 360 - (angle * 180 / Math.PI + 180);
+                joystick_thumb.style.transform = `translate(${posX}px, ${posY}px)`;
+            }
+        };
+
+
+        window.ontouchend = () => {
+            joystick_value = {x: 0, y: 0};
+            joystick_canMove = false;
+            joystick_wrapper.style.display = '';
+            joystick_thumb.style.transform = '';
+        };
+        
+
+        function generateBox( qty = 0 ){
+            if ( qty < 0 ) return;
+            list.innerHTML = '';
+            while (qty-- > 0){
+                let item = document.createElement('div');
+                item.classList.add('rigid');
+                let posX = Math.random() * (screen.availWidth - 64);
+                let posY = Math.random() * (screen.availHeight - 64);
+                item.style.left = posX + 'px';
+                item.style.top  = posY + 'px';
+                list.appendChild(item);
+            }
+        }
+        
+
+        function update(){
+
+            let speed = 3;
+            box.style.left = Math.clamp(box.offsetLeft + speed * joystick_value.x, 0, screen.availWidth - box.offsetWidth) + 'px';
+            box.style.top  = Math.clamp(box.offsetTop + speed * joystick_value.y, 0, screen.availHeight - box.offsetHeight) + 'px';
+            box.style.transform = `rotate(${joystick_angle}deg)`;
+
+            if ( joystick_canMove ){
+                for (let i of list.children){ 
+                    let collision = (box.offsetLeft + box.offsetWidth >= i.offsetLeft) &&
+                                    (box.offsetLeft <= i.offsetLeft + i.offsetWidth) &&
+                                    (box.offsetTop + box.offsetHeight >= i.offsetTop) &&
+                                    (box.offsetTop <= i.offsetTop + i.offsetHeight);
+
+                    
+                    if ( collision ){
+                        
+                        let posX = box.offsetLeft;
+                        let posY = box.offsetTop;
+
+                        if ( joystick_value.x > 0 && box.offsetLeft + box.offsetWidth <= i.offsetLeft + speed ){
+                            posX = Math.clamp(posX, 0, i.offsetLeft - box.offsetWidth); 
+                        }
+                        else if ( joystick_value.x < 0 && box.offsetLeft >= i.offsetLeft + i.offsetWidth - speed ){
+                            posX = Math.clamp(posX, i.offsetLeft + i.offsetWidth, screen.availWidth); 
+                        }
+
+
+                        if ( joystick_value.y > 0 && box.offsetTop + box.offsetHeight <= i.offsetTop + speed ){
+                            posY = Math.clamp(posY, 0, i.offsetTop - box.offsetHeight); 
+                        }
+                        else if ( joystick_value.y < 0 && box.offsetTop >= i.offsetTop + i.offsetHeight - speed ){
+                            posY = Math.clamp(posY, i.offsetTop + i.offsetHeight, screen.availHeight); 
+                        } 
+
+                        box.style.left = posX + 'px';
+                        box.style.top  = posY + 'px';
+                        
+                    }
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        
+        generateBox(10);
+        update();
+        
+        
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            height: 100%;
+            user-select: none;
+        }
+        html{
+            height: 100%;
+        }
+
+
+
+
+        .window{
+            width: fit-content;
+            min-width: 240px;
+            height: 240px;
+            position: absolute;
+            z-index: 1;
+            box-shadow: 0 0 5px 0 #fff;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .window > header{
+            padding: 8px;
+            background-color: red;
+        }
+
+
+        .window > section{
+            background-color: blue;
+            height: 100%;
+        }
+
+
+
+        
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+
+
+    <div class="window">
+        <header></header>
+        <section></section>
+    </div>
+
+    <div class="window">
+        <header></header>
+        <section></section>
+    </div>
+
+
+
+
+    <script>
+
+
+
+        var WINDOW_MOVE = false;
+
+
+        var WINDOW_MOVE_POS_INIT = {
+            x: 0,
+            y: 0,
+            index: -1,
+            old_index: -1
+        }
+
+
+        var WINDOW_LIST = document.getElementsByClassName("window");
+
+
+
+        for (let i = 0; i < WINDOW_LIST.length; i++){
+
+            WINDOW_LIST[i].querySelector("header").addEventListener("mousedown", (e)=>{
+                WINDOW_MOVE = true;
+                WINDOW_MOVE_POS_INIT.x = e.clientX;
+                WINDOW_MOVE_POS_INIT.y = e.clientY;
+
+
+                 
+
+                
+
+                WINDOW_MOVE_POS_INIT.index = i;
+
+                if ( WINDOW_MOVE_POS_INIT.index != WINDOW_MOVE_POS_INIT.old_index ){
+                    console.log("NEW PRESS", WINDOW_MOVE_POS_INIT.index);
+                    WINDOW_LIST[WINDOW_MOVE_POS_INIT.index].style.zIndex = 1;
+
+                    if ( WINDOW_MOVE_POS_INIT.old_index >= 0 ){
+                        WINDOW_LIST[WINDOW_MOVE_POS_INIT.old_index].style.zIndex = 0;
+                    }
+
+                    WINDOW_MOVE_POS_INIT.old_index = i;
+
+                }else{
+                    WINDOW_LIST[WINDOW_MOVE_POS_INIT.index].style.zIndex = 1;
+                    console.log("SAME")
+                }
+ 
+
+                
+
+                
+            });
+
+        }
+
+        
+
+
+
+        window.addEventListener("mousemove", (e)=>{
+
+            if ( WINDOW_MOVE ){
+
+                let diffX = e.clientX - WINDOW_MOVE_POS_INIT.x;
+                let diffY = e.clientY - WINDOW_MOVE_POS_INIT.y;
+
+
+                if ( WINDOW_MOVE_POS_INIT.index >= 0 ){
+                    
+                    
+                    
+                     
+
+                    let sizeW = WINDOW_LIST[WINDOW_MOVE_POS_INIT.index].offsetWidth;
+                    let sizeH = WINDOW_LIST[WINDOW_MOVE_POS_INIT.index].offsetHeight;
+
+                    let posX = e.clientX;
+                    let posY = e.clientY;
+
+
+                    if ( posX < sizeW/2 ){
+                        posX = sizeW/2;
+                    }
+                    if ( posX > document.body.offsetWidth-sizeW/2 ){
+                        posX = 800 - sizeW/2;
+                    }
+
+
+
+                    if ( posY < 8 ){
+                        posY = 8;
+                    }
+
+
+                    if ( posY > document.body.offsetHeight - sizeH - 8 ){
+                        console.log("-------", sizeH)
+
+                        //posY = document.body.offsetHeight - sizeH - 8;
+                    }
+
+                    
+
+                     
+
+
+                    console.log(posY)
+
+
+
+
+                    WINDOW_LIST[WINDOW_MOVE_POS_INIT.index].style.left = (posX - (sizeW/2)) + 'px';
+
+                    WINDOW_LIST[WINDOW_MOVE_POS_INIT.index].style.top = (posY-8) + 'px';
+
+                }
+
+                
+            }
+            
+        });
+
+        window.addEventListener("mouseup", (e)=>{
+            WINDOW_MOVE = false;
+            console.log("LEAVE"); 
+            WINDOW_MOVE_POS_INIT.index = -1;
+        });
+
+
+    </script>
+
+
+</body>
+</html>

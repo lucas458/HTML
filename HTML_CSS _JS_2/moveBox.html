@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body{
+            width: 100%;
+            height: 100%;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        
+        #box_wrapper{
+            width: 320px;
+            height: 240px;
+            background-color: #353535;
+            position: absolute;
+            left: calc( 50% - 320px / 2);
+            top: calc( 50% - 240px/2);
+        }
+
+        #box_header{
+            height: 16px;
+            background-color: #626262;
+            cursor: pointer;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+ 
+
+    <div id="box_wrapper">
+        <div id="box_header"></div>
+        <div id="box_content"></div>
+    </div>
+     
+
+
+
+
+
+    <script>
+
+
+
+         
+        var box_wrapper = document.getElementById("box_wrapper");
+
+
+        var move_start = {x: 0, y: 0};
+        var move_isPress =  false;
+
+        box_wrapper.firstElementChild.onmousedown = (evt) => {
+            move_start.x = evt.clientX - box_wrapper.offsetLeft;
+            move_start.y = evt.clientY - box_wrapper.offsetTop;
+            move_isPress = true;
+        };
+
+
+        window.onmouseup = () => {
+            move_isPress = false;
+        };
+
+
+        window.onmousemove = (evt) => {
+
+            if ( move_isPress ){
+                
+                let posX = evt.clientX - move_start.x;
+                let posY = evt.clientY - move_start.y;
+                
+                posX = Math.clamp(posX, 0, document.body.offsetWidth - box_wrapper.offsetWidth);
+                posY = Math.clamp(posY, 0, document.body.offsetHeight - box_wrapper.offsetHeight);
+
+                box_wrapper.style.left = (posX) + 'px';
+                box_wrapper.style.top  = (posY) + 'px'; 
+            }
+
+        };
+
+
+
+
+        Math.clamp = (value, min, max) => {
+            if ( value > max ) return max;
+            if ( value < min ) return min;
+            return value;
+        };
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

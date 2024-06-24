@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+            overflow: hidden;
+            font-family: monospace;
+            font-size: 1.2em;
+        }
+
+
+
+
+
+
+        /* NOME DO ITEM */
+        #tooltip_item{
+            z-index: 1;
+            width: fit-content;
+            background-color: #0d020f;
+            border: 2px solid #210551;
+            padding: 4px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        /* ITEM MOUSE  */
+        #temp_item{
+            z-index: 1;
+            width: 36px;
+            height: 36px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            pointer-events: none;
+            /* visibility: hidden; */
+        }
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+        /* INVENTARIO */
+        #interface{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #wrapper{
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        #chest{
+            margin-top: 50%;
+        }
+        #chest::before{
+            content: 'Chest';
+        }
+
+
+        #inventory::before{
+            content: 'Inventory';
+        }
+
+        #hand{
+            margin-bottom: 8px;
+        }
+
+
+        .item-wrapper-row{
+            display: flex;
+        }
+        .item-wrapper, .item-wrapper-temp{ 
+            position: relative;
+            display: inline-block;
+            background-color: #8B8B8B;
+            border: 2px solid;
+            border-color: #373737 #FFF #FFF #373737;
+            width: 36px;
+            height: 36px;
+            line-height: 1;
+        }
+
+        .item-wrapper:hover{
+            background-color: #616161;
+        }
+
+        .item-wrapper-temp{
+            background-color: transparent;
+            border: none;
+            padding: 2px;
+        }
+        
+
+
+
+
+        .item{
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .item-icon{
+            background-image: url("https://static.wikia.nocookie.net/minecraft_gamepedia/images/4/44/InvSprite.png/revision/latest?cb=20221123185755&format=original&format=original");
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+        }
+
+        .item-value{ 
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+
+
+
+
+
+
+        /* ITENS */
+
+
+        .item-grass{
+            background-position-x: calc(-32px * 20);
+            background-position-y: calc(-32px * 30);
+        }
+
+        .item-wood{
+            background-position-x: calc(-32px * 0);
+            background-position-y: calc(-32px * 29);    
+        }
+        
+        .item-ender_pearl{
+            background-position-x: calc(-32px * 21);
+            background-position-y: calc(-32px * 109);
+        }
+
+        .item-picaxe_stone{
+            background-position-x: calc(-32px * 1);
+            background-position-y: calc(-32px * 112);
+        }
+
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    <!-- TOOLTIP -->
+    <div id="tooltip_item">nome aqui</div>
+
+
+
+
+
+    <!-- HOLD ITEM -->
+    <div id="temp_item">
+        <div class="item-wrapper-temp"></div>
+    </div>
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+    <!-- INVENTARIO -->
+    <div id="interface">
+
+        <div id="wrapper">
+
+
+            <div id="chest">
+
+                <div class="item-wrapper-row">
+
+                    <div class="item-wrapper">
+                        <div class="item" item-title="Grass" item-pack="64">
+                            <div class="item-icon item-grass"></div>
+                            <div class="item-value">60</div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="item-wrapper">
+                        <div class="item" item-title="Grass" item-pack="64">
+                            <div class="item-icon item-grass"></div>
+                            <div class="item-value">2</div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="item-wrapper">
+                        <div class="item" item-title="Oak Planks" item-pack="64">
+                            <div class="item-icon item-wood"></div>
+                            <div class="item-value">12</div>
+                        </div>
+                    </div>
+
+                    <div class="item-wrapper">
+                        <div class="item" item-title="Ender Pearl" item-pack="16">
+                            <div class="item-icon item-ender_pearl"></div>
+                            <div class="item-value">14</div>
+                        </div>
+                    </div>
+
+
+                    <div class="item-wrapper">
+                        <div class="item" item-title="Ender Pearl" item-pack="16">
+                            <div class="item-icon item-ender_pearl"></div>
+                            <div class="item-value">3</div>
+                        </div>
+                    </div>
+
+
+                    <div class="item-wrapper">
+                        <div class="item" item-title="Stone Picaxe" item-pack="1">
+                            <div class="item-icon item-picaxe_stone"></div>
+                            <div class="item-value" style="visibility: hidden;">1</div>
+                        </div>
+                    </div>
+
+                    <div class="item-wrapper">
+                        <div class="item" item-title="Stone Picaxe" item-pack="1">
+                            <div class="item-icon item-picaxe_stone"></div>
+                            <div class="item-value" style="visibility: hidden;">1</div>
+                        </div>
+                    </div>
+
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                </div>
+
+                <div class="item-wrapper-row">
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                </div>
+
+                <div class="item-wrapper-row">
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                </div> 
+ 
+                 
+            </div>
+
+
+
+             
+            <div id="inventory">
+
+                <div class="item-wrapper-row">
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                </div>
+
+                <div class="item-wrapper-row">
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                </div>
+
+                <div class="item-wrapper-row">
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                </div>
+
+            </div>
+
+
+            <div id="hand">
+
+                <div class="item-wrapper-row">
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    
+    
+     
+
+
+
+
+
+    <script>
+
+
+
+        window.oncontextmenu = (evt)=>{
+            evt.preventDefault();
+        }
+        
+
+
+
+
+        var item_wrapper = document.getElementsByClassName("item-wrapper");
+
+        var tooltip_item = document.getElementById("tooltip_item");
+        var temp_item = document.getElementById("temp_item");
+
+
+
+
+
+        function tempItemPosition(x, y){
+            temp_item.style.left = (x - temp_item.offsetWidth/2) + 'px';
+            temp_item.style.top = (y - temp_item.offsetHeight/2) + 'px';
+        }
+
+        function toooltipPosition(x, y){
+            tooltip_item.style.left = (x + 8) + 'px';
+            tooltip_item.style.top = (y - tooltip_item.offsetHeight) + 'px';
+        }
+
+        
+        window.onmousemove = (evt)=>{
+            tempItemPosition(evt.clientX, evt.clientY);
+            toooltipPosition(evt.clientX, evt.clientY);
+        };
+
+
+
+
+        // REMOVER NUMERO (1) DO ITEM
+        function updateItemValue(){
+            document.querySelectorAll(".item-wrapper .item-value").forEach(e=>{
+                e.style.display = (e.innerHTML <= 1)? 'none' : 'block';
+            });
+
+            if ( temp_item.querySelector(".item-value") ){
+                temp_item.querySelector(".item-value").style.display = (temp_item.querySelector(".item-value").innerHTML <= 1)? 'none' : 'block';
+            }
+
+            
+        }
+
+
+
+
+
+        for (let index = 0; index < item_wrapper.length; index++) {
+            
+            
+            item_wrapper[index].onmousemove = ()=>{
+                let tempSlotFree = (temp_item.firstElementChild.firstElementChild == null);
+                let slotFree = (item_wrapper[index].firstElementChild == null);
+                tooltip_item.style.visibility = ( tempSlotFree && !slotFree )? 'visible' : 'hidden';
+            };
+
+            item_wrapper[index].onmouseleave = ()=>{
+                tooltip_item.style.visibility = 'hidden';
+            }
+
+
+            item_wrapper[index].onmouseover = ()=>{
+                let tempSlotFree = (temp_item.firstElementChild.firstElementChild == null);
+                let slotFree = (item_wrapper[index].firstElementChild == null);
+                if ( tempSlotFree && !slotFree ){
+                    tooltip_item.innerHTML = item_wrapper[index].firstElementChild.getAttribute("item-title");
+                }
+            }
+
+
+            item_wrapper[index].onmousedown = (evt)=>{
+
+                
+
+                tempItemPosition(evt.clientX, evt.clientY);
+
+                let tempSlotFree = (temp_item.firstElementChild.firstElementChild == null);
+                let slotFree = (item_wrapper[index].firstElementChild == null);
+
+                var current_slot = item_wrapper[index];
+
+                // LEFT CLICK
+                if ( evt.button == 0 ){
+
+                    // PEGAR ITEM
+                    if ( tempSlotFree && !slotFree ){
+                        console.log('A1');
+                        temp_item.firstElementChild.appendChild( current_slot.firstElementChild );
+                    }
+
+                    // COLOCAR ITEM NO ESPAÇO LIVRE
+                    else if ( !tempSlotFree && slotFree ){
+                        console.log('B1');
+
+                        current_slot.appendChild( temp_item.firstElementChild.firstElementChild );
+
+                    }
+
+                    // COLOCAR ITEM NO ESPAÇO USADO
+                    else if ( !tempSlotFree && !slotFree ){
+                        console.log('C1');
+
+
+                        let maxPack = parseInt( temp_item.firstElementChild.firstElementChild.getAttribute("item-pack") );
+                        let temp_item_qty = parseInt(temp_item.querySelector(".item-value").innerHTML);
+                        let current_slot_qty = parseInt(current_slot.querySelector(".item-value").innerHTML);
+
+                        // MESMO TIPO (SOMAR)
+                        if ( temp_item.firstElementChild.firstElementChild.getAttribute("item-title") == current_slot.firstElementChild.getAttribute("item-title") ){
+                            
+                            
+                            if ( temp_item_qty + current_slot_qty <= maxPack ){
+                                temp_item.firstElementChild.innerHTML = '';
+                                current_slot.querySelector(".item-value").innerHTML = temp_item_qty + current_slot_qty;
+                            }
+                            else{
+                                let diff = maxPack - current_slot_qty;
+                                temp_item.querySelector(".item-value").innerHTML = temp_item_qty - diff;
+                                current_slot.querySelector(".item-value").innerHTML = current_slot_qty + diff;
+                            }
+
+
+                        }
+
+                        // DIFERENTE (SWAP)
+                        else{
+                            
+                            temp_item.firstElementChild.appendChild( current_slot.firstElementChild );
+                            current_slot.appendChild( temp_item.firstElementChild.firstElementChild );
+                        }
+
+
+                        
+
+                    } 
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                // RIGHT CLICK
+                else if ( evt.button == 2 ){
+
+
+
+                    // DIVIDIR ou PEGAR
+                    if ( tempSlotFree && !slotFree ){
+                        console.log('A2');
+
+                        let current_slot_qty = parseInt(current_slot.querySelector(".item-value").innerHTML);
+
+                        // DIVIDIR
+                        if ( current_slot_qty > 1 ){
+                            temp_item.firstElementChild.innerHTML = current_slot.innerHTML;
+                            temp_item.querySelector(".item-value").innerHTML = current_slot_qty - parseInt(current_slot_qty/2);
+                            current_slot.querySelector(".item-value").innerHTML = parseInt(current_slot_qty/2);
+                        }
+
+                        // PEGAR
+                        else{
+                            temp_item.firstElementChild.appendChild( current_slot.firstElementChild );
+                        }
+
+                    }
+
+
+
+                    // COLOCAR (1x) ITEM NO SLOT LIVRE
+                    else if ( !tempSlotFree && slotFree ){
+                        console.log('B2');
+                        current_slot.innerHTML = temp_item.firstElementChild.innerHTML;
+                        current_slot.querySelector(".item-value").innerHTML = 1;
+
+                        let temp_item_qty = parseInt(temp_item.querySelector(".item-value").innerHTML);
+
+                        if ( temp_item_qty-1 > 0){
+                            temp_item.querySelector(".item-value").innerHTML = temp_item_qty - 1;
+                        }else{
+                            temp_item.firstElementChild.innerHTML = '';
+                        }
+
+                    }
+
+
+                    // COLOCAR (1x) ITEM NO SLOT USADO
+                    else if ( !tempSlotFree && !slotFree ){
+                        console.log('C2');
+
+                        // MESMO TIPO (SOMAR)
+                        if ( temp_item.firstElementChild.firstElementChild.getAttribute("item-title") == current_slot.firstElementChild.getAttribute("item-title") ){
+                             
+                            let maxPack = parseInt( temp_item.firstElementChild.firstElementChild.getAttribute("item-pack") );
+                            let temp_item_qty = parseInt(temp_item.querySelector(".item-value").innerHTML);
+                            let current_slot_qty = parseInt(current_slot.querySelector(".item-value").innerHTML);
+
+                            if ( current_slot_qty + 1 <= maxPack ){
+                                temp_item.querySelector(".item-value").innerHTML = temp_item_qty - 1;
+                                current_slot.querySelector(".item-value").innerHTML = current_slot_qty + 1;
+
+                                if ( temp_item_qty-1 <= 0){
+                                    temp_item.firstElementChild.innerHTML = '';
+                                }
+                            }
+
+
+                        }
+
+                        // DIFERENTE (SWAP)
+                        else{ 
+                            temp_item.firstElementChild.appendChild( current_slot.firstElementChild );
+                            current_slot.appendChild( temp_item.firstElementChild.firstElementChild );
+                        }
+
+                    }
+
+                }
+
+                
+                
+
+                tempSlotFree = (temp_item.firstElementChild.firstElementChild == null);
+                slotFree = (item_wrapper[index].firstElementChild == null);
+                tooltip_item.style.visibility = ( tempSlotFree && !slotFree )? 'visible' : 'hidden';
+
+                updateItemValue();
+
+            };
+            
+            
+        }
+
+
+        
+
+    </script>
+
+
+
+</body>
+</html>

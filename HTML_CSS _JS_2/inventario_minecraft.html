@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            color: #fff;
+            user-select: none;
+            overflow: hidden;
+        }
+
+
+
+
+
+
+        /* NOME DO ITEM */
+        #tooltip_item{
+            z-index: 1;
+            width: fit-content;
+            background-color: #0d020f;
+            border: 2px solid #210551;
+            padding: 4px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        /* ITEM MOUSE  */
+        #temp_item{
+            z-index: 1;
+            width: 36px;
+            height: 36px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+        /* INVENTARIO */
+        #inventory{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #wrapper{
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #chest{
+            margin-top: 50%;
+        }
+
+        #hand{
+            margin-bottom: 8px;
+        }
+
+
+        .inventory-row{
+            display: flex;
+        }
+        .item-wrapper, .item-wrapper-temp{ 
+            position: relative;
+            display: inline-block;
+            background-color: #8B8B8B;
+            border: 2px solid;
+            border-color: #373737 #FFF #FFF #373737;
+            width: 36px;
+            height: 36px;
+            line-height: 1;
+        }
+
+        .item-wrapper:hover{
+            background-color: #616161;
+        }
+
+        .item-wrapper-temp{
+            background-color: transparent;
+            border: none;
+            padding: 2px;
+        }
+        
+
+
+
+
+        .item{
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .item-icon{
+            background-image: url("https://static.wikia.nocookie.net/minecraft_gamepedia/images/4/44/InvSprite.png/revision/latest?cb=20221123185755&format=original&format=original");
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+        }
+
+        .item-value{ 
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+
+
+
+
+
+
+        /* ITENS */
+
+
+        .item-grass{
+            background-position-x: calc(-32px * 20);
+            background-position-y: calc(-32px * 30);
+        }
+
+
+        .item-wood{
+            background-position-x: calc(-32px * 0);
+            background-position-y: calc(-32px * 29);    
+        }
+        
+        .item-ender_pearl{
+            background-position-x: calc(-32px * 21);
+            background-position-y: calc(-32px * 109);
+        }
+
+        .item-picaxe_stone{
+            background-position-x: calc(-32px * 1);
+            background-position-y: calc(-32px * 112);
+        }
+
+
+
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    <div id="tooltip_item">nome aqui</div>
+
+
+
+
+
+
+    <div id="temp_item">
+        <div class="item-wrapper-temp"></div>
+    </div>
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+    <!-- INVENTARIO -->
+    <div id="inventory">
+
+        <div id="wrapper">
+
+
+            <div id="chest">
+
+                <div class="inventory-row">
+
+                    <div class="item-wrapper">
+                        <div class="item item_pack64" item-title="Grass">
+                            <div class="item-icon item-grass"></div>
+                            <div class="item-value">60</div>
+                        </div>
+                    </div>
+
+
+                    <div class="item-wrapper">
+                        <div class="item item_pack64" item-title="Wood">
+                            <div class="item-icon item-wood"></div>
+                            <div class="item-value">12</div>
+                        </div>
+                    </div>
+
+                    <div class="item-wrapper">
+                        <div class="item" item-title="Stone Picaxe">
+                            <div class="item-icon item-picaxe_stone"></div>
+                            <div class="item-value" style="visibility: hidden;">1</div>
+                        </div>
+                    </div>
+                    
+                    <div class="item-wrapper">
+                        <div class="item" item-title="Stone Picaxe">
+                            <div class="item-icon item-picaxe_stone"></div>
+                            <div class="item-value" style="visibility: hidden;">1</div>
+                        </div>
+                    </div>
+
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                </div>
+
+                <div class="inventory-row">
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                </div>
+
+                <div class="inventory-row">
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                </div> 
+ 
+                 
+            </div>
+
+
+
+
+            <div id="hand">
+
+                <div class="inventory-row">
+
+
+                    <!-- SLOT -->
+                    <div class="item-wrapper">
+                        <div class="item item_pack64" item-title="Grass">
+                            <div class="item-icon item-grass"></div>
+                            <div class="item-value">8</div>
+                        </div>
+                    </div>
+
+                    <!-- SLOT -->
+                    <div class="item-wrapper">
+                        <div class="item item_pack64" item-title="Wood">
+                            <div class="item-icon item-wood"></div>
+                            <div class="item-value">12</div>
+                        </div>
+                    </div>
+
+                    <!-- SLOT -->
+                    <div class="item-wrapper">
+                        <div class="item item_pack16" item-title="Ender Pearl">
+                            <div class="item-icon item-ender_pearl"></div>
+                            <div class="item-value">6</div>
+                        </div>
+                    </div>
+
+                    <!-- SLOT -->
+                    <div class="item-wrapper">
+                        <div class="item item_pack16" item-title="Ender Pearl">
+                            <div class="item-icon item-ender_pearl"></div>
+                            <div class="item-value">11</div>
+                        </div>
+                    </div>
+
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    <div class="item-wrapper"></div>
+                    
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    
+    
+     
+
+
+    <script>
+
+        var tooltip_item = document.getElementById("tooltip_item");
+        var temp_item = document.getElementById("temp_item");
+        var item_wrapper = document.getElementsByClassName("item-wrapper");
+
+        function setTooltipItem( content, x, y, visible ){
+
+
+
+        }  
+
+
+
+        window.oncontextmenu = (evt)=>{
+            evt.preventDefault();
+        }
+
+
+
+        window.onmousemove = (evt)=>{
+
+            temp_item.style.left = (evt.clientX - temp_item.offsetWidth/2) + 'px';
+            temp_item.style.top = (evt.clientY - temp_item.offsetHeight/2) + 'px';
+            temp_item.style.visibility = (temp_item.children.length > 0)? "visible" : "hidden";
+
+            tooltip_item.style.left = (evt.clientX + 32/2) + 'px';
+            tooltip_item.style.top = (evt.clientY - tooltip_item.offsetHeight*1.5) + 'px';
+
+        }
+
+
+        
+
+
+
+
+
+        function findFreeSlot( parent_name, reference = null, ignore = -1 ){
+
+            let list = document.getElementById(parent_name).querySelectorAll(".item-wrapper");
+
+
+            for (let i = 0; i < list.length; i++){
+
+
+                if ( reference == null ){
+
+                    if ( list[i].children.length <= 0 ){
+                        return i;
+                    }
+                }
+
+
+                else{
+                    if ( list[i].children.length > 0 ){
+                        if ( list[i].firstElementChild.firstElementChild.classList.value == reference ){
+                            
+                            if ( i == ignore ){
+                                continue;
+                            }
+
+                            return i;
+                        }
+
+                        
+                    }
+                }
+            }
+
+            if ( reference != null ){
+                return findFreeSlot(parent_name);
+            }
+
+            return -1;
+
+
+        }
+
+
+
+
+
+
+
+
+
+        
+
+        // LAÇO
+        for (let index = 0; index < item_wrapper.length; index++){
+
+
+            item_wrapper[index].onmousemove = ()=>{
+
+                let show_tooltip = (temp_item.firstElementChild.children.length <= 0 && item_wrapper[index].children.length > 0);
+
+                if ( show_tooltip ){
+                    tooltip_item.innerHTML = item_wrapper[index].firstElementChild.getAttribute('item-title');
+                }
+
+                tooltip_item.style.visibility = (show_tooltip)? "visible" : "hidden";
+
+            }
+
+
+
+
+
+
+            item_wrapper[index].onmousedown = (evt)=>{
+                
+                
+                let tempHasItem = temp_item.firstElementChild.children.length > 0;
+                let slotHasItem = item_wrapper[index].children.length > 0;
+
+
+                tooltip_item.style.visibility = "hidden";
+
+
+
+
+                // LEFT CLICK
+                if ( evt.button == 0 ){
+
+
+
+                    // SHIFT + CLICK
+                    if ( evt.shiftKey ){
+
+
+                        if ( item_wrapper[index].children.length > 0 ){
+
+                            let temp_item_qty = parseInt(item_wrapper[index].querySelector(".item-value").innerHTML);
+                            let max_pack = 1;
+
+                            if ( item_wrapper[index].firstElementChild.classList.contains('item_pack64') ){
+                                max_pack = 64;
+                            }
+                            else if ( item_wrapper[index].firstElementChild.classList.contains('item_pack16') ){
+                                max_pack = 16;
+                            }
+                            
+                            // findFreeSlot( parent_name, reference = null, ignore = -1 );
+                            let find_id = (item_wrapper[index].parentElement.parentElement.id == "hand")? "chest" : "hand";
+                            let list = document.getElementById(find_id).querySelectorAll(".item-wrapper");
+                            let findIndexSlotFree = findFreeSlot(find_id, item_wrapper[index].firstElementChild.firstElementChild.classList.value);
+                            
+                                
+                            while ( findIndexSlotFree >= 0 ){
+
+                                let qty_clicked = 0; 
+                                let qty_founded = 0;
+
+                                if ( item_wrapper[index].querySelector(".item-value") ){
+                                    qty_clicked = parseInt(item_wrapper[index].querySelector(".item-value").innerHTML); 
+                                }
+
+                                if ( list[findIndexSlotFree].querySelector(".item-value") ){
+                                    qty_founded = parseInt(list[findIndexSlotFree].querySelector(".item-value").innerHTML);
+                                }
+
+                                // slot usado
+                                if ( list[findIndexSlotFree].children.length > 0 ){
+                                        
+                                    if ( qty_founded > max_pack ){
+                                        console.log('a');
+                                        findIndexSlotFree = findFreeSlot(find_id, item_wrapper[index].firstElementChild.firstElementChild.classList.value, findIndexSlotFree);
+                                    }
+
+                                    else if ( qty_clicked + qty_founded >= max_pack ){
+                                        console.log('b');
+                                        let diff = max_pack - qty_founded;
+                                        item_wrapper[index].querySelector(".item-value").innerHTML = qty_clicked - diff;
+                                        list[findIndexSlotFree].querySelector(".item-value").innerHTML = qty_founded + diff;
+                                        findIndexSlotFree = findFreeSlot(find_id, item_wrapper[index].firstElementChild.firstElementChild.classList.value, findIndexSlotFree);
+                                    }
+
+                                    else{
+                                        console.log('c');
+                                        list[findIndexSlotFree].querySelector(".item-value").innerHTML = qty_clicked + qty_founded;
+                                        item_wrapper[index].innerHTML = '';
+                                        list[findIndexSlotFree].querySelector(".item-value").style.display = (qty_clicked+qty_founded>1)? "block" : "none";
+                                        break;
+                                    }
+
+                                }
+
+                                // slot vazio
+                                else{
+                                    console.log('vazio')
+                                    list[findIndexSlotFree].appendChild( item_wrapper[index].firstElementChild );
+                                    break;
+                                } 
+
+                            }
+
+                        }
+                        
+                        
+
+
+                        return;
+
+                    }
+
+
+
+
+                    if ( slotHasItem && tempHasItem ){
+                        console.log('colocar item no ocupado');
+
+                        let max_pack = 1;
+                        if ( temp_item.firstElementChild.firstElementChild.classList.contains('item_pack64') ){
+                            max_pack = 64;
+                        }
+                        else if ( temp_item.firstElementChild.firstElementChild.classList.contains('item_pack16') ){
+                            max_pack = 16;
+                        }
+
+                         
+
+                        if ( max_pack > 1 && item_wrapper[index].firstElementChild.firstElementChild.classList.value == temp_item.firstElementChild.firstElementChild.firstElementChild.classList.value ){
+                            console.log('é do mesmo tipo');
+                            let slot_qty = parseInt( item_wrapper[index].firstElementChild.lastElementChild.innerText );
+                            let temp_item_qty = parseInt( temp_item.firstElementChild.firstElementChild.lastElementChild.innerText );
+
+                            if ( slot_qty+temp_item_qty > max_pack ){
+                                console.log('diff');
+                                let diff = max_pack - slot_qty;
+                                item_wrapper[index].firstElementChild.lastElementChild.innerText = slot_qty + diff;
+                                temp_item.firstElementChild.firstElementChild.lastElementChild.innerText = temp_item_qty - diff;
+                                temp_item.querySelector(".item-value").style.display = (temp_item.querySelector(".item-value").innerText > 1 )? "block" : "none";
+                            }
+                            else{
+                                console.log('somar');
+                                temp_item.firstElementChild.innerHTML = '';
+                                item_wrapper[index].firstElementChild.lastElementChild.innerText = slot_qty+temp_item_qty;
+                            }
+
+                            item_wrapper[index].querySelector(".item-value").style.display = (item_wrapper[index].querySelector(".item-value").innerText > 1 )? "block" : "none";
+                            
+                        }
+
+
+
+                        else{
+                            console.log('swap');
+                            let temp_swap = item_wrapper[index].firstElementChild.innerHTML;
+                            item_wrapper[index].firstElementChild.innerHTML = temp_item.firstElementChild.firstElementChild.innerHTML;
+                            temp_item.firstElementChild.firstElementChild.innerHTML = temp_swap;
+                        }
+                    }
+
+
+                    else if ( slotHasItem && !tempHasItem ){
+                        console.log('segurar item');
+                        temp_item.style.visibility = 'visible';
+                        temp_item.firstElementChild.appendChild(item_wrapper[index].firstElementChild);
+                    }
+
+
+                    else if ( !slotHasItem && tempHasItem ){
+                        console.log("colocar item no vazio");
+                        item_wrapper[index].appendChild( temp_item.firstElementChild.firstElementChild );
+                    }
+                    
+
+                }
+
+
+
+
+
+
+
+                // RIGHT CLICK
+                else if ( evt.button == 2 ){
+
+                    if ( slotHasItem && tempHasItem ){
+                        console.log('right -- colocar 1 item no item ocupado');
+
+                        let max_pack = 1;
+                        if ( temp_item.firstElementChild.firstElementChild.classList.contains('item_pack64') ){
+                            max_pack = 64;
+                        }
+                        else if ( temp_item.firstElementChild.firstElementChild.classList.contains('item_pack16') ){
+                            max_pack = 16;
+                        } 
+
+                        let slot_qty = parseInt( item_wrapper[index].querySelector(".item-value").innerText );
+
+                        if ( slot_qty+1 <= max_pack && temp_item.querySelector(".item-value").innerText >= 1 ){
+                            item_wrapper[index].querySelector(".item-value").innerText = slot_qty + 1;
+                            temp_item.querySelector(".item-value").innerText = parseInt(temp_item.querySelector(".item-value").innerText) - 1;
+
+                            item_wrapper[index].querySelector(".item-value").style.display = (item_wrapper[index].querySelector(".item-value").innerText > 1 )? "block" : "none";
+                            temp_item.querySelector(".item-value").style.display = (temp_item.querySelector(".item-value").innerText > 1 )? "block" : "none";
+
+                            if ( !(temp_item.querySelector(".item-value").innerText >= 1) ){
+                                temp_item.firstElementChild.innerHTML = '';
+                            }
+                        } 
+                    }
+
+
+                    else if ( slotHasItem && !tempHasItem ){
+                        console.log('right -- divir por 2');
+
+                        let slot_qty = parseInt( item_wrapper[index].firstElementChild.lastElementChild.innerText );
+
+
+                        if ( slot_qty > 1 ){
+                            temp_item.firstElementChild.innerHTML =  item_wrapper[index].innerHTML;
+                            temp_item.querySelector(".item-value").innerText = Math.trunc( slot_qty / 2 );
+                            item_wrapper[index].querySelector(".item-value").innerText = slot_qty - Math.trunc( slot_qty / 2);
+                            item_wrapper[index].querySelector(".item-value").style.display = (item_wrapper[index].querySelector(".item-value").innerText > 1 )? "block" : "none";
+                        }
+                        else{
+                            console.log('xxxx'); 
+                            temp_item.firstElementChild.appendChild(item_wrapper[index].firstElementChild);
+                        }
+                        
+                        
+                        temp_item.querySelector(".item-value").style.display = (temp_item.querySelector(".item-value").innerText > 1 )? "block" : "none";
+                    }
+
+
+                    else if ( !slotHasItem && tempHasItem ){
+                        console.log('right -- colocar 1 item no item vazio');
+                        
+                        item_wrapper[index].innerHTML = temp_item.firstElementChild.innerHTML;
+                        item_wrapper[index].querySelector(".item-value").innerText = '1';
+
+                        item_wrapper[index].querySelector(".item-value").style.display = (item_wrapper[index].querySelector(".item-value").innerText > 1 )? "block" : "none";
+
+
+                        if ( temp_item.querySelector(".item-value").innerText > 1 ){
+                            temp_item.querySelector(".item-value").innerText = parseInt(temp_item.querySelector(".item-value").innerText) - 1;
+                            temp_item.querySelector(".item-value").style.display = (temp_item.querySelector(".item-value").innerText > 1 )? "block" : "none";
+                        }
+                        else{
+                            temp_item.firstElementChild.innerHTML = '';
+                            
+                        }
+                    }
+
+
+                }
+
+                
+ 
+
+                
+
+                
+
+
+            }
+
+        }
+
+
+
+    </script>
+
+
+
+</body>
+</html>

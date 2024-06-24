@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html{
+            cursor: none;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #menu{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            justify-items: center;
+            align-items: center;
+        }
+
+
+
+
+        .gun_slot{
+            width: 128px;
+            aspect-ratio: 1/1;
+            background-color: #353535;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gun_slot_active{
+            border: 2px solid #fff;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+
+    <div id="menu">
+
+        <div class="slot"></div>
+        <div class="slot"> <div class="gun_slot gun_slot_active">a</div> </div>
+        <div class="slot"></div>
+
+        <div class="slot"> <div class="gun_slot">b</div> </div>
+        <div class="slot"></div>
+        <div class="slot"> <div class="gun_slot">c</div> </div>
+
+        <div class="slot"></div>
+        <div class="slot"> <div class="gun_slot">d</div> </div>
+        <div class="slot"></div>
+
+    </div>
+
+ 
+
+
+     
+
+
+    <script>
+
+
+
+
+        var menu_open = false;
+
+
+
+        function toggleMenu(state = false){
+            document.getElementById("menu").style.display = (state)? 'grid' : 'none';
+        }
+
+
+        toggleMenu(false);
+
+
+
+
+        function selectGun( index = 0 ){
+
+            document.querySelectorAll(".gun_slot_active").forEach(e => {
+                e.classList.remove("gun_slot_active");
+            });
+
+            document.querySelectorAll(".gun_slot")[index].classList.add("gun_slot_active");
+        }
+
+
+        
+
+        window.onmousemove = (evt) => {
+
+            if ( menu_open ){
+
+                // console.log(evt.movementX, evt.movementY);
+
+                let sensi = 2;
+
+                if      ( evt.movementX >  sensi ){ selectGun(2); }
+                else if ( evt.movementX < -sensi ){ selectGun(1); }
+                else if ( evt.movementY >  sensi ){ selectGun(3); }
+                else if ( evt.movementY < -sensi ){ selectGun(0); }
+
+            }
+
+        };
+
+
+
+
+        window.onkeydown = (evt) => {
+            menu_open = (evt.key == 'e');
+            toggleMenu(menu_open);
+        };
+ 
+        window.onkeyup = (evt) => {
+            menu_open = false;
+            toggleMenu(false);
+        };
+
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Contatos</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+        #search_container{
+            background-color: #181818;
+            padding: 8px;
+            position: sticky;
+            top: 0;
+        }
+
+
+        #search_wrapper{ 
+            padding: 4px;
+            padding-left: 16px;
+            border-radius: 25px;
+            background-color: #353535;
+            color: #9e9e9e;
+            display: flex;
+            overflow: hidden;
+            position: sticky;
+            top: 0;
+        }
+
+
+        #search_input{
+            width: 100%;
+            border: none;
+            outline: none;
+            background-color: transparent;
+            caret-color: #f00;
+            color: #fafafa;
+        }
+        #search_input::selection{
+            color: #fafafa;
+            background-color: #656565;
+        } 
+
+
+
+        #search_placeholder{
+            position: absolute;
+            display: flex;
+            align-items: center;
+            pointer-events: none; 
+            transform: scaleY(0);
+            transition: 100ms;
+            margin-left: 2px;
+        }
+        #search_placeholder div{
+            margin-left: 8px;
+        }
+
+        .search_placeholder_visible{
+            transform: scaleY(1) !important;
+        }
+
+
+
+
+
+        #search_clear{
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            transform: translateX(100%);
+            transition: 200ms;
+            outline: none;
+        }
+
+
+        .search_clear_visible{
+            transform: translateX(0) !important;
+            cursor: pointer;
+        }
+
+        .search_clear_visible:active{
+            background-color: #616161;
+            color: #fff;
+        }
+ 
+
+
+
+
+ 
+
+        .item_wrapper{
+            padding: 8px;
+            border-radius: 8px;
+            background-color: #1e1e1e;
+            margin: 8px;
+            display: flex;
+            align-items: center; 
+        }
+        .item_wrapper:active{
+            background-color: #252525;
+        }
+        
+
+        .item_image{
+            flex-shrink: 0;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background-color: #353535;
+            color: #c2c2c2;
+            font-size: 2.2em;
+            line-height: 0;
+        }
+
+        .item_content{
+            height: 64px;
+            margin-left: 10px;
+        }
+        .item_content span{
+            color: #dd5d5d;
+            font-weight: 700;
+        }
+        .item_title{
+            font-size: 1.2em;
+            font-weight: 600;
+        } 
+        .item_subTitle{
+            color: #9e9e9e;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+
+
+
+    <div id="search_container">
+
+        <div id="search_wrapper">
+
+            <input type="text" id="search_input" spellcheck="false">
+    
+            <!-- class="search_placeholder_visible" -->
+            <div id="search_placeholder" class="search_placeholder_visible">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+                <div>Buscar</div>
+            </div>
+    
+            <!-- class="search_clear_visible" -->
+            <div id="search_clear">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                </svg>
+            </div>
+    
+        </div>
+
+    </div>
+    
+
+
+    <div id="main_content"></div>
+    
+
+
+
+
+    <script>
+        
+        
+        var search_input        = document.getElementById("search_input");
+        var search_placeholder  = document.getElementById("search_placeholder");
+        var search_clear        = document.getElementById("search_clear");
+
+        var main_content = document.getElementById("main_content");
+
+
+
+        var CONTATOS = [
+
+            {
+                "nome": "luiz",
+                "numero": "(46) 3768-9462"
+            },
+
+            {
+                "nome": "ana",
+                "numero": "(63) 2040-1872"
+            },
+
+            {
+                "nome": "Luiz felipe",
+                "numero": "(55) 2655-7483"
+            },
+
+            {
+                "nome": "Felipe",
+                "numero": "(68) 2373-3064"
+            },
+
+            {
+                "nome": "marcos",
+                "numero": "(94) 2441-5475"
+            },
+
+            {
+                "nome": "alef",
+                "numero": "(62) 2813-5133"
+            },
+
+            {
+                "nome": "bruno",
+                "numero": "(18) 2172-4822"
+            },
+
+            {
+                "nome": "henrique",
+                "numero": "(21) 2122-3342"
+            },
+
+            {
+                "nome": "igor",
+                "numero": "(21) 4520-5884"
+            }
+
+
+
+        ];
+        
+
+
+        window.onload = () => {
+            generateList(CONTATOS);
+        };
+
+
+        search_input.oninput = () => {
+            search_placeholder.classList.toggle("search_placeholder_visible", !search_input.value.length);
+            search_clear.classList.toggle("search_clear_visible", search_input.value.length);
+            generateList(CONTATOS, search_input.value);
+        };
+
+
+        search_clear.onclick = () => {
+            search_input.value = '';
+            search_clear.classList.toggle("search_clear_visible", false);
+            search_placeholder.classList.toggle("search_placeholder_visible", true);
+            search_input.focus();
+            generateList(CONTATOS);
+        };
+        
+
+
+        
+        function generateList(list = [], search = ""){
+
+            main_content.innerHTML = '';
+
+            list = list.filter(e => e.nome.toUpperCase().indexOf(search.toUpperCase()) >= 0 || e.numero.toUpperCase().indexOf(search.toUpperCase()) >= 0).
+            sort((a, b) => a.nome.localeCompare(b.nome.toUpperCase()));
+
+            list.forEach(e => {
+                
+                let tempContentName     = e.nome.replaceAll(new RegExp(search, 'ig'), `<span>${search}</span>`);
+                let tempContentNumber   = e.numero.replaceAll(new RegExp(search, 'ig'), `<span>${search}</span>`);;
+
+                let item = document.createElement("div");
+                item.classList.add("item_wrapper");
+
+                item.innerHTML = `
+                <div class="item_image">${e.nome.charAt(0).toUpperCase()}</div>
+                <div class="item_content">
+                    <div class="item_title">${tempContentName}</div>
+                    <div class="item_subTitle">${tempContentNumber}</div>
+                </div>`;
+
+                main_content.appendChild(item);
+
+            });
+
+        }
+
+        
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{ 
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+
+            padding: 16px;
+        }
+
+
+        
+
+
+        .seekbar{
+            width: 100%;
+            height: 4px;
+            background-color: #353535;
+        }
+
+        .seekbar_fill{
+            width: 0%;
+            height: 4px;
+            background-color: #fff;
+        }
+
+        .seekbar_handler{
+            width: 12px;
+            height: 18px;
+            background-color: #fff;
+            box-shadow: 0 0 5px 0 #000;
+            position: relative;
+            left: calc(100% - 12px/2);
+            top: calc(100% - 18px/2 - 2px);
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div class="seekbar" seek-min="10" seek-max="50" seek-value="0" seek-step="2.5" seek-default="30" seek-pressed="false">
+        <div class="seekbar_fill">
+            <div class="seekbar_handler"></div>
+        </div>
+    </div>
+
+
+
+
+    <input type="range" min="10" max="50" value="0" step="2.5" style="width: 100%; margin: 16px 0;">
+
+ 
+
+
+     
+
+
+    <script>
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+
+
+        document.querySelectorAll(".seekbar").forEach((e, i) =>{
+            
+
+            e.onmousedown = (event) =>{
+                e.setAttribute("seek-pressed", "true");
+                let percent      = Math.clamp((event.clientX - e.offsetLeft) / (e.offsetWidth) * 100, 0, 100);
+                let tick_count   = (e.getAttribute("seek-max") - e.getAttribute("seek-min")) / e.getAttribute("seek-step");
+                let tick_current = Math.round( (percent/100 * e.offsetWidth) / (e.offsetWidth / tick_count) );
+                let value        = parseFloat(e.getAttribute("seek-min")) + parseFloat(e.getAttribute("seek-step")) * tick_current;
+                percent          = e.offsetWidth / tick_count * tick_current;
+                if ( parseFloat(e.getAttribute("seek-value")) != value ){
+                    console.log("change", value);
+                }
+                e.setAttribute("seek-value", value);
+                e.querySelector(".seekbar_fill").style.width = percent + "px";
+            };
+            
+
+
+            e.querySelector(".seekbar_handler").ondblclick = (event) =>{
+                event.stopImmediatePropagation();
+                e.setAttribute("seek-value", e.getAttribute("seek-default"));
+                let width = (parseFloat(e.getAttribute("seek-default")) - parseFloat(e.getAttribute("seek-min"))) * e.offsetWidth / (e.getAttribute("seek-max") - parseFloat(e.getAttribute("seek-min")));
+                e.querySelector(".seekbar_fill").style.width = (width) + "px";
+            };
+
+
+
+            e.onwheel = (event) => {
+                event.preventDefault();
+                
+                let value = parseFloat(e.getAttribute("seek-value"));
+                let width = 0;
+
+                if ( event.deltaY < 0 ){    
+                    value += parseFloat(e.getAttribute("seek-step"));
+                    if ( value < e.getAttribute("seek-min") ){
+                        value = parseFloat(e.getAttribute("seek-min")) + parseFloat(e.getAttribute("seek-step"));
+                    }
+                }else{
+                    value -= parseFloat(e.getAttribute("seek-step"));
+                }
+
+                value = Math.clamp(value, parseFloat(e.getAttribute("seek-min")), parseFloat(e.getAttribute("seek-max")));
+                e.setAttribute("seek-value", value);
+                width = (value - parseFloat(e.getAttribute("seek-min"))) * e.offsetWidth / (e.getAttribute("seek-max") - parseFloat(e.getAttribute("seek-min")));
+                e.querySelector(".seekbar_fill").style.width = (width) + "px";
+            };
+            
+
+
+            e.querySelector(".seekbar_handler").onmousedown = (event) =>{
+                event.stopImmediatePropagation();
+                e.setAttribute("seek-pressed", "true");
+            };
+            
+
+
+            window.addEventListener("mouseup", ()=>{
+                e.setAttribute("seek-pressed", "false");
+            });
+
+            
+
+            window.addEventListener("mousemove", (event) =>{
+                if ( e.getAttribute("seek-pressed") === "true" ){
+                    let percent      = Math.clamp((event.clientX - e.offsetLeft) / (e.offsetWidth) * 100, 0, 100);
+                    let tick_count   = (e.getAttribute("seek-max") - e.getAttribute("seek-min")) / e.getAttribute("seek-step");
+                    let tick_current = Math.round( (percent/100 * e.offsetWidth) / (e.offsetWidth / tick_count) );
+                    let value        = parseFloat(e.getAttribute("seek-min")) + parseFloat(e.getAttribute("seek-step")) * tick_current;
+                    percent          = e.offsetWidth / tick_count * tick_current;
+                    if ( parseFloat(e.getAttribute("seek-value")) != value ){
+                        console.log("change", value);
+                    }
+                    e.setAttribute("seek-value", value);
+                    e.querySelector(".seekbar_fill").style.width = percent + "px";
+                }
+            });
+
+
+
+        });
+
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

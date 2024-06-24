@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            overflow: hidden;
+        }
+
+
+
+        #joystick-wrapper{
+            width: 64px;
+            height: 64px;
+            background-color: #353535;
+            box-shadow: 0 0 5px 0 #000; 
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            margin: 32px;
+            opacity: 0  ;
+            transition: 100ms opacity;
+        }
+
+
+        #joystick-ball{
+            width: 32px;
+            height: 32px;
+            background-color: #9e9e9e;
+            position: absolute;
+            left: 0;
+            top: 0;
+             
+            border-radius: 50%;
+        }
+
+
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    
+
+
+
+
+    <div id="joystick-wrapper">
+
+        <div id="joystick-ball"></div>
+
+    </div>
+
+
+
+    <script>
+
+        var joystick_wrapper = document.getElementById("joystick-wrapper");
+        var joystick_ball    = document.getElementById("joystick-ball");
+
+        var TOUCH_PRESS = false;
+
+        var TOUCH_POS_INIT = {
+            x: 0,
+            y: 0
+        }
+ 
+
+
+
+
+        window.addEventListener("mousedown", (e)=>{
+
+            joystick_wrapper.style.opacity = 1;
+
+
+
+
+            joystick_ball.style.transition = '0ms';
+            TOUCH_POS_INIT.x = e.clientX;
+            TOUCH_POS_INIT.y = e.clientY;
+
+
+            joystick_wrapper.style.left = (e.clientX - joystick_wrapper.offsetWidth) + 'px';
+            joystick_wrapper.style.top = (e.clientY - joystick_wrapper.offsetHeight) + 'px';
+
+
+            TOUCH_PRESS = true;
+        });
+
+
+
+        function resetJoystick(){
+            
+            joystick_ball.style.left = ((joystick_wrapper.offsetWidth/2)-(joystick_ball.offsetWidth/2)) + 'px';
+            joystick_ball.style.top = (joystick_ball.offsetHeight/2) + 'px';
+        }
+
+        resetJoystick();
+
+
+        
+        window.addEventListener("mouseup", ()=>{
+            joystick_wrapper.style.opacity = 0;
+            joystick_ball.style.transition = '200ms';
+            resetJoystick();
+            TOUCH_PRESS = false;
+        });
+
+
+
+
+        window.addEventListener("mousemove", (e)=>{
+
+            if ( TOUCH_PRESS ){
+                
+                 
+                let diffX = e.clientX - TOUCH_POS_INIT.x;
+                let diffY = e.clientY - TOUCH_POS_INIT.y;
+                 
+                
+
+                let posX = diffX + (joystick_ball.offsetWidth/2);
+                let posY = diffY + (joystick_ball.offsetHeight/2);
+
+
+                
+                let valueX = clamp(posX, -joystick_wrapper.offsetWidth, joystick_wrapper.offsetWidth);
+                let valueY = clamp(posY, -joystick_wrapper.offsetHeight, joystick_wrapper.offsetHeight);
+
+                console.log(valueX, valueY);
+
+
+                //console.log(posX);
+
+                joystick_ball.style.left = (posX) + 'px';
+                joystick_ball.style.top = (posY) + 'px';
+            }
+
+        });
+
+
+
+
+        function ditance(cx1, cy1, r1, cx2, cy2, r2){
+
+            let catetoA = Math.abs( cx1 - cx2 );
+            let catetoB = Math.abs( cy1 - cy2 );
+
+
+            let catetoC = Math.sqrt( catetoA**2 + catetoB**2 );
+
+            return (catetoC);
+
+        }
+
+
+
+
+
+        function clamp(value, min, max){
+            return Math.min(Math.max(value, min), max);
+        }
+
+
+        function map(value, in_min, in_max, out_min, out_max){
+
+            return (value - in_min) * (out_max - out_min) / (in_max - in_min) - out_min;
+
+        }
+
+
+
+    </script>
+
+
+</body>
+</html>

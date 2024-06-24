@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{ 
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #25232a;
+            color: #fff;
+			user-select: none; 
+            overflow: hidden;
+            scroll-behavior: none;
+        }
+
+
+
+
+
+        #container{
+            padding: 40px;
+        }
+
+
+
+
+        .slider{
+            width: 100%;
+            height: 4px;
+            background-color: #36343b;
+            border-radius: 25px;
+            margin-bottom: 60px;
+            position: relative;
+            left: 0;
+        }
+
+
+
+        .slider_track{
+            width: 0%;
+            height: 100%;
+            background-color: #d0bcff;
+            border-radius: 25px;
+            position: relative;
+        }
+
+
+
+        .track_label{
+            color: #d0bcff;
+            z-index: 1;
+            transition: 200ms;
+            transform: scale(0);
+            position: absolute;
+            left: -4px;
+            top: -30px;
+        }
+
+         
+        .track_label_text{
+            position: absolute;
+            top: 5px;
+            color: #391f73;
+            font-weight: 700;
+            font-size: 8px;
+            width: 27px;
+            text-align: center;
+        }
+ 
+
+
+        .track_thumb{
+            z-index: 2;
+            width: 20px;
+            height: 20px;
+            background-color: #d0bcff;
+            border-radius: 50%;
+            position: absolute;
+            /* left: calc(100% - 10px); */
+            left: 0;
+            top: calc(100% - 12px);
+            box-shadow: 0 0 5px 0 #212121;
+        }
+
+        .track_thumb::after{
+            content: '';
+            display: block;
+            width: 40px;
+            height: 40px;
+            background-color: #d0bcff;
+            opacity: 0.1;
+            transition: 200ms;
+            transform: scale(0);
+            border-radius: 50%;
+            position: absolute;
+            left: -10px;
+            top: -10px;
+        }
+
+
+        .track_thumb_pressed::after,
+        .track_label_visible .track_label{
+            transform: scale(1);
+        }
+
+
+
+
+        .tick_list{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            top: -3px;
+            padding: 0 1px;
+        }
+
+        .tick{
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background-color: #cac4d0;
+            opacity: 0.38;
+        }
+
+        .tick_active{
+            background-color: #371e73; 
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    
+
+    <div id="container">
+
+
+
+
+        <!-- NORMAL SLIDER -->
+        <div class="slider">
+            <div class="slider_track"></div>
+
+            <div class="track_thumb">
+                <div class="track_label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/></svg>
+                    <div class="track_label_text">0</div>
+                </div>
+            </div>
+            
+        </div>
+
+
+
+
+
+
+        <!-- DISCRETE SLIDER -->
+        <div class="slider slider_discrete">
+
+            <div class="slider_track"></div>
+
+            <div class="track_thumb">
+                <div class="track_label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/></svg>
+                    <div class="track_label_text">0</div>
+                </div>
+            </div> 
+
+            <div class="tick_list">
+                <div class="tick" tick-value="5"></div>
+                <div class="tick" tick-value="10"></div>
+                <div class="tick" tick-value="15"></div>
+                <div class="tick" tick-value="20"></div>
+                <div class="tick" tick-value="25"></div>
+            </div>
+
+        </div>
+
+
+
+
+
+
+        <!-- NORMAL SLIDER : DUAL -->
+        <div class="slider slider_dual">
+            <div class="slider_track"></div>
+
+            <div class="track_thumb">
+                <div class="track_label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/></svg>
+                    <div class="track_label_text">0</div>
+                </div>
+            </div>
+
+            <div class="track_thumb">
+                <div class="track_label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/></svg>
+                    <div class="track_label_text">0</div>
+                </div>
+            </div>
+            
+        </div>
+
+
+
+
+
+
+
+        <!-- DISCRETE SLIDER : DUAL -->
+        <div class="slider slider_discrete slider_dual">
+
+            <div class="slider_track"></div>
+
+            <div class="track_thumb">
+                <div class="track_label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/></svg>
+                    <div class="track_label_text">0</div>
+                </div>
+            </div>
+
+            <div class="track_thumb">
+                <div class="track_label">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/></svg>
+                    <div class="track_label_text">0</div>
+                </div>
+            </div> 
+
+            <div class="tick_list">
+                <div class="tick" tick-value="5"></div>
+                <div class="tick" tick-value="10"></div>
+                <div class="tick" tick-value="15"></div>
+                <div class="tick" tick-value="20"></div>
+                <div class="tick" tick-value="25"></div>
+            </div>
+
+        </div>
+
+
+
+         
+
+
+    </div>
+
+ 
+
+
+     
+
+
+    <script>
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+         
+
+
+        document.querySelectorAll('.slider').forEach((e, i) => {
+
+
+
+            e.querySelectorAll('.track_thumb').forEach((el, idx) => {
+                
+
+                el.addEventListener('touchstart', ()=>{
+                    el.classList.add('track_thumb_pressed');
+                });
+
+
+                el.addEventListener('touchend', ()=>{
+                    el.classList.remove('track_thumb_pressed');
+                });
+
+
+                el.addEventListener('touchmove', (event)=>{
+
+
+                    e.classList.add('track_label_visible');
+                    let posX = event.touches[0].clientX - e.offsetLeft - el.offsetWidth/2;
+                    posX = Math.clamp(posX, 0, e.offsetWidth - 10);
+                    el.style.left = (posX) + 'px';
+
+
+                    if ( !e.classList.contains('slider_dual') && !e.classList.contains('slider_discrete') ){
+                        console.log('normal');
+                        e.querySelector('.slider_track').style.width = (posX + 10) + 'px';
+                        el.querySelector('.track_label_text').innerHTML = Math.trunc(el.offsetLeft / (e.offsetWidth - 10) * 100);
+                    }
+
+
+                    else if ( e.classList.contains('slider_dual') ){ 
+
+                        if ( e.classList.contains('slider_discrete') ){
+                            console.log('dual discrete');
+                            let index_tick = Math.round(el.offsetLeft / (e.offsetWidth / (e.querySelectorAll('.tick').length - 1)));
+                            let index_tick_compare = Math.round(e.querySelectorAll('.track_thumb')[(idx==0)?1:0].offsetLeft / (e.offsetWidth / (e.querySelectorAll('.tick').length - 1)));
+                            if ( idx == 0 && index_tick >= index_tick_compare || idx == 1 && index_tick <= index_tick_compare ){
+                                index_tick = index_tick_compare;
+                            }
+                            el.style.left = e.querySelectorAll('.tick')[index_tick].offsetLeft-1 + 'px';
+                            e.querySelector('.slider_track').style.width = e.querySelectorAll('.tick')[index_tick].offsetLeft + 'px';
+                            el.querySelector('.track_label_text').innerHTML = e.querySelectorAll('.tick')[index_tick].getAttribute('tick-value');
+
+                            e.querySelectorAll('.tick').forEach((tick, tick_idx) => { 
+                                tick.classList.toggle('tick_active', tick_idx <= Math.round(e.querySelectorAll('.track_thumb')[1].offsetLeft / (e.offsetWidth / (e.querySelectorAll('.tick').length - 1))) && tick_idx > Math.round(e.querySelectorAll('.track_thumb')[0].offsetLeft / (e.offsetWidth / (e.querySelectorAll('.tick').length - 1))) );
+                            });
+
+                        }
+                        
+
+                        else{
+                            console.log('dual');
+                            el.querySelector('.track_label_text').innerHTML = Math.trunc(el.offsetLeft / (e.offsetWidth-10) * 100);
+                            el.style.zIndex = 1;
+                            if ( idx == 1 && e.querySelectorAll('.track_thumb')[1].offsetLeft <= e.querySelectorAll('.track_thumb')[0].offsetLeft ){
+                                console.log('MAX');
+                                el.style.left = e.querySelectorAll('.track_thumb')[0].offsetLeft + 'px';
+                                el.style.zIndex = 1;
+                                e.querySelectorAll('.track_thumb')[1].style.zIndex = 0;
+                            }
+                            else if ( e.querySelectorAll('.track_thumb')[0].offsetLeft >= e.querySelectorAll('.track_thumb')[1].offsetLeft ){
+                                console.log('MIN');
+                                el.style.left = e.querySelectorAll('.track_thumb')[1].offsetLeft + 'px';
+                                el.style.zIndex = 1;
+                                e.querySelectorAll('.track_thumb')[0].style.zIndex = 0;
+                            }
+                        }
+
+                        e.querySelector('.slider_track').style.width = (e.querySelectorAll('.track_thumb')[1].offsetLeft - e.querySelectorAll('.track_thumb')[0].offsetLeft +10) + 'px';
+                        e.querySelector('.slider_track').style.left = (e.querySelectorAll('.track_thumb')[0].offsetLeft) + 'px';
+
+                    }
+
+                    else{
+                        console.log('discrete');
+                        let index_tick = Math.round(el.offsetLeft / (e.offsetWidth / (e.querySelectorAll('.tick').length - 1)));
+                        el.style.left = e.querySelectorAll('.tick')[index_tick].offsetLeft-1 + 'px';
+                        e.querySelector('.slider_track').style.width = e.querySelectorAll('.tick')[index_tick].offsetLeft + 'px';
+                        el.querySelector('.track_label_text').innerHTML = e.querySelectorAll('.tick')[index_tick].getAttribute('tick-value');
+
+                        e.querySelectorAll('.tick').forEach((tick, tick_idx) => { 
+                            tick.classList.toggle('tick_active', tick_idx < index_tick); 
+                        });
+
+                    }
+                    
+
+                });
+                
+
+                
+
+
+            });
+
+
+
+
+            e.addEventListener('touchend', ()=>{
+                e.classList.remove('track_label_visible');
+            });
+
+
+
+            e.addEventListener('touchmove', (event)=>{
+                // console.log('body move');
+            });
+
+
+
+
+
+
+        });
+        
+
+
+    </script>
+
+
+</body>
+</html>

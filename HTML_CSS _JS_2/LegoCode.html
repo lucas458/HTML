@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+        #container{
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .element{
+            width: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .element_arrow{
+            margin: 8px 0;
+            color: #ffc107;
+            visibility: hidden;
+        }
+        .element_value{
+            font-size: 1.2em;
+            line-height: 0;
+            margin-top: 8px;
+            margin-bottom: 13px;
+            transition: 200ms; 
+        }
+
+        .element_selected .element_value{ 
+            animation: 0.8s pulse infinite linear;
+        }
+        .element_selected .element_arrow{
+            visibility: visible;
+        }
+        
+        .moveUpClass .element_arrow:first-child{
+            animation: .1s moveUp;
+        }
+        .moveDownClass .element_arrow:last-child{
+            animation: .1s moveUp;
+        }
+
+        @keyframes pulse{
+            0%{ transform: scale(1); }
+            50%{ transform: scale(1.5); }
+            100%{ transform: scale(1); }
+        }
+
+        @keyframes moveUp{
+            0%{ transform: translateY(-8px); opacity: 0.2; }
+        }
+
+        @keyframes moveDown{
+            0%{ transform: translateY(8px); opacity: 0.2; }
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+        <div id="container">
+
+            <div class="element element_selected" aria-valuenow="0">
+                <div class="element_arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg>
+                </div>
+                <div class="element_value">0</div>
+                <div class="element_arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+                </div>
+            </div>
+            
+            <div class="element" aria-valuenow="0">
+                <div class="element_arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg>
+                </div>
+                <div class="element_value">0</div>
+                <div class="element_arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+                </div>
+            </div>
+            
+            <div class="element" aria-valuenow="0">
+                <div class="element_arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg>
+                </div>
+                <div class="element_value">0</div>
+                <div class="element_arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+                </div>
+            </div>
+            
+            <div class="element" aria-valuenow="0">
+                <div class="element_arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg>
+                </div>
+                <div class="element_value">0</div>
+                <div class="element_arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+                </div>
+            </div>
+            
+            <div class="element" aria-valuenow="0">
+                <div class="element_arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg>
+                </div>
+                <div class="element_value">0</div>
+                <div class="element_arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+                </div>
+            </div>
+            
+            <div class="element" aria-valuenow="0">
+                <div class="element_arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg>
+                </div>
+                <div class="element_value">0</div>
+                <div class="element_arrow">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+                </div>
+            </div>
+            
+        </div>
+
+
+    </div>
+
+
+     
+
+
+    <script>
+
+        const CODELIST = ['ABCDEF', '012345', 'POTATO'];
+        var USEDCODELIST = [];
+        
+        function getCharFromValue( value = 0 ){
+            if ( value >= 0 && value <= 9 ){
+                return String.fromCharCode(value + 0x30);
+            }
+            if ( value < 10 + 26 ){
+                return String.fromCharCode(value + 0x41 - 10);
+            }
+            return '';
+        }
+
+
+        function getCurrentCode(){
+            let str = '';
+            document.querySelectorAll('.element_value').forEach(e => {
+                str = str.concat(e.innerHTML);
+            });
+            return str;
+        }
+
+
+        function resetInputCode(){
+            document.querySelectorAll('.element').forEach(e => {
+                e.querySelector('.element_value').innerHTML = e.ariaValueNow = 0;
+                e.classList.remove('element_selected');
+            });
+            container.firstElementChild.classList.add('element_selected');
+        }
+        
+
+        const keyController = {
+
+            ArrowLeft: () => {
+                const e = document.querySelector('.element_selected');
+                e.classList.remove('element_selected');
+                try{
+                    e.previousElementSibling.classList.add('element_selected');
+                }catch (e){
+                    container.lastElementChild.classList.add('element_selected');
+                }
+            },
+
+            ArrowRight: () => {
+                const e = document.querySelector('.element_selected');
+                e.classList.remove('element_selected');
+                try{
+                    e.nextElementSibling.classList.add('element_selected');
+                }catch (e){
+                    container.firstElementChild.classList.add('element_selected');
+                }
+            },
+
+            ArrowUp: () => {
+                const e = document.querySelector('.element_selected');
+                const v = (parseInt(e.ariaValueNow) + 1) % 36;
+                e.ariaValueNow = v;
+                e.children[1].innerHTML = getCharFromValue(v);
+                e.classList.remove('moveDownClass');
+                e.classList.add('moveUpClass');
+                e.onanimationend = () => {
+                    e.classList.remove('moveUpClass');
+                };
+            },
+
+            ArrowDown: () => {
+                const e = document.querySelector('.element_selected');
+                let v = (parseInt(e.ariaValueNow) - 1);
+                if ( v < 0 ) v = 35;
+                e.ariaValueNow = v;
+                e.children[1].innerHTML = getCharFromValue(v);
+                e.classList.remove('moveUpClass');
+                e.classList.add('moveDownClass');
+                e.onanimationend = () => {
+                    e.classList.remove('moveDownClass');
+                };
+            }
+
+        };
+
+
+        onkeydown = (event) => {
+            if ( keyController[event.key] ){
+                keyController[event.key]();
+            }
+            if ( !event.repeat ){
+                if ( event.key == "Enter" ){
+                    const code = getCurrentCode();
+                    if ( CODELIST.indexOf(code) >= 0 && USEDCODELIST.indexOf(code) < 0 ){
+                        USEDCODELIST.push(code);
+                        resetInputCode();
+                    }
+                }
+                if ( event.key == 'r' ){
+                    resetInputCode();
+                }
+            }
+        };
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

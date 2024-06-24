@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Forca</title>
+
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+            user-select: none;
+            overscroll-behavior: contain;
+        }
+
+
+
+
+
+
+        @keyframes shakeAnimation {
+            10%, 90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+            20%, 80% {
+                transform: translate3d(2px, 0, 0);
+            }
+            30%, 50%, 70% {
+                transform: translate3d(-4px, 0, 0);
+            }
+            40%, 60% {
+                transform: translate3d(4px, 0, 0);
+            }
+
+        }
+
+        .shake{
+            animation: 1s shakeAnimation;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* MODAL */
+        .modal-wrapper{
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            background-color: #000000bd;
+            transition: 200ms;
+            opacity: 0;
+            display: none;
+        }
+
+
+
+        .modal-window{
+            width: 80%;
+            height: 50%;           
+            display: flex;
+            flex-direction: column;
+            overflow: auto;
+            border-radius: 16px;
+            transition: 200ms;
+            background-color: #181818;
+            transform: scale(0);
+        }
+
+
+
+
+        .modal-window:focus-within{
+            height: 80%;
+        }
+
+
+
+        .modal-window > div{
+            padding: 8px;
+        }
+
+
+        .modal-header{
+            text-align: center;
+            color: #9e9e9e;
+        }
+
+
+
+        .modal-content{
+            height: 100%;
+            border-top: 1px solid #353535;
+            border-bottom: 1px solid #353535;
+        }
+
+
+
+        .input-wrapper{
+            color: #9e9e9e;
+            margin-bottom: 10px;
+        }
+
+
+
+
+        .input-wrapper input{
+            width: 100%;
+            padding: 4px;
+            border: none;
+            border-bottom: 1px solid #9e9e9e;
+            color: #fff;
+            background-color: inherit;
+            margin: 4px 0;
+            outline: none;
+            transition: 200ms;
+        }
+        .input-wrapper input:focus{
+            border-color: #007bff;
+        }
+
+
+        .input-msg{
+            visibility: hidden;
+        }
+
+        .input-wrapper div:last-child{
+            color: #dc3545;
+        }
+
+
+
+        .modal-footer{
+            display: flex;
+        }
+
+        .modal-footer > div{
+            width: 100%;
+            margin: 0 5px;
+            box-shadow: none;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .button{
+            padding: 8px;
+            background-color: #28a745;
+            color: #fff;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 0 5px 0 #000;   
+            transition: 200ms;
+        }
+
+        .button:active{
+            box-shadow: none;
+            transform: scale(0.9);
+        }   
+
+
+
+        .button-red{
+            background-color: inherit;
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+
+
+
+
+
+
+
+
+
+
+        .screen{
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+        }
+
+        .screen-content{
+            height: 100%;
+        }
+
+
+
+
+
+
+
+
+        /* HEADER */
+        .screen-header{
+            box-shadow: 0 0 5px 0 #000;
+            color: #fff;
+            background-color: #212121;
+        }
+
+
+ 
+
+        #timer{
+            font-size: 1.5em;
+            text-align: center;
+            padding: 16px 0;
+            font-weight: bold;
+        }
+
+
+
+
+
+
+
+
+
+
+        /* CONTENT */
+
+
+        .content-badge{
+            margin: 10px 8px;
+            background-color: #212121;
+            color: #9e9e9e;
+            width: fit-content;
+            padding: 8px;
+        }
+
+        .content-badge > span{
+            padding: 4px 8px;
+            text-align: center;
+            background-color: #181818;
+            aspect-ratio: 1 / 1;
+            border-radius: 8px;
+        }
+
+
+
+
+        #dica-wrapper{
+            padding: 4px 8px;
+            color: #9e9e9e;
+            display: flex;
+            align-items: center;
+        }
+
+        #dica-wrapper > div{
+            padding: 8px;
+            color: #fff;
+            margin-left: 4px;
+            background-color: #212121;
+        }
+
+        
+
+
+
+
+
+
+
+
+        /* FOOTER */
+        .screen-footer{
+            padding: 8px;
+            box-shadow: 0 0 5px 0 #000;
+            background-color: #212121;
+        }
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        #palavra-wrapper{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 8px 0;
+            padding-left: 8px;
+        }
+
+        .palavra-letra{
+            padding: 8px;
+            border-bottom: 2px solid #424242;
+            border-radius: 4px;
+            color: #fff;
+            white-space: pre;
+            width: 24px;
+            min-height: 30px;
+            padding-bottom: 0;
+            text-align: center;
+            margin-right: 8px;
+        }
+
+
+
+
+
+
+
+
+
+        #keyboard{
+            margin-bottom: 16px;
+             
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .key{
+            color: #fff;
+            box-shadow: 0 0 5px 0  #000;
+            margin: 4px;
+            background-color: #3f51b5;
+            border-radius: 15px;
+            padding: 8px;
+            text-align: center;
+            width: calc( 100% / 10);
+            min-width: 24px;
+            transition: 200ms;
+        }
+
+
+        .key:active{
+            transform: scale(0.9);
+        }
+
+
+        .key-clicked{
+            background: #353535;
+            color: #bdbdbd;
+        }
+
+
+
+
+
+
+
+
+
+
+
+    </style>
+    
+
+
+</head>
+
+
+
+<body>
+
+
+
+
+
+
+    <!-- MODAL -- ADD -->
+    <div class="modal-wrapper" id="modal-add">
+
+        <div class="modal-window">
+
+            <div class="modal-header">Criar Palavra</div>
+
+            <div class="modal-content">
+
+                <div class="input-wrapper">
+                    <div class="label">Palavra</div>
+                    <input type="text" placeholder="Digite" maxlength="20" class="inputElement">
+                    <div class="input-msg">Max. 20 Letras</div>
+                </div>
+
+                <div class="input-wrapper">
+                    <div class="label">Dica</div>
+                    <input type="text" placeholder="Digite" maxlength="50" class="inputElement">
+                    <div class="input-msg">Max. 50 Letras</div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <div class="button" onclick="modalCriar()">Criar</div>
+                <div class="button button-red" onclick="modalAddToggle(false)">Fechar</div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <!-- MODAL -- DESISTIR -->
+    <div class="modal-wrapper" id="modal-desistir">
+
+        <div class="modal-window">
+
+            <div class="modal-header">Desistir</div>
+
+            <div class="modal-content" style="color: #fff;">
+ 
+                Deseja Desistir?
+            </div>
+
+            <div class="modal-footer">
+                <div class="button" onclick="desistir()">SIM</div>
+                <div class="button button-red" onclick="modalDesistirToggle(false)">NÃO</div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+    <!-- MAIN SCREEN -->
+    <div class="screen" id="screen-main">
+
+
+        <!-- HEADER -->
+        <div class="screen-header">
+            <div id="timer">0:00</div>
+        </div>
+
+
+        <!-- CONTENT -->
+        <div class="screen-content">
+            <div class="content-badge">Tentativas <span id="tentativas">0</span> </div>
+            <div id="dica-wrapper">Dica <div id="dica">.</div></div>
+
+            <div id="palavra-wrapper"></div>
+
+            <div id="keyboard"></div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="screen-footer">
+            <div class="button" onclick="footerButton()" id="footer-button">Jogar</div>
+        </div>
+
+    </div>
+
+
+
+
+
+    <script>
+
+
+
+
+
+
+        var PALAVRA = '';
+        var GAME_RUNNING = false;
+        var VIDAS = 7;
+
+
+
+        var TIMER_VALUE = 120;
+
+        function onlyLetters(str) {
+            return /^[a-zA-Z]+$/.test(str);
+        }
+
+
+
+
+        function timetrack( value = 0 ){
+            let min = parseInt(value/60%60);
+            let sec = parseInt(value%60);
+            sec = ( sec < 10 )? ('0' + sec) : sec;
+            return min + ':' + sec;
+        }
+
+
+
+
+        function timerCount(){
+
+            if ( GAME_RUNNING ){
+                TIMER_VALUE--;
+                document.getElementById("timer").innerText = timetrack(TIMER_VALUE);
+                document.getElementById("timer").style.color = ( TIMER_VALUE <= 30 )? "#dc3545" : "#fff";
+                if ( TIMER_VALUE <= 30 && TIMER_VALUE%10==0 ){
+                    shakeElement( document.getElementById("timer") );
+                    navigator.vibrate(100);
+                }
+                if ( TIMER_VALUE <= 0 ){
+                    GAME_RUNNING = false;
+                    console.warn("TIMEOUT");
+                    TIMER_VALUE = 120;
+                    footerButtonMode(1);
+                    clearInterval(MASTER_TIMER);
+                    MASTER_TIMER;
+                    mostraPalavra();
+                }
+            }
+
+        }
+
+
+        var MASTER_TIMER = setInterval(timerCount, 1000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // GERAR TECLADO
+        function gerarTeclado(){
+
+            document.getElementById("keyboard").innerHTML = '';
+            for (let i = 0; i < 26; i++){
+                let item = document.createElement("div");
+                item.classList.add("key");
+                item.innerText = String.fromCharCode(0x41+i);
+                document.getElementById("keyboard").appendChild(item);
+
+                item.addEventListener("click", ()=>{
+                    if ( !item.classList.contains("key-clicked") && GAME_RUNNING ){
+                        console.log("click: " + item.innerText);
+                        item.classList.add("key-clicked");
+                        gameCheck(item.innerText);
+                    }
+                });
+            }
+        }
+
+        gerarTeclado();
+
+
+
+
+
+
+
+
+
+
+
+
+        function gerarPalavra( palavra, dica ){
+
+            gerarTeclado();
+
+            VIDAS = 7;
+
+            desistir();
+
+            document.getElementById("dica").innerText = dica;
+            document.getElementById("tentativas").innerText = VIDAS;
+            document.getElementById("palavra-wrapper").innerHTML = '';
+            
+            for (let i = 0; i < palavra.length; i++){
+                let item = document.createElement("div");
+                item.classList.add("palavra-letra");
+
+                document.getElementById("palavra-wrapper").appendChild(item);
+            }
+
+
+            PALAVRA = palavra.toUpperCase();
+            
+            document.getElementById("timer").innerText = timetrack(TIMER_VALUE);
+            document.getElementById("timer").style.color = ( TIMER_VALUE <= 30 )? "#dc3545" : "#fff";
+            GAME_RUNNING = true;
+   
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        function mostraPalavra(){
+
+            for (let i = 0; i < PALAVRA.length; i++){
+                 
+                if ( document.querySelectorAll('.palavra-letra')[i].innerText == '' ){
+                    document.querySelectorAll('.palavra-letra')[i].innerText = PALAVRA[i];
+                    document.querySelectorAll('.palavra-letra')[i].style.color = '#9e9e9e';
+                }
+
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        function gameCheck( letra ){
+
+            if ( !GAME_RUNNING ){return;}
+
+            let jumpIdx = -1;
+
+            letra = letra.toUpperCase();
+
+            jumpIdx = PALAVRA.indexOf(letra);
+
+            if ( jumpIdx == -1 ){
+
+                console.log("ERROU");
+                navigator.vibrate(100);
+                VIDAS--;
+                
+                if ( VIDAS <= 0 ){
+                    console.log("GAME OVER");
+                    GAME_RUNNING = false;
+                    footerButtonMode(1);
+                    mostraPalavra();
+                }
+                
+                document.getElementById("tentativas").innerText = VIDAS;
+
+            }
+
+            else{
+
+                while ( jumpIdx != -1 ){
+                    document.querySelectorAll(".palavra-letra")[jumpIdx].innerText = letra;
+                    jumpIdx = PALAVRA.indexOf(letra, jumpIdx+1);
+                }
+
+
+                let tempPalavra = '';
+
+                document.querySelectorAll(".palavra-letra").forEach((e)=>{
+                    tempPalavra += e.innerText;
+                });
+
+
+                if ( tempPalavra == PALAVRA ){
+                    console.log("WINNER");
+                    GAME_RUNNING = false;
+                    footerButtonMode(1);
+                }
+
+
+
+            }
+
+            
+
+
+
+
+        }
+       
+        
+
+
+
+
+
+
+
+        function footerButtonMode( mode ){
+
+
+
+            document.getElementById("footer-button").style.backgroundColor = (mode)? "#28a745" : "#dc3545";
+            document.getElementById("footer-button").innerText = (mode)? "Jogar" : "Desistir";
+
+
+        }
+
+
+
+        function footerButton(){
+
+            if ( GAME_RUNNING ){
+                modalDesistirToggle(true);
+            }
+            else{
+                modalAddToggle(true);
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+        function modalToggle( state , el ){
+
+
+            if ( state ){
+                el.style.display = 'flex';
+                
+                setTimeout(()=>{
+                    el.style.opacity = 1;
+                    el.querySelector('.modal-window').style.transform = "scale(1)";
+
+                }, 1);
+            }
+
+            else{
+
+                el.querySelector('.modal-window').style.transform = "scale(0)";
+
+                setTimeout(()=>{
+                    el.style.opacity = 0;
+                    el.style.display = 'none';
+
+                }, 100);
+
+            }
+
+
+        }
+
+
+
+
+
+        function shakeElement( el ){
+            el.classList.add("shake");
+            el.addEventListener("animationend", ()=>{
+                el.classList.remove("shake");
+            });
+        }
+
+
+
+
+
+
+        document.querySelectorAll('.inputElement').forEach((e,i)=>{
+
+            
+
+            e.addEventListener("keyup", (e)=>{
+
+
+                if ( !onlyLetters(e.target.value) ){
+                    console.log("TEXT ONLY")
+                    document.querySelectorAll(".input-wrapper .input-msg")[0].style.visibility = 'visible';
+                    document.querySelectorAll(".input-wrapper .input-msg")[0].innerText = 'Apenas Texto';
+                }
+
+                else if (  e.target.value.length >= e.target.getAttribute('maxLength') ){
+                    shakeElement(e.target);
+                    document.querySelectorAll(".input-wrapper .input-msg")[i].style.visibility = 'visible';
+                    document.querySelectorAll(".input-wrapper .input-msg")[0].innerText = 'Max. 20 Letras';
+                    navigator.vibrate(100);
+                }
+
+                
+
+                else{
+                    document.querySelectorAll(".input-wrapper .input-msg")[i].style.visibility = 'hidden';
+                }
+
+            });
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+        function desistir(){
+
+           
+            gerarTeclado();
+
+            GAME_RUNNING = false;
+            VIDAS = 7;
+            PALAVRA = '';
+            TIMER_VALUE = 120;
+
+            document.getElementById("tentativas").innerText = VIDAS;
+            document.getElementById("palavra-wrapper").innerHTML = '';
+            document.getElementById("dica").innerText = '.';
+
+            document.getElementById("timer").style.color = ( TIMER_VALUE <= 30 )? "#dc3545" : "#fff";
+            document.getElementById("timer").innerText = timetrack(TIMER_VALUE);
+
+            modalDesistirToggle(false);
+            footerButtonMode(1);
+            clearInterval(MASTER_TIMER);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        function modalCriar(){
+
+
+
+            let palava = document.querySelectorAll('.inputElement')[0].value;
+            let dica = document.querySelectorAll('.inputElement')[1].value
+
+
+            
+
+            if ( palava.length > 0 && dica.length > 0 && onlyLetters(palava) ){
+                gerarPalavra( palava, dica );
+                modalAddToggle(false);
+                footerButtonMode(0);
+                clearInterval(MASTER_TIMER);
+                MASTER_TIMER = setInterval(timerCount, 1000);
+            }
+
+            
+
+
+
+            
+        }
+
+
+
+
+
+
+
+
+
+
+        function modalAddToggle( state ){
+
+            document.querySelectorAll('.inputElement')[0].value = '';
+            document.querySelectorAll('.inputElement')[1].value = '';
+
+            document.querySelectorAll(".input-wrapper .input-msg")[0].style.visibility = 'hidden';
+            document.querySelectorAll(".input-wrapper .input-msg")[1].style.visibility = 'hidden';
+
+            if ( state ){
+                modalToggle(true, document.getElementById("modal-add") );
+            }
+            else{
+                modalToggle(false, document.getElementById("modal-add") );
+            }
+
+        }
+
+
+
+
+
+
+
+
+        function modalDesistirToggle( state ){
+
+            
+
+            if ( state ){
+                modalToggle(true, document.getElementById("modal-desistir") );
+            }
+            else{
+                modalToggle(false, document.getElementById("modal-desistir") );
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+    
+
+</body>
+</html>

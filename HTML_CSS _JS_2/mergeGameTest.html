@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+        #gameGrid{
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 1px;
+            background-color: #fff;
+            padding: 1px;
+        }
+
+
+        .slot{
+            width: 48px;
+            height: 48px;
+            background-color: #181818;
+            padding: 4px;
+        }
+
+        .slot *{
+            image-rendering: pixelated;
+        }
+
+        .slotSelected{
+            background-color: #28a745;
+        }
+        .slotGhost{
+            background-color: #007bff;
+        }
+
+
+        .slotSelected *, .slotGhost *{
+            image-rendering: pixelated;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%{
+                transform: scale(0.8);
+            }50%{
+                transform: scale(1);
+            }100%{
+                transform: scale(0.8);
+            }
+        }
+
+        .item{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-size: 100% 100%;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+
+        <div id="gameGrid">
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+            <div class="slot"></div>
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+
+        const ITEMS = [
+            { name: "Wooden_Sword", icon: "https://static.wikia.nocookie.net/minecraft_gamepedia/images/d/d5/Wooden_Sword_JE2_BE2.png/revision/latest/scale-to-width/360?cb=20200217235747" },
+            { name: "Iron_Sword", icon: "https://static.wikia.nocookie.net/minecraft_gamepedia/images/8/8e/Iron_Sword_JE2_BE2.png/revision/latest/scale-to-width/360?cb=20200217235910" },
+            { name: "Diamond_Sword", icon: "https://static.wikia.nocookie.net/minecraft_gamepedia/images/6/6a/Diamond_Sword_JE2_BE2.png/revision/latest?cb=20200217235945" }
+        ];
+
+
+
+
+        function createItemAt( index = 0, itemObj ){
+            const slot = document.querySelectorAll(".slot")[index];
+            if ( slot.firstElementChild == null ){
+                slot.innerHTML = `<div class="item" item-name="${itemObj.name}"></div>`;
+                slot.firstElementChild.style.backgroundImage = `url("${itemObj.icon}")`;
+            }
+        }
+        
+        function selectByIndex( index = 0 ){
+            document.querySelectorAll(".slotSelected").forEach(e => e.classList.remove("slotSelected"));
+            const slot = document.querySelectorAll(".slot")[index];
+            if ( slot.firstElementChild != null ){
+                slot.classList.add("slotSelected");
+            }
+        }
+
+
+        function getItemNameAt( index = 0 ){
+            try {
+                return document.querySelectorAll(".slot")[index].firstElementChild.getAttribute("item-name");
+            } catch (error) {
+                return null;
+            }
+        }
+
+
+        function upgradeItemAt( index = 0 ){
+            const item = document.querySelectorAll(".slot")[index].firstElementChild;
+            if ( item != null ){
+                const itemName = getItemNameAt(index);
+                const idx = ITEMS.findIndex(e => e.name == itemName);
+                if ( idx+1 < ITEMS.length ){
+                    const newItemObj = ITEMS[idx+1]; 
+                    item.setAttribute("item-name", newItemObj.name);
+                    item.style.backgroundImage = `url("${newItemObj.icon}")`;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        function getSelectedIndex(){
+            return Array.from(document.querySelectorAll(".slot")).indexOf(document.querySelector(".slotSelected"));
+        }
+
+
+
+        function ghostItemByName( name, ignoreIndex = 0 ){
+            document.querySelectorAll(".slotGhost").forEach(e => e.classList.remove("slotGhost"));
+            if ( name == null ){
+                return;
+            }
+            document.querySelectorAll(`.slot .item[item-name="${name}"]`).forEach(e => e.parentElement.classList.add("slotGhost"));
+            document.querySelectorAll(".slot")[ignoreIndex].classList.remove("slotGhost");
+        }
+
+
+        document.querySelectorAll(".slot").forEach((slot, slotIndex) => {
+            slot.onmousedown = (event) => {
+                if ( slot.classList.contains("slotSelected") || slot.firstElementChild == null ){
+                    document.querySelectorAll(".slotGhost").forEach(e => e.classList.remove("slotGhost"));
+                    document.querySelectorAll(".slotSelected").forEach(e => e.classList.remove("slotSelected"));
+                    return;
+                }
+
+                const oldSelectedIndex = getSelectedIndex();
+
+                if ( oldSelectedIndex >= 0 ){
+
+                    if ( getItemNameAt(oldSelectedIndex) == getItemNameAt(slotIndex) ){
+                        if ( upgradeItemAt(slotIndex) ){
+                            document.querySelectorAll(".slot")[oldSelectedIndex].innerHTML = '';
+                        }
+                    }
+
+                    document.querySelectorAll(".slotGhost").forEach(e => e.classList.remove("slotGhost"));
+                    document.querySelectorAll(".slotSelected").forEach(e => e.classList.remove("slotSelected"));
+                    return;
+
+                }
+               
+                const itemName = getItemNameAt(slotIndex);
+                selectByIndex(slotIndex);
+                ghostItemByName(itemName, slotIndex);
+
+            };
+        });
+
+
+
+
+
+        
+
+        onload = () => {
+            const pattern = [0, 1, 0, 2, 2, 0, 1, 0];
+            pattern.forEach((e, i) => createItemAt(i, ITEMS[e]));
+        };
+
+
+    </script>
+
+
+</body>
+</html>

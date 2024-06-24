@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista 2.0</title>
+
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #181818;
+        }
+
+
+
+
+        section header{
+            display: flex;
+            justify-content: space-between;
+            margin: 5px;
+            margin-bottom: 0;
+            align-items: center;
+        }
+
+
+        /* APAGAR TUDO */
+        #erase-button{
+            background-color: #ff9800;
+            color: #252525;
+            padding: 4px 8px;
+            border-radius: 5px;
+            user-select: none;
+        }
+
+
+
+
+
+
+        /* MODAL -- CONTAINER */
+        .modal-container{
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            background-color: #00000066;
+            z-index: 1;
+            backdrop-filter: blur(2px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+
+        .modal-window{
+            user-select: none;
+            width: 85%;
+            border-radius: 10px;
+            background-color: #212121;
+            color: #fff;
+            box-shadow: 4px -4px 16px 0px #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .modal-window > div{
+            padding: 10px;
+        }
+
+
+
+        .modal-header{
+            font-size: 1.2em;
+            font-weight: bold;   
+            border-bottom: 1px solid #9e9e9e;
+        }
+
+
+
+
+        .modal-content{
+            height: 100%;
+            border-bottom: 1px solid #9e9e9e;
+        }
+
+
+
+
+        .input-wrapper{
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .input-wrapper > *{
+            height: 28px;       
+        }
+
+
+        .input-logo{
+            background-color: #fff;
+            color: #212529;
+            width: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px 0 0 5px;
+        }
+
+
+        .input-wrapper > input{
+            border: 0;
+            outline: none;
+            padding-left: 5px;
+            width: 100%;
+            border-radius: 0 5px 5px 0;
+        }
+
+
+
+        #input-error{
+            color: #dc3545;
+            font-size: 0.9em;
+            visibility: hidden;
+        }
+
+
+
+
+
+
+        
+
+        .modal-footer{
+            
+        }
+
+
+
+
+        .modal-button-wrapper{
+            display: flex;
+            justify-content: flex-end;
+        }
+
+
+
+        .modal-button{
+            padding: 5px 16px;
+            margin-left: 16px;
+            background-color: #007bff;
+            width: fit-content;
+            border-radius: 8px;
+            font-size: 1.1em;
+        }
+
+
+        .modal-button-ok{
+            background-color: #2e7d32;
+        }
+
+        .modal-button-close{
+            background-color: #dc3545;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        /* MODAL -- ADD */
+        #modal-add{
+            display: none;
+        }
+
+
+        /* MODAL -- REMOVE */
+        #modal-remove{
+            display: none;
+        }
+
+        #modal-close{
+            padding: 4px 8px;
+            background-color: #dc3545;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        #modal-remove .modal-header{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+
+
+
+        /* MODAL -- REMOVE -> CONTENTS */
+        #modal-item-summary{
+            margin-top: 8px;
+            color: #9e9e9e;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-item{
+            border-radius: 8px;
+            padding: 8px;
+            border: 1px solid #9e9e9e;
+            color: #000;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+
+        
+
+
+
+
+
+
+
+
+
+        /* MODAL -- ERASE ALL */
+        #modal-erase{
+            display: none;
+        }
+
+        #modal-erase .modal-content{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #erase-code{
+            display: flex;
+            margin-bottom: 5px;
+        }
+
+        .erase-digit{
+            width: 32px;
+            height: 32px;
+            border: 1px solid #acacac;
+            border-radius: 5px;
+            color: #acacac;
+            margin: 0 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .digit-pass{
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .digit-fail{
+            background-color: #dc3545;
+            color: #fff;
+            animation: moving 1s infinite;
+        }
+        
+
+        @keyframes moving {
+            0% {transform: translateY(-5px);}
+            25% {transform: translateY(0px);}
+            100% {transform: translateY(-5px);}
+        }
+
+
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+         
+
+
+
+
+
+
+
+
+
+
+
+        /* SORT */
+        #inputSort{
+            margin: 5px;
+            padding: 5px;
+            background-color: #404040;
+            color: #fff;
+            border: 0;
+            outline: none;
+        }
+
+
+        #inputSort:hover{
+            background-color: #505050;
+        }
+
+
+
+
+
+
+
+        /* CONTENT */
+        #listaTable{
+            border-collapse: collapse;
+            background-color: #000;
+            width: 100%;
+        }
+
+
+        #listaTable th,td{
+            padding: 4px;
+        }
+
+        #listaTable tr{
+            border: 1px solid #9e9e9e;
+            text-align: center;
+            border-width: 1px 1px 1px 1px;
+        }
+
+
+        #listaTable thead tr{
+            background-color: #000;
+            color: #9e9e9e;
+        }
+
+
+
+
+        #listaTable tbody{
+            color: #9e9e9e;
+        }
+
+        #listaTable tbody tr:nth-child(odd){
+            background-color: #282828;
+        }
+
+        #listaTable tbody tr:nth-child(even){
+            background-color: #181818;
+        }
+
+
+        
+
+        #listItensAll tr td:last-child{
+            background-color: #dc3545;
+            color: #fff;
+            padding: 12px 12px;
+        }
+
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /* FOOTER */
+
+        footer{
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+
+        #add-wrapper{
+            float: right;
+            margin: 16px 32px;
+        }
+
+        #add-button{
+            width: 50px;
+            height: 50px;
+            background-color: #28a745;
+            color: #fff;
+            font-size: 2.1em;
+            box-shadow: 0 0 5px 1px #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.5;
+        }
+
+        .round-button{
+            border-radius: 50%;
+        }
+
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+
+<body>
+
+    
+    <!-- ADD -->
+    <div class="modal-container" id="modal-add">
+
+        <div class="modal-window">
+           
+            <div class="modal-header">ADICIONAR</div>
+
+            <div class="modal-content">
+
+                
+
+                <!-- INPUT: NOME -->
+                <div class="input-wrapper">
+                    <div class="input-logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        </svg>
+                    </div>
+                    
+                    <input type="text" id="inputNome" placeholder="Nome">
+                </div>
+
+
+
+                <!-- INPUT: TEL -->
+                <div class="input-wrapper">
+                    <div class="input-logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                        </svg>
+                    </div>
+                    <input type="tel" id="inputTel" placeholder="Tel." maxlength="10">
+                </div>
+
+
+
+                <!-- INPUT: COTA -->
+                <div class="input-wrapper">
+                    <div class="input-logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-diagram-2" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 5 7h2.5V6A1.5 1.5 0 0 1 6 4.5v-1zM8.5 5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1zM3 11.5A1.5 1.5 0 0 1 4.5 10h1A1.5 1.5 0 0 1 7 11.5v1A1.5 1.5 0 0 1 5.5 14h-1A1.5 1.5 0 0 1 3 12.5v-1zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zm4.5.5a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1A1.5 1.5 0 0 1 9 12.5v-1zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
+                        </svg>
+                    </div>
+                    <input type="number" id="inputCota" placeholder="Cotas" min="0">
+                </div>
+                
+                
+                <!-- ERROR CASO NAO PREENCHAR TODOS OS CAMPOS -->
+                <div id="input-error">Preencha todos os campos</div>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="modal-button-wrapper">
+                    <div class="modal-button modal-button-close" onclick="modalAdd(false)">FECHAR</div>
+                    <div class="modal-button modal-button-ok" onclick="addItem()">OK</div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- CONFIG ITEM -->
+    <div class="modal-container" id="modal-remove">
+
+
+        <div class="modal-window" style="height: auto;">
+
+            <div class="modal-header">
+                <div>EDITAR / DELETE</div>
+                <div onclick="modalDelete(false)" id="modal-close">X</div>
+            </div>
+
+            <div class="modal-content">
+                
+                <div id="modal-item-summary">
+                    <input type="text" class="modal-item" id="inputNomeEdit" placeholder="nome">
+                    <input type="tel" class="modal-item" id="inputTelEdit"  placeholder="tel." maxlength="11">
+                    <input type="number" class="modal-item" id="inputCotaEdit" placeholder="cotas" min="0">
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="modal-button-wrapper">
+                    <div class="modal-button" style="background-color: #007bff;" onclick="itemSave()">SALVAR</div>
+                    <div class="modal-button modal-button-close" onclick="deleteItem()">DELETAR</div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <!-- ERASE -->
+    <div class="modal-container" id="modal-erase">
+
+
+        <div class="modal-window" style="height: auto;">
+
+            <div class="modal-header">APAGAR TUDO</div>
+
+            <div class="modal-content">
+                
+                <div id="erase-code">
+                    <div class="erase-digit">0</div>
+                    <div class="erase-digit">0</div>
+                    <div class="erase-digit">0</div>
+                    <div class="erase-digit">0</div>
+                </div>
+
+                <input type="text" inputmode="numeric" class="modal-item" id="inputEraseCode" placeholder="Codigo" maxlength="4">
+
+            </div>
+
+
+            <div class="modal-footer">
+                <div class="modal-button-wrapper">
+                    <div class="modal-button" style="background-color: #007bff;" onclick="modalErase(false)">CANCELAR</div>
+                    <div class="modal-button modal-button-close" onclick="eraseAll()">ZERAR</div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- MAIN CONTENT -->
+    <section style="padding-bottom: 80px;">
+        
+        <header>
+
+            <!-- ORGANIZAR POR... -->
+            <select id="inputSort">
+                <option value="">Ordem: A-Z</option>
+                <option value="">Ordem: Cota</option>
+            </select>
+
+            <!-- APAGAR TUDO -->
+            <div id="erase-button" onclick="modalErase(true)">zerar</div>
+
+        </header>
+
+
+        
+
+
+
+
+
+        <!-- TABELA -->
+        <table id="listaTable">
+
+            <!-- HEADER -->
+            <thead style="position: sticky;top: 0;">
+                <tr>
+                    <th style="width: 15px;">Index</th>
+                    <th>Nome</th>
+                    <th style="width: 150px;">Tel.</th>
+                    <th style="width: 15px;">Cotas</th>
+                </tr>
+            </thead>
+
+
+            <!-- BODY -->
+            <tbody id="listItensAll">
+            </tbody>
+
+        </table>
+
+    </section>
+
+
+
+
+
+    <footer>
+
+        <div id="add-wrapper">
+            <div class="ui-button round-button" id="add-button" onclick="modalAdd(true)">+</div>
+        </div>
+
+    </footer>
+
+
+
+
+
+
+    <script>
+
+
+        // INPUT - ADD
+        var inputNome = document.getElementById("inputNome");
+        var inputTel = document.getElementById("inputTel");
+        var inputCota = document.getElementById("inputCota");
+        
+        var listItensAll = document.getElementById("listItensAll");
+        var DELETE_INDEX = -1;
+
+        // INPUT - EDIT
+        var inputNomeEdit = document.getElementById("inputNomeEdit");
+        var inputTelEdit = document.getElementById("inputTelEdit");
+        var inputCotaEdit = document.getElementById("inputCotaEdit");
+
+
+
+        var PASS_CODE = '0000';
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+
+
+
+
+
+        var listaItem = [
+
+            /*{
+                "nome": "nome teste",
+                "tel": "9 xxxx-yyyy",
+                "cotas": 0
+            },
+
+            {
+                "nome": "Marcos Antonio",
+                "tel": "9 1515-0012",
+                "cotas": 0
+            },
+
+            {
+                "nome": "Alexandre",
+                "tel": "9 9880-5012",
+                "cotas": 2
+            },
+
+            {
+                "nome": "Francisco Silva",
+                "tel": "9 1202-0215",
+                "cotas": 0
+            }*/
+
+        ];
+        
+        
+        
+        // LER DADOS DO CACHE
+        if ( localStorage.getItem('lista') != null ){
+            listaItem = JSON.parse( localStorage.getItem('lista') );
+        }
+
+
+ 
+
+
+
+        /* SORT */
+        
+        function sortFunction(a, b) {
+
+            if (a.nome.toLocaleUpperCase() === b.nome.toLocaleUpperCase()) {
+                return 0;
+            }
+            else {
+                return (a.nome.toLocaleUpperCase() < b.nome.toLocaleUpperCase()) ? -1 : 1;
+            }
+        }
+
+
+
+        // SORT: A-Z
+        function sortByNameAZ(){
+            listaItem.sort(sortFunction);
+            gerarLista();
+        }
+
+
+        // SORT: COTA
+        function sortByCota(){
+            listaItem = listaItem.sort((a, b)=> b.cotas - a.cotas);
+            gerarLista();
+        }
+
+
+
+
+
+
+
+
+
+        var inputSort = document.getElementById("inputSort");
+
+
+        function indexSort(){
+            if (inputSort.selectedIndex == 0){
+                sortByNameAZ();
+            }
+            else if (inputSort.selectedIndex == 1){
+                sortByCota();
+            }
+        }
+
+
+
+        inputSort.addEventListener("change", function(){
+            indexSort();
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+        // EDITAR ITEM
+        function editItem(index, nome, tel, cotas){
+
+            // EDITAR ARRAY
+            listaItem[index].nome = nome;
+            listaItem[index].tel = tel;
+            listaItem[index].cotas = cotas;
+
+            sortByNameAZ();
+            gerarLista();
+        }
+
+
+
+        // INPUT EDIT NOME -- FOCUS
+        inputNomeEdit.addEventListener("keydown", function(e){
+            if ( event.keyCode == 13 ){
+                inputTelEdit.focus();
+            }
+        });
+
+
+        // INPUT EDIT TEL.  -- FOCUS
+        inputTelEdit.addEventListener("keydown", function(){
+            if ( event.keyCode == 13 ){
+                inputCotaEdit.focus();
+            }
+        });
+
+
+        // INPUT EDIT COTA -- FORMAT VALUE
+        inputCotaEdit.addEventListener("input", function(){
+            this.value = Math.abs( this.value | 0 );
+        });
+
+
+
+
+
+
+
+
+
+
+        // ADD INPUTT -- FOCUS
+        inputNome.addEventListener("keydown", function(e){
+            if ( event.keyCode == 13 ){
+                inputTel.focus();
+            }
+        });
+
+
+        inputTel.addEventListener("keydown", function(){
+            if ( event.keyCode == 13 ){
+                inputCota.focus();
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+        // MODAL SALVAR MUDANÇAS
+        function itemSave(){
+
+            // VERIFICAR CAMPOS EM BRANCO
+            if ( inputNomeEdit.value.length <= 0 || inputTelEdit.value.length <= 0 ){
+                return;
+            }
+
+            inputCotaEdit.value = Math.abs( inputCotaEdit.value | 0 );
+
+            modalDelete(false);
+            editItem(DELETE_INDEX, inputNomeEdit.value, inputTelEdit.value, inputCotaEdit.value);
+            DELETE_INDEX = -1;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        // MODAL -- ADD
+        function modalAdd( state ){
+            if ( state ){
+                document.getElementById("modal-add").style.display = "flex";
+            }
+
+            else{
+                document.getElementById("modal-add").style.display = "none";
+            }
+
+            document.getElementById("input-error").style.visibility = "hidden";
+        }
+
+
+        // MODAL -- DELETE/EDIT
+        function modalDelete( state ){
+            if ( state ){
+                document.getElementById("modal-remove").style.display = "flex";
+            }
+
+            else{
+                document.getElementById("modal-remove").style.display = "none";
+            }
+        }
+
+
+
+        // MODAL -- ERASE ALL
+        function modalErase( state ){
+
+            document.getElementById("inputEraseCode").value = '';
+            for (let i = 0; i < 4; i++){
+                document.querySelectorAll('.erase-digit')[i].classList.remove('digit-pass', 'digit-fail');    
+            }
+
+            if ( state ){
+                codeGen();
+                document.getElementById("modal-erase").style.display = "flex";
+            }
+
+            else{
+                document.getElementById("modal-erase").style.display = "none";
+            }
+        }
+
+
+
+
+
+
+        // ADICIONAR ITEM PARA O ARRAY E GUI
+        function addItem(){
+
+            if ( inputNome.value.length > 0 && inputTel.value.length > 0 ){
+                console.log("Add item para o ARRAY");
+
+                document.getElementById("input-error").style.visibility = "hidden";
+
+
+                // FORMATAR COTAS
+                inputCota.value = Math.abs( inputCota.value | 0 );
+
+
+                listaItem.push({
+                    "nome": inputNome.value,
+                    "tel": inputTel.value,
+                    "cotas": inputCota.value
+                });
+
+
+                sortByNameAZ();
+                gerarLista();
+
+
+                modalAdd(false);
+
+                // Clear inputs
+                inputNome.value = inputTel.value = inputCota.value = '';
+            }
+            else{
+                document.getElementById("input-error").style.visibility = "initial";
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        // DELETAR ITEM
+        function deleteItem(){
+
+
+
+            if (DELETE_INDEX != -1){
+                
+                console.log("DELETE_INDEX", DELETE_INDEX);
+
+                listItensAll.children[DELETE_INDEX].remove();
+                listaItem.splice(DELETE_INDEX, 1);
+
+
+                DELETE_INDEX = -1;
+                modalDelete(false);
+
+                sortByNameAZ();
+                gerarLista();
+            }
+
+            
+        }
+
+
+
+
+
+
+
+
+        
+
+
+
+
+        // GERAR LISTA
+        function gerarLista(){
+
+
+            // LIMPAR TUDO
+            listItensAll.innerHTML = '';
+            
+            
+            for (let x = 0; x < listaItem.length; x++){
+
+                let item = document.createElement("tr");
+
+                // INDEX & COTAS
+                let itemIndex = x + 1;
+                itemIndex = (itemIndex < 10)? ('0'+itemIndex) : itemIndex;
+                
+
+                let cotas = (listaItem[x].cotas <= 0)? '' : listaItem[x].cotas;
+
+
+                // VALORES
+                item.innerHTML = `
+                <td>${itemIndex}</td>
+                <td>${listaItem[x].nome}</td>
+                <td>${listaItem[x].tel}</td>
+                <td>${cotas}</td>
+                <td><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/></svg></td>
+                `;
+
+
+                listItensAll.appendChild(item);
+
+
+            }
+
+
+
+            // DELETAR / EDITAR 
+            for (let x = 0; x < listItensAll.children.length; x++){
+
+                listItensAll.children[x].children[4].addEventListener("click", function(){
+
+                    console.log("event click em delete, index " + x);
+
+                    document.getElementById("modal-item-summary").children[0].value = listaItem[x].nome;
+                    document.getElementById("modal-item-summary").children[1].value = listaItem[x].tel;
+                    document.getElementById("modal-item-summary").children[2].value = listaItem[x].cotas;
+
+                    DELETE_INDEX = x;
+
+                    modalDelete(true);
+                });
+
+
+            }
+
+            // SALVAR DADOS NO CACHE
+            localStorage.setItem('lista', JSON.stringify(listaItem));
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        // GERAR CODIGO
+
+        function codeGen(){
+
+            let CODE = getRandomInt(0, 9999);
+
+            console.log("temp:", CODE);
+
+            if (CODE < 10){
+                CODE = '0' + CODE;
+            }
+            
+            else if (CODE < 100){
+                CODE = '00' + CODE;
+            }
+            else if (CODE < 1000){
+                CODE = '0' + CODE;
+            }
+
+            PASS_CODE = CODE + '';
+
+            console.log(PASS_CODE);
+
+
+            for (let i = 0; i < 4; i++){
+                document.querySelectorAll('.erase-digit')[i].innerHTML = PASS_CODE[i];
+            }
+
+
+        }
+
+
+        // INPUT CODE
+        document.getElementById("inputEraseCode").addEventListener("input", function(){
+
+            // VERIFICA CADA DIGITO
+            for (let i = 0; i < this.value.length; i++){
+
+                // SE TIVE VERMELHO OU VERDE O DIGITO FICA NA COR PADÃO (CINZA)
+                document.querySelectorAll('.erase-digit')[i].classList.remove('digit-pass', 'digit-fail');    
+                
+                // FICAR VERDE
+                if ( PASS_CODE[i] == this.value[i] ){
+                    document.querySelectorAll('.erase-digit')[i].classList.add('digit-pass');
+                }
+
+                // FICAR VERMEHO
+                else{
+                    document.querySelectorAll('.erase-digit')[i].classList.add('digit-fail');
+                }
+            }
+
+            
+            // ZERAR OS DIGITOS QUE NAO FORAM PREECHIDOS (FICAR CINZA)
+            for (let i = 0; i < 4-this.value.length; i++){
+                document.querySelectorAll('.erase-digit')[3-i].classList.remove('digit-pass', 'digit-fail');    
+            }
+            
+
+
+
+        });
+
+
+
+
+
+        function eraseAll(){
+
+            if ( PASS_CODE == document.getElementById("inputEraseCode").value ){
+                console.warn("TUDO FOI APAGADO");
+                listaItem = [];
+                gerarLista();
+                modalErase(false);
+                
+            }
+            else{
+                document.querySelector("#modal-erase .modal-window").style.animation = 'shake 0.5s';
+                setTimeout(function(){
+                    document.querySelector("#modal-erase .modal-window").style.animation = '';
+                }, 600);
+            }
+
+        }
+
+
+
+
+
+
+        // INIT
+        sortByNameAZ();
+        gerarLista();
+
+
+
+    </script>
+
+
+
+</body>
+</html>

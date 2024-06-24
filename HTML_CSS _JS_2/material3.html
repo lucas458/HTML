@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{ 
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #25232a;
+            color: #fff;
+			user-select: none;
+        }
+
+
+        
+
+        /* SLIDER */
+        .slider{
+            padding: 20px;
+        }
+
+        .slider_track{
+            width: 100%;
+            height: 4px;
+            background-color: #49454f;
+            border-radius: 25px;
+        }
+
+
+        .slider_track_fill{
+            width: 25%;
+            height: 100%;
+            background-color: #d0bcff;
+            border-radius: 25px;
+        }
+
+        .slider_handler{
+            width: 20px;
+            height: 20px;
+            background-color: #d0bcff;
+            border-radius: 50%;
+            position: relative;
+            top: calc(100% - 12px);
+            left: calc(100% - 10px); 
+        }
+
+        .slider_handler::after{
+            content: '';
+            display: block;
+            width: 40px;
+            height: 40px;
+            background-color: #d0bcff;
+            opacity: 0.2;
+            margin: auto;
+            border-radius: 100%;
+            transition: 350ms transform;
+            transform: scale(0);
+            position: absolute;
+            left: calc(100% - 30px);
+            top: calc(100% - 30px);
+        }
+
+        .slider_pressed .slider_handler::after{
+            transition: 1ms transform;
+            transform: scale(1);
+        }
+
+
+
+
+
+
+
+        /* ITEM LIST */
+        .item_list{
+            height: 72px;
+            background-color: #1c1b1f;
+            padding: 8px 24px 8px 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .item_list_pressed{
+            background-color: #58565a !important; 
+        }
+
+        .item_list_image{
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+            background-color: #25232a;
+            margin-right: 16px;
+            border-radius: 8px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .item_list_content{
+            flex: 1;
+        }
+        
+        .item_list_title{
+            color: #e6e1e5;
+            font-size: large;
+            line-height: 24px;
+        }
+
+        .item_list_subTitle{
+            color: #cac4d0;
+            font-size: medium;
+            line-height: 20px;
+        }
+
+
+        .item_list_option{
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            color: #e6e1e5;
+        }
+        
+        
+        .item_list_option::after{
+            content: '';
+            display: block;
+            width: 32px;
+            height: 32px;
+            background-color: #58565a;
+            opacity: 0.2;
+            margin: auto;
+            border-radius: 100%;
+            transition: 350ms transform;
+            transform: scale(0);
+            position: absolute;
+            left: calc(100% - 32px);
+            top: calc(100% - 32px);
+        }
+
+        .item_list_option_pressed::after{
+            transition: 100ms transform;
+            transform: scale(1);
+        }
+
+        .item_list_option *{
+            pointer-events: none;
+        }
+
+        .item_list_no_image .item_list_image{
+            width: 40px;
+            height: 40px;
+            background-color: transparent;
+            color: #cac4d0;
+        }
+
+
+
+
+
+
+
+
+
+
+        .tooltip{
+            width: fit-content;
+            height: 24px;
+            padding: 0 8px;
+            background-color: #E6E1E5;
+            color: #313033;
+            border-radius: 4px;
+            font-size: small;
+            line-height: 24px;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: 100ms opacity;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+
+        .tooltip_visible{
+            opacity: 1;
+        }
+    
+        
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+    <!-- SLIDER -- class => slider_pressed -->
+    <div class="slider">
+        <div class="slider_track">
+            <div class="slider_track_fill">
+                <div class="slider_handler"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <!-- LIST : NORMAL -->
+    <div class="item_list">
+
+        <div class="item_list_image"></div>
+
+        <div class="item_list_content">
+            <div class="item_list_title">Headline</div>
+            <div class="item_list_subTitle">Supporting text</div>
+        </div>
+
+        <!-- item_list_option_pressed, item_list_option_button, item_list_option_button_press_effect, has_tooltip -->
+        <div class="item_list_option item_list_option_button item_list_option_button_press_effect has_tooltip" tooltip="opções">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24" fill="currentColor"><path d="M480 896q-33 0-56.5-23.5T400 816q0-33 23.5-56.5T480 736q33 0 56.5 23.5T560 816q0 33-23.5 56.5T480 896Zm0-240q-33 0-56.5-23.5T400 576q0-33 23.5-56.5T480 496q33 0 56.5 23.5T560 576q0 33-23.5 56.5T480 656Zm0-240q-33 0-56.5-23.5T400 336q0-33 23.5-56.5T480 256q33 0 56.5 23.5T560 336q0 33-23.5 56.5T480 416Z"/></svg>
+        </div>
+
+    </div>
+
+
+
+
+    <!-- LIST : REORDER -->
+    <div class="item_list">
+
+        <div class="item_list_image"></div>
+
+        <div class="item_list_content">
+            <div class="item_list_title">Headline</div>
+            <div class="item_list_subTitle">Supporting text</div>
+        </div>
+
+        <!-- item_list_option_pressed, item_list_option_button, item_list_option_button_press_effect -->
+        <div class="item_list_option item_list_option_button_press_effect">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24" fill="currentColor"><path d="M120 856v-80h720v80H120Zm0-160v-80h720v80H120Zm0-160v-80h720v80H120Zm0-160v-80h720v80H120Z"/></svg>
+        </div>
+
+    </div>
+
+
+
+
+ 
+
+    <!-- LIST : NUMERIC MUSIC -->
+    <div class="item_list item_list_no_image">
+
+        <div class="item_list_image">1</div>
+
+        <div class="item_list_content">
+            <div class="item_list_title">Headline</div>
+            <div class="item_list_subTitle">Supporting text</div>
+        </div>
+
+        <!-- item_list_option_pressed, item_list_option_button, item_list_option_button_press_effect, has_tooltip -->
+        <div class="item_list_option item_list_option_button item_list_option_button_press_effect has_tooltip" tooltip="opções">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24" fill="currentColor"><path d="M480 896q-33 0-56.5-23.5T400 816q0-33 23.5-56.5T480 736q33 0 56.5 23.5T560 816q0 33-23.5 56.5T480 896Zm0-240q-33 0-56.5-23.5T400 576q0-33 23.5-56.5T480 496q33 0 56.5 23.5T560 576q0 33-23.5 56.5T480 656Zm0-240q-33 0-56.5-23.5T400 336q0-33 23.5-56.5T480 256q33 0 56.5 23.5T560 336q0 33-23.5 56.5T480 416Z"/></svg>
+        </div>
+
+    </div>
+
+
+
+
+
+  
+
+
+    <!-- tooltip_visible -->
+    <div class="tooltip">algo aqui</div>
+
+
+
+
+
+
+
+
+
+     
+
+
+    <script>
+
+
+
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+
+
+
+
+
+        // SLIDER CODE
+        document.querySelectorAll(".slider").forEach((e, i) => {
+
+
+            e.ontouchstart = (evt) => {
+                e.classList.toggle('slider_pressed', evt.target == e.querySelector('.slider_handler'));
+            };
+
+
+            e.ontouchmove = (evt) => {
+                e.classList.add('slider_pressed');
+                slider_pos = evt.touches[0].clientX - 20;
+                e.querySelector('.slider_track_fill').style.width = Math.clamp(slider_pos, 0, e.firstElementChild.offsetWidth) + 'px';
+            }
+
+
+            e.ontouchend = (evt) => {
+                e.classList.remove('slider_pressed');
+            };
+
+
+
+        });
+
+
+
+
+
+
+        // TOOLTIP CODE
+
+        var tooltip = document.querySelector('.tooltip');
+        var TIMER_PRESS_TIMER = null;
+
+        function setTooltipText( text ){
+            tooltip.innerHTML = text;
+        }
+
+
+        function showTooltip(){ 
+            tooltip.style.opacity = 1;
+        }
+
+
+        function hideTooltip(){
+            setTimeout(()=>{
+                tooltip.style.opacity = 0;
+            }, 1000);
+        }
+
+        
+        document.querySelectorAll('.has_tooltip').forEach((e, i) => {
+            
+            e.addEventListener('touchstart', (evt) => {
+                if ( !TIMER_PRESS_TIMER ){
+                    TIMER_PRESS_TIMER = setTimeout(()=>{
+                        console.log('long');
+                        TIMER_PRESS_TIMER = null;
+
+                        setTooltipText( e.getAttribute('tooltip') );
+
+                        let pos = {
+                            x: e.offsetLeft - e.offsetWidth/2,
+                            y: e.offsetTop + e.offsetHeight + 4
+                        };
+
+                        console.log(pos, tooltip.offsetWidth);
+
+                        pos.x = Math.clamp(pos.x, 0, screen.width - tooltip.offsetWidth);
+                        pos.y = Math.clamp(pos.y, 0, screen.height - tooltip.offsetHeight);
+
+                        tooltip.style.left = (pos.x) + 'px';
+                        tooltip.style.top  = (pos.y) + 'px';
+
+                        showTooltip();
+                    }, 500);
+                }
+            });
+
+            e.addEventListener('touchend', () => {
+                clearTimeout(TIMER_PRESS_TIMER);
+                TIMER_PRESS_TIMER = null;
+                hideTooltip();
+            });
+
+            
+
+        });
+
+
+
+
+
+
+        // LIST ITEM CODE
+        document.querySelectorAll('.item_list').forEach((e, i) => {
+
+            if ( e.querySelector('.item_list_option_button_press_effect') ){
+                e.querySelector('.item_list_option_button_press_effect').ontouchstart = (evt) => {
+                    evt.stopImmediatePropagation();
+                    evt.target.classList.add('item_list_option_pressed');
+                }
+
+                e.querySelector('.item_list_option_button_press_effect').ontouchend = (evt) => {
+                    evt.stopImmediatePropagation();
+                    evt.target.classList.remove('item_list_option_pressed');
+                }  
+            }
+
+
+            if ( e.querySelector('.item_list_option_button') ){
+                e.querySelector('.item_list_option_button').onclick = (evt) => {
+                    console.log('option click')
+                }
+            }
+
+
+            e.ontouchstart = () => {
+                e.classList.add('item_list_pressed'); 
+            };
+
+            e.ontouchend = () => {
+                e.classList.remove('item_list_pressed'); 
+            };
+
+            e.onclick = () => {
+                console.log('item list click');
+            };
+            
+
+        });
+
+
+
+
+
+
+
+
+
+        
+
+        
+
+         
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
