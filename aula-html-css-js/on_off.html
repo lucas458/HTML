@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+        #popup{
+
+            text-align: center;
+            padding: 10px;
+            background-color: #cd3545;
+            color: #fff;
+            width: 100%;
+            position: fixed;
+            top: -50px;
+
+            transition: 200ms;
+        }
+
+    </style>
+    
+
+</head>
+
+
+
+<body>
+
+    
+
+    <div id="popup">Aparelho Offline</div>
+
+
+
+
+
+    <script>
+
+
+
+
+        function popupShow( mode ){
+
+            let elemento = document.getElementById("popup");
+
+            elemento.innerText = "Aparelho " + ( (mode)?"Online":"Offline" );
+            elemento.style.top = "0";
+            elemento.style.backgroundColor = (mode)?"#28a745": "#dc3545";
+
+            if ( mode ){
+                navigator.vibrate([200, 100, 200]);
+            }
+            else{
+                navigator.vibrate(300);
+            }
+
+            setTimeout(function(){
+                elemento.style.top = "-50px";
+            }, 1500);
+
+            
+        } 
+
+
+
+        window.addEventListener("online", function(){ popupShow(1); });
+
+        window.addEventListener("offline", function(){ popupShow(0); });
+
+
+
+    </script>
+
+
+
+</body>
+</html>

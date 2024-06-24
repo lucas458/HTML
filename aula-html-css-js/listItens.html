@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+            background-color: #212121;
+        }
+
+        
+
+        #container{
+
+            
+            color: #fff;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            padding: 5px;
+
+            overflow: hidden auto;
+        }
+
+
+        .item{
+            
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            overflow: hidden;
+
+             
+        }
+
+
+
+
+        .item input{
+            visibility: hidden;
+            display: none;
+        }
+
+        
+
+
+
+
+        .item-contents{
+            display: flex;
+            align-items: center;
+            width: 100%;
+            
+
+            transition: 200ms;
+            position: relative;
+            left: 0;
+        }
+
+
+
+        .item input:checked ~ .item-contents {
+            background-color: #353535;
+            left: 8px;
+        }
+
+
+        .item-index{
+            user-select: none;
+            border: 1px solid #646464;
+            margin-right: 10px;
+            color: #e3e3e3;
+            width: 32px;
+            height: 32px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;          
+        }
+
+
+        .item-text{
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+
+
+    <div id="container">
+        
+    </div>
+
+    
+
+    <script>
+
+
+        container = document.getElementById("container");
+
+        item = document.getElementsByClassName("item");
+
+
+        function createItem( text ){
+
+
+            tempIndex = item.length+1;
+
+            
+
+
+            container.innerHTML += `
+            <label class="item">
+
+                <input type="radio" name="mainScreenItem">
+                <div class="item-contents">
+                    <div class="item-index">${(tempIndex < 10)? ("0" + tempIndex): tempIndex}</div>
+                    <div class="item-text">${text}</div>
+                </div>
+                
+            </label>
+            `;
+
+
+            if ( tempIndex != 0 ){
+                tempIndex++;
+            }
+
+        }
+
+
+
+        for ( let i = 0; i < 100; i++){
+            createItem( "item de numero: " + (i+1) );
+        }
+        
+
+
+    </script>
+
+</body>
+</html>

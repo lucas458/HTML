@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permissões</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .bit input{
+            visibility: hidden;
+            display: none;
+        }
+
+        .bit div{
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #6c757d;
+            border-radius: 15px;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 10px;
+            user-select: none;
+        }
+        .bit input:checked ~ div{
+            background-color: #28a745;
+        }
+
+
+        .permissson{
+            display: flex;
+            background-color: #252525;
+            margin-right: 5px;
+        }
+
+        #container{
+            display: flex;
+        }
+
+
+        #output{
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2em;
+
+        }
+
+    </style>
+    
+</head>
+
+<body>
+
+    
+
+    <div id="container">
+
+        <div class="permissson">
+            <label class="bit">
+                <input type="checkbox" onchange="toggle(this, 0, 0)">
+                <div>R</div>
+            </label>
+    
+            <label class="bit">
+                <input type="checkbox" onchange="toggle(this, 0, 1)">
+                <div>W</div>
+            </label>
+    
+            <label class="bit">
+                <input type="checkbox" onchange="toggle(this, 0, 2)">
+                <div>X</div>
+            </label>
+        </div>
+
+
+        <div class="permissson">
+            <label class="bit">
+                <input type="checkbox" onchange="toggle(this, 1, 0)">
+                <div>R</div>
+            </label>
+    
+            <label class="bit">
+                <input type="checkbox" onchange="toggle(this, 1, 1)">
+                <div>W</div>
+            </label>
+    
+            <label class="bit">
+                <input type="checkbox" onchange="toggle(this, 1, 2)">
+                <div>X</div>
+            </label>
+        </div>
+
+
+        <div class="permissson">
+            <label class="bit">
+                <input type="checkbox" onchange="toggle(this, 1, 0)">
+                <div>R</div>
+            </label>
+    
+            <label class="bit">
+                <input type="checkbox" onchange="toggle(this, 1, 1)">
+                <div>W</div>
+            </label>
+    
+            <label class="bit">
+                <input type="checkbox" onchange="toggle(this, 1, 2)">
+                <div>X</div>
+            </label>
+        </div>
+
+    </div>
+
+
+
+    <div id="output">d --- --- ---</div>
+
+
+    
+    <script>
+
+
+
+        function toggle(e, type, bit){
+
+            dono = grupo = outros = '';
+
+            dono += (document.getElementsByClassName("permissson")[0].children[0].children[0].checked)? 'r' : '-';
+            dono += (document.getElementsByClassName("permissson")[0].children[1].children[0].checked)? 'w' : '-';
+            dono += (document.getElementsByClassName("permissson")[0].children[2].children[0].checked)? 'x' : '-';
+
+            grupo += (document.getElementsByClassName("permissson")[1].children[0].children[0].checked)? 'r' : '-';
+            grupo += (document.getElementsByClassName("permissson")[1].children[1].children[0].checked)? 'w' : '-';
+            grupo += (document.getElementsByClassName("permissson")[1].children[2].children[0].checked)? 'x' : '-';
+
+            outros += (document.getElementsByClassName("permissson")[2].children[0].children[0].checked)? 'r' : '-';
+            outros += (document.getElementsByClassName("permissson")[2].children[1].children[0].checked)? 'w' : '-';
+            outros += (document.getElementsByClassName("permissson")[2].children[2].children[0].checked)? 'x' : '-';
+
+            document.getElementById("output").innerText = `d ${dono} ${grupo} ${outros}`;
+            
+
+        }
+
+
+
+
+    </script>
+    
+
+</body>
+</html>

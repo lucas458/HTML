@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pr-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numeros Divisiveis</title>
+
+    <style>
+
+        #constainer_lista{
+            padding: 0;
+
+        }
+
+        .item_lista{
+            background-color: #ff8585;
+            width: 190px;
+            margin-top: 5px;
+            border-radius: 30px;
+            text-align: center;
+            padding: 5px;
+            font-family: Consolas;
+            font-size: 1em;
+            list-style-type: none;
+            transition: 300ms;
+            
+        }
+
+        .item_lista:hover{
+            background-color: aqua;
+        }
+
+        #botao{
+            background-color: #7070ff;
+            border: 0;
+            padding: 5px;
+            font-family: Arial, Helvetica, sans-serif;
+            border-radius: 5px;
+            text-align: center;
+            user-select: none;
+            transition: 300ms;
+        }
+        #botao:hover{
+            background-color: brown;
+            color:#fff;
+        }
+    </style>
+</head>
+<body>
+
+    <input type="number" id="entrada_valor">
+    <button onclick="calc()" id="botao">Calcular</button>
+
+    <ul id="constainer_lista">
+        <li class="item_lista" style="border-radius: 10px; width: fit-content;">VALOR(ES):</li>
+    </ul>
+
+    <script>
+        var entrada_valor = document.getElementById("entrada_valor");
+        var itens         = document.getElementById("constainer_lista");
+
+        var lista = [];
+        var index = 0;
+
+        var old_item = itens.innerHTML;
+        function calc(){
+
+            
+            if (entrada_valor.value.length == 0){ return 0; }
+            itens.innerHTML = old_item;
+            index = 0;
+            for (let x = 1; x != entrada_valor.value+1; x++){
+                if (Number.isInteger(entrada_valor.value / x)){
+                    lista[index] = x;
+                    console.log("VALOR_" + (index+1) + ": " + lista[index]);
+                    index++;
+                    itens.innerHTML += `<li class="item_lista">ITEM ${index} : <span style="color: white;">${lista[index-1]}</span></li>`
+                }
+            }
+            document.getElementsByClassName("item_lista")[0].innerText = "VALOR(ES): "+index
+        }
+
+    </script>
+</body>
+</html>

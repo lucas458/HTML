@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> MAP </title>
+
+    <style>
+
+        body{
+            background-color: #909090;
+        }
+
+
+        #container{
+            width: fit-content;
+            height: 170px;
+            background-color: red;
+            border-radius: 15px;
+            box-shadow: 0px 0px 17px 0px black;
+        }
+
+        .entrada{
+            width: 150px;
+            height: 25px;
+            border-radius: 25px;
+            border-style: none;
+            margin: 5px;
+            outline: none;
+        }
+
+        #resposta{
+            margin-left: 5px;
+            margin-top: 5px;
+            font-size: 1.2em;
+            font-family: Arial, Helvetica, sans-serif;
+
+        }
+
+        #calcular{
+            width: 64px;
+            height: 25px;
+            margin-left: 5px;
+            background-color: #775fff;
+            cursor: pointer;
+            user-select: none;
+            border-radius: 25px;
+            box-sizing: border-box;
+            padding: 3px;
+            transition: 300ms;
+        }
+        #calcular:hover{
+            background-color: aqua;
+        }
+
+
+    </style>
+</head>
+<body>
+    
+
+    <div id="container">
+        <input type="number" class="entrada" id="valor" placeholder="Valor Atual">
+        <br>
+
+        <input type="number" class="entrada" id="in_minimo" placeholder="Entrada Minima">
+        <input type="number" class="entrada" id="in_maximo" placeholder="Entrada Máxima">
+        <br>
+        
+        <input type="number" class="entrada" id="out_minimo" placeholder="Saída Minima">
+        <input type="number" class="entrada" id="out_maximo" placeholder="Saída Máxima">
+        
+        
+        <div id="calcular" onclick="calc()">Calcular</div>
+        
+        <p id="resposta">Resposta: </p>
+    </div>
+
+    
+    
+    <!-- JS -->
+    <script>
+
+        res = document.getElementById("resposta");
+        // GET VALORES
+
+        x = document.getElementById("valor");
+
+        in_max = document.getElementById("in_maximo");
+        in_min = document.getElementById("in_minimo");
+
+        out_max = document.getElementById("out_maximo");
+        out_min = document.getElementById("out_minimo");
+
+
+        function calc() {
+            if ((x.value.length && in_min.value.length && in_max.value.length && out_min.value.length && out_max.value.length) > 0){
+                res.innerHTML = "Resposta: " + ((Number(x.value) - Number(in_min.value)) * (Number(out_max.value) - Number(out_min.value)) / (Number(in_max.value) - Number(in_min.value)) + Number(out_min.value));
+            }
+        }
+        
+        
+    </script>
+</body>
+</html>

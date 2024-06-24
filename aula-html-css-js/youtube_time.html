@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        #texto_valor{
+            font-family: monospace;
+            font-size: 1.4em;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <input type="number" id="valor_input" oninput="mostrar()" placeholder="Digite: Segundos">
+    <div id="texto_valor">0:00</div>
+
+    <script>
+	
+	
+        function time_track(valor){
+
+            var texto = "";
+
+            var dias  = parseInt(valor/86400);
+            var horas = parseInt((valor/3600)%24);
+            var min   = parseInt((valor/60)%60);
+            var seg   = parseInt(valor%60);
+
+
+            // DIAS
+            if (valor >= 86400){
+                texto += (dias + ":");
+            }
+
+            // HORAS
+            if (valor >= 3600){
+                if (horas > 9){
+                    texto += (horas + ":");
+                }
+                else{
+                    if (dias > 0){
+                        texto += ("0" + horas + ":");
+                    }
+                    else{
+                        texto += (horas + ":");
+                    }
+                }
+            }
+
+            // MINUTOS : SEGUNDOS
+            if (valor >= 0){
+
+                // MINUTOS
+                if (min > 9){
+                    texto += (min);
+                }
+
+                else{
+                    if ((dias || horas) > 0){
+                        texto += ("0" + min);
+                    }
+                    else{
+                        texto += (min);
+                    }
+
+                }
+
+
+                // SEGUNDOS
+                if (seg > 9){
+                    texto += (":" + seg);
+                }
+                else{
+                    texto += (":0" + seg);
+                }
+                
+                
+            }
+            console.log(texto);
+            document.getElementById("texto_valor").innerHTML = texto;
+            texto = "";
+			
+			
+        }
+
+        function mostrar(){
+            valor = document.getElementById("valor_input").value-0;
+            time_track(valor);
+        }
+
+
+        
+
+    </script>
+
+</body>
+</html>

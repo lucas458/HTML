@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+
+            background-color: #181818;
+        }
+
+
+
+        .screen{
+            display: none;
+        }
+
+        #home{
+            display: block;
+        }
+
+        
+
+        .list-channel-container{
+            background-color: #212121;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+        }
+        
+
+        .list-channel{
+            overflow: auto hidden;
+            display: flex;
+        }
+        /* .list-channel::-webkit-scrollbar{ 
+            height: 0;
+        } */
+
+
+
+        .wrapper{
+            /* background-color: aqua; */
+            padding: 2px 0px;
+            width: 48px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 10px;
+        }
+
+        .wrapper:active, .list-all:active{
+            background-color: #353535;
+        }
+
+
+
+        .channel{
+            /* background-color: blue; */
+            width: 36px;
+            height: 36px;
+            position: relative;
+            border-radius: 50%;
+        }
+
+        .channel img{
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+
+
+        .badge{
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 8px;
+            height: 8px;
+            margin: 1px;
+            border-radius: 50%;
+            
+        }
+        .badge-active{
+            border: 1px solid #212121;
+            background-color: #0d47a1;
+        }
+
+
+
+
+        .channel-name{
+            font-size: 0.5em;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 100%;
+            color: #fff;
+            padding: 3px 5px;
+        }
+
+
+        .list-all{
+            font-weight: bold;
+            color: #007bff;
+            padding: 5px 0;
+            margin-left: 8px;
+            /* background-color: brown; */
+        }
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .all-item{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+            padding: 5px 10px;
+        }
+        .all-param{
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            width: 100%;
+        }
+        .all-image{
+            margin-right: 5px;
+            
+        }
+        .all-image img{
+            border-radius: 50%;
+        }
+
+
+
+        .all-badge{
+            padding-left: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .all-badge-active{
+            
+            background-color: #0d47a1;
+        }
+
+
+
+
+
+
+
+
+        #back{
+            padding: 10px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            background-color: #212121;
+            position: sticky;
+            top: 0;
+        }
+        #back > div{
+            margin-left: 5px;
+        }
+
+        
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+    <div class="screen" id="verticalList">
+
+        
+
+        <!-- ITEM -->
+        <!-- <div class="all-item">
+            <div class="all-param">
+                <div class="all-image">
+                    <img src="#" width="36" height="36">
+                </div>
+                <div class="all-name">Nome Aqui</div>
+            </div>
+            <div class="all-badge all-badge-active"></div>
+        </div> -->
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="screen" id="home">
+
+        
+
+        <div class="list-channel-container">
+
+            <div class="list-channel" id="channels-horizontal">
+
+                <!-- ITEM -->
+                <!-- <div class="wrapper">
+                    <div class="channel">
+                        <img src="#" width="36" height="36">
+                        <div class="badge badge-active"></div>
+                    </div>
+                    <div class="channel-name">nome aqui</div>
+                </div> -->
+
+                 
+                 
+
+                
+
+            </div>
+
+            
+            <!-- ALL -->
+            <div class="list-all" onclick="openListVertical()">TODOS</div>
+
+        </div>
+
+        
+
+
+        <div class="list-itens">
+
+        </div>
+                
+
+    </div>
+
+    
+
+
+
+
+
+
+
+
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+
+
+        var obj = {
+            "subscriptions":[
+                {"name": "T3ddy", 
+                "image": "https://yt3.ggpht.com/wt4Vej4o0NpDH6OXwSk-L7TwzxPcB_2ml8Ycy1ongYVnHumD4eKgRj5SdB1zvvgyhtFT10Xwsw=s68-c-k-c0x00ffffff-no-rj",
+                "badge": false},
+
+                {"name": "ESPN Brasil", 
+                "image": "https://yt3.ggpht.com/ytc/AKedOLQ-uDjWFLVnZiGxQfWRsLH6aMDrZNbnnxTYtDJ9EpE=s68-c-k-c0x00ffffff-no-rj",
+                "badge": true},
+
+                {"name": "Mundo Desconhecido", 
+                "image": "https://yt3.ggpht.com/ytc/AKedOLTMkC6Mw2DDBKr9XLKasrc3eGv2qPXfwi6-VZrh-Q=s68-c-k-c0x00ffffff-no-rj",
+                "badge": true},
+
+                {"name": "BBC News Brasil", 
+                "image": "https://yt3.ggpht.com/ytc/AKedOLSHZ4cwvhJrfPl2m7nOPujalJP811Q1lghY7qauYT0=s68-c-k-c0x00ffffff-no-rj",
+                "badge": false},
+
+                {"name": "Marvel Brasil", 
+                "image": "https://yt3.ggpht.com/ytc/AKedOLRJFxojUGx7u06lBjilcCYrHQyLt9k678A5Uef2=s68-c-k-c0x00ffffff-no-rj",
+                "badge": true},
+
+                {"name": "Aviões e Músicas", 
+                "image": "https://yt3.ggpht.com/9iQyyGoyciDF03vjXJ1eCaAMCn2X1__r1-ucPat7uzZFDRJChBUWwipWq2NbHQjWtGZ0iVq0=s68-c-k-c0x00ffffff-no-rj",
+                "badge": false}
+                
+            ]
+        };
+
+
+
+
+        function generateChannels(){
+
+            $("#channels-horizontal").empty();
+
+
+            
+
+
+            obj.subscriptions.forEach(element => {
+                
+                $("#channels-horizontal").append(`
+                <div class="wrapper">
+                    <div class="channel">
+                        <img src="${element.image}" width="36" height="36">
+                        <div class="badge${(element.badge)?" badge-active":""}"></div>
+                    </div>
+                    <div class="channel-name">${element.name}</div>
+                </div>
+                `);
+            });
+
+        }
+
+
+
+        $(function(){
+            generateChannels();
+        })
+       
+
+
+
+
+
+        function closeListVertical(){
+            $(".screen").hide();
+            $("#home").show();
+
+            $("#verticalList").empty();
+        }
+
+
+        function openListVertical(){
+
+            $(".screen").hide();
+            $("#verticalList").show();
+
+            $("#verticalList").empty();
+
+
+
+            $("#verticalList").append(`
+            <div id="back">
+                <svg onclick="closeListVertical()" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/></svg>
+                <div>Voltar</div>
+            </div>
+            `);
+
+
+
+
+            obj.subscriptions.forEach(element => {
+                
+                $("#verticalList").append(`
+                <div class="all-item">
+                    <div class="all-param">
+                        <div class="all-image">
+                            <img src="${element.image}" width="36" height="36">
+                        </div>
+                        <div class="all-name">${element.name}</div>
+                    </div>
+                    <div class="all-badge${(element.badge)?" all-badge-active":""}"></div>
+                </div>
+                `);
+            });
+
+        }
+
+
+
+
+    </script>
+
+
+
+    
+
+</body>
+</html>

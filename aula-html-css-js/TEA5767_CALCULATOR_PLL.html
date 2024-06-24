@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLL Calculator TEA5767</title>
+
+
+    <style>
+
+        *{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #inputFreq{
+            width: 100px;
+        }
+
+        body{
+            margin: 5;
+            background-color: #212121;
+        }
+
+
+        .radioInputs, #result{
+            margin-top: 5px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            padding: 5px;
+            
+        }
+
+
+        .radioBtn:first-child{
+            margin-top: 16px;
+        }
+        .radioBtn{
+            margin-bottom: 16px;
+        }
+        
+
+
+        #result{
+            background-color: #28a745;
+        }
+
+
+    </style>
+
+
+</head>
+<body>
+    
+
+
+    <input type="number" min="87.5" max="108.0" step="0.1" value="87.5" id="inputFreq" placeholder="Freq. (MHz)" oninput="calculatePLL()">
+
+
+
+    <div class="radioInputs">
+
+        <label>
+            <input type="radio" name="sizeMode" class="radioBtn inputSideMode" onclick="calculatePLL()" checked> High side injection
+        </label><br>
+        
+        <label>
+            <input type="radio" name="sizeMode" class="radioBtn inputSideMode" onclick="calculatePLL()"> Low size injection
+        </label>
+
+    </div>
+
+
+
+
+    <div class="radioInputs">
+
+        <label>
+            <input type="radio" name="clockMode" class="radioBtn inputClockType" onclick="calculatePLL()" checked> 32.768 kHz crystal 
+        </label><br>
+        
+        <label>
+            <input type="radio" name="clockMode" class="radioBtn inputClockType" onclick="calculatePLL()"> 13 MHz crystal or 6.5MHz external clock
+        </label>
+
+        
+    </div>
+
+
+
+    <div id="result"></div>
+
+
+
+
+
+
+
+    <script>
+
+
+
+        inputFreq = document.getElementById("inputFreq");
+
+        inputSideMode = document.getElementsByClassName("inputSideMode");
+        inputClockType = document.getElementsByClassName("inputClockType");
+
+
+        result = document.getElementById("result");
+
+
+        
+
+        function toHex(value){
+
+
+            if ( value < 10){
+
+                return value;
+
+            }
+            else if ( value < 16){
+
+                return String.fromCharCode(0x41 + value - 10);
+
+            }
+            
+        }
+
+
+
+
+
+
+        function calculatePLL(){
+
+            //inputFreq.value = (inputFreq.value - 0).toFixed(1);
+
+
+            if ( inputFreq.value < 87.5 || inputFreq.value > 108 ){
+                return;
+            }
+
+
+            let PLL = 0x0000;
+
+            let CLOCK_REFERENCE = ( inputClockType[0].checked )? 32768 : 50000;
+
+
+            // SIZE MODE -- HIGH
+            if ( inputSideMode[0].checked ){
+                PLL = 4 * ( inputFreq.value * 1E6 + 225000 ) / CLOCK_REFERENCE;
+            }
+
+            // SIZE MODE -- LOW
+            else{
+                PLL = 4 * ( inputFreq.value * 1E6 - 225000 ) / CLOCK_REFERENCE;
+            }
+
+
+            PLL_tempInt = parseInt(PLL);
+
+
+            PLL_HIGH = PLL_tempInt >> 8;
+            PLL_LOW  = PLL_tempInt & 0xFF;
+
+            
+
+
+
+
+            result.innerText = `PLL = 0x${toHex(PLL_HIGH >> 4)}${toHex(PLL_HIGH & 0xF)}${toHex(PLL_LOW >> 4)}${toHex(PLL_LOW & 0xF)} ⇒ ${parseInt(PLL)}  ⇒ ${PLL} `; 
+
+
+        }
+        
+        
+        calculatePLL();
+
+
+
+
+
+    </script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> SHOTGUN </title>
+
+    <style>
+
+        body{
+            background-color: #a5a5a5;
+        }
+
+        #container{
+            width: 200px;
+            height: 100px;
+            background-color: red;
+
+            box-sizing: border-box;
+
+            padding-top: 25px;
+            padding-left: 25px;
+        }
+
+        .fonte{
+            user-select: none;
+            font-weight: bold;
+            font-size: 2.2em;
+            white-space: pre;
+            font-family: monospace;
+
+        }
+
+        #magazine{
+            text-align: center;
+            position: absolute;
+            left: 50px;
+        }
+
+        #ammo{
+            position: absolute;
+            left: 118px;
+        }
+
+        /* BOTOES */
+        #botoes{
+            width: 100px;
+            height: 150px;
+            background-color: blue;
+            box-sizing: border-box;
+            padding-top: 5px;
+            border-radius: 0px 0px 30px 30px;
+            
+        }
+
+        .botao{
+            width: 90px;
+            height: 40px;
+            background-color: rgb(47, 194, 54);
+            user-select: none;
+            border-radius: 30px;
+            box-sizing: border-box;
+            text-align: center;
+            padding-top: 10px;
+            margin-top: 5px;
+            margin-left: 5px;
+            cursor: pointer;
+            transition: 300ms;
+        }
+        .botao:hover{
+            background: white;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div id="container">
+        <span class="fonte" id="magazine">0</span>
+        <span class="fonte" style="position: absolute; left: 75px;"> | </span>
+        <span class="fonte" id="ammo">0</span>    
+    </div>
+
+    <div id="botoes">
+        <div class="botao" onclick="atirar_1()">ATIRAR 1</div>
+        <div class="botao" onclick="atirar_2()">ATIRAR 2</div>
+        <div class="botao" onclick="reload()">RELOAD</div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const ammo_size = 8;                                               // Munições Maximas para Levar no inventario
+        const magazine_size = 2;                                           // Balas Maximas no Pente da arma
+
+
+        document.getElementById("magazine").innerText   = magazine_size;
+        document.getElementById("ammo").innerText       = ammo_size; 
+
+        var magazine = document.getElementById("magazine").innerText - 0;   // Balas atual no Pente
+        var ammo     = document.getElementById("ammo").innerText - 0;       // Quantidade de munições no inventario
+
+
+        function update(){
+            document.getElementById("magazine").innerText = magazine;
+            document.getElementById("ammo").innerText = ammo;
+        }
+
+        function reload(){
+            if (ammo > magazine_size){
+                ammo -= (magazine_size - magazine);
+                magazine += (magazine_size - magazine);
+            }
+            else{
+
+                if ((magazine + ammo) > magazine_size){
+                    ammo -= (magazine_size - magazine);
+                    magazine += (magazine_size - magazine);
+                }
+                else{
+                    magazine += ammo;
+                    ammo = 0;
+                }
+
+            }
+            update();
+        }
+
+        function atirar_1(){
+            if (magazine > 0){
+                console.log("Tiro UNICO");
+                magazine--;
+            }
+            update();
+        }
+
+
+        function atirar_2(){
+            if (magazine > 0){
+                
+                switch (magazine){
+                    case 1:
+                        magazine-=1;
+                        console.log("Tiro Duplo: 1 bala");
+                        break;
+                    case 2:
+                        magazine-=2;
+                        console.log("Tiro Duplo: 2 bala");
+                        break;
+                }
+            }
+
+            update();
+        }
+
+
+
+    </script>
+</body>
+</html>

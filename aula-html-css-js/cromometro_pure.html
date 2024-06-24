@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronômetro</title>
+
+
+    <style>
+
+        *{
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #212121;
+            color: #9e9e9e;
+        }
+
+        /* COUNTERs */
+        #counter{
+            text-align: center;
+            padding: 5px;
+        }
+        #counter::after{
+            content: '';
+            display: block;
+            margin: 0 auto;
+            background-color: #2196f3;
+            height: 2px;
+            width: 90%;
+        }
+
+        /* LAPS */
+        #lapContainer{
+            overflow: hidden auto;
+            height: 240px;
+            margin-top: 10px;
+        }
+        .lapItem{            
+            margin-bottom: 5px;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .lapItem span{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+        }
+        .lapCounter, #masterCounter{
+            color: #2196f3;
+        }
+
+
+        /* FOOTER */
+        #controls{
+            position: fixed;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            
+            
+            text-align: center;
+        }
+
+
+        .controlType div{
+            width: 100%;
+            padding: 10px;
+        }
+
+        .controlType div:active{
+            background-color: #424242;
+        }
+        #controlMode1{
+            color: #2196f3;
+        }
+        #controlMode2{
+            display: flex;
+            justify-content: space-around;
+        }
+
+
+        #leftButton{
+            color: #cd3545;
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+    <div id="counter">
+        <h1 id="masterCounter">00:00.00</h1>
+        <div id="lapCounter">00:00.00</div>
+    </div>
+<div id="lapContainer"></div>
+
+    <div id="controls">
+        <div class="controlType"  id="controlMode1">
+            <div onclick="masterStart();">Iniciar</div>
+        </div>
+
+        <div class="controlType" id="controlMode2" style="display: none;">
+            <div id="leftButton" onclick="leftButton(this);">Parar</div>
+            <div id="rightButton" onclick="rightButton();">Marcar</div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+
+        // TIME
+        masterCounterDiv = document.getElementById("masterCounter");
+        lapCounterDiv = document.getElementById("lapCounter");
+
+
+
+        // ITEMS
+        lapContainer = document.getElementById("lapContainer");
+
+
+        // BUTTON RIGHT
+        rightButtonDiv = document.getElementById("rightButton");
+        // BUTTON LEFT
+        leftButtonDiv = document.getElementById("leftButton");
+        // MODE CONTROL | START | (X|Y)
+        controlType = document.getElementsByClassName("controlType");
+
+
+        masterValue = lapValue = [0,0,0];
+        lapIndex = 0;
+        isMasterRun = false;
+        isLapRun = false;
+
+
+        setInterval(function(){
+
+            if ( isMasterRun ){
+
+                masterValue[2]++;
+                if ( masterValue[2] > 99 ){
+                    masterValue[2] = 0;
+                    masterValue[1]++;
+                    if ( masterValue[1] > 59 ){
+                        masterValue[1] = 0;
+                        masterValue[0]++;
+                        if ( masterValue[0] > 99 ){
+                            masterValue[0] = 0;
+                        }
+                    }
+                }
+
+                masterCounterDiv.innerText = `${ (masterValue[0] < 10)? ("0" + masterValue[0]) : masterValue[0] }:${ (masterValue[1] < 10)? ("0" + masterValue[1]) : masterValue[1] }.${ (masterValue[2] < 10)? ("0" + masterValue[2]) : masterValue[2] }`;
+
+
+                // LAP COUNTER
+                if ( isLapRun ){
+
+                    lapValue[2]++;
+                    if ( lapValue[2] > 99 ){
+                        lapValue[2] = 0;
+                        lapValue[1]++;
+                        if ( lapValue[1] > 59 ){
+                            lapValue[1] = 0;
+                            lapValue[0]++;
+                            if ( lapValue[0] > 99 ){
+                                lapValue[0] = 0;
+                            }
+                        }
+                    }
+
+                    lapCounterDiv.innerHTML = `${ (lapValue[0] < 10)? ("0" + lapValue[0]) : lapValue[0] }:${ (lapValue[1] < 10)? ("0" + lapValue[1]) : lapValue[1] }.${ (lapValue[2] < 10)? ("0" + lapValue[2]) : lapValue[2] }`;
+
+                }
+
+            }
+
+        }, 10);
+
+
+
+        function masterStart(){
+            isMasterRun = true;
+            controlType[0].style.display = "none";
+            controlType[1].style.display = "flex";
+        }
+
+
+
+
+        function leftButton(e){
+
+            // STOP
+            if ( isMasterRun ){
+                e.style.color = "#28a745";
+                e.innerText = "Continuar";
+                rightButtonDiv.innerText = "Resetar";
+                document.title = "Pausado";
+            }
+
+
+            // CONTINUE
+            else{
+                e.style.color = "#cd3545";
+                e.innerText = "Parar";
+                rightButtonDiv.innerText = "Marcar";
+                document.title = "Cronômetro";
+            }
+            isMasterRun = !isMasterRun;
+
+        }
+
+
+        function rightButton(){
+
+
+            // LAP
+            if ( isMasterRun ){
+                isLapRun = true;
+                lapIndex++;
+
+                if ( lapIndex == 1 ){
+                    lapContainer.innerHTML = `<div class="lapItem"><span class="lapIndex">01</span><span class="lapMaster">${masterCounterDiv.innerText}</span><span class="lapCounter">${masterCounterDiv.innerText}</span></div>` + lapContainer.innerHTML;
+                }
+                else{
+                    lapContainer.innerHTML = `<div class="lapItem"><span class="lapIndex">${(lapIndex < 10)? ("0" + lapIndex) : lapIndex}</span><span class="lapMaster">${masterCounterDiv.innerText}</span><span class="lapCounter">${lapCounterDiv.innerText}</span></div>` + lapContainer.innerHTML;
+                }
+
+                lapValue = [0,0,0];
+            }
+
+
+            // RESET
+            else{
+                masterCounterDiv.innerText = "00:00.00";
+                lapCounterDiv.innerText = "00:00.00";
+                lapContainer.innerHTML = "";
+                isMasterRun = false;
+                isLapRun = false;
+                lapIndex = 0;
+                masterValue = lapValue = [0,0,0];
+                controlType[0].style.display = "flex";
+                controlType[1].style.display = "none";
+                leftButtonDiv.innerText = "Parar";
+                leftButtonDiv.style.color = "#dc3545";
+                rightButtonDiv.innerText = "Marcar";
+                document.title = "Cronômetro";
+            }
+
+        }
+
+
+
+    </script>
+</body>
+</html>

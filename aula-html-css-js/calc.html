@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+
+    <!-- CSS -->
+    <style>
+
+        html,body{
+            
+            margin: 0 auto;
+            height: 100%;
+        }
+
+        #valor_IO{
+            font-size: 100px;
+            font-family: Consolas;
+            width: 96.5%;
+            height: 100px;
+            text-align: right;
+            border: 1px solid black;
+            border-radius: 15px;
+            outline: none;
+            box-sizing: border-box;
+            padding-right: 55px;
+            caret-color: transparent;
+        }
+
+        #teclado{
+            background-color: red;
+            width: 100%;
+            height: 100%;
+            /*height: 420px;*/
+            
+            border-collapse: collapse;
+            
+        }
+
+        .botao{
+            background-color: blue;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            box-sizing: border-box;
+            padding-top: 25px;
+            user-select: none;
+            font-family: Consolas;
+            font-size: 50px;
+            margin: 2px;
+            float: left;
+            border-radius: 15px;
+        }
+
+        .botao:active{
+            background-color: lightblue;
+        }
+
+        .numero{
+            background-color: teal;
+        }
+
+        .igual{
+            background-color: yellowgreen;
+        }
+
+        #clear_btn{
+            width: 57px;
+            height: 100px;
+            background-color: brown;
+            text-align: center;
+            box-sizing: border-box;
+            padding-top: 34px;
+            font-size: 32px;
+            user-select: none;
+            font-family: Consolas;
+            float: right;
+            position: absolute;
+            border-radius: 15px;
+            top: 8px;
+            right: 4.2%;
+        }
+
+        #clear_btn:active{
+            background-color: crimson;
+        }
+    </style>
+</head>
+<body>
+
+    
+        
+
+    <table id="teclado">
+
+        <tr>
+            <td colspan="4">
+
+                <input id="valor_IO" type="text" autofocus oninput="analise_valor(event)">
+
+                <div id="clear_btn" onclick="clear_lcd()">C</div>
+            </td>
+        </tr>
+
+        <tr>
+            <td><div class="botao numero" onclick="keyPress('7')">7</div></td>
+            <td><div class="botao numero" onclick="keyPress('8')">8</div></td>
+            <td><div class="botao numero" onclick="keyPress('9')">9</div></td>
+            <td><div class="botao" onclick="keyPress('+')">+</div></td>
+        </tr>
+        
+        <tr>
+            <td><div class="botao numero" onclick="keyPress('4')">4</div></td>
+            <td><div class="botao numero" onclick="keyPress('5')">5</div></td>
+            <td><div class="botao numero" onclick="keyPress('6')">6</div></td>
+            <td><div class="botao" onclick="keyPress('-')">-</div></td>
+        </tr>
+        
+        
+        
+        <tr>
+            <td><div class="botao numero" onclick="keyPress('1')">1</div></td>
+            <td><div class="botao numero" onclick="keyPress('2')">2</div></td>
+            <td><div class="botao numero" onclick="keyPress('3')">3</div></td>
+            <td><div class="botao" onclick="keyPress('*')">*</div></td>
+        </tr>
+        
+        
+        
+        <tr>
+            <td><div class="botao" onclick="keyPress('.')">.</div></td>
+            <td><div class="botao numero" onclick="keyPress('0')">0</div></td>
+            <td><div class="botao igual" onclick="calcular()">=</div></td>
+            <td><div class="botao" onclick="keyPress('/')">/</div></td>
+        </tr>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </table>
+    
+
+
+    <!-- JavaScript -->
+    <script>
+        var valorIO = document.getElementById("valor_IO");
+        var buffer = "";
+        var resultado = "";
+        
+        var decimal = false;
+        
+        var sinal   = false;
+
+        // LIMPAR LCD
+        function clear_lcd(){
+
+            // apagar tudo, caso tenha feito resultado.
+            if (resultado > "0"){
+                valorIO.value = "";
+                buffer = "";
+                
+            }
+
+            // apagar de um em um.
+            else{
+                let temp = valorIO.value;
+                valorIO.value = temp.slice(0,temp.length-1);
+                buffer = buffer.slice(0, buffer.length-1);
+            }
+            
+            resultado = "";
+            sinal   = false;
+            decimal = false;
+        }
+
+        // TECLADO FÍSICO INPUT
+        function analise_valor(teclado){
+            buffer = valorIO.value;
+            console.log("ANALISE...");
+
+            console.log(teclado.key);
+
+            if ( (valorIO.value[valorIO.value.length-1]) == "."){
+                console.log("SIM!");
+
+                valorIO.value[valorIO.value.length-1] = "";
+                
+            }
+
+            valorIO.value = buffer;
+        }
+
+        // TECLADO VIRTUAL
+        function keyPress(valorPress){
+            //console.log("TECLA: " + valorPress);
+            
+
+            switch (valorPress){
+                case "+": case "-": case "*": case "/":
+                    console.log("OPERAÇÃO");
+                    decimal = false;
+                    
+                
+                    if (sinal == false){
+                        sinal = true;
+                        buffer += valorPress;
+                        
+                    }
+                    else{
+                        buffer[buffer.length-1] = valorPress;
+                        if (valorPress == "-" && sinal == false){
+                            buffer += "-";
+                            sinal = true;
+                        }
+                    }
+                    break;
+                
+                case ".":
+                    if (decimal == false){
+                        decimal = true;
+                        console.log("PONTO");
+                        buffer+=valorPress;
+                    }
+                    break;
+
+                default:
+                    if (valorPress => "0" && valorPress <= "9"){
+                        
+                        buffer+=valorPress;
+                        sinal = false;
+                    }
+                    break;
+            }
+
+            valorIO.value = buffer;
+
+        }
+        
+        // BOTAO DE CALCULAR
+        function calcular(){
+            if (buffer.length > 0){
+                valorIO.value = eval(valorIO.value);
+                resultado = valorIO.value;
+                buffer = resultado;
+
+                //valorIO.value = buffer;
+            }
+        }
+
+    </script>
+</body>
+</html>

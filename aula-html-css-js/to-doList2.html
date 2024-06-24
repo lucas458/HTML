@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        html, body{
+            width: 100%;
+            height: 100%;
+        }
+
+
+        #container{
+            background-color: #007bff;
+            padding: 15px 5px;
+            height: 100%;
+            overflow-y: auto;
+            border-radius: 15px;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+
+
+        /* NAVEGAÇÃO */
+        #nav{
+            display: flex;
+            margin-bottom: 5px;
+        }
+
+        #nav input{
+            border-radius: 25px;
+            border: 1px solid black;
+            padding-left: 15px;
+            padding-right: 5px;
+        }
+
+        #nav button{
+            color: #fff;
+            background-color: #28a745;
+            padding: 5px;
+            border-radius: 5px;
+            border: 0;
+            margin-left: 5px;
+        }
+
+
+
+
+        /* ITENS */
+        .item{
+            background-color: #673ab7;
+            border-radius: 5px;
+            color: #fff;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3px;
+            transition: 300ms;
+            
+        }
+        .item:nth-child(even){
+            background-color: rebeccapurple;
+        }
+
+        .item:hover{
+            background-color: #28a745;
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+        /* CONTENT */
+        
+
+        /* DELETE ITEM */
+        .delete{
+            background-color: #dc3545;
+            padding: 5px;
+            
+            transition: 250ms;
+        }
+
+        .delete:hover{
+            color: #000;
+            box-shadow: 0 0 5px 0 #000;
+        }
+        
+
+    </style>
+
+
+</head>
+
+
+<body>
+
+
+
+
+    <div id="container">
+
+        <!-- NAVEGAÇÃO -->
+        <div id="nav">
+            <input type="search" id="inputText">
+            <button onclick="addItem();">ADD</button>
+        </div>
+
+
+        <!-- ITENS - CONTAINER -->
+        <div id="content-container">
+
+            <!-- ITEM -->
+            <!-- <div class="item">
+                <span class="string">TESTE</span>
+                <span class="delete">X</span>
+            </div> -->
+
+            
+
+
+        </div>
+
+    </div>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+        var container_content = document.getElementById("content-container");
+
+        var inputText = document.getElementById("inputText");
+
+        
+
+        function addItem(){
+
+            
+
+            let str = inputText.value;
+            str = str.trim();
+
+            if (str.length <= 0){
+                return;
+            }
+
+            
+
+            let item        = document.createElement("div");
+            let Itemstring  = document.createElement("span");
+            let itemDelete  = document.createElement("span");
+
+            item.classList       = "item";
+
+            Itemstring.classList = "string";
+            itemDelete.classList = "delete";
+
+
+            Itemstring.innerText = str;
+            itemDelete.innerText = "X";
+
+
+            /*itemDelete.addEventListener("click", function(){
+                deleteItem();
+            });*/
+
+
+            item.appendChild(Itemstring);
+            item.appendChild(itemDelete);
+
+            container_content.appendChild(item);
+        }
+
+        
+
+
+        $("#content-container").on("click", ".delete", function(){
+            $(this).parent().remove();
+        });
+
+
+
+        
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+
+
+    </script>
+
+    
+</body>
+</html>

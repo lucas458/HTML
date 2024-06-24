@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+
+    <style>
+
+        
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+
+
+
+
+
+        .dropdown-wrapper{
+            color: #fff;
+
+            width: 128px;
+            position: relative;
+
+            user-select: none;
+
+            margin: 5px;
+        }
+
+
+
+        .dropdown-title{
+            text-overflow: ellipsis;
+            background-color: #007bff;
+            padding: 5px 10px;
+            overflow: hidden;
+        }
+
+
+
+        .dropdown-content{
+            background-color: blue;
+            overflow: hidden;
+            transition: 200ms;
+            display: none;
+            
+        }
+
+        .dropdown-option{
+            background-color: #202020;
+            padding: 5px;
+        }
+        
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+
+
+    
+    <!-- DROPDOWN -->
+    <div class="dropdown-wrapper">
+        <div class="dropdown-title"></div>
+        <div class="dropdown-content">
+            <div class="dropdown-option">BMW</div>
+            <div class="dropdown-option">AUDI</div>
+        </div>
+    </div>
+
+
+
+     <!-- DROPDOWN -->
+     <div class="dropdown-wrapper">
+        <div class="dropdown-title"></div>
+        <div class="dropdown-content">
+            <div class="dropdown-option">UVA</div>
+            <div class="dropdown-option">LARANJA</div>
+        </div>
+    </div>
+    
+
+
+
+
+
+
+
+    <script>
+
+        
+        dropdownTitle = document.getElementsByClassName("dropdown-title");
+
+        // TODOS OS 'DROPDOWNS'
+        for ( let i = 0; i < dropdownTitle.length; i++ ){
+
+            // ABRIR / FECHAR
+            dropdownTitle[i].addEventListener("click", function(){
+                if ( window.getComputedStyle(dropdownTitle[i].nextElementSibling).display == "none" ){
+                    dropdownTitle[i].nextElementSibling.style.display = "block";
+                }
+                else{
+                    dropdownTitle[i].nextElementSibling.style.display = "none";
+                }    
+            });
+
+
+            // TODOS OS ITENS DENTRO
+            for ( let x = 0; x < dropdownTitle[i].nextElementSibling.children.length; x++){
+
+                // TITLE - MOSTRAR NOME DO ITEM SELECIONADO
+                if ( x == 0 ){
+                    dropdownTitle[i].innerText = dropdownTitle[i].nextElementSibling.children[x].innerText;
+                }
+
+                // QUANDO CLICAR NO ITEM...
+                dropdownTitle[i].nextElementSibling.children[x].addEventListener("click", function(){
+
+                    // APAGAR AS CORES
+                    for (let k = 0; k < dropdownTitle[i].nextElementSibling.children.length; k++){
+                        dropdownTitle[i].nextElementSibling.children[k].style.backgroundColor = "#202020";
+                    }
+
+
+                    // MARCAR COM COR NO ITEM SELECIONADO
+                    console.log(`PAI ${i} | ITEM ${x}`);
+                    dropdownTitle[i].innerText = dropdownTitle[i].nextElementSibling.children[x].innerText;
+                    dropdownTitle[i].nextElementSibling.children[x].style.backgroundColor = "#424242";
+
+                });
+            }
+
+        }
+       
+
+    </script>
+
+
+
+</body>
+</html>

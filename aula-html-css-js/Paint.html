@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint</title>
+    
+    <style>
+        body{
+            background-color: #202020;
+        }
+        #tela{
+            width: 600px;
+            height: 600px;
+            background-color: #ffffff;
+            border: 2px dashed black;
+            cursor: crosshair;
+        }
+        .telaP{
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: black;
+            display: none;
+            z-index: inherit;
+			
+        }
+        #cor{
+            width: 100px;
+            position: relative;
+            top: -454px;
+            left: 620px;
+        }
+        #tamanho{
+            width: 100px;
+            position: relative;
+            top: -411px;
+            left: 513px;
+        }
+        #cor:hover{
+            background-color: red;
+            height: 100px;
+        }
+        #cont{
+            width: 100px;
+            position: relative;
+            top: -400px;
+            left: 615px;
+        }  
+        .btn{
+            width: 100px;
+            background-color: gray;
+            margin: 5px;
+            padding: 5px;
+            border-radius: 15px;
+            user-select: none;
+            cursor: pointer;
+            font-family: Arial, Helvetica, sans-serif;
+            transition: 300ms;
+        }
+        .btn:hover{
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div id="tela" onmousemove="pintar(event)" onmousedown="ativa()" onmouseup="ativa()"></div>
+    <input type="color" id="cor">
+    <input type="range" min="2" max="5" value="0" id="tamanho">
+    <div id="cont">
+        <div class="btn" onclick="apagar(this)">BORRACHA</div>
+        <div class="btn" onclick="normal(this)">NORMAL</div>
+        <div class="btn" onclick="especial(this)">ESPECIAL</div>
+    </div>
+
+    <script>
+        tela = document.getElementById("tela")
+        pixel = document.getElementsByClassName("pixel")[0]
+        cor = document.getElementById("cor")
+        tam = document.getElementById("tamanho")
+        //botoes
+        erase = false
+        stand = true
+        esp = false
+        borracha = document.getElementsByClassName("btn")[0]
+        std = document.getElementsByClassName("btn")[1]
+        espec = document.getElementsByClassName("btn")[2]
+        
+        std.style.backgroundColor = "red"
+        function apagar(x){
+            if (!erase){
+                erase = true
+                stand = false
+                esp = false
+                borracha.style.backgroundColor = "red"
+                std.style.backgroundColor = "gray"
+                espec.style.backgroundColor = "gray"
+            }
+            else{
+                erase = false
+            }
+        }
+        function normal(x){
+            if (!stand){
+                erase = false
+                stand = true
+                esp = false
+                std.style.backgroundColor = "red"
+                borracha.style.backgroundColor = "gray"
+                espec.style.backgroundColor = "gray"
+            }
+            else{
+                stand = false
+            }
+        }
+        function especial(x){
+            if (!esp){
+                erase = false
+                stand = false
+                esp = true
+                espec.style.backgroundColor = "red"
+                std.style.backgroundColor = "gray"
+                borracha.style.backgroundColor = "gray"
+            }
+            else{
+                esp = false
+            }
+        }
+        //
+
+        c = 0
+        function ativa(){
+            if (!c){
+                c = 1
+            }
+            else{
+                c = 0
+            }
+        }
+        
+        function pintar(event){
+            if (c){
+                var x = event.offsetX; 
+                var y = event.offsetY;
+                console.log(`X=${x}  Y=${y}  COR=${cor.value}`)
+                ponto = document.createElement("div");
+                ponto.className = "telaP"
+                if (erase){
+                    ponto.style.backgroundColor = "#ffffff"
+                    ponto.style.width = (tam.value * 10) + "px"
+                    ponto.style.height = (tam.value * 10) + "px"
+                }
+                else if (stand){
+                    ponto.style.backgroundColor = cor.value
+                    ponto.style.width = (tam.value * 10) + "px"
+                    ponto.style.height = (tam.value * 10) + "px"
+                }
+                else if (esp){
+                    ponto.style.backgroundColor = cor.value
+                    ponto.style.width = (tam.value * 10 + 20) + "px"
+                    ponto.style.height = (tam.value * 10) + "px"
+                }
+                ponto.style.left = x + ".00px";
+                ponto.style.top = y + ".00px";
+                ponto.style.display = "block";
+                tela.appendChild(ponto)
+            }
+        }
+    </script>
+</body>
+</html>

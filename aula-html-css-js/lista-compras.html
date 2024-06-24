@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    
+    <style>
+
+        *{
+            font-family: Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+        }
+
+        html,body{
+            margin: 0 auto;
+            height: 100%;
+            width: 100%;
+
+            background-color: #101010;
+
+            overflow: hidden;
+        }
+
+
+
+
+        /* INPUTS */
+        #inputs input{
+            border-radius: 15px;
+            border: 1px solid #000;
+            padding: 5px 15px 5px 15px;
+        }
+
+
+        /* CRIAR ITEM */
+        #inputs button{
+            
+            display: block;
+
+            border: 1px solid #28a745;
+            background-color: #212121;
+            color: #fff;
+
+            margin-top: 5px;
+            border-radius: 10px;
+            padding: 10px;
+            
+            transition: 200ms;
+        }
+
+        #inputs button:hover{
+            background-color: #28a745;
+            color: #fff;
+        }
+
+
+
+
+        #header{
+            background-color: #212121;
+            padding: 5px;
+        }
+
+
+        #result{
+            width: fit-content;
+            background-color: #6c757d;
+            color: #fff;
+
+            padding: 8px 10px;
+            margin-top: 5px;
+            border-radius: 15px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        /* ITENS */
+        #list-itens{
+            overflow-y: scroll;
+        }
+
+
+        #list-itens table{
+            border-collapse: collapse;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+        }
+
+        .item{
+            background-color: #6c757d;
+            transition: 200ms;
+        }
+        .item:nth-child(even){
+            background-color: #4f565c;
+        }
+
+        .item:hover{
+            background-color: #007bff;
+        }
+
+
+        .item td{
+            padding: 5px;
+        }
+
+
+        /* DELETE ITEM */
+        .item-delete{
+            user-select: none;
+            background-color: #dc3545;
+        }
+        .item-delete:active{
+            background-color: #e31a2d;
+        }
+
+
+
+        /* TABLE HEADER */
+        th{
+            user-select: none;
+        }
+        th:hover{
+            background-color: #757575;
+        }
+        
+        
+
+
+    </style>
+
+
+</head>
+<body>
+    
+
+    <div id="app">
+
+        <!-- BARRA FIXA -->
+        <div id="header">
+
+            <div id="inputs">
+
+                <input type="text" placeholder="Nome">
+                <input type="number" placeholder="Quantidade" min="0">
+                <input type="number" placeholder="Valor R$ (total)" min="0" step="0.1">
+                
+                <button onclick="addItem();">Adicionar</button>
+
+            </div>
+
+            <div id="result">Total R$ 0,00</div>
+
+        </div>
+
+
+
+        <!-- LISTA DE ITENS (Container) -->
+        <div id="list-itens">
+            
+            <!-- TABELA -->
+            <table>
+
+                <!-- HEADER DA TABELA -->
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Qty.</th>
+                        <th>Preço</th>
+                    </tr>
+                </thead>
+
+                <!-- ITENS -->
+                <tbody id="table-itens">
+
+                    <!-- ITEM -->
+                    <!-- <tr class="item">
+                        <td>Nome Aqui</td>
+                        <td>0000</td>
+                        <td>R$ 000,00</td>
+                        <td class="item-delete">&times;</td>
+                    </tr> -->
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+        // CONFIGURAR TELA
+        let PaginaHeigth = document.body.offsetHeight;
+        let HeaderHeight = $("#header").outerHeight();
+        $("#list-itens").css("height", (PaginaHeigth - HeaderHeight) + "px");
+
+
+        // RESULTADO DA SOMA DOS VALORES (R$) DE CADA ITEM.a
+        var resultado = 0;
+
+
+
+
+        // FORMATAR INPUTs
+        function formatInputs(){
+
+            let flag = 0;   // Codigo de Erro
+
+            let nome    = $("#inputs input").eq(0).val();  // Nome
+            let qty     = $("#inputs input").eq(1).val();  // Quantidade
+            let valor   = $("#inputs input").eq(2).val();  // Valor
+
+            // NOME
+            nome = nome.trim();
+
+            // QTY
+            qty = Math.abs( parseInt(qty) );
+
+            // VALOR
+            valor = Math.abs(valor);
+            valor = valor.toFixed(2);
+
+
+            // 0 - ok
+            // 1 - qty
+            // 2 - valor
+            // 3 - qty && valor
+            flag = ((valor == '0.00') << 1) | (qty == 0);
+
+
+            let lista = [nome, qty, valor, flag];
+
+            return lista;
+
+        }
+
+
+
+
+        // ADD ITEM
+        function addItem(){
+
+            // Formatar Input's
+            let item = formatInputs();
+            
+
+            // QTY
+            if (item[3] == 1){
+                alert("Valor de 'Quantidade' NÃO pode ser 0 ou VAZIO");
+            }
+
+            // VALOR
+            else if (item[3] == 2){
+                alert("Valor de 'Valor' NÃO pode ser 0 ou VAZIO");
+            }
+
+            // QTY && VALOR
+            else if (item[3] == 3){
+                alert("Valor de 'Quantidade' e 'Valor' NÃO pode ser 0 VAZIO");
+            }
+
+
+
+            // OK
+            else{
+
+                // CRIAR ITEM
+                $("#table-itens").append(`
+                <tr class="item">
+                    <td>${item[0]}</td>
+                    <td>${item[1]}</td>
+                    <td>R$ ${item[2]}</td>
+                    <td class="item-delete">&times;</td>
+                </tr>
+                `);
+
+
+                // Somar valor
+                resultado += item[2]-0;
+                $("#result").text("Total R$ " + resultado.toFixed(2).replace(".", ","));    // Mostrar novo valor
+                
+                // Rolar a lista para o 'bottom'
+                $("#list-itens").scrollTop( $("#table-itens").outerHeight());
+
+                // LIMPAR INPUTs
+                $("#inputs input").val(null);
+
+            }
+
+
+        }
+
+
+
+
+        // DELETAR ITEM
+        $("#table-itens").on("click", ".item-delete", function(){
+
+            resultado -= $(this).parent().children("td").eq(2).text().split("R$ ")[1] - 0;  // Subtrair do 'resultado'
+            $("#result").text("Total R$ " + resultado.toFixed(2).replace(".", ","));        // Mostrar novo valor
+            $(this).parent().remove();  // REMOVER
+
+        });
+
+    </script>
+
+</body>
+</html>

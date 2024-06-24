@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game</title>
+
+    <style>
+        
+        *{
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            margin: 0 auto;
+            padding: 5px;
+        }
+
+        #app{
+            margin-top: 50px;
+        }
+
+        /* CONTAINER DO QUIZ */
+        #quiz-container{
+            width: 500px;
+            min-width: 100%;
+            border: 1px solid black;
+            border-radius: 15px;
+            overflow: hidden;
+            user-select: none;
+            color: #fff;
+            background-color: #252525;
+            padding: 5px;
+        }
+
+        /* PERGUNTA */
+        #quiz-header{
+            padding: 10px;
+            font-weight: bold;
+            word-break: break-all;
+        }
+        #quiz-header::after{
+            content: '';
+            display: block;
+            height: 1px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            background-color: darkgray;
+        }
+
+
+
+
+
+        /* OPÇÃO */
+        .quiz-option input{
+            visibility: hidden;
+            display: none;
+        }
+
+        /* OPÇÃO SELECIONADA */
+        .quiz-option input:checked ~ .quiz-option-content{
+            background-color: #505050;
+            border-radius: 15px;
+        }
+        .quiz-option input:checked ~ .quiz-option-content .quiz-option-index{
+            border-color: #007bff;
+        }
+
+
+
+
+
+        /* OPÇÃO DA PERGUNTA | RESPOSTA*/
+        .quiz-option-content, .quiz-answer-content{
+            padding: 10px;
+            background-color: #323232;
+            color: #fff;
+            transition: 300ms;
+            border-radius: 5px;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+        .quiz-option-content:hover{
+            background-color: #505050;
+        }
+
+
+
+
+
+        /* INDEX DA PERGUNTA  A-Z  | RESPOSTA */
+        .quiz-option-index{
+            border-radius: 50%;
+            border: 1px solid #9e9e9e;
+            padding: 5px 9px;
+            text-align: center;
+            margin-right: 5px;
+            font-family: monospace;
+            font-weight: bold;
+            transition: 300ms;
+        }
+
+        /* STRING DA QUESTÃO e RESPOSTA */
+        .quiz-option-string{
+            text-align: left;
+            line-height: 25px;
+        }
+
+
+
+
+
+        /* BOTAO - CUSTOM */
+        .custom-button{
+            border: 0;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            margin: 5px 0 0 5px;
+            transition: 300ms;
+            outline: none;
+        }
+        .custom-button:hover{
+            border-radius: 15px;
+        }
+        .custom-button:hover, .custom-button:focus{
+            background-color: #1565c0;
+        }
+
+
+
+
+
+        /* PARAMETROS - CONTADOR */
+        #quiz-parameters{
+            display: inline;
+        }
+
+        /* CONTADOR DA PERGUNTA ATUAL/TOTAL */
+        #quiz-parameter-counter{
+            background-color: #757575;
+            padding: 5px;
+            border-radius: 15px;
+        }
+
+
+
+
+
+        /* RESUMO DE ERROS E ACERTOS */
+        #quiz-summary{
+            display: none;
+            margin-bottom: 10px;
+            justify-content: space-evenly;
+            
+        }
+
+        /* CLASS DE CONTAINER DO CONTADOR */
+        .quiz-summary-content{
+            padding: 5px;
+            width: fit-content;
+            border-radius: 5px;
+        }
+
+        /* NUMERO DE ACERTOS */
+        #quiz-correct, .quiz-answer-correct{
+            background-color: #28a745;
+        }
+
+        /* NUMERO DE ERROS */
+        #quiz-wrong, .quiz-answer-wrong{
+            background-color: #dc3545;
+        }
+
+        
+
+
+        
+
+
+
+        /* MOSTRAR AS RESPOSTAS */
+        #quiz-answers{
+            display: none;
+            overflow-y: auto;
+            max-height: 390px;
+        }
+
+
+        /* CONTAINER DA PERGUNTA */
+        .quiz-answer-container{
+            border-bottom: 2px solid #9e9e9e;
+        }
+        .quiz-answer-container:last-child{
+            border: 0;
+        }
+
+        /* PERGUNTA DE CADA QUESTIONARIO */
+        .quiz-answer-header{
+            margin-top: 40px;
+        }
+
+        /* CONTEUDO DA RESPOSTA */
+        .quiz-answer-content{
+            margin-bottom: 10px;
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+
+    
+    <div id="app">
+
+        <div id="quiz-container">
+
+            <!-- PERGUNTA -->
+            <div id="quiz-header"></div>
+
+
+            <!-- FIM DE JOGO - RESUMO DE ERROS E ACERTOS -->
+            <div id="quiz-summary">
+                <span class="quiz-summary-content" id="quiz-correct">Acertos <span id="quiz-correct-count">0</span> </span>
+                <span class="quiz-summary-content" id="quiz-wrong">Erros <span id="quiz-wrong-count">0</span> </span>
+            </div>
+            
+
+            <!-- FIM DE JOGO - MOSTRAR AS RESPOSTAS NO FINAL DO JOGO -->
+            <div id="quiz-answers">
+
+                <!-- RESPOSTA ITEM X -->
+                <!-- <div class="quiz-answer-container">
+
+                    <div class="quiz-answer-header">Pergunta Fica Aqui!</div>
+
+                    <div class="quiz-content-container">
+                        <div class="quiz-answer-content">
+                            <span class="quiz-answer-index">A</span> 
+                            <span class="quiz-answer-string">A opção à ser enviada deve ficar aqui!</span>
+                        </div>
+                    </div>
+                    
+                </div> -->
+                
+            </div>
+
+
+            <!-- OPÇÕES -->
+            <div id="quiz-option-container">
+                <!-- OPÇÃO -->
+                <!-- <label class="quiz-option">
+                    <input type="radio" name="option">
+                    <div class="quiz-option-content">
+                        <span class="quiz-option-index">A</span> 
+                        <span class="quiz-option-string">A opção à ser enviada deve ficar aqui!</span>
+                    </div>
+                </label> -->
+            </div>
+
+                
+            <!-- BOTAO - ENVIAR -->
+            <button class="custom-button" id="send">Enviar</button>
+
+
+            <!-- CONTADOR DA PERGUNTA ATUAL -->
+            <div id="quiz-parameters">
+                <span id="quiz-parameter-counter"></span>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+        /*
+            O array 'quiz' armazena as perguntas, questões, resposta e a resposta selecionada.
+
+            quiz[0]         = Pergunta.
+            quiz[1]         = Index da resposta correta.
+            quiz[2]         = Index da resposta SELECIONADA. Obs. deve ser 'null'
+            quiz[3 ate 28]  = questões de A-Z.
+
+            
+
+        */
+
+        // DEBUG
+        /*var quiz = [
+            ["pergunta 1", 2, null, "resposta X", "resposta Y", "resposta Z"],
+            ["pergunta 2", 1, null, "resposta 1", "resposta 2", "resposta 3"],
+        ];*/
+
+        // https://beduka.com/blog/exercicios/exercicios-de-matematica-basica/
+
+        var quiz = [
+
+            
+
+            // 1
+            ["Mário pretende realizar uma viagem utilizando um veículo cujo consumo médio de combustível é de 10 Km/L. Sabendo que percorrerá 300 000 m, é correto afirmar que o volume de combustível a ser consumido será de:",
+            4, null,"10 litros.", "12 litros.", "15 litros.", "25 litros.", "30 litros."],
+
+            ["Duas empreiteiras farão conjuntamente a pavimentação de uma estrada, cada uma trabalhando a partir de uma das extremidades. Se uma delas pavimentar 2/5 da estrada e a outra os 81 km restantes, a extensão dessa estrada é de:",
+            1, null, "125 km.", "135 km.", "142 km.", "145 km.", "160 km."],
+
+            // 4
+            ["O piso de uma sala retangular, medindo 3,52 m × 4,16 m, será revestido com ladrilhos quadrados, de mesma dimensão, inteiros, de forma que não fique espaço vazio entre ladrilhos vizinhos. Os ladrilhos serão escolhido de modo que tenham a maior dimensão possível. Na situação apresentada, o lado do ladrilho deverá medir:",
+            0, null, "mais de 30 cm.", "menos de 15 cm.", "mais de 15 cm e menos de 20 cm.", "mais de 20 cm e menos de 25 cm.", "mais de 25 cm e menos de 30 cm."],
+
+            ["O valor de (0,2)³ + (0,16)² é:",
+            1, null, "0,0264.", "0,0336.", "0,1056.", "0,2568.", "0,6256."],
+
+            ["Por qual número devemos multiplicar o número 0,75 de modo que a raiz quadrada do produto obtido seja igual a 45?",
+            0, null, "2700.", "2800.", "2900.", "3000."],
+
+            ["Numa progressão geométrica de quatro termos positivos, a soma dos dois primeiros vale 1 e a soma dos dois últimos vale 9. calcule a razão da progressão.",
+            0, null, "3.", "5.", "7.", "9."],
+
+            ["Uma pessoa tomou um empréstimo de R$ 1.200,00 no sistema de capitalização simples, quitando-o em uma única parcela, após 4 meses, no valor de R$ 1.260,00. A que taxa anual de correção este empréstimo foi concedido?",
+            3, null, "5% a.a.", "29% a.a.", "12% a.a.", "15% a.a.", "18% a.a."],
+
+            ["Uma empresa tem 750 empregados e comprou marmitas individuais congeladas suficientes para o almoço deles durante 25 dias. Se essa empresa tivesse mais 500 empregados, a quantidade de marmitas adquiridas seria suficiente para quantos dias? ",
+            2, null, "20", "11", "15", "17"],
+
+            // 12
+            ["Três pessoas A, B e C vão participar de um concurso num programa de televisão. O apresentador faz um sorteio entre A e B e, em seguida, faz um sorteio, para decidir quem iniciará o concurso. Se em cada sorteio as duas pessoas têm a mesma “chance” de ganhar, qual é a probabilidade de A iniciar o concurso?",
+            1, null, "12,5%", "25%", "50%", "75%", "95%"],
+
+            ["Carla tem 2 reais a mais que Paula, Paula tem dois reais a mais que Leia e Leia tem dois reais a mais que Vivian. As 4 juntas possuem 48 reais. Quanto cada uma tem individualmente?",
+            4, null, "Carla tem 14, Paula tem 12, Leila tem 10 e Vivian tem 8", "Vivian tem 8, Leila tem 10, Paula tem 12 e Carla tem 14", "Carla tem 9, Paula tem 11, Leila tem 13 e Vivian tem 15", "Carla tem 10, Paula tem 12, Leila tem 14 e Vivian tem 16", "Vivian tem 9, Leila tem 11, Paula tem 13 e Carla tem 15"],
+        
+            ["A parábola de equação y = ax² passa pelo vértice da parábola y = 4x – x².Ache o valor de a:",
+            0, null, "1", "2", "3", "-1", "nda"],
+
+            ["Considere um triângulo retângulo tal que o cosseno de um de seus ângulos agudos é igual a 0,8. Sabendo-se que a hipotenusa desse retângulo é igual a 4, o valor da tangente deste mesmo ângulo é:",
+            0, null, "0,75", "1", "0,7", "0,5"],
+
+            // 17
+            ["Uma loja de materiais de construção vende dois tipos de caixas-d’água: tipo A e tipo B. Ambas têm formato cilíndrico e possuem o mesmo volume, e a altura da caixa d’água do tipo B é igual a 25% da altura da caixa d’agua do tipo A. Se R denota o raio da caixa d’água do tipo A, então o raio da caixa d’água do tipo B é",
+            1, null, "R/2", "2R", "4R", "5R", "16R"],
+
+            ["O ponto P (3, m) é interno a um dos lados do triângulo A (1,2), B (3,1) e C (5,-4). Então:",
+            0, null, "m = -1", "m = 0", "m = ½", "m = 1", "nenhuma das respostas anteriores"],
+        ];
+
+
+            // n
+            /*["pergunta",
+            1, null, "resposta", "resposta", "resposta"],*/
+
+
+        var atualQuizIndex = 0;     // PERGUNTA ATUAL
+        var selectedIndex = -1;     // SABER A OPÇÃO SELECIONADA
+        var quiz_correct    = 0;    // NUMERO DE ACERTOS
+        var quiz_wrong      = 0;    // NUMERO DE ERROS
+
+
+
+        // GERAR QUIZ
+        function generateQuiz( indexQuiz ){
+
+            if ( indexQuiz < 0 || quiz.length <= 0){
+                return;
+            }
+
+            // FIM DO QUIZ-GAME
+            if (indexQuiz >= quiz.length){
+
+                // ESCONDE BOTAO 'ENVIAR' e CONTADOR
+                $("#send").fadeOut(1);
+                $("#quiz-parameters").fadeOut(1);
+
+                // MOSTRAR RESPOSTAS
+                $("#quiz-answers").fadeIn(1);
+
+                // ESCREVER NO TITULO
+                $("#quiz-header").text( "Fim de Jogo!" );
+
+                // LIMPAR AS OPÇÕES
+                $("#quiz-option-container").empty();
+
+                // ESCREVER VALORES
+                $("#quiz-correct-count").text(quiz_correct);
+                $("#quiz-wrong-count").text(quiz_wrong);
+                
+                // MOSTRAR ERROS/ACERTOS
+                $("#quiz-summary").css("display", "flex");
+
+
+
+                // GERAR AS RESPOSTA E SABER QUAIS O USER ACERTOU/ERROU.
+                for ( let perguntaIndex = 0; perguntaIndex < quiz.length; perguntaIndex++ ){
+
+                    console.log("pergunta >>", quiz[perguntaIndex][0]);
+                    
+                    $("#quiz-answers").append(`<div class="quiz-answer-container"><div class="quiz-answer-header">${quiz[perguntaIndex][0]}</div><div class="quiz-content-container"></div></div>`);
+
+                    
+                    for ( let questaoIndex = 0; questaoIndex < quiz[perguntaIndex].length-3; questaoIndex++){
+
+
+
+                        /* O CODIGO DESTACA A RESPOSTA CORRETA */
+
+                        // CORRETA
+                        if ( quiz[perguntaIndex][1] == questaoIndex ){
+                            console.log(`Questão (${String.fromCharCode(65+questaoIndex)}) - ${ quiz[perguntaIndex][3+questaoIndex] } - PASS`);
+                            
+                            $(".quiz-content-container").eq( perguntaIndex ).append(`
+                            <div class="quiz-answer-content quiz-answer-correct">
+                            <span class="quiz-option-index">${String.fromCharCode(65+questaoIndex)}</span> 
+                            <span class="quiz-option-string">${ quiz[perguntaIndex][3+questaoIndex] }</span>
+                            </div>`);
+                        }
+
+                        // CASO ERRRAR
+                        else if ( quiz[perguntaIndex][2] == questaoIndex ){
+                            console.log(`Questão (${String.fromCharCode(65+questaoIndex)}) - ${ quiz[perguntaIndex][3+questaoIndex] } - WRONG`);
+                            
+                            $(".quiz-content-container").eq( perguntaIndex ).append(`
+                            <div class="quiz-answer-content quiz-answer-wrong">
+                            <span class="quiz-option-index">${String.fromCharCode(65+questaoIndex)}</span> 
+                            <span class="quiz-option-string">${ quiz[perguntaIndex][3+questaoIndex] }</span>
+                            </div>`);
+                        }
+
+                        // RESTANTE DAS QUESTOES
+                        else{
+                            console.log(`Questão (${String.fromCharCode(65+questaoIndex)}) - ${ quiz[perguntaIndex][3+questaoIndex] }`);
+                            
+                            $(".quiz-content-container").eq( perguntaIndex ).append(`
+                            <div class="quiz-answer-content">
+                            <span class="quiz-option-index">${String.fromCharCode(65+questaoIndex)}</span> 
+                            <span class="quiz-option-string">${ quiz[perguntaIndex][3+questaoIndex] }</span>
+                            </div>`);
+                        }
+
+
+                        /* O CODIGO NÃO DESTACA A RESPOSTA CORRETA */
+
+                        // SELECIONADO PELO USER
+                        /*if ( quiz[perguntaIndex][2] == questaoIndex ){
+
+                            // ACERTOU
+                            if ( quiz[perguntaIndex][1] == quiz[perguntaIndex][2] ){
+                                console.log(`Questão (${String.fromCharCode(65+questaoIndex)}) - ${ quiz[perguntaIndex][3+questaoIndex] } - PASS`);
+
+                                $(".quiz-content-container").eq( perguntaIndex ).append(`
+                                <div class="quiz-answer-content quiz-answer-correct">
+                                    <span class="quiz-option-index">${String.fromCharCode(65+questaoIndex)}</span> 
+                                    <span class="quiz-option-string">${ quiz[perguntaIndex][3+questaoIndex] }</span>
+                                </div>`);
+
+                            }
+
+                            // ERROU
+                            else{
+                                console.log(`Questão (${String.fromCharCode(65+questaoIndex)}) - ${ quiz[perguntaIndex][3+questaoIndex] } - WRONG`);
+
+                                $(".quiz-content-container").eq( perguntaIndex ).append(`
+                                <div class="quiz-answer-content quiz-answer-wrong">
+                                    <span class="quiz-option-index">${String.fromCharCode(65+questaoIndex)}</span> 
+                                    <span class="quiz-option-string">${ quiz[perguntaIndex][3+questaoIndex] }</span>
+                                </div>`);
+                            }
+
+                        }
+
+                        // RESTANTE DAS QUESTOES
+                        else{
+                            console.log(`Questão (${String.fromCharCode(65+questaoIndex)}) - ${ quiz[perguntaIndex][3+questaoIndex] }`);
+
+                            $(".quiz-content-container").eq( perguntaIndex ).append(`
+                                <div class="quiz-answer-content">
+                                    <span class="quiz-option-index">${String.fromCharCode(65+questaoIndex)}</span> 
+                                    <span class="quiz-option-string">${ quiz[perguntaIndex][3+questaoIndex] }</span>
+                                </div>`);
+                        }*/
+                        
+                        
+                        //console.log(`Questão (${String.fromCharCode(65+questaoIndex)}) - ${ quiz[perguntaIndex][3+questaoIndex] } - MATCH`);
+                
+
+                    }
+                    console.log("");
+
+                }
+
+                
+                
+
+
+                return;
+            }
+
+
+            // GERAR A PERGUNTA
+            $("#quiz-header").text( quiz[indexQuiz][0] );
+            
+
+            // LIMPAR AS OPÇÕES
+            $("#quiz-option-container").empty();
+
+
+            // GERAR AS OPÇÕES
+            for (let indexList = 0; indexList < quiz[indexQuiz].length-3; indexList++){
+
+                if (indexList > 25){
+                    break;
+                }
+
+                $("#quiz-option-container").append(`
+                <label class="quiz-option">
+                    <input type="radio" name="option">
+                    <div class="quiz-option-content">
+                        <span class="quiz-option-index">${String.fromCharCode(65+indexList)}</span> 
+                        <span class="quiz-option-string">${quiz[indexQuiz][indexList+3]}</span>
+                    </div>
+                </label>`);
+
+            }
+
+
+            // GERAR O CONTADOR
+            $("#quiz-parameter-counter").text(`${ atualQuizIndex+1 } / ${quiz.length}`);
+        }
+
+
+
+
+
+
+        /****** INICAR JOGO *****/
+        
+        generateQuiz( 0 );
+        //$("#quiz-parameter-counter").text(`${ atualQuizIndex+1 } / ${quiz.length}`);
+
+
+
+
+
+
+
+
+        // SABER A OPÇÃO SELECIONADA
+        $("#quiz-option-container").on("click", ".quiz-option", function(){
+            selectedIndex = $(this).index();
+        });
+
+
+
+
+
+
+
+
+
+        // VEFICAR SE ACERTOU
+        function checkQuiz( indexQuiz ){
+
+            
+            if (selectedIndex < 0){
+                return;
+            }
+
+            // QUESTAO SELECIONADA
+            quiz[indexQuiz][2] = selectedIndex;
+
+
+            // ACERTOU
+            if ( selectedIndex == quiz[indexQuiz][1] ){
+                console.log("acertou!");
+                quiz_correct++;
+
+                $(".quiz-option-content").eq(selectedIndex).css({
+                    "background-color":"#28a745"
+                });
+            }
+
+            // ERROU
+            else{
+                console.log("errou!");
+                quiz_wrong++;
+
+                $(".quiz-option-content").eq(selectedIndex).css({
+                    "background-color":"#dc3545"
+                });
+            }
+
+            atualQuizIndex++;
+
+            selectedIndex = -1; // SABER A OPÇÃO SELECIONADA
+            
+        }
+
+
+        
+
+
+
+
+        // ENVIAR RESPOSTA
+        $("#send").click(function(){
+
+            if (selectedIndex < 0){
+                return;
+            }
+
+            // VERIFICA ACERTO
+            checkQuiz( atualQuizIndex );
+
+            // DELAY PARA GERAR A PROXIMA PERGUNTA
+            setTimeout(function(){
+                generateQuiz(atualQuizIndex);
+            }, 500);
+
+
+            
+        });
+
+
+    </script>
+
+
+
+</body>
+</html>

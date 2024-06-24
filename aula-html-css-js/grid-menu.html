@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    
+    <style>
+
+        *{
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+            
+        }
+
+        body{
+            margin: 0;
+        }
+
+
+        
+        #container{
+            background-color: #9e9e9e;
+            padding: 2px;
+
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+
+        .item{
+            width: 24px;
+            height: 24px;
+
+            margin: 4px;
+
+            background-color: #6c757d;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 5px;
+
+            overflow: hidden;
+            transition: 250ms;
+
+           
+            
+        }
+
+
+        .item-selected{
+
+            
+            
+            box-shadow: 0 0 2px 1px #000;
+
+            transform: scale(1.1);
+        }
+        
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+
+    
+
+    <div id="container">
+
+
+        <div class="item item-selected"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+
+
+    </div>
+
+    
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+
+        var tempIndex = 0;
+
+        var WIDTH   = parseInt( ( $("#container").width() - 4 ) / 32);
+        var HEIGHT  = Math.round( $(".item").length / 7 );
+
+        
+
+        // SELECT ITEM x, y
+
+
+        function selectItem(index){
+
+
+            
+
+
+            $(".item").removeClass("item-selected");
+
+
+
+            $(".item").eq( index ).addClass("item-selected");
+
+
+            
+
+
+        }
+
+
+
+
+
+
+
+        // KEY PRESS
+
+         
+        $("html").on("keydown", function(e){
+
+            //console.log(e.key);
+
+
+            switch ( e.key ){
+
+                case "ArrowLeft":
+
+                    if ( tempIndex > 0){
+                        tempIndex--;
+                    }
+                    else{
+                        tempIndex = $(".item").length-1;
+                    }
+
+                    break;
+                
+
+                case "ArrowRight":
+                    
+                    if ( tempIndex < $(".item").length-1){
+                        tempIndex++;
+                    }
+                    else{
+                        tempIndex = 0;
+                    }
+
+                    break;
+                    
+
+                
+                    
+
+            }
+
+
+            
+
+            selectItem( tempIndex );
+
+
+        });
+        
+
+    </script>
+
+
+</body>
+</html>

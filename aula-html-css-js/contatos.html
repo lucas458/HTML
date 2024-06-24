@@ -1,0 +1,384 @@
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contatos</title>
+
+
+    <style>
+
+        *{
+            margin: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+        html, body{
+            width: 100%;
+        }
+
+
+        #app{
+            user-select: none;
+
+            
+        }
+
+
+
+        /* MODAL default ( hidden ) */
+
+        #modal{
+            display: none;
+        }
+
+        #modal-content{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+
+            background-color: #00000057;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            
+            
+        }
+
+
+        #modal-inputs input{
+            display: block;
+            font-size: 1em;
+            border: 0;
+            border-radius: 25px;
+            padding: 5px 10px;
+            margin-top: 15px;
+            outline: 1px solid #000;
+            
+        }
+
+        #modal-inputs input:focus{
+            background-color: #616161;
+            color: #fff;
+            caret-color: red;
+            box-shadow: 0 0 8px 2px black;
+        }
+
+
+
+        #modal-buttons{
+            margin-top: 15px;
+             
+        }
+        #modal-buttons button{
+            border-radius: 20px;
+            padding: 10px 32px;
+            box-shadow: 0 0 5px 0 black;
+        }
+        
+
+
+
+        #modal-btn-add{
+            background-color: transparent;
+            color: #1d1d1d;
+            border: 2px solid #28a745;
+        }
+
+        #modal-btn-add:active{
+            background-color: #28a745;
+            color: #fff;
+        }
+
+
+
+        #modal-btn-close{
+            background-color: #dc3545;
+            border: 2px solid #dc3545;
+            color: #fff;
+        }
+
+        
+        
+
+
+
+
+        #content *{
+            /* filter: blur(1px); */
+        }
+
+
+        #header{
+            text-align: center;
+            background-color: #202020;
+            color: #fff;
+            padding: 5px;
+        }
+
+
+
+        /* ITENS */
+
+        .item{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+            background-color: #666;
+            margin-bottom: 4px;
+            padding-left: 5px;
+        }
+        .item:nth-child(even){
+            background-color: #3e3e3e;
+        }
+        
+
+
+        .item-delete{
+            padding: 5px 10px;
+            font-size: 1.2em;
+            background-color: #dc3545;
+        }
+
+
+
+
+
+
+
+
+
+        /* FOOTER */
+        #footer{
+            position: fixed;
+            right: 50px;
+            bottom: 25px;
+        }
+
+        #add-button{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 0;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 32px;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            box-shadow: 0 0 8px 2px black;
+
+            transition: 300ms transform;
+        }
+
+        
+
+    </style>
+    
+</head>
+
+
+<body>
+    
+    
+    <div id="app">
+
+        <div id="modal">
+
+            <div id="modal-content">
+
+            
+
+                <div id="modal-inputs">
+                    <input type="text" id="input-name" placeholder="Nome">
+                    <input type="tel" id="input-tel" placeholder="Numero">
+                </div>
+
+
+                <div id="modal-buttons">
+                    <button id="modal-btn-add" onclick="addItem();">Criar</button>
+                    <button id="modal-btn-close" onclick="modalClose();">Fechar</button>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div id="content">
+
+
+            <h3 id="header">Contatos (0)</h3>
+
+            
+            <!-- LIST ITENS -->
+
+            <div id="list-itens">
+
+                <!-- ITEM -->
+                <!-- <div class="item">
+                    <div class="item-name">nome aqui</div>
+                    <div class="item-tel">0000000</div>
+                    <div class="item-delete">&times;</div>
+                </div> -->
+
+                <!-- ITEM -->
+                <!-- <div class="item">
+                    <div class="item-name">nome aqui</div>
+                    <div class="item-tel">0000000</div>
+                    <div class="item-delete">&times;</div>
+                </div> -->
+
+                
+
+
+            </div>
+
+
+            
+            <!-- ADD BUTTON -->
+            <div id="footer">
+                <button id="add-button" onclick="modalOpen();">&plus;</button>
+            </div>
+        </div>
+
+
+
+        
+
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+        // CRIAR ITEM
+        function addItem(){
+
+            // GET name and format
+            let nome = $("#input-name").val();
+            nome = nome.trim();
+
+            // GER tel
+            let tel = $("#input-tel").val();
+            
+            
+            if ( isNaN(tel) ){
+                return;
+            }
+
+
+            // FORMAT: tel
+            var cleaned = ('' + tel).replace(/\D/g, '');
+            var match = cleaned.match(/^(^(\d{2})\D*(\d{5}|\d{4})\D*(\d{4})$)$/);
+            if (match) {
+                tel = '(' + match[2] + ') ' + match[3] + '-' + match[4];
+            }
+
+            console.log("nome:", nome, "| tel:", tel);
+
+
+            // INPUTS VAZIO >= sair da function
+            if ( (nome.length <= 0) || ( tel.length <= 0 ) ){
+                return;
+            }
+
+
+            // ADICIONAR NO CONTAINER
+            $("#list-itens").append(`
+            <div class="item">
+            <div class="item-name">${nome}</div>
+            <div class="item-tel">${tel}</div>
+            <div class="item-delete">&times;</div>
+            </div>
+            `);
+
+
+            // CONTATOS (9999+)
+            if ( $("#list-itens .item").length > 9999 ){
+                $("#header").text( "Contatos (9999+)" );
+            }
+
+            // CONTATOS (n)
+            else{
+                $("#header").text( `Contatos (${$("#list-itens .item").length})` );
+            }
+            
+
+            // FEHCAR POPUP
+            modalClose();
+
+            // CLEAR INPUTS
+            $("#input-name").val('');
+            $("#input-tel").val('')
+        }
+
+
+
+
+
+
+        // ABRIR POPUP
+        function modalOpen(){
+            
+            
+            $("#add-button").css({
+                "background-color": "#202020",
+                "transform": "rotate(90deg)",
+            });
+
+
+            $("#modal").fadeIn();
+
+        }
+
+
+        // FECHAR POPUP
+        function modalClose(){
+
+            $("#add-button").css({
+                "background-color": "#007bff",
+                "transform": "rotate(0deg)",
+            });
+
+            $("#modal").fadeOut(300);
+        }
+
+
+
+
+
+        // DELETE ITEM
+        $("#list-itens").on("click", ".item-delete", function(){
+
+            $(this).parent().remove();
+
+            if ( $("#list-itens .item").length > 9999 ){
+                $("#header").text( "Contatos (9999+)" );
+            }
+
+            else{
+                $("#header").text( `Contatos (${$("#list-itens .item").length})` );
+            }
+        })
+
+
+
+    </script>
+
+
+</body>
+</html>

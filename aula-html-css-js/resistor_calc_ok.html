@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+        }
+
+        html, body{
+            width: 100%;
+            height: 100%;
+			overflow: hidden auto;
+        }
+
+
+
+
+        #mode-1{
+            user-select: none;
+            border-collapse: collapse;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+
+            background-color: #000;
+            color: #fff;
+        }
+
+        
+
+
+        .selected-item{
+            border: 4px solid #616161;
+        }
+
+
+
+        #mode-1 thead td{
+            background-color: rebeccapurple;
+        }
+
+
+
+        #mode-1 tbody tr:nth-child(1) td{background-color: #000;}
+        #mode-1 tbody tr:nth-child(2) td{background-color: #997551;}
+        #mode-1 tbody tr:nth-child(3) td{background-color: #ff393a;}
+        #mode-1 tbody tr:nth-child(4) td{background-color: #ffa64a;}
+        #mode-1 tbody tr:nth-child(5) td{background-color: #ffff79;color: #000;}
+        #mode-1 tbody tr:nth-child(6) td{background-color: #89fe89;color: #000;}
+        #mode-1 tbody tr:nth-child(7) td{background-color: #4988f2;}
+        #mode-1 tbody tr:nth-child(8) td{background-color: #f18ff6;}
+        #mode-1 tbody tr:nth-child(9) td{background-color: #808080;}
+        #mode-1 tbody tr:nth-child(10) td{background-color: #fff;color: #000;}
+        #mode-1 tbody tr:nth-child(11) td{background-color: #cd9933;}
+        #mode-1 tbody tr:nth-child(12) td{background-color: #cccccc;color: #000;}
+
+
+        #mode-1 tbody tr{
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+
+
+
+        
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <table id="mode-1">
+
+        <thead>
+
+            <tr><th colspan="4">Resistor Calculator</th></tr>
+
+            <tr><td>3 stripes</td><td colspan="3" id="result">1KΩ ± 5%</td></tr>
+
+            <tr><td>BAND 1</td><td>BAND 2</td><td>MUL.</td><td>TOL.</td></tr>
+
+        </thead>
+
+
+        <!-- BRAND-x, MUL., TOL. -->
+        <tbody>
+
+            <tr><td class="row1">0</td><td class="row2 selected-item">0</td><td class="row3">1Ω</td><td class="row4"></td></tr>
+            <tr><td class="row1 selected-item">1</td><td class="row2">1</td><td class="row3">10Ω</td><td class="row4">± 1%</td></tr>
+            <tr><td class="row1">2</td><td class="row2">2</td><td class="row3 selected-item">100Ω</td><td class="row4">± 2%</td></tr>
+            <tr><td class="row1">3</td><td class="row2">3</td><td class="row3">1KΩ</td><td></td></tr>
+            <tr><td class="row1">4</td><td class="row2">4</td><td class="row3">10KΩ</td><td></td></tr>
+            <tr><td class="row1">5</td><td class="row2">5</td><td class="row3">100KΩ</td><td class="row4">± 0.50%</td></tr>
+            <tr><td class="row1">6</td><td class="row2">6</td><td class="row3">1MΩ</td><td class="row4">± 0.25%</td></tr>
+            <tr><td class="row1">7</td><td class="row2">7</td><td class="row3">10MΩ</td><td class="row4">± 0.10%</td></tr>
+            <tr><td class="row1">8</td><td class="row2">8</td><td></td><td class="row4">± 0.05%</td></tr>
+            <tr><td class="row1">9</td><td class="row2">9</td><td></td><td></td></tr>
+            <tr><td></td><td></td><td class="row3">0.1</td><td class="row4 selected-item">± 5%</td></tr>
+            <tr><td></td><td></td><td class="row3">0.01</td><td class="row4">± 10%</td></tr>
+
+        </tbody>
+
+    </table>
+
+
+
+
+<script>
+item_col1 = document.getElementsByClassName("row1");
+item_col2 = document.getElementsByClassName("row2");
+item_col3 = document.getElementsByClassName("row3");
+item_col4 = document.getElementsByClassName("row4");
+res = document.getElementById("result");
+itemSelectedValue = ["1", "0", "100Ω", "± 5%"];
+
+function calc(){
+
+    temp = ((itemSelectedValue[0] - 0) * 10) + (itemSelectedValue[1] - 0);
+    mult = itemSelectedValue[2];
+    selectedIndex = -1;
+    
+    for (let i = 0; i < item_col3.length; i++){if ( item_col3[i].classList.value.split(" ").length > 1 ){selectedIndex = i;break;}}
+
+    while ( isNaN(mult) ){mult = mult.slice(0, mult.length-1);}
+
+    if (selectedIndex >= 0 && selectedIndex <= 2){temp *= mult ;}
+    else if (selectedIndex >= 3 && selectedIndex <= 5){temp *= mult * 1E3;}
+    else if (selectedIndex == 6 || selectedIndex == 7){temp *= mult * 1E6;}
+    else if (selectedIndex == 8){temp *= 0.1;}
+    else if (selectedIndex == 9){temp *= 0.01;}
+    
+    // FORMAT DECIMAL
+    if (temp >= 1E6){
+        temp /= 1E6;
+        temp = temp.toFixed(2);
+        if (temp.split(".")[1] <= 0){temp = parseInt(temp);}
+        temp += "MΩ";
+    }
+    else if (temp >= 1E3){
+        temp /= 1E3;
+        temp = temp.toFixed(2);
+        if (temp.split(".")[1] <= 0){temp = parseInt(temp);}
+        temp += "KΩ";
+    }
+    else{
+        temp = temp.toFixed(2);
+        if (temp.split(".")[1] <= 0){temp = parseInt(temp);}
+        temp += "Ω";
+    }
+    temp += ' ' + itemSelectedValue[3];
+    res.innerText = temp;
+}
+
+function selectRow1(){
+    for (let i = 0; i < item_col1.length; i++){item_col1[i].style.border = "none";}
+    this.style.border = "4px solid #616161";
+    itemSelectedValue[0] = this.innerText;
+    calc();
+}
+
+function selectRow2(){
+    for (let i = 0; i < item_col2.length; i++){item_col2[i].style.border = "none";}
+    this.style.border = "4px solid #616161";
+    itemSelectedValue[1] = this.innerText;
+    calc();
+}
+
+function selectRow3(){
+    for (let i = 0; i < item_col3.length; i++){item_col3[i].classList = "row3";}
+    this.classList += " selected-item";
+    itemSelectedValue[2] = this.innerText;
+    calc();
+}
+
+function selectRow4(){
+    for (let i = 0; i < item_col4.length; i++){item_col4[i].style.border = "none";}
+    this.style.border = "4px solid #616161";
+    itemSelectedValue[3] = this.innerText;
+    calc();
+}
+
+for (let i = 0; i < item_col1.length; i++){item_col1[i].addEventListener("click", selectRow1);}
+for (let i = 0; i < item_col2.length; i++){item_col2[i].addEventListener("click", selectRow2);}
+for (let i = 0; i < item_col3.length; i++){item_col3[i].addEventListener("click", selectRow3);}
+for (let i = 0; i < item_col4.length; i++){item_col4[i].addEventListener("click", selectRow4);}
+
+
+</script>
+</body></html>

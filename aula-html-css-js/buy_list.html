@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+        *{
+            margin: 0;
+            box-sizing: border-box;
+
+        }
+
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+
+
+
+
+
+
+        /* HEADER */
+
+        header{
+            padding: 5px;
+            background-color: #212121;
+            color: #fff;
+
+        }
+
+
+
+
+
+        /* ADD */
+
+
+        #addMoney{
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: #28a745;
+            width: fit-content;
+            margin-top: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+
+
+
+
+        #container{
+            display: flex;
+        }
+
+
+        .itemBuy{
+            cursor: pointer;
+            width: 128px;
+            height: 64px;
+            border-radius: 10px;
+            margin: 5px;
+
+            user-select: none;
+
+            text-overflow: clip;
+            white-space: nowrap;
+            overflow: hidden;
+            background-color: #848484;
+            color: #fff;
+
+            transition: 250ms;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .itemBuy:hover{
+            background-color: #646464;
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+
+
+    <header>
+
+        <div id="balance">500</div>
+        <div id="addMoney" onclick="addMoney()">Add Money +100</div>
+
+    </header>
+
+
+
+
+    <div id="container">
+
+        <!-- ITEM -->
+        <div class="itemBuy">
+            <div class="itemTitle">motor</div>
+            <div class="itemLevel">0/5</div>
+            <div class="itemCust">R$ 150</div>
+        </div>
+
+
+        <!-- ITEM -->
+        <div class="itemBuy">
+            <div class="itemTitle">Pneu</div>
+            <div class="itemLevel">0/3</div>
+            <div class="itemCust">R$ 200</div>
+        </div>
+
+
+        <!-- ITEM -->
+        <div class="itemBuy">
+            <div class="itemTitle">Turbo</div>
+            <div class="itemLevel">0/8</div>
+            <div class="itemCust">R$ 128</div>
+        </div>
+
+    </div>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+
+
+        balance = 500;
+
+
+
+        function addMoney(){
+
+            balance += 100;
+
+
+            $("#balance").text(balance);
+
+        }
+
+
+
+
+
+
+
+        
+
+
+
+        list_buy = [
+
+            [ ["motor", 0, 5], [150, 250, 320, 420, 750] ],
+            [ ["pneu", 0, 3], [200, 425, 700] ],
+            [ ["turbo", 0, 8], [128, 254, 368, 467, 700, 812, 920, 1080] ],
+
+        ];
+
+
+
+
+
+        $("#container").on("click", ".itemBuy", function(){
+
+            console.log("item:", $(this).index());
+
+            itemIndex = $(this).index();
+
+            
+            itemLimiter = list_buy[itemIndex][0][2];
+            itemLevel = list_buy[itemIndex][0][1];
+            itemPrice = list_buy[itemIndex][1][itemLevel];
+
+
+            if ( (itemLevel == itemLimiter) ){
+                console.log("MAX. EQUIPADO");
+                return;
+            }
+            
+
+            if ( (itemPrice > balance) ){
+                console.log("SEM DINHEIRO");
+                return;
+            }
+
+            
+
+
+            
+            
+            // COMPRANDO
+            balance -= itemPrice;
+
+
+            // level up
+            itemLevel++;
+            list_buy[itemIndex][0][1] = itemLevel;
+
+            // UPDATE LEVEL
+            $(this).children(".itemLevel").text( `${itemLevel}/${itemLimiter}` );
+
+
+            // VALUE or MAX.
+            if ( (itemLevel == itemLimiter) ){
+                $(this).children(".itemCust").text( "MAX." );
+            }
+            else{
+                $(this).children(".itemCust").text( "R$ " + list_buy[itemIndex][1][itemLevel] );
+            }
+
+            
+
+            // UPDATE BALANCE
+            $("#balance").text(balance);
+
+
+
+            
+
+
+
+        });
+
+
+
+    </script>
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

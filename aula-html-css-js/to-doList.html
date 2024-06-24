@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <style>
+
+        body{
+            margin: 0;
+        }
+
+
+
+
+        /* ADD ITEM */
+        nav{
+            background-color: #673ab7;
+            width: 100%;
+            padding: 4px;
+            user-select: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+
+        }
+
+        nav input{
+            border: 1px solid #202020;
+            outline: none;
+            transition: 300ms;
+            padding-left: 5px;
+            box-sizing: border-box;
+            
+
+        }
+        nav input:focus{
+            border: 1px solid #000;
+            border-radius: 10px;
+        }
+
+        nav button{
+            border: 1px solid transparent;
+            transition: 300ms;
+            outline: none;
+        }
+
+        nav button:hover, nav button:focus{
+            border-radius: 5px;
+        }
+
+        nav button:focus{
+            border-color: black;
+        }
+
+
+
+
+
+
+
+        /* SELECTION COUNTER | BUTTONS CONTAINER */
+
+        #selectedContainer, #buttonsContainer{
+            font-family: Arial, Helvetica, sans-serif;
+            display: inline;
+            border-radius: 20px;
+            margin-top: 2px;
+            margin-right: 10px;
+            padding: 2px 5px 2px 5px;
+            background-color: #2196f3;
+            box-sizing: border-box;
+        }
+
+
+
+        .checkboxItem{
+            /* display: none; */
+            margin-top: 8px;
+        }
+
+
+
+
+
+        /* SELECIONAR TUDO E DELETE */
+        #buttonsContainer{
+            padding: 2px;
+            background-color: transparent;
+        }
+
+        #buttonsContainer span{
+            border-radius: 10px;
+            padding: 2px 5px 2px 5px;
+            
+            transition: 300ms;
+
+        }
+
+        #buttonsContainer span:hover{
+            background-color: #9e9e9e;
+        }
+
+        /* deleteItens */
+        #deleteItens{
+            background-color: #e53935;
+        }
+
+        /* selectAll */
+        #selectAll{
+            background-color: #ff9800;
+        }
+
+        
+
+
+
+
+
+
+
+
+
+        /* CONTAINER DO TO-DO LIST */
+        #app{
+            margin-top: 30px;
+        }
+
+
+        /* CONTAINER DA LISTA DE ITENS */
+        #listContainer{
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+        /* ITEM CONTAINER */
+        .listItem{
+            box-sizing: border-box;
+            background-color: #2196f3;
+            border-left: 5px solid blue;
+            display: flex;
+            flex-grow: 2;
+            justify-content: space-between;
+            transition: 300ms;
+        }
+        .listItem:nth-child(odd){
+            background-color: turquoise;
+        }
+        .listItem:hover{
+            background-color: #b0bec5;
+        }
+
+        .listItem input{
+            display: none;
+        }
+
+
+
+        /* TEXTO DO ITEM */
+        .listText{
+            width: 100%;
+            padding: 5px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        /* DELETAR ITEM */
+        .listDeleteItem{
+            padding: 5px;
+            box-sizing: border-box;
+            user-select: none;
+            background-color: #3f51b5;
+            color: #fff;
+            transition: 300ms;
+        }
+        .listDeleteItem:hover{
+            color: #ffc5c5;
+            
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <nav>
+
+        <input type="search" id="inputTODO" placeholder="Digite Aqui!">
+        <button onclick="generateItem();">ADD</button>
+
+        <!-- CONTADORES -->
+        <div id="selectedContainer">
+            <span id="selectedCount">0</span> / <span id="selectedLength">0</span>
+        </div>
+
+        <!-- BOTOES -->
+        <div id="buttonsContainer">
+            <span id="deleteItens" onclick="deleteItens();">Delete</span>
+            <span id="selectAll" onclick="selectAll();">Select All</span>
+        </div>
+
+    </nav>
+
+
+    <div id="app">
+
+        <ul id="listContainer">
+
+            <!-- ITEM -->
+            <!-- <li class="listItem"> <input type="checkbox" class="checkboxItem"> <span class="listText">Teste De Texto Aqui!</span> <span class="listDeleteItem">X</span> </li> -->
+
+            <!-- ITEM -->
+            <!-- <li class="listItem"> <input type="checkbox" class="checkboxItem"> <span class="listText">Teste De Texto Aqui!</span> <span class="listDeleteItem">X</span> </li> -->
+
+        </ul>
+
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+        
+        
+
+        var itemID = -1;                // ID DE IDENTIFICAÇÃO DE CADA ITEM Ex: item0, item1, item2
+        var AllSelected = false;        // VERIFICA SE TODOS OS ITENS FORAM SELECIONADOS
+        var selectedItensIndex = [];    // LISTA DE ITENS PARA SER DELETADOS
+        var selectedCount = 0;          // CONTADOR DE QUANTOS ITENS FORAM SELECIONADOS
+
+        // GERAR NOVO ITEM ITEM
+        function generateItem(){
+            var str = $("#inputTODO").val();    // PEGAR VALOR DO INPUT
+            str = str.replace(/\s/g, ' ');       // REMOVER ESPAÇOS
+
+            if ( str.length > 0 && selectedCount <= 0 ){
+
+                console.log(`criar item : "${str}"`);
+
+                itemID += 1;    // itemID COMEÇARÁ DE 0
+
+                // GERAR ITEM COM TEXTO
+                $("#listContainer").append(`<li class="listItem" id="item${itemID}"> <input type="checkbox" class="checkboxItem"> <span class="listText">${str}</span> <span class="listDeleteItem">X</span> </li>`);
+
+                // MOSTRAR O NUMERO TOTAIS DE ITENS
+                $("#selectedLength").text( $("#listContainer").children(".listItem").length )
+
+                // CLEAR INPUT
+                $("#inputTODO").val("");
+
+            }
+            
+        }
+
+
+        // GERAR COM CLICK NO 'ENTER'
+        $("#inputTODO").on("keypress", function(e){
+            if (e.keyCode == 13){
+                generateItem();
+            }
+        });
+
+
+
+        /************ GERAR ITENS -- DEBUG **************/
+        for (let x = 0; x < 5; x++){
+            $("#inputTODO").val(`item ${x}`);
+            generateItem();
+        }
+
+        
+
+
+        // DELETAR ITEM - INDIVIDUAL
+        $("#listContainer").on("click", ".listDeleteItem", function(){
+
+            console.log("delatar item");
+
+            // REMOVER ITEM
+            $(this).parent().remove();
+
+            // MOSTRAR O NUMERO TOTAIS DE ITENS
+            $("#selectedLength").text( $("#listContainer").children(".listItem").length );
+        });
+
+
+
+
+
+
+
+        
+        
+
+
+        // SELECIONAR ITEM
+        $("#listContainer").on("click", ".listText", function(){
+
+            console.log("selected item: ", $(this).parent().index() );
+
+            // MUDAR O ESTADO DO checkbox QUANDO CLICAR NO -> '.listText'
+            let getState = $(this).parent().children("input").prop("checked");  // LER ESTADO
+            $(this).parent().children("input").prop("checked",  !getState);     // ESCREVER -> !ESTADO
+
+
+            // SE SELECIONAR...
+            if ( !getState ){
+
+                // DESTACAR O ITEM SELECIONADO
+                $(this).css("background-color", "#b0bec5");
+                $(this).parent().css("border-color", "#28a745");
+
+                // ADD PARA O ARRAY DE ITENS À SER DELETADO
+                selectedItensIndex.push( $(this).parent().index() );
+
+                
+                
+                selectedCount++;    // AUMENTAR O CONTADOR DE ITENS SELECIONADOS
+
+                // VERICA SE SELECIONOU TODOS OS ITENS
+                if (selectedCount == $("#listContainer").children(".listItem").length){
+                    $("#selectAll").text( "Deselect All" );
+                    AllSelected = true;
+                }
+            }
+
+            // SE DESELECIONAR...
+            else{
+
+                // DESTACAR O ITEM SELECIONADO
+                $(this).css("background-color", ($(this).parent().index() % 2 == 0)? "turquoise": "#2196f3");
+                $(this).parent().css("border-color", "#00f");
+
+                // DELETAR DO ARRAY DE ITENS À SER DELETADO
+                let indexItem = selectedItensIndex.indexOf( $(this).parent().index() ); // INDEX DO ITEM PARA SER DELETADO DO ARRAY
+
+                selectedItensIndex.splice( indexItem, 1 );  // REMOVER ITEM DESSELECIONAD DO ARRAY
+
+                AllSelected = false;
+
+                $("#selectAll").text( (AllSelected)? "Deselect All" : "Select All" );
+
+                selectedCount--;    // DIMINUIR O CONTADOR DE ITENS SELECIONADOS
+            }
+
+
+
+            // SE DESELECIONAR TUDO
+            if ( selectedCount == 0){
+                // QUANDO NENHUM ITEM FOR SELECIONADO: MOSTRAR O BOTAO DELETE INDIVIDUAL
+                $(".listDeleteItem").fadeIn(1);
+            }
+            else{
+                // QUANDO PELO MENOS UM ITEM FOR SELECIONADO: ESCONDER BOTAO DE DELETE INDIVIDUAL
+                $(".listDeleteItem").fadeOut(1);
+            }
+
+
+            // MOSTRAR O NUMERO DE ITENS SELECIONADOS:
+            $("#selectedCount").text( selectedCount );
+
+
+            // MOSTRAR O NUMERO TOTAIS DE ITENS
+            $("#selectedLength").text( $("#listContainer").children(".listItem").length );
+            
+
+        });
+
+        // MOSTRAR O NUMERO TOTAIS DE ITENS -- PRIMEITA VEZ
+        $("#selectedLength").text( $("#listContainer").children(".listItem").length );
+
+
+
+
+
+
+
+
+
+
+        
+
+        // SELECIONAR/DESSELECIONAR TUDO
+        function selectAll(){
+
+
+            // CASO NÃO EXISTIR ITENS O 'selectAll' NÃO VAI FUNCIONAR
+            if ( $(".listItem").length <= 0){
+                return;
+            }
+
+            
+
+            // LIMPAR LISTA DE ITENS PARA SER DELETADOS
+            selectedItensIndex = [];
+
+            // CHECK/UNCHECK
+            $(".listItem input").prop( "checked" , (!AllSelected) );
+
+            // CONTADOR RECEBE 0 ou LENGTH TOTAL
+            selectedCount = (!AllSelected)? $("#listContainer").children(".listItem").length : 0;  
+
+            // ADICIONAR TODOS OS ITENS SELECIONADOS PARA O ARRAY
+            for (let x = 0; x < selectedCount; x++){
+                selectedItensIndex.push(x);
+            }
+
+            AllSelected = !AllSelected; // INVERTER
+
+
+            // SELECIONAR TUDO
+            if ( AllSelected || selectedCount == $("#listContainer").children(".listItem").length ){
+                $("#selectAll").text( "Deselect All" );
+                $(".listDeleteItem").fadeOut(1);
+            }
+
+            // DESSELECIONAR TUDO
+            else{
+                $("#selectAll").text( "Select All" );
+                $(".listDeleteItem").fadeIn(1);
+            }
+            
+
+            // MOSTRAR O NUMERO DE ITENS SELECIONADOS:
+            $("#selectedCount").text( (AllSelected)? $("#listContainer").children(".listItem").length : 0 );
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        // DELETAR OS ITENS SELECIONADOS
+        function deleteItens(){
+
+
+
+            // DELETAR TUDO - SE USAR 'select all'
+            if (AllSelected){
+                console.log("deletar ALL");
+                $("#listContainer").empty();
+                
+                // ZERAR O NUMERO DE ITENS SELECIONADOS:
+                $("#selectedCount").text( 0 );
+
+                selectedCount = 0;
+            }
+
+
+            // DELETAR APENAS OS ITENS SELECIONADOS
+            if ( selectedCount > 0){
+
+                // DELETAR OS ITENS SELECIONADOS -- LOOP
+                selectedItensIndex.forEach(element => {
+                    console.log("deletar item: ", element);
+                    
+                    // ZERAR O NUMERO DE ITENS SELECIONADOS:
+                    $("#selectedCount").text( 0 );
+
+                    selectedCount = 0;
+
+                    // REMOVER ITEM 
+                    $("#listContainer").children("#item" + element).remove()
+
+                });
+            }
+
+            // MOSTRAR O NUMERO TOTAIS DE ITENS
+            $("#selectedLength").text( $("#listContainer").children(".listItem").length );
+
+        }
+
+    </script>
+
+</body>
+</html>
