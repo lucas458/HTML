@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Campeonatos</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+        #tabela{
+            position: relative;
+        }
+
+
+        .coluna{
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+        }
+
+        .coluna:nth-child(1){
+            gap: 21.3px;
+            top: 34px;
+            left: 39px;
+        }
+        .coluna:nth-child(2){
+            gap: 67.6px;
+            top: 57px;
+            left: 186px;
+        }
+        .coluna:nth-child(3){
+            gap: 162px;
+            top: 103px;
+            left: 334px;
+        }
+        .coluna:nth-child(4){
+            top: 196px;
+            left: 482px;
+        }
+
+
+
+
+
+        .linha{
+            width: 109px;
+            height: 25px;
+            /* background-color: #f00; */
+            border-radius: 0 5px 5px 0;
+        }
+
+
+        .item{
+            width: 109px;
+            height: 25px;
+            /* background-color: #0f0; */
+            color: #000;
+            border-radius: 0 5px 5px 0;
+            padding-left: 2px;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .itemGanhador{
+            color: #fff;
+            background-color: #28a745;
+        }
+
+        
+
+        .linha:hover{
+            opacity: 0.8;
+        }
+
+
+
+        .icone{
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            /* background-color: #00f; */
+            background-size: 100% 100%;
+        }
+
+        .titulo{
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            padding-left: 2px;
+        }
+        
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body oncontextmenu="return false">
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="tabela">
+            <img src="tabelaCampeonato.jpg">
+
+            <div id="elementos">
+
+                <div class="coluna">
+                    <div class="linha"></div>
+                    <div class="linha"></div>
+                    <div class="linha"></div>
+                    <div class="linha"></div>
+                    <div class="linha"></div>
+                    <div class="linha"></div>
+                    <div class="linha"></div>
+                    <div class="linha"></div>
+                </div>
+
+                <div class="coluna">
+                    <div class="linha"></div>
+                    <div class="linha"></div>
+                    <div class="linha"></div>
+                    <div class="linha"></div>
+                </div>
+                
+                <div class="coluna">
+                    <div class="linha"></div>
+                    <div class="linha"></div>
+                </div>
+                
+                <div class="coluna">
+                    <div class="linha"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+        
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+        
+        var TIMES = [
+
+            {
+                nome: "Botafogo",
+                foto: "botafogo.png"
+            },
+            {
+                nome: "Corinthians",
+                foto: "corinthians.png"
+            },
+            {
+                nome: "Flamengo",
+                foto: "flamengo.png"
+            },
+            {
+                nome: "Grêmio",
+                foto: "gremio.png"
+            },
+            {
+                nome: "Palmeiras",
+                foto: "palmeiras.png"
+            },
+            {
+                nome: "Santos",
+                foto: "santos.png"
+            },
+            {
+                nome: "São Paulo",
+                foto: "saopaulo.png"
+            },
+            {
+                nome: "Vasco",
+                foto: "vasco.png"
+            }
+
+        ];
+        
+
+
+        function gerarOponentes(){
+            TIMES = shuffleArray(TIMES);
+
+            elementos.firstElementChild.querySelectorAll('.linha').forEach((e, i) => {
+                const item = document.createElement('div');
+                item.classList.add('item');
+                item.setAttribute('item-name', TIMES[i].nome);
+                item.innerHTML = `
+                <div class="icone" style="background-image: url('${TIMES[i].foto}')"></div>
+                <div class="titulo">${TIMES[i].nome}</div>`;
+                e.appendChild(item);
+            });
+        }
+
+
+        function deletarPorNo(startColunaIndex = 1, startLinhaIndex = 0){
+            for (let i = startColunaIndex; i < elementos.children.length; i++){
+                elementos.children[i].children[startLinhaIndex].innerHTML = '';
+                startLinhaIndex = parseInt(startLinhaIndex / 2);
+            }
+        }
+
+
+        function setGanhador( itemName ){ 
+            document.querySelectorAll(`.item[item-name="${itemName}"]`).forEach(e => e.classList.add('itemGanhador'));
+        }
+
+        
+        function clearGanhador(){
+            document.querySelectorAll('.itemGanhador').forEach(e => e.classList.remove('itemGanhador'));
+        }
+
+
+        document.querySelectorAll('.coluna').forEach((coluna, colunaIndex) => {
+
+            coluna.querySelectorAll('.linha').forEach((linha, linhaIndex) => {
+
+                linha.onclick = () => {
+                    if ( linha.firstElementChild != null && coluna.nextElementSibling != null ){
+                        clearGanhador();
+                        const i = parseInt(linhaIndex / 2);
+                        deletarPorNo(colunaIndex+1, i);
+                        coluna.nextElementSibling.children[i].innerHTML = '';
+                        coluna.nextElementSibling.children[i].appendChild( linha.firstElementChild.cloneNode(true) );
+
+                        if ( colunaIndex + 1 >= elementos.children.length - 1 ){ 
+                            setGanhador( linha.firstElementChild.getAttribute('item-name') );
+                        }
+                    }
+                };
+
+                linha.oncontextmenu = () => {
+                    if ( colunaIndex == 0 ) return;
+                    clearGanhador(); 
+                    deletarPorNo(colunaIndex, linhaIndex); 
+                };
+
+            });
+
+        });
+
+
+        onload = gerarOponentes;
+        
+    </script>
+
+
+</body>
+</html>
