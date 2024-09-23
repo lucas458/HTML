@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16 Seg</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+        #container{
+            position: relative;
+            left: -64px; 
+        }
+
+
+        .seg{
+            width: 96px;
+            height: 10px;
+            background-color: #353535;
+            cursor: pointer;
+            position: absolute;
+			text-align: center;
+			line-height: 10px;
+            font-size: 0.8em;
+        }
+        .segMini{
+            width: 64px;
+        }
+
+
+        .segV{
+            transform: rotate(90deg);
+            transform-origin: left center;
+        }
+
+
+        .segR{
+            left: calc(140px + 4px);
+        }
+
+        .segR.segMini{
+            left: calc(64px + 4px);
+        }
+
+
+        .active{
+            background-color: #f55 !important;
+        }
+
+        #output{
+            position: absolute;
+            top: 0;
+        }
+
+        button{
+            position: absolute;
+            top: 32px;
+            padding: 4px 8px;
+        }
+		
+		
+			
+			
+		#register{
+			display: grid;
+			grid-template-columns: repeat(16, 1fr);
+			position: absolute;
+			top: 64px;
+			background: #fff;
+			padding: 1px;
+			gap: 1px; 
+		}
+		
+		#register div{
+			background: #212121;
+			text-align: center;
+			padding: 2px 6px; 
+            position: relative;
+		}
+
+        #register div:hover{
+            opacity: 0.8;
+        }
+
+
+        #register div:first-child::after{
+            content: 'MSb';
+            position: absolute;
+            left: 0;
+            top: 100%;
+        }
+        #register div:last-child::after{
+            content: 'LSb';
+            position: absolute;
+            right: 0;
+            top: 100%;
+        }
+
+
+        a{
+            position: absolute;
+            top: 96px;
+            color: #fff;
+        }
+ 
+		
+		
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="output" >0x0000</div>
+        <button onclick="copy();">Copy</button>
+
+        <a target="_blank" href="https://web.archive.org/web/20240711080756/https://www.analog.com/en/resources/design-notes/quickstart-driving-16segment-displays-with-the-max6954.html">Learn More</a>
+		
+		<div id="register"></div>
+
+        <div id="container">
+            <div class="seg segMini" style="top: -10px;">A1</div>
+            <div class="seg segMini segR" style="top: -10px;">A2</div>
+
+            <div class="seg segV segR"> <div style="transform: rotate(-90deg);">B</div> </div>
+            
+            <div class="seg segV segR" style="top: 100px;"> <div style="transform: rotate(-90deg);">C</div> </div>
+
+            <div class="seg segMini" style="top: 210px;">D1</div>
+            <div class="seg segMini segR" style="top: 210px;">D2</div>
+
+            <div class="seg segV" style="left: -10px;top: 100px;"> <div style="transform: rotate(-90deg);">E</div> </div>
+            <div class="seg segV" style="left: -10px;"> <div style="transform: rotate(-90deg);">F</div> </div>
+
+            <div class="seg segMini" style="top: 100px;">G1</div>
+            <div class="seg segMini segR" style="top: 100px;">G2</div>
+
+            <div class="seg segV" style="left: 10px;transform: rotate(70deg);"> <div style="transform: rotate(-70deg);">H</div> </div>
+            <div class="seg segV" style="left: 64px;top: -2px;"> <div style="transform: rotate(-90deg);">I</div> </div>
+            <div class="seg segV" style="left: 120px;transform: rotate(110deg);"> <div style="transform: rotate(-110deg);">J</div> </div>
+            
+            <div class="seg segV" style="top: 110px;left: 90px;transform: rotate(70deg)"> <div style="transform: rotate(-70deg);">K</div> </div>
+            <div class="seg segV" style="left: 64px;top: 107px;"> <div style="transform: rotate(-90deg);">L</div> </div>
+            <div class="seg segV" style="top:110px;left: 44px;transform: rotate(110deg);"> <div style="transform: rotate(-110deg);">M</div> </div> 
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+        
+        function getData(){
+            let data = 0x0000;
+            for (let i = 0; i < container.children.length; i++){
+                const stateIsActive = Math.trunc( container.children[i].classList.contains("active") );
+                data |= stateIsActive << i;
+            }
+            output.innerHTML = '0x' + data.toString(16).padStart(4, 0).toUpperCase();
+            return data;
+        }
+
+        function copy(){
+            var copyText = document.getElementById("output"); 
+            navigator.clipboard.writeText(copyText.innerHTML);
+            console.log("Copied: " + copyText.innerHTML);
+        }
+
+        function setSegmentByIndex(index, state){
+            register.children[15-index].classList.toggle("active", state);
+            container.children[index].classList.toggle("active", state);
+            getData();
+        }
+        
+		onload = () => {
+			register.innerHTML = '';
+
+			for (let i = 0; i < container.children.length; i++){
+				const element = container.children[container.children.length-1-i];
+				register.innerHTML += '<div>' + element.innerText + '</div>';
+			}
+
+            document.querySelectorAll(".seg, #register > div").forEach((e, index) => {
+                e.onclick = () => {
+                    const i = index % 16;
+
+                    if (index < 16){
+                        setSegmentByIndex(15-i, !e.classList.contains("active"));
+                        return;
+                    }
+                    setSegmentByIndex(i, !e.classList.contains("active"));
+                };
+            });
+
+		};
+
+
+
+
+        
+
+
+    </script>
+
+
+</body>
+</html>

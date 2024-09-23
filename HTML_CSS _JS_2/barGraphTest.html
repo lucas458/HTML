@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #bargraph{
+            padding: 16px 10px;
+            background-color: #212121;
+        }
+
+        .led{
+            width: 64px;
+            height: 8px;
+            background-color: #353535;
+            margin-bottom: 4px;
+        }
+        .ledActive{
+            background-color: #f55;
+        }
+
+        .led:last-child{
+            margin: 0;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="bargraph">
+            <!-- <div class="led"></div>
+            <div class="led"></div>
+            <div class="led"></div>
+            <div class="led"></div>
+            <div class="led"></div>
+            <div class="led"></div>
+            <div class="led"></div>
+            <div class="led"></div> -->
+        </div>
+
+    </div>
+
+
+     
+
+
+    <script>
+
+        function removeSpaces( str = '' ){
+            return (str.replace(/  +/g, ' ')).trim();
+        }
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+		
+		function getSpacing( width, sizes = [] ){
+			const sum = sizes.reduce((a, b) => a+b, 0);
+			const len = (sizes.length - 1) >= 2? sizes.length - 1 : 2;
+			return (width - sum) / len;
+		}
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+        function pad( v = 0 ){
+            if ( v < 10 ) return '0' + v;
+            return v.toString();
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+        
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+        const DATES    = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        const WEEKDAYS = ["DOMINGO", "SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO"];
+        const MONTHS   = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
+
+        
+        
+        function generateBar(){
+            bargraph.innerHTML = '<div class="led"></div>'.repeat(24);
+        }
+
+        function setData( data ){   
+            for (let bit = 0; bit < bargraph.children.length; bit++){
+                bargraph.children[bit].classList.toggle("ledActive", data & 1 << bit);
+            }
+        }
+
+
+
+        function animate(){
+            let c = 0;
+            const leds_qty = bargraph.children.length;
+            for (let i = 0; i < leds_qty; i++){
+                for (let j = 0; j < leds_qty-i; j++){
+                    const data = (1 << j) | ( (1 << leds_qty) - (1 << (leds_qty-i)) );
+                    setTimeout(()=>{
+                        setData(data);
+                    }, 50 * c++);
+                }
+            }
+        }
+
+        generateBar();
+        animate();
+
+
+    </script>
+
+
+</body>
+</html>

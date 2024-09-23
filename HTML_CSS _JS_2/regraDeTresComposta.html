@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regra de Três • Composta</title>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        #container{
+            max-width: 100%;
+            height: 180px;
+            display: flex;
+            overflow: auto;
+            margin-bottom: 16px;
+        }
+        
+        #container:has(.inputColumn){
+            border: 2px solid #fff;
+        }
+
+
+
+        .inputColumn{
+            padding: 6px 16px;
+            background-color: #181818;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            border-right: 2px solid #fff;
+        }
+
+        .inputColumn:last-child{
+            border: none;
+        }
+
+
+        .inputColumn:has(input[type=radio]:checked) .inputTypeToggle{
+            visibility: hidden;
+        }
+
+
+        .inputTitle{
+            font-size: 1.2em;
+            font-weight: 500;
+            padding: 4px;
+        }
+
+        .inputTitle:empty{
+            background-color: #353535;
+        }
+
+
+        .inputElement{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .inputElement:last-child{
+            margin: 0;
+        }
+
+        .inputValue{
+            width: 96px;
+            padding: 2px 6px; 
+        }
+
+
+        input{
+            border: none;
+        }
+
+
+
+        .inputElement:has(input:checked) .inputValue{
+            pointer-events: none;
+            opacity: 0.5;
+            background-color: #f0f0f0;
+            color: transparent;
+        }
+
+        .inputElement:has(input:checked) .inputValue::placeholder{
+            color: transparent;
+        }
+             
+
+
+        button, .inputDelete{
+            padding: 4px 6px;
+            margin-top: 4px;
+            width: 100%;
+            background-color: #dc3545;
+            color: #fff; 
+            border-radius: 6px; 
+            border: none;
+        }
+        
+        button:hover{
+            opacity: 0.8;
+        }
+
+
+        #btnAdd, #btnCalcular, #btnResetar{
+            width: fit-content;
+            background-color: #007bff;
+            font-size: 1.1em; 
+        }
+
+        #btnAdd{
+            background-color: #28a745;
+        }
+        #btnResetar{
+            background-color: #dc3545;
+        }
+
+        #result{
+            margin-top: 8px;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        #result span{
+            color: #dc3545;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+<body>
+
+    <div id="main_screen">
+        <div id="container"></div>
+        <div id="btnGrupo">
+            <button id="btnAdd" onclick="onClickAdd()">Adicionar</button>
+            <button id="btnCalcular" onclick="onClickCalc()">Calcular (0)</button>
+            <button id="btnResetar" onclick="onClickResetar()">Resetar</button>
+        </div>
+        <div id="result">Resultado: 0</div>
+    </div>
+    
+
+    <script>
+        
+        function onClickAdd(){
+            const length = container.children.length;
+            const inputColumn = document.createElement("div");
+            inputColumn.classList.add("inputColumn");
+            
+            inputColumn.innerHTML = `
+            <div class="inputTitle" contenteditable spellcheck="false">Nome${length+1}</div>
+
+            <label class="inputTypeToggle">
+                <input type="checkbox" class="inputCheckbox" name="inverso">
+                <span>Inverso</span>
+            </label>
+
+            <div class="inputList">
+                <div class="inputElement">
+                    <input type="number" class="inputValue" placeholder="Valor" name="top">
+                    <input type="radio" class="inputRadio" name="icognita">
+                </div>  
+                <div class="inputElement">
+                    <input type="number" class="inputValue" placeholder="Valor" name="bottom">
+                    <input type="radio" class="inputRadio" name="icognita">
+                </div>  
+            </div>
+
+            <button class="inputDelete">Deletar</button>`;
+            
+            inputColumn.querySelector(".inputDelete").onclick = () => {
+                inputColumn.remove();
+                btnCalcular.innerHTML = `Calcular (${container.children.length})`;
+            };
+
+            container.appendChild(inputColumn);
+            btnCalcular.innerHTML = `Calcular (${container.children.length})`;
+        }
+
+
+
+
+
+        function onClickCalc(){
+            const inputColumnList   = container.querySelectorAll(".inputColumn");
+
+            if ( document.querySelector(".inputRadio:checked") == null && inputColumnList.length > 1 ){
+                result.innerHTML = "Resultado: <span>Erro</span>";
+                return;
+            }
+            
+            let numerador           = 1;
+            let denominador         = 1;
+            let fixo                = 0;
+            
+            for (let i = 0; i < inputColumnList.length; i++){
+                const inputColumn = inputColumnList[i];
+                const hasIcognita = inputColumn.querySelector("input[type='radio']:checked") != null;
+
+                if ( hasIcognita ){
+                    fixo = parseInt(inputColumn.querySelector("input[type='radio']:not(:checked)").previousElementSibling.value);
+
+                    if ( isNaN(fixo) ){
+                        result.innerHTML = "Resultado: <span>Erro</span>";
+                        return;
+                    }
+
+                    continue;
+                }
+
+                const valorTop      = parseInt(inputColumn.querySelectorAll(".inputList input[type=number]")[0].value);
+                const valorBottom   = parseInt(inputColumn.querySelectorAll(".inputList input[type=number]")[1].value);
+
+                if ( isNaN(valorTop) || isNaN(valorBottom) ){
+                    result.innerHTML = "Resultado: <span>Erro</span>";
+                    return;
+                }
+
+                if ( inputColumnList.length == 1 && !hasIcognita ){
+                    const resultValue = valorTop / valorBottom;
+
+                    if ( resultValue == Infinity || isNaN(resultValue) ){
+                        result.innerHTML = "Resultado: <span>Erro</span>";
+                        return;
+                    }
+
+                    result.innerHTML = "Resultado: " + resultValue;
+                    return;
+                }
+
+                const isInverse = inputColumn.querySelector("input[type='checkbox']").checked;
+                
+                if ( isInverse ){
+                    numerador   *= valorBottom;
+                    denominador *= valorTop;
+                    continue;
+                }
+
+                numerador   *= valorTop;
+                denominador *= valorBottom;
+                
+            }
+            
+            const resultValue = fixo / (numerador / denominador);
+
+            if ( resultValue == Infinity || isNaN(resultValue) ){
+                result.innerHTML = "Resultado: <span>Erro</span>";
+                return;
+            }
+
+            result.innerHTML = "Resultado: " + resultValue;
+
+        }
+
+
+
+
+
+        function onClickResetar(){
+            container.innerHTML = "";
+            result.innerHTML = "Resultado: 0";
+            btnCalcular.innerHTML = "Calcular (0)";
+        }
+
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+        .card{
+            width: 320px;
+            height: 480px;
+            background-color: #353535;
+            perspective: 1000px;
+        }
+
+        .cardInner{
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: 0.8s;
+            position: relative;
+        }
+
+        .card:hover .cardInner,
+        .cardInner:hover,
+        .cardBack{
+            transform: rotateY(180deg);
+        }
+
+        .cardFront, .cardBack{
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            position: absolute;
+        }
+
+        .cardFront{
+            background-color: #f55;
+        }
+        .cardBack{
+            background-color: #55f;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+    
+    <div id="main_screen">
+        
+        <div class="card">
+            <div class="cardInner">
+                <div class="cardFront">X</div>
+                <div class="cardBack">Y</div>
+            </div>
+        </div>
+        
+    </div>
+
+
+</body>
+</html>

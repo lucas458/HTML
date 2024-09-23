@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+        button{
+            margin-top: 8px;
+        }
+
+
+
+        #fatoradorContainer{
+            display: flex;
+            gap: 1px;
+            background-color: #fff;
+            margin-top: 16px;
+        }
+
+        .contentWrapper{
+            background-color: #181818;
+            text-align: right;
+        }
+
+
+        .contentWrapper:last-child{
+            text-align: left;
+        }
+
+        .item{
+            padding: 4px 8px;
+        }
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+        
+        <input type="number" id="inputValor" placeholder="Digite o valor"> 
+        <button onclick="onClickFatorar()">Fatorar</button>
+
+        <div id="fatoradorContainer">
+            <div class="contentWrapper" id="leftContent"></div>
+            <div class="contentWrapper" id="rightContent"></div>
+        </div>
+        
+    </div>
+
+
+     
+
+
+    <script>
+
+        function checarNumeroPrimo( n ) {
+            for (let i = 2; i < n; i++) {
+                if (n % i === 0) return false;
+            }
+            return n > 1;
+        }
+
+        function removeSpaces( str = '' ){
+            return (str.replace(/  +/g, ' ')).trim();
+        }
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+		
+		function getSpacing( width, sizes = [] ){
+			const sum = sizes.reduce((a, b) => a+b, 0);
+			const len = (sizes.length - 1) >= 2? sizes.length - 1 : 2;
+			return (width - sum) / len;
+		}
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+        function pad( v = 0 ){
+            if ( v < 10 ) return '0' + v;
+            return v.toString();
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+        
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+        const DATES    = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        const WEEKDAYS = ["DOMINGO", "SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO"];
+        const MONTHS   = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
+
+
+
+
+
+
+        function fatorar( numero = 0 ){
+
+            let numeroAtual = numero;
+            let primoAtual = 2;
+            let lista = [];
+
+            while ( numeroAtual > 1 ){
+
+                if ( numeroAtual % primoAtual == 0 ){
+                    lista.push([numeroAtual, primoAtual]);
+                    numeroAtual /= primoAtual;
+                    continue;
+                }
+
+                primoAtual++;
+                while ( !checarNumeroPrimo(primoAtual) ){
+                    primoAtual++;
+                }
+
+            }
+            
+            return lista;
+
+        }
+
+
+
+        function isValid(){
+            const valor = inputValor.value;
+
+            if ( valor.length == 0 || isNaN(valor) ){
+                return false;
+            }
+
+            return true;
+        }
+
+
+
+
+        function getItem( value = 0 ){
+            const item = document.createElement("div");
+            item.classList.add("item");
+            item.innerHTML = value;
+            return item;
+        }
+
+        
+        function onClickFatorar(){
+            
+            if ( !isValid() ){
+                return;
+            }
+
+            const valor = inputValor.value;
+            const lista = fatorar(valor);
+
+
+            leftContent.innerHTML = '';
+            rightContent.innerHTML = '';
+
+
+
+            lista.forEach((e, i) => {
+                leftContent.appendChild( getItem(e[0]) );
+                rightContent.appendChild( getItem(e[1]) );
+            });
+            leftContent.appendChild( getItem(1) );
+
+        }
+        
+
+
+    </script>
+
+
+</body>
+</html>

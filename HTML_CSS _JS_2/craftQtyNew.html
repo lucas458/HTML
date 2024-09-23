@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+	
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            position: fixed;
+            overflow: auto;
+        }
+
+        #listaCrafting{
+            padding: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        #listaCrafting .item{ 
+            flex-shrink: 0;
+        }
+
+
+        .item{
+            width: 320px;
+            overflow: hidden;
+            border-radius: 4px;
+            border: 1px solid #fff;
+            height: fit-content;
+        }
+
+        .itemTop{ 
+            background-color: #353535;
+            padding: 8px; 
+        }
+        .itemBottom{ 
+            padding: 8px;
+            padding-left: 24px;
+        }
+
+
+
+        .itemTop,
+        .itemRecipe{
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .itemRecipe{
+            margin-bottom: 4px; 
+        }
+        .itemRecipe:hover{
+            background-color: #353535;
+            border-radius: 8px;
+        }
+		
+		.itemRecipe:hover .itemName{
+			padding-left: 8px;
+			 
+		}
+		
+
+        .itemRecipe:last-child{
+            margin: 0;
+        }
+        
+        .itemAmount{
+            width: 64px;
+            height: 32px; 
+            background-color: #28a745;
+            border-radius: 6px;
+            box-shadow: inset 0 0 5px 0 #000;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .itemAmountInvalid{
+            background-color: #dc3545;
+        }
+
+
+        .itemName{
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+			transition: 100ms;
+        }
+
+        
+
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+        <div id="listaCrafting"></div>
+    </div>
+
+
+     
+
+
+    <script> 
+
+		var LISTA_ITENS = [
+
+
+            {
+                'nome': 'peças de metal',
+                'qty': 285
+            },
+
+
+            {
+                'nome': 'fitas de vedação',
+                'qty': 84
+            },
+
+
+            {
+                'nome': 'álcool',
+                'qty': 242
+            },
+
+            {
+                'nome': 'gaze',
+                'qty': 157
+            },
+
+            {
+                'nome': 'componente plástico',
+                'qty': 51
+            },
+
+
+            {
+                'nome': 'suprimentos caseiros',
+                'qty': 0
+            },
+
+
+            {
+                'nome': 'cogumelos florescente',
+                'qty': 34
+            }
+
+            
+        ];
+
+
+
+        var LISTA_OBJETOS_CRAFT = [
+
+
+            {
+                'nome': 'escudo',
+                'materiais': [
+                    {'nome': 'peças de metal','qty': 3},
+                    {'nome': 'fitas de vedação','qty': 1}
+                ]
+            },
+
+
+            {
+                'nome': 'medkit',
+                'materiais': [
+                    {'nome': 'álcool','qty': 1},
+                    {'nome': 'gaze','qty': 1}
+                ]
+            },
+
+
+            {
+                'nome': 'gazua',
+                'materiais': [
+                    {'nome': 'peças de metal','qty': 1}
+                ]
+            },
+
+
+            {
+                'nome': 'bombinhas',
+                'materiais': [
+                    {'nome': 'componente plástico','qty': 1},
+                    {'nome': 'suprimentos caseiros','qty': 1}
+                ]
+            },
+
+
+            {
+                'nome': 'poção de cogumelos',
+                'materiais': [
+                    {'nome': 'álcool','qty': 2},
+                    {'nome': 'gaze','qty': 1},
+                    {'nome': 'cogumelos florescente','qty': 1}
+                ]
+            }
+
+
+        ];
+        
+        
+
+        const listaCrafting = document.getElementById("listaCrafting");
+
+
+
+        function getItem( itemName ){
+            return LISTA_ITENS.find(e => e.nome == itemName);
+        }
+
+
+        function getItemQty( itemName ){
+            const item = getItem(itemName);
+            if ( item == null ){
+                return 0;
+            }
+            return item.qty;
+        }
+
+
+        function getCraftingList(){
+            let list = [];
+            
+            for (let i = 0; i < LISTA_OBJETOS_CRAFT.length; i++){
+                const nome = LISTA_OBJETOS_CRAFT[i].nome;
+                const amountList = LISTA_OBJETOS_CRAFT[i].materiais.map(e => Math.trunc(getItemQty(e.nome) / e.qty));
+                const craftAmount = Math.min(...amountList);
+
+                list.push({
+                    nome: nome,
+                    materiais: LISTA_OBJETOS_CRAFT[i].materiais,
+                    craftAmount: craftAmount
+                });
+            }
+
+            return list;
+        }
+        
+
+        function generateCraftingInterface(){
+            listaCrafting.innerHTML = "";
+            const craftingList = getCraftingList();
+
+            craftingList.forEach((e, i) => {
+                const item = document.createElement("div");
+                item.classList = "item";
+
+                item.innerHTML = `
+                <div class="itemTop">
+                    <div class="itemAmount">${e.craftAmount}</div>
+                    <div class="itemName">${e.nome}</div>
+                </div>
+                <div class="itemBottom"></div>`;
+
+                item.querySelector(".itemTop .itemAmount").classList.toggle("itemAmountInvalid", e.craftAmount==0);
+
+                e.materiais.forEach(el => {
+                    const itemQty = getItemQty(el.nome);
+                    const itemRecipe = document.createElement("div");
+                    itemRecipe.classList = "itemRecipe";
+                    
+                    itemRecipe.innerHTML = `
+                    <div class="itemAmount">${itemQty}/${el.qty}</div>
+                    <div class="itemName">${el.nome}</div>`;
+                    
+                    itemRecipe.querySelector(".itemAmount").classList.toggle("itemAmountInvalid", itemQty < el.qty);
+                    item.querySelector(".itemBottom").appendChild(itemRecipe);
+                });
+
+                listaCrafting.appendChild(item);
+                
+            });
+
+        }
+
+
+        onload = generateCraftingInterface;
+
+
+    </script>
+
+
+</body>
+</html>
