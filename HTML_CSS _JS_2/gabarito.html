@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gabarito</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+			overscroll-behavior: contain;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column; 
+            position: fixed;
+        }
+
+
+
+
+        #header{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 4px;
+            overflow: auto;
+        }
+
+
+        .item{
+            width: 100%;
+            height: 32px;
+            border-radius: 25px;
+            background-color: #353535;
+            display: flex;
+            align-items: center;
+            line-height: 0;
+            padding: 0 16px;
+            flex-shrink: 0;
+        }
+
+
+        .itemLabel{
+			width: 32px;
+            margin-right: 8px;
+        }
+
+
+        .button{
+            width: 24px;
+            height: 24px;
+            background-color: #9e9e9e;
+            margin: 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .buttonAtivo:nth-child(2){ background-color: #28a745; }
+        .buttonAtivo:nth-child(3){ background-color: #dc3545; }
+        .buttonAtivo:nth-child(4){ background-color: #ffc107; color: #000; }
+
+       
+
+
+        #footer{
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 8px;
+            background-color: #212121;
+        }
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+
+    <div id="main_screen">
+        <div id="header"></div>
+
+        <div id="footer">
+            <span>Acertos: 0</span>
+            <span>Erros: 0</span>
+            <span>Branco: 0</span>
+        </div>
+    </div>
+
+
+     
+
+
+    <script>
+
+
+        function createItem(index = 1){
+
+            const item = document.createElement("div");
+            item.classList.add("item");
+
+            item.innerHTML = `
+            <div class="itemLabel">#${index}</div>
+            <div class="button buttonCorreto">C</div>
+            <div class="button buttonErro">E</div>
+            <div class="button buttonBranco buttonAtivo">?</div>`;
+
+            header.appendChild(item);
+
+            item.onclick = (event) => {
+                if ( event.target.classList.contains("button") ){ 
+                    item.querySelectorAll(".button").forEach(e => e.classList.remove("buttonAtivo"));
+                    event.target.classList.toggle("buttonAtivo", true);
+                    calcular();
+                }
+            };
+
+        }
+
+
+        function calcular(){
+            footer.children[0].innerHTML = 'Acertos: ' + document.querySelectorAll(".buttonCorreto.buttonAtivo").length;
+            footer.children[1].innerHTML = 'Erros: ' + document.querySelectorAll(".buttonErro.buttonAtivo").length;
+            footer.children[2].innerHTML = 'Branco: ' + document.querySelectorAll(".buttonBranco.buttonAtivo").length;
+        }
+        
+
+        
+        
+        onload = () => {
+            const QTY 	 = prompt("Quantidade: ");
+			const OFFSET = parseInt(prompt("Offset: "));
+			
+            for (let i = 0; i < QTY; i++){
+                createItem(i + OFFSET);
+            }
+			
+            calcular();
+        };
+        
+
+    </script>
+
+</body>
+</html>

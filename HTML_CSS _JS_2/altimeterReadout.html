@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			/* font-family: 'Segoe UI', Tahoma, sans-serif; */
+            font-family: "airbusdisp";
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+        #container{
+            display: flex;
+            align-items: center;
+        }
+
+
+        #triangle{
+            border: 8px solid transparent;
+            border-right-color: gray; 
+            display: flex;
+            align-items: center;
+            position: relative;
+            transform: translateX(1px);
+        }
+
+
+        #triangle > div{
+            border: 7px solid transparent;
+            border-right-color: #000;
+            position: absolute;
+            left: -6px;
+
+        }
+
+
+        #rectLeft{
+            width: 60px;
+            height: 32px;
+            border: 1px solid gray;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        #rectLeft .numberContainer{
+            left: 1px; 
+            top: -237px;
+        }
+
+        #rectLeft .numberContainer:nth-child(2){
+            visibility: hidden;
+        }
+
+        #rectLeft::after{
+            content: '';
+            display: block;
+            width: 59px;
+            height: 30px;
+            background-color: #000;
+            z-index: 1;
+            position: absolute;
+        }
+
+        
+        
+        #rectRight{
+            width: 35px;
+            height: 48px;
+            background-color: #000;
+            border: 1px solid gray;
+            transform: translateX(-1px);
+            overflow: hidden;
+        }
+
+        #rectRight .numberContainer{
+            top: -133px; 
+        }
+
+
+
+        .numberContainer{
+            width: fit-content;
+            position: relative; 
+            z-index: 2;
+        }
+        
+        
+
+        #rectLeft .numberContainer:nth-child(3) div,
+        #rectRight .numberContainer div{
+            font-size: 20px;
+        }
+
+        .numberContainer > div{
+            /* background-color: red; */
+            font-size: 24px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .numberContainer > div:first-child{
+            /* background-color: rebeccapurple; */
+        }
+
+ 
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+
+        <div id="container">
+
+            <div id="triangle"> <div></div> </div>
+
+
+            <div id="rectLeft">
+                <div class="numberContainer"> 
+                    <div>0</div>
+                    <div>9</div>
+                    <div>8</div>
+                    <div>7</div>
+                    <div>6</div>
+                    <div>5</div>
+                    <div>4</div>
+                    <div>3</div>
+                    <div>2</div>
+                    <div>1</div>
+                    <div>X</div>
+                    <div>-</div>
+                </div> 
+                <div class="numberContainer"> 
+                    <div>0</div>
+                    <div>9</div>
+                    <div>8</div>
+                    <div>7</div>
+                    <div>6</div>
+                    <div>5</div>
+                    <div>4</div>
+                    <div>3</div>
+                    <div>2</div>
+                    <div>1</div>
+                    <div>0</div>
+                    <div>9</div>
+                </div> 
+                <div class="numberContainer"> 
+                    <div>0</div>
+                    <div>9</div>
+                    <div>8</div>
+                    <div>7</div>
+                    <div>6</div>
+                    <div>5</div>
+                    <div>4</div>
+                    <div>3</div>
+                    <div>2</div>
+                    <div>1</div>
+                    <div>0</div>
+                    <div>9</div>
+                </div> 
+            </div>
+
+
+            <div id="rectRight">
+                <div class="numberContainer">
+                    <div>20</div> 
+                    <div>00</div> 
+                    <div>80</div> 
+                    <div>60</div> 
+                    <div>40</div> 
+                    <div>20</div> 
+                    <div>00</div> 
+                    <div>80</div> 
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+     
+
+
+    <script>
+	
+		function checarNumeroPrimo( n ) {
+            for (let i = 2; i < n; i++) {
+                if (n % i === 0) return false;
+            }
+            return n > 1;
+        }
+
+        function removeSpaces( str = '' ){
+            return (str.replace(/  +/g, ' ')).trim();
+        }
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+		
+		function getSpacing( width, sizes = [] ){
+			const sum = sizes.reduce((a, b) => a+b, 0);
+			const len = (sizes.length - 1) >= 2? sizes.length - 1 : 2;
+			return (width - sum) / len;
+		}
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+        function map(x, in_min, in_max, out_min, out_max) {
+            return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+        function pad( v = 0 ){
+            if ( v < 10 ) return '0' + v;
+            return v.toString();
+        }
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		function fatorial(n){
+            if (n > 1) {
+                return n * fatorial(n - 1);
+            }
+            return n;
+        }
+        
+        function leapYear(year){
+            return ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+        }
+
+
+        function getGraphOffetY( stepY = 25, thX = 90, thX2 = 100, valueX = 0 ){
+            const segmentIndex = Math.trunc(valueX / thX2);
+			let currentY = valueX % thX2;
+
+            if ( currentY <= thX ){
+                currentY = thX;
+            }
+			
+            return stepY * segmentIndex + map(currentY, thX, thX2, 0, stepY);
+
+        }
+
+
+        const DATES    = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        const WEEKDAYS = ["DOMINGO", "SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO"];
+        const MONTHS   = ["JANEIRO", "FEVEREIRO", "MARÇO", "ABRIL", "MAIO", "JUNHO", "JULHO", "AGOSTO", "SETEMBRO", "OUTUBRO", "NOVEMBRO", "DEZEMBRO"];
+
+
+
+
+
+        var AIRPLANE_ALTIMETER = 0;
+
+
+        function setAltimeter( altitude = 0 ){
+            console.log( altitude );
+			
+            rectLeft.children[0].style.transform = `translateY(${getGraphOffetY(24, 10000-20, 10000, altitude%100000)}px)`;
+            rectLeft.children[1].style.transform = `translateY(${getGraphOffetY(24, 1000-20, 1000, altitude%10000)}px)`;
+            rectLeft.children[2].style.transform = `translateY(${getGraphOffetY(24, 100-20, 100, altitude%1000)}px)`;
+
+            rectLeft.children[1].style.visibility =  Math.abs(altitude) > 985 ? "visible" : "hidden";
+
+            rectRight.children[0].style.transform = `translateY(${getGraphOffetY(24, 0, 20, altitude%100)}px)`;
+
+        }
+
+
+
+
+        onkeydown = (event) => {
+
+            if ( event.key == '1' ){
+                AIRPLANE_ALTIMETER--;
+                setAltimeter(AIRPLANE_ALTIMETER);
+                return;
+            }
+            
+            if ( event.key == '2' ){
+                AIRPLANE_ALTIMETER++;
+                setAltimeter(AIRPLANE_ALTIMETER);
+                return;
+            }
+
+        };
+
+        
+
+
+    </script>
+
+
+</body>
+</html>
