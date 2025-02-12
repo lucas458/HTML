@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QFP Generator</title>
+
+
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #181818;
+            color: #fff;
+			user-select: none;
+        }
+
+
+ 
+        #main_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            justify-content: flex-start;
+            align-items: center;
+            position: fixed;
+        }
+
+
+
+        #resultContainer{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 64px;
+            overflow: auto;
+        }
+
+        #packageContainer{
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #package{
+            width: 64px;
+            height: 64px;
+            background-color: #353535;
+            position: relative;
+        }
+
+
+        #package::after{
+            content: '•';
+            font-size: 10px;
+            position: absolute;
+            left: 2px;
+            top: -4px;
+        }
+
+        .packagePins{
+            width: fit-content;
+            height: fit-content; 
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin: auto;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .packagePins:nth-child(1){
+            left: 64px;
+        }
+        .packagePins:nth-child(2){
+            left: calc(-64px - 16px);
+            /* transform: rotate(0deg) translateY(0.5px); */
+            flex-direction: column-reverse;
+        } 
+
+        .packagePins:nth-child(3){
+            top: calc(64px + 16px/2);
+            transform: rotate(-90deg) translateX(0.5px);
+            flex-direction: column-reverse;
+        }
+        .packagePins:nth-child(4){
+            top: calc(-64px - 16px);
+            transform: rotate(-90deg) translateX(-0.5px);
+        }
+
+
+        .pin{
+            width: 16px;
+            height: 2px;
+            background-color: #9e9e9e;
+            color: #000;
+            text-align: center; 
+        }
+
+        .pin:not(.pinSelected):hover{
+            background-color: #9e9e9e80;
+        }
+
+
+        .pinSelected{
+            animation: blink 800ms step-start infinite;
+        }
+
+        @keyframes blink {
+            50% { background-color: #0f0; }
+        }
+
+
+
+
+
+
+        #packageInfoTable{
+            overflow: hidden auto; 
+            height: 100%;
+            flex-shrink: 0;
+        }
+
+
+        #packageInfoTable thead{
+            position: sticky;
+            top: 0;
+            background-color: #007bff;
+        }
+
+        #packageInfoTable td{
+            height: 25px;
+            background-color: #353535;
+            color: #acacac;
+            padding: 2px 8px;
+        }
+
+        #packageInfoTable th{
+            padding: 2px 8px;
+        }
+
+        #packageInfoTable tr:nth-child(odd) td{
+            background-color: #212121;
+            color: #c5c5c5;
+        }
+
+        #packageInfoTable table{
+            background-color: #fff;
+            margin-right: 2px;
+        }
+
+        #packageInfoTable td:nth-child(3){
+            text-align: center;
+        }
+
+        #packageInfoTable td:last-child{ 
+            min-width: 200px;
+        }
+
+        #packageInfoTable td:focus{
+            background-color: #dc3545 !important;
+            color: #fff !important;
+        }
+
+        .rowSelected td{
+            background-color: #28a745 !important;
+            color: #fff !important;
+        }
+
+        .nameActiveLow::after{ 
+            content: '';
+            display: block;
+            height: 2px;
+            background-color: #acacac;
+            position: relative;
+            /* top: -80%; */
+            top: calc(-100% + 3px);
+        }
+
+        #packageInfoTable tr:nth-child(odd) td.nameActiveLow::after{
+            background-color: #c5c5c5;
+        }
+         
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    
+    
+
+
+    <div id="main_screen">
+
+        <div id="controlsContainer">
+            <input type="number" value="11" id="input_pinTop" placeholder="Pins Top">
+            <input type="number" value="11" id="input_pinRight" placeholder="Pins Right">
+            <input type="number" value="11" id="input_pinBottom" placeholder="Pins Bottom">
+            <input type="number" value="11" id="input_pinLeft" placeholder="Pins Left">
+            <br>
+            <input type="number" value="6" id="input_pinPitchH" placeholder="Pitch Horizontal">
+            <input type="number" value="6" id="input_pinPitchV" placeholder="Pitch Vertical">
+            <br>
+            <input type="number" value="16" id="input_pinSpaceH" placeholder="Spacing Horizontal">
+            <input type="number" value="16" id="input_pinSpaceV" placeholder="Spacing Vertical">
+            <br>
+            <input type="number" value="6" id="input_pinWidth" placeholder="Pin Width">
+            <input type="number" value="32" id="input_pinLength" placeholder="Pin Length">
+            <br>
+            <input type="checkbox" id="checkClockwise">
+            <span>Clockwise</span>
+            <br>
+            <button onclick="onClickGenerate()">Generate</button>
+            <button onclick="onClickGenerateSample()">Generate Sample</button>
+        </div>
+
+         
+        <div id="resultContainer">
+
+            <div id="packageContainer">
+                <div id="package"> 
+                    <div class="packagePins"></div> 
+                    <div class="packagePins"></div> 
+                    <div class="packagePins"></div> 
+                    <div class="packagePins"></div> 
+                </div>
+            </div>
+
+
+            <div id="packageInfoTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pin</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Desciption</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="tableBody"></tbody>
+
+                </table>
+            </div>
+
+        </div>
+        
+
+    </div>
+
+
+     
+
+
+    <script>
+        
+        function setEndOfContenteditable(contentEditableElement){
+            var range,selection;
+
+            if ( document.createRange ){
+                range = document.createRange();
+                range.selectNodeContents(contentEditableElement);
+                range.collapse(false);
+                selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                return;
+            }
+            
+            if ( document.selection ){ 
+                range = document.body.createTextRange();
+                range.moveToElementText(contentEditableElement);
+                range.collapse(false);
+                range.select();
+            }
+        }
+
+
+
+
+        function isActiveLow(str) { 
+            return /^\{.*\}$/.test(str) && str.length > 2;
+        }
+
+
+
+
+        function generateQFP(pin_top, pin_right, pin_bottom, pin_left, pitch_v, pitch_h, space_v, space_h, pin_width, pin_length, clockWise, pin_info = []){
+            
+            package.children[3].innerHTML = "";
+            package.children[0].innerHTML = "";
+            package.children[2].innerHTML = "";
+            package.children[1].innerHTML = "";
+
+            tableBody.innerHTML = "";
+
+            package.children[0].style.gap = pitch_v + 'px';
+            package.children[1].style.gap = pitch_v + 'px';
+            
+            package.children[2].style.gap = pitch_h + 'px';
+            package.children[3].style.gap = pitch_h + 'px';
+
+            const totalPins = pin_top + pin_right + pin_bottom + pin_left;
+            const maxTopBottom = Math.max(pin_top, pin_bottom);
+            const maxLeftRight = Math.max(pin_left, pin_right); 
+
+
+            for (let i = 0; i < totalPins; i++){
+
+                const pinNumber = (clockWise? (i + 1) : (totalPins - i));
+
+                const pin = document.createElement("div");
+                pin.classList.add("pin");
+                pin.style.width = pin_length + 'px';
+                pin.style.height = pin_width + 'px';
+                pin.title = 'Pin ' + pinNumber;
+                pin.innerHTML = pinNumber;
+                pin.style.fontSize = pin_width+'px';
+                pin.style.lineHeight = pin_width+'px';
+
+                pin.onclick = (event) => {
+                    const isSelected = pin.classList.contains("pinSelected");
+                    document.querySelectorAll(".pinSelected").forEach(e => e.classList.remove("pinSelected"));
+                    pin.classList.toggle("pinSelected", !isSelected); 
+
+                    document.querySelectorAll(".rowSelected").forEach(e => e.classList.remove("rowSelected"));
+                    tableBody.children[clockWise? i : (totalPins - i-1)].classList.toggle("rowSelected", !isSelected);
+                    tableBody.children[clockWise? i : (totalPins - i-1)].scrollIntoViewIfNeeded({behavior: 'smooth'});
+                };
+                
+
+                const tr = document.createElement("tr");
+
+                if ( pin_info.length == 0 ){
+                    tr.innerHTML = `
+                        <td>${i+1}</td>
+                        <td contenteditable="true" spellcheck="false"></td>
+                        <td contenteditable="true" spellcheck="false"></td>
+                        <td contenteditable="true" spellcheck="false"></td>
+                    `;
+
+                    tr.querySelectorAll("td").forEach((td, td_index) => {
+
+                        td.oninput = (event) => {
+                            if ( td_index == 2 ){
+                                td.innerHTML = td.innerHTML.toLocaleUpperCase();
+                                setEndOfContenteditable(td);
+                            }
+                        };
+
+
+                        td.onkeydown = (event) => {
+                            if ( event.key == 'Enter' ){
+                                td.blur();
+                                
+                                if ( tr.nextElementSibling != null ){
+                                    tr.nextElementSibling.children[td_index].focus();
+                                }
+                            }
+                            return event.key != "Enter" && !(td_index == 2 && event.key == ' ');
+                        };
+
+
+                        if ( td_index == 1 ){
+                            td.onfocus = () => {
+                                if ( !td.classList.contains("nameActiveLow") ){
+                                    return;
+                                }
+                                td.innerHTML = `{${td.innerHTML}}`;
+                                td.classList.remove("nameActiveLow")
+                            };
+
+                            td.onblur = () => {
+                                td.classList.toggle("nameActiveLow", isActiveLow(td.innerHTML));
+                                td.innerHTML = td.innerHTML.replace('{', '').replace('}', '');
+                            };
+                        }
+
+                    });
+
+                }else if ( pin_info.length <= totalPins && i < pin_info.length ){
+                    tr.innerHTML = `
+                        <td>${i+1}</td>
+                        <td>${pin_info[i].name}</td>
+                        <td>${pin_info[i].type}</td>
+                        <td>${pin_info[i].desc}</td>
+                    `;
+                }
+
+
+                tr.firstElementChild.onclick = () => {
+                    console.log(i);
+                    const clickedPin = document.querySelector(`.pin[title='Pin ${i+1}']`);
+
+                    const isSelected = clickedPin.classList.contains("pinSelected");
+                    document.querySelectorAll(".pinSelected").forEach(e => e.classList.remove("pinSelected"));
+                    clickedPin.classList.toggle("pinSelected", !isSelected); 
+
+                    document.querySelectorAll(".rowSelected").forEach(e => e.classList.remove("rowSelected"));
+                    tr.classList.toggle("rowSelected", !isSelected);
+
+                };
+
+                tableBody.appendChild(tr);
+
+                if (pin_top > 0){
+                    package.children[3].appendChild(pin);
+                    pin_top--;
+                }else if (pin_right > 0){
+                    package.children[0].appendChild(pin);
+                    pin_right--;
+                }else if (pin_bottom > 0){
+                    package.children[2].appendChild(pin);
+                    pin_bottom--;
+                }else if (pin_left > 0){
+                    package.children[1].appendChild(pin);
+                    pin_left--;
+                }
+
+            }
+
+
+
+            package.style.width  = Math.max(package.children[3].offsetHeight, package.children[2].offsetHeight) + space_h + 'px';
+            package.style.height = Math.max(package.children[0].offsetHeight, package.children[1].offsetHeight) + space_v + 'px';
+
+            package.children[0].style.left = package.offsetWidth + 'px';
+            package.children[1].style.left = (-package.offsetWidth - pin_length) + 'px';
+            package.children[2].style.top = (package.offsetHeight + pin_length/2) + 'px';
+            package.children[3].style.top = (-package.offsetHeight - pin_length) + 'px';
+
+        }
+
+
+
+
+
+
+
+        function onClickGenerate(){
+
+            const input_pinTopValue     = parseInt( Math.abs(input_pinTop.value) );
+            const input_pinRightValue   = parseInt( Math.abs(input_pinRight.value) );
+            const input_pinBottomValue  = parseInt( Math.abs(input_pinBottom.value) );
+            const input_pinLeftValue    = parseInt( Math.abs(input_pinLeft.value) );
+            const input_pinPitchHValue  = parseInt( Math.abs(input_pinPitchH.value) );
+            const input_pinPitchVValue  = parseInt( Math.abs(input_pinPitchV.value) );
+            const input_pinSpaceHValue  = parseInt( Math.abs(input_pinSpaceH.value) );
+            const input_pinSpaceVValue  = parseInt( Math.abs(input_pinSpaceV.value) );
+            const input_pinWidthValue   = parseInt( Math.abs(input_pinWidth.value) );
+            const input_pinLengthValue  = parseInt( Math.abs(input_pinLength.value) );
+
+
+            generateQFP(
+                input_pinTopValue, input_pinRightValue, input_pinBottomValue, input_pinLeftValue,
+                input_pinPitchHValue, input_pinPitchVValue,
+                input_pinSpaceHValue, input_pinSpaceVValue,
+                input_pinWidthValue, input_pinLengthValue, 
+                checkClockwise.checked
+            );
+
+        }
+
+
+
+
+        function onClickGenerateSample(){
+
+            // PIC18F46K22 -- 44-PIN TQFP Pinout
+
+            const pinInfoList = [
+                {'name': 'RC7', 'type': 'I/O', 'desc': ''}, // 1
+                {'name': 'RD4', 'type': 'I/O', 'desc': ''}, // 2
+                {'name': 'RD5', 'type': 'I/O', 'desc': ''}, // 3
+                {'name': 'RD6', 'type': 'I/O', 'desc': ''}, // 4
+                {'name': 'RD7', 'type': 'I/O', 'desc': ''}, // 5
+                {'name': 'Vss', 'type': 'P', 'desc': ''}, // 6
+                {'name': 'Vdd', 'type': 'P', 'desc': ''}, // 7
+                {'name': 'RB0', 'type': 'I/O', 'desc': ''}, // 8
+                {'name': 'RB1', 'type': 'I/O', 'desc': ''}, // 9
+                {'name': 'RB2', 'type': 'I/O', 'desc': ''}, // 10
+                {'name': 'RB3', 'type': 'I/O', 'desc': ''}, // 11
+                {'name': 'NC', 'type': 'I/O', 'desc': ''}, // 12
+                {'name': 'NC', 'type': 'I/O', 'desc': ''}, // 13
+                {'name': 'RB4', 'type': 'I/O', 'desc': ''}, // 14
+                {'name': 'RB5', 'type': 'I/O', 'desc': ''}, // 15
+                {'name': 'PGC/RB6', 'type': 'I/O', 'desc': ''}, // 16
+                {'name': 'PGD/RB7', 'type': 'I/O', 'desc': ''}, // 17
+                {'name': 'MCLR/Vpp/RE3', 'type': 'I/O', 'desc': ''}, // 18
+                {'name': 'RA0', 'type': 'I/O', 'desc': ''}, // 19
+                {'name': 'RA1', 'type': 'I/O', 'desc': ''}, // 20
+                {'name': 'RA2', 'type': 'I/O', 'desc': ''}, // 21
+                {'name': 'RA3', 'type': 'I/O', 'desc': ''}, // 22
+                {'name': 'RA4', 'type': 'I/O', 'desc': ''}, // 23
+                {'name': 'RA5', 'type': 'I/O', 'desc': ''}, // 24
+                {'name': 'RE0', 'type': 'I/O', 'desc': ''}, // 25
+                {'name': 'RE1', 'type': 'I/O', 'desc': ''}, // 26
+                {'name': 'RE2', 'type': 'I/O', 'desc': ''}, // 27
+                {'name': 'Vdd', 'type': 'P', 'desc': ''}, // 28
+                {'name': 'Vss', 'type': 'P', 'desc': ''}, // 29
+                {'name': 'RA7', 'type': 'I/O', 'desc': ''}, // 30
+                {'name': 'RA6', 'type': 'I/O', 'desc': ''}, // 31
+                {'name': 'RC0', 'type': 'I/O', 'desc': ''}, // 32
+                {'name': 'NC', 'type': 'I/O', 'desc': ''}, // 33
+                {'name': 'NC', 'type': 'I/O', 'desc': ''}, // 34
+                {'name': 'RC1', 'type': 'I/O', 'desc': ''}, // 35
+                {'name': 'RC2', 'type': 'I/O', 'desc': ''}, // 36
+                {'name': 'RC3', 'type': 'I/O', 'desc': ''}, // 37
+                {'name': 'RD0', 'type': 'I/O', 'desc': ''}, // 38
+                {'name': 'RD1', 'type': 'I/O', 'desc': ''}, // 39
+                {'name': 'RD2', 'type': 'I/O', 'desc': ''}, // 40
+                {'name': 'RD3', 'type': 'I/O', 'desc': ''}, // 41
+                {'name': 'RC4', 'type': 'I/O', 'desc': ''}, // 42
+                {'name': 'RC5', 'type': 'I/O', 'desc': ''}, // 43
+                {'name': 'RC6', 'type': 'I/O', 'desc': ''}, // 44
+            ];
+            
+            const pinsPerFace = Math.trunc(pinInfoList.length / 4);
+
+            generateQFP(
+                pinsPerFace, pinsPerFace, pinsPerFace, pinsPerFace,
+                6, 6,
+                16, 16,
+                6, 32, 
+                false,
+                pinInfoList
+            );
+        }
+
+
+    </script>
+
+</body>
+</html>
