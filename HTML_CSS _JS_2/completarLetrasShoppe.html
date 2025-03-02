@@ -1,0 +1,3333 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Completar Letras</title>
+
+    <style>
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            overflow: hidden;
+            overscroll-behavior: none;
+        }
+
+        body{
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #38a96b;
+            color: #fff;
+			user-select: none; 
+        }
+ 
+
+        /* NAO USADO */
+        @keyframes shake {
+            0% {
+                margin-left: 0rem;
+            }
+            25% {
+                margin-left: 0.5rem;
+            }
+            75% {
+                margin-left: -0.5rem;
+            }
+            100% {
+                margin-left: 0rem;
+            }
+        }
+
+
+        .shakeEntrada{
+            animation: shake 0.2s ease-in-out 0s 2;
+        }
+
+
+
+
+
+
+
+
+        .screen{
+            width: 100%;
+            height: 100%;
+            background-color: #38a96b;
+            display: flex;
+            flex-direction: column;
+            transition: 200ms;
+            overflow: hidden;
+            position: fixed;
+            left: 100%;
+        }
+
+        .screenOpen{
+            left: 0px;
+        }
+
+
+        .screen_header{
+            width: 100%;
+            height: 56px;
+            box-shadow: 0 0 5px 0 #000;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+        }
+        .screen_header_label{
+            margin-left: 8px;
+            font-weight: 500;
+            font-size: 1.2em;
+        }
+
+        .botaoVoltar{
+            width: 32px;
+            height: 32px;
+            background-color: #fff;
+            border: 3px solid #f7cc64;
+            color: #af7221;
+            border-radius: 50%;
+            font-size: 1.2em; 
+            line-height: 23px;
+            display: flex;
+            justify-content: center;
+            transition: 100ms;
+        }
+        
+        .botaoVoltar:active{
+            transition: 50ms;
+            transform: scale(0.9);
+        }
+
+
+
+
+
+
+
+        .screen_content{
+            flex: 1;
+            overflow: hidden auto;
+        }
+
+        .screen_footer{
+            height: 56px; 
+            box-shadow: 0 0 5px 0 #000;
+        }
+
+
+
+
+
+
+
+        /******* TELA: MENU *******/
+        #menu_screen .screen_header{
+            justify-content: flex-end;
+            box-shadow: none;
+        }
+
+        #configBotaoContainer{
+            position: relative; 
+        }
+
+        #configBotaoMestre{
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            position: relative;
+            background-color: #38a96b;
+            transition: 100ms;
+            border-radius: 50%;
+        }
+
+
+        #configLista{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 8px;
+            margin: auto;
+            position: absolute;
+            top: 48px;
+            left: 0;
+            right: 0;
+        }
+        
+        .configBotao{
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+            color: #d68a36;
+            border-radius: 50%;
+            transition: 200ms;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #97571a;
+        }
+
+        .configBotao:not(.configBotaoAtivo){
+            opacity: 0.5;
+        }
+
+        .configBotao:nth-child(1){
+            transform: translateY(-44px);
+        }
+        .configBotao:nth-child(2){
+            transform: translateY(-76px);
+        }
+        .configBotao:nth-child(3){
+            transform: translateY(-108px);
+        }
+
+
+        .configBotaoContainerOpen .configBotao{
+            transform: translateY(0px);
+        }
+
+        .configBotaoContainerOpen #configBotaoMestre{
+            transform: rotate(45deg);
+        }
+
+
+
+
+
+
+        #menu_screen .screen_content{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #menuPlay{
+            width: 64px;
+            height: 64px;
+        }
+
+        .menuMiniBotao{
+            width: 32px;
+            height: 32px;
+        }
+
+        .menuMediodBotao{
+            width: 40px;
+            height: 40px;
+            margin-top: 16px;
+        }
+
+        #menuPlay,
+        .menuMiniBotao,
+        .menuMediodBotao{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 3px solid #97571a;
+            color: #d68a36;
+            background-color: #fff;
+            border-radius: 8px;
+            transition: 200ms;
+        }
+
+        #menuPlay:active,
+        .menuMiniBotao:active,
+        .menuMediodBotao:active{
+            transform: translateY(3px);
+            border-width: 0px;
+            transition: 100ms;
+        }
+
+        #menuMiniBotoes{
+            margin-top: 16px;
+            display: flex;
+            gap: 16px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /******* TELA: CONQUISTAS *******/
+        #conquistas_screen .screen_content{
+            padding: 16px;
+        }
+
+        .conquista{
+            padding: 8px;
+            background-color: #ffeeda;
+            color: #d68a36;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-bottom: 4px solid #97571a;
+
+        }
+        .conquista:last-child{
+            margin: 0;
+        }
+
+
+        .conquistaBloqueada{
+            opacity: 0.5;
+        }
+
+        .conquistaTitle{
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .conquistaSubtitle{
+            font-size: 0.8em;
+            color: #853b00;
+        }
+
+        .conquistaProgress{
+            width: 100%;
+            height: 20px;
+            background-color: #af6027;
+            border-radius: 25px;
+            overflow: hidden;
+            margin-top: 10px;
+            padding: 4px;
+            position: relative;
+        }
+
+        .conquistaProgressFillContainer{
+            height: 100%;
+            width: 100%; 
+            border-radius: 25px;
+            overflow: hidden; 
+        }
+
+        .conquistaProgressFill{
+            background-color: #ed9c0d;
+            height: 100%;
+            width: 100%; 
+            border-radius: 25px;
+            transform: translateX(-75%);
+        }
+
+        .conquistaProgressLabel{
+            width: 100%;
+            /* margin: auto; */
+            font-size: 0.8em;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 20px;
+
+            text-align: center;
+            position: absolute;
+            top: 0;
+            /* left: 0; */
+            /* right: 0; */
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /******* TELA: LOJA *******/
+        #loja_screen .screen_header,
+        #loja_screen .screen_footer{
+            background-color: #af6027;
+        }
+
+
+
+
+        #lojaMoedas{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 16px;
+            font-size: 0.8em;
+            background-color: #fff;
+            color: #af6027;
+            border-radius: 16px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            width: fit-content;
+            margin: auto;
+            top: 56px;
+            transform: translateY(-50%);
+            gap: 8px;
+        }
+
+        #lojaMoedasIcone{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #lojaMoedasIcone svg{
+            color: #ffc107;
+            background-color: #775b09;
+            border-radius: 50%;
+        }
+
+        #lojaMoedasQuantidade{
+            font-size: 1.5em;
+            font-weight: 500;
+        }
+
+
+
+
+        #loja_screen .screen_content{
+            background-color: #facb79;
+            padding: 16px;
+            padding-top: 32px;
+        }
+        
+
+        
+        .lojaCategoria{
+            margin-bottom: 48px; 
+        }
+
+        .lojaCategoria:last-child{
+            margin-bottom: 0;
+        }
+
+
+        .lojaCategoriaHeader{
+            padding: 8px;
+            background-color: #ea9d2b;
+            /* font-size: 1.2em; */
+            font-weight: 500;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .lojaCategoriaHeaderIcone{
+            width: 32px;
+            height: 32px;
+            /* background-color: green; */
+            margin-right: 8px;
+        }
+
+        .lojaCategoriaHeaderLabel{
+            flex: 1;
+            text-shadow: 0 0 2px #db5a0b, 1px 1px 2px #db5a0b, -1px -1px 2px #db5a0b,  1px -1px 2px #db5a0b,  -1px 1px 2px #db5a0b;
+        }
+
+        .lojaCategoriaHeaderDesc{
+            text-shadow: 0 0 1px #000, 1px 1px 1px #000, -1px -1px 1px #000,  1px -1px 1px #000,  -1px 1px 1px #000;
+        }
+
+
+
+        .lojaCategoriaListaItens{
+            margin-top: 16px;
+            gap: 16px; 
+            overflow: auto hidden;
+            /* display: grid; */
+            /* grid-template-columns: repeat(3, 1fr); */
+            display: flex;
+        }
+
+        .lojaCategoriaItem{
+            min-width: 120px;
+            min-width: calc(100% / 2);
+            background-color: #fdebb9;
+            padding: 8px;
+            border: 4px solid #ea9d2b;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+
+        .lojaCategoriaBadge{
+            font-size: 0.6em;
+            padding: 7px 8px;
+            background-color: #ef3236;
+            border-radius: 25px;
+            position: absolute;
+            right: -7px;
+            top: -4px;
+        }
+
+        .lojaCategoriaItemIcone{
+            width: 48px;
+            height: 48px;
+            /* background-color: rebeccapurple; */
+        }
+
+        .lojaCategoriaHeaderIcone,
+        .lojaCategoriaItemIcone{
+            color: #775b09;
+        }        
+
+
+
+        .lojaCategoriaItemQuantidade{
+            font-size: 2em;
+            font-weight: 500;
+            margin: 16px 0;
+            text-shadow: 0 0 3px #af6027, 1px 1px 3px #af6027, -1px -1px 3px #af6027,  1px -1px 3px #af6027,  -1px 1px 3px #af6027;
+        }
+
+
+        .lojaCategoriaItemBotaoContainer{
+            width: 100%;
+            background: linear-gradient(#ed9c0d, #f15628);
+            border-bottom: 3px solid #c23612;
+            border-radius: 10px;
+            padding: 8px;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            transition: 200ms;
+        }
+        
+        .lojaCategoriaItemBotaoContainer:active{
+            transition: 100ms;
+            transform: translateY(2px);
+            /* border-color: transparent; */
+        }
+
+        .lojaCategoriaItemBotaoIcone{
+            width: 24px;
+            height: 24px;
+            box-shadow: 0 0 3px 0 #000;
+            border-radius: 50%;
+            color: #ffc107;
+            background-color: #775b09;
+            flex-shrink: 0;
+        }
+
+        .lojaCategoriaItemBotaoValor{
+            width: 100%;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .lojaCategoriaItemBotaoValor > span{
+            padding: 0 8px;
+        }
+
+        .lojaCategoriaItemBotaoValor > span {
+            color: #fff;
+        }
+
+        .lojaCategoriaItemBotaoValor > span:not(:only-child):first-child{
+            text-decoration: line-through;
+            color: #8b3800;
+        }
+
+
+
+
+        
+
+
+
+        /******* TELA: FASES *******/
+        #faseLista{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            justify-items: center;
+            padding: 16px;
+            row-gap: 32px;
+        }
+
+
+        .fase{
+            width: 96px;
+            height: 96px;
+            background-color: #fff;
+            color: #af7221;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 4px solid #a25b23;
+            transition: 200ms; 
+        }
+
+
+        .faseBloqueada::after{
+            content: attr(fase);
+            color: #fff;
+            font-weight: 500;
+            position: absolute;
+            top: 45px;
+        }
+
+
+        .faseBloqueada{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.5;
+        }
+
+
+        .fase:not(.faseBloqueada):active{
+            transition: 100ms;
+            border-width: 0px;
+            transform: translateY(2px);
+        }
+
+
+        .faseDicionario{
+            width: 30px;
+            height: 24px;
+            border-radius: 0 0 8px 0;
+            background-color: #f7cc64;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 0;
+        }
+
+        .faseNumero{
+            font-size: 1.5em;
+            font-weight: 500;
+            padding-top: 24px;
+            letter-spacing: 2px;
+        }
+
+
+        .faseTempo{
+            letter-spacing: 2px;
+            background-color: #f7cc64;
+            width: 100%;
+            text-align: center;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /******* TELA: PALAVRAS DESCOBERTAS *******/
+        .letraPalavra{
+            font-size: 1.5em;
+            padding-left: 8px;
+            background-color: #28a745;
+            position: sticky;
+            top: 0;
+        }
+
+        /* .listaPalavras{ 
+        } */
+
+        .palavra{
+            padding: 4px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        #palavras_screen .screen_footer{
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        .chip{
+            height: 32px;
+            width: fit-content;
+            border-radius: 25px;
+            padding: 0 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #07612e;
+            color: #3aaf6f;
+        }
+
+        .chipSelecionado{
+            background-color: #fff;
+            color: #d68a36;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /******* TELA: JOGO *******/
+        #game_screen{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+
+
+
+        /* GAME HEADER */
+        #game_header{
+            width: 100%;
+        }
+
+
+        #game_headerTop{
+            height: 56px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+        }
+
+        
+
+        #faseAtual,
+        #moedas{
+            height: 24px;
+            background-color: #00000080;
+            font-weight: bold;
+            padding: 0 12px;
+            border-radius: 25px;
+        }
+
+
+        #faseAtual{
+            width: fit-content;
+            margin: auto;
+            line-height: 25px;
+            position: absolute;
+            left: 0;
+            right: 0;
+        }
+
+        #moedas{ 
+            width: 86px;
+            padding: 0 10px 0 2px;
+            line-height: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: right;
+        }
+
+        #moedaIcone{
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            color: #ffc107;
+        }
+
+
+
+
+
+
+        #game_headerBottom{
+            display: flex;
+            justify-content: flex-end;
+            position: relative;
+        }
+
+
+
+
+        #dicionarioPalavra{ 
+            height: 24px;
+            font-weight: bold;
+            background-color: #fff;
+            color: #0a0a0a;
+            padding: 0 8px;
+            border-radius: 4px;
+            margin: auto;
+            transform: translateX( calc(100% + 8px) );
+            transition: 200ms;
+            display: flex; 
+
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 54px;
+
+            
+        }
+
+        #dicionarioPalavra::after{
+            content: '';
+            display: block;
+            height: fit-content;
+            border: 6px solid transparent;
+            border-left-color: #fff;
+            margin: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 100%;
+        }
+
+        .dicionarioPalavraVisivel{
+            transform: translateX(0px) !important;
+        }
+
+
+
+
+
+        #dicionarioIcone{
+            width: 48px;
+            height: 56px;
+            background-color: #fff;
+            border-radius: 6px 0 0 6px;
+            padding: 4px; 
+            position: relative;
+        }
+
+        #dicionarioIcone > div{
+            width: 100%;
+            height: 100%;
+            background-color: #dc8c47;
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #dicionarioIcone > div > div:first-child{
+            width: 8px;
+            height: 100%;
+            background-color: #a95d20;
+        }
+
+        #dicionarioIcone > div > div:nth-child(2){
+            width: 32px;
+            height: 37px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        #dicionarioIcone > div > div:last-child{
+            width: 38px;
+            height: 8px;
+            background-color: #fff;
+            border-radius: 6px 0 0 6px;
+            position: absolute;
+            bottom: 3px;
+            right: -1px;
+        }
+
+
+
+        
+
+        
+
+
+
+
+
+
+        /* GAME CONTENT */
+        #game_content{
+            width: 100%;
+            flex: 1;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        #gameArea{
+            width: 100%;
+            height: 100%;
+            background-color: #f0b74e;
+            border-radius: 16px;
+            border: 4px solid #34b22f;
+            box-shadow: inset 0 0 10px 0 #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        #gameGrid{
+            display: grid;
+            grid-template-columns: repeat(7, 24px);
+            grid-template-rows: repeat(5, 24px);
+            gap: 8px;
+        }
+
+
+        .letraSlot{
+            width: 24px;
+            height: 24px;
+            background-color: #d68a36;
+            border-radius: 6px;
+        }
+
+        .letraSlotDica div{
+            color: rebeccapurple !important;
+        }
+
+        
+
+        .letra{
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+            color: #d68a36;
+            border-bottom: 2px solid #97571a;
+            border-radius: 6px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+
+
+        /* GAME FOOTER */
+        #game_footer{ 
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding-bottom: 8px;
+        }
+
+        #entrada{
+            overflow: hidden;
+            margin-bottom: 6px;
+            gap: 2px;
+            border: 2px solid #d68a36;
+            background-color: #d68a36;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        #entradaLeft{
+            background-color: #624734;
+            height: 100%;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px 0 4px;
+            gap: 16px;
+        }
+
+
+        #entradaReset{
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+            color: #d68a36;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            transition: 200ms;
+            box-shadow: 0 0 5px 0 #000;
+            transform: rotate(-135deg);
+        }
+
+        #entradaReset:not(.entradaResetBloqueada):active{
+            transform: scale(1.1) rotate(-225deg);
+        }
+
+
+
+        #entradaTeclas{
+            min-width: 190px;
+            display: flex;
+            gap: 3px;
+        }
+
+        .entradaTecla{
+            width: 24px;
+            height: 24px;
+            background-color: #fff;
+            color: #d68a36;
+            border-bottom: 2px solid #97571a;
+            border-radius: 6px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;             
+        }
+
+
+
+        #entradaEnviar{
+            height: 32px;
+            background-color: #28a745;
+            border-radius: 6px;
+            padding: 0 6px;
+            display: flex;
+            align-items: center;
+        }
+
+
+
+
+        #game_footerControles{
+            width: 100%;
+            display: flex;
+            justify-content: space-between; 
+            padding: 0 16px;
+        }
+
+
+        .game_footerControle{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game_footerControleBotao{
+            width: 32px;
+            height: 32px;
+            background-color: #fff;
+            border: 3px solid #f7cc64;
+            color: #af7221;
+            border-radius: 50%;
+            font-size: 1.2em;
+            line-height: 23px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 100ms;
+            position: relative;
+        }
+        .game_footerControleBotao:first-child{
+            margin-bottom: 6px;
+        }
+
+        .game_footerControleBotao:active{
+            transition: 50ms;
+            transform: scale(0.9);
+        }
+
+
+        .game_footerControleBotaoBadge{
+            height: 16px;
+            padding: 2px 6px;
+            display: flex;
+            font-size: 0.5em;
+            background-color: #ef3236;
+            color: #fff;
+            position: absolute;
+            border-radius: 25px;
+            justify-content: center;
+            align-items: center;
+            left: 20px;
+            top: -6px;
+        }
+
+
+        
+
+        #listaTeclas{
+            width: calc(32px * 4);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+
+        .tecla{
+            width: 32px;
+            height: 32px;
+            background-color: #fff;
+            border-bottom: 2px solid #97571a;
+            border-radius: 6px;
+            color: #d68a36;
+            font-weight: bold;
+            font-size: 1.2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 200ms transform;
+        }
+
+        .tecla:active{
+            border-bottom-width: 0px;
+            transform: translateY(2px);
+        }
+
+        .teclaSelecionada{
+            opacity: 0.5;
+            transform: scale(0.9);
+            border-bottom-width: 0px;
+        }
+
+
+        .entradaEnviarBloqueada,
+        .entradaResetBloqueada{
+            opacity: 0.5;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /****** TELA: DICIONARIO *******/
+        #dicionario_screen{
+            width: 100%;
+            height: 100%;
+            background-color: #000000cc;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            position: fixed;
+        }
+
+
+        #dicionario_screen:not(.dicionario_screenOpen){
+            display: none;
+        }
+
+
+
+
+        #dicionarioContainer{
+            width: 320px;
+            height: 480px;
+            font-weight: bold;
+            background-color: #a25b23;
+            color: #a25b23;
+            padding: 16px;
+            padding-left: 0;
+            border-radius: 24px;
+        }
+
+        #dicionarioWrapper{
+            background-color: #e6a998;
+            border-radius: 8px;
+            padding: 0 10px 10px 0;
+            height: 100%;
+        }
+
+
+        #dicionarioContent{
+            background-color: #ffeeda;
+            padding: 24px 8px 8px 16px;
+            border-radius: 8px;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+
+
+        #dicionarioHeader{
+            text-align: center;
+            padding: 4px;
+            border: 1px solid #e6a99880;
+        }
+
+
+        #dicionarioHeaderTitle{
+            font-size: 1.5em;
+        }
+
+        #dicionarioHeaderDashed{
+            border: 2px dashed transparent;
+            border-top-color: #9e9e9e; 
+        }
+
+
+
+
+
+        #dicionarioLista{
+            height: 226px;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            padding: 0 8px;
+        }
+
+        .dicionarioListaGrupo{
+            width: 100%;
+        }
+
+        .dicionarioItem{
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+
+        .dicionarioItem::first-letter{
+            margin-right: 4px;
+        }
+
+
+
+
+
+
+
+        #dicionarioPagina{
+            margin-top: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dicionarioPaginaBotao{
+            width: 20px;
+            height: 20px; 
+            border-radius: 8px;
+            color: #a25b23;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dicionarioPaginaBotao:active{
+            background-color: #e6a998;
+            color: #ffeeda;
+        }
+
+        #dicionarioPaginaValor{
+            width: 110px;
+            text-align: center;
+        }
+
+
+
+
+
+        #fecharDicionario{
+            height: 32px;
+            margin-top: 16px;
+            font-weight: bold;
+            font-size: 1.2em;
+            line-height: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        /****** TELA: POPUP FIM DE FASE ******/
+        #popupFase_screen{
+            width: 100%;
+            height: 100%;
+            background-color: #000000cc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            position: fixed;
+
+            display: none;
+        }
+
+
+        #popupFase_container{
+            width: 320px;
+            height: 180px;
+            overflow: hidden;
+            background-color: #ffeeda;
+            color: #fff;
+            border-radius: 16px;
+            font-weight: bold;
+            transition: 200ms;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 5px 0 #000;
+
+            transform: scale(0);
+        }
+
+
+        #popupFase_header{
+            font-size: 2em;
+            text-align: center;
+            background-color: #fcc31c; 
+            text-shadow: 0 0 2px #000;
+        }
+
+
+        #popupFase_content{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 0 0 16px 16px;
+            padding: 16px 16px;
+            border: 5px solid #a25b23;
+            border-top: none;
+        }
+
+        #popupFase_nivel{
+            color: #a25b23;
+            text-align: center;
+            font-weight: 500;
+        }
+
+
+        #popupFase_controles{
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+
+        .popupFase_botao:first-child{
+            width: 48px;
+            padding: 8px 32px;
+            background: linear-gradient(#f9c572, #b0742e);
+            border-bottom: 4px solid #7b4e25;
+        }
+
+        .popupFase_botao{
+            padding: 8px 16px;
+            height: 48px;
+            background: linear-gradient(#fcb040, #cb6f1a);
+            width: 100%;
+            white-space: nowrap;
+            border-radius: 10px;
+            border-bottom: 4px solid #ad5b11;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 200ms;
+        }
+
+
+        .popupFase_botao:active{
+            border-width: 0px;
+            transition: 100ms;
+        }
+
+        .popupFase_botao svg{
+            flex-shrink: 0;
+        }
+
+
+
+    </style>
+
+
+</head>
+
+
+
+<body>
+
+    <!-- <div class="screen" id="">
+        <div class="screen_header">
+            <div class="botaoVoltar">&leftarrow;</div>
+            <div class="screen_header_label">TESTE</div>
+        </div>
+        <div class="screen_content"></div>
+        <div class="screen_footer"></div>
+    </div> -->
+
+
+
+    
+
+
+    <!-- TELA: MENU -->
+    <div class="screen screenOpen" id="menu_screen">
+        <div class="screen_header">
+            
+            <div id="configBotaoContainer">
+                
+                <div id="configBotaoMestre" onclick="toggleConfig()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                    </svg>
+                </div>
+
+                <div id="configLista">
+
+                    <div class="configBotao">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M10 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM6 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>
+                            <path d="M8 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2M1.599 4.058a.5.5 0 0 1 .208.676A7 7 0 0 0 1 8c0 1.18.292 2.292.807 3.266a.5.5 0 0 1-.884.468A8 8 0 0 1 0 8c0-1.347.334-2.619.923-3.734a.5.5 0 0 1 .676-.208m12.802 0a.5.5 0 0 1 .676.208A8 8 0 0 1 16 8a8 8 0 0 1-.923 3.734.5.5 0 0 1-.884-.468A7 7 0 0 0 15 8c0-1.18-.292-2.292-.807-3.266a.5.5 0 0 1 .208-.676M3.057 5.534a.5.5 0 0 1 .284.648A5 5 0 0 0 3 8c0 .642.12 1.255.34 1.818a.5.5 0 1 1-.93.364A6 6 0 0 1 2 8c0-.769.145-1.505.41-2.182a.5.5 0 0 1 .647-.284m9.886 0a.5.5 0 0 1 .648.284C13.855 6.495 14 7.231 14 8s-.145 1.505-.41 2.182a.5.5 0 0 1-.93-.364C12.88 9.255 13 8.642 13 8s-.12-1.255-.34-1.818a.5.5 0 0 1 .283-.648"/>
+                        </svg>
+                    </div>
+
+                    <div class="configBotao configBotaoAtivo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z"/>
+                            <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89z"/>
+                            <path d="M8.707 11.182A4.5 4.5 0 0 0 10.025 8a4.5 4.5 0 0 0-1.318-3.182L8 5.525A3.5 3.5 0 0 1 9.025 8 3.5 3.5 0 0 1 8 10.475zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="configBotao configBotaoAtivo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13s1.12-2 2.5-2 2.5.896 2.5 2m9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2"/>
+                            <path fill-rule="evenodd" d="M14 11V2h1v9zM6 3v10H5V3z"/>
+                            <path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4z"/>
+                        </svg>
+                    </div>
+
+                </div>
+
+            </div>
+            
+        </div>
+
+        <div class="screen_content">
+
+            <div id="menuPlay" onclick="toggleScreen('fases_screen', true)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+                </svg>
+            </div>
+
+            <div class="menuMediodBotao" onclick="toggleScreen('loja_screen', true)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
+                </svg>
+            </div>
+
+            <div id="menuMiniBotoes">
+
+                <div class="menuMiniBotao" onclick="toggleTelaPalavrasDescobertas(true)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M5 0h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2 2 2 0 0 1-2 2H3a2 2 0 0 1-2-2h1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1H1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1H3a2 2 0 0 1 2-2"/>
+                        <path d="M1 6v-.5a.5.5 0 0 1 1 0V6h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 2.5v.5H.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2v-.5a.5.5 0 0 0-1 0"/>
+                    </svg>
+                </div>
+
+                <div class="menuMiniBotao" onclick="toggleTelaConquistas(true)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935"/>
+                    </svg>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+    
+    
+
+
+
+
+    <!-- TELA: CONQUISTAS -->
+    <div class="screen" id="conquistas_screen">
+        
+        <div class="screen_header">
+            <div class="botaoVoltar" onclick="toggleTelaConquistas(false)">&leftarrow;</div>
+            <div class="screen_header_label">CONQUISTAS</div>
+        </div>
+
+        <div class="screen_content" id="lista_conquistas">
+
+            <!-- <div class="conquista conquistaBloqueada">
+                <div class="conquistaTitle">NOME AQUI</div>
+                <div class="conquistaSubtitle">Complete 00 fases e bla bla bla</div>
+
+                <div class="conquistaProgress">
+                    <div class="conquistaProgressFillContainer">
+                        <div class="conquistaProgressFill"></div>
+                    </div>
+                    <div class="conquistaProgressLabel">00/00</div>
+                </div>
+            </div> -->
+            
+            <!-- <div class="conquista conquistaBloqueada conquistaOneTime">
+                <div class="conquistaTitle">NOME AQUI</div>
+                <div class="conquistaSubtitle">Complete 00 fases e bla bla bla</div>
+            </div> -->
+
+
+        </div>
+
+        <!-- <div class="screen_footer"></div> -->
+    </div>
+
+
+
+
+
+
+    <!-- TELA: LOJA -->
+    <div class="screen" id="loja_screen" style="z-index: 2;">
+
+        <div class="screen_header">
+            <div class="botaoVoltar" onclick="toggleScreen('loja_screen', false)">&leftarrow;</div>
+            <div class="screen_header_label">LOJA</div>
+
+            <div id="lojaMoedas">
+                <div>Minhas moedas:</div>
+                <div id="lojaMoedasIcone">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z"></path>
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
+                        <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12"></path>
+                    </svg>
+                    <div id="lojaMoedasQuantidade">000</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="screen_content">
+
+            <!-- COMPRAR: DICAS -->
+            <div class="lojaCategoria">
+
+                <div class="lojaCategoriaHeader">
+
+                    <div class="lojaCategoriaHeaderIcone">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13h-5a.5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m3 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1-.5-.5"/>
+                        </svg>
+                    </div>
+
+                    <div class="lojaCategoriaHeaderLabel">Dicas</div>
+                    <div class="lojaCategoriaHeaderDesc">Revela uma letra espeficífica</div>
+                </div>
+
+
+                <div class="lojaCategoriaListaItens">
+                    
+                    <div class="lojaCategoriaItem">
+                        <div class="lojaCategoriaItemIcone">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13h-5a.5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m3 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1-.5-.5"/>
+                            </svg>
+                        </div>
+                        <div class="lojaCategoriaItemQuantidade">+1</div>
+                        <div class="lojaCategoriaItemBotaoContainer" onclick="comprarDica(1, 10)">
+                            <div class="lojaCategoriaItemBotaoIcone">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z"/>
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                    <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12"/>
+                                </svg>
+                            </div>
+                            <div class="lojaCategoriaItemBotaoValor">
+                                <span>10</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="lojaCategoriaItem">
+                        <div class="lojaCategoriaBadge">Economize 17%</div>
+                        <div class="lojaCategoriaItemIcone">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13h-5a.5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m3 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1-.5-.5"/>
+                            </svg>
+                        </div>
+                        <div class="lojaCategoriaItemQuantidade">+3</div>
+                        <div class="lojaCategoriaItemBotaoContainer" onclick="comprarDica(3, 25)">
+                            <div class="lojaCategoriaItemBotaoIcone">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z"/>
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                    <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12"/>
+                                </svg>
+                            </div>
+                            <div class="lojaCategoriaItemBotaoValor">
+                                <span>30</span><span>25</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="lojaCategoriaItem">
+                        <div class="lojaCategoriaBadge">Economize 20%</div>
+                        <div class="lojaCategoriaItemIcone">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13h-5a.5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m3 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1-.5-.5"/>
+                            </svg>
+                        </div>
+                        <div class="lojaCategoriaItemQuantidade">+5</div>
+                        <div class="lojaCategoriaItemBotaoContainer" onclick="comprarDica(5, 40)">
+                            <div class="lojaCategoriaItemBotaoIcone">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z"/>
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                    <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12"/>
+                                </svg>
+                            </div>
+                            <div class="lojaCategoriaItemBotaoValor">
+                                <span>50</span><span>40</span>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+        <div class="screen_footer"></div>
+    </div>
+
+
+
+
+
+
+    <!-- TELA: PALAVRAS DESCOBERTAS -->
+    <div class="screen" id="palavras_screen">
+        <div class="screen_header">
+            <div class="botaoVoltar" onclick="toggleScreen('palavras_screen', false)">&leftarrow;</div>
+            <div class="screen_header_label">PALAVRA DESCOBERTAS</div>
+        </div>
+        <div class="screen_content" id="lista_palavras_descobertas">
+
+            <!-- <div class="sublistaPalavras">
+                <div class="letraPalavra">A</div>
+                <div class="listaPalavras">
+                    <div class="palavra">
+                        ABACATE
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journals" viewBox="0 0 16 16">
+                            <path d="M5 0h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2 2 2 0 0 1-2 2H3a2 2 0 0 1-2-2h1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1H1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1H3a2 2 0 0 1 2-2"/>
+                            <path d="M1 6v-.5a.5.5 0 0 1 1 0V6h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 2.5v.5H.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2v-.5a.5.5 0 0 0-1 0"/>
+                        </svg>
+                    </div>
+
+                    <div class="palavra">AMA</div>
+                </div>
+            </div> -->
+
+        </div>
+
+        <div class="screen_footer">
+
+            <div class="chip chipFiltro chipSelecionado">JOGO</div>
+            <div class="chip chipFiltro chipSelecionado">DICIONÁRIO</div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+    <!-- TELA: FASES -->
+    <div class="screen" id="fases_screen">
+
+        <div class="screen_header">
+            <div class="botaoVoltar" onclick="toggleScreen('fases_screen', false)">&leftarrow;</div>
+            <div class="screen_header_label">SELECIONAR FASE</div>
+        </div>
+
+        <div class="screen_content">
+
+
+            <div id="faseLista">
+
+                <!-- <div class="fase">
+                    <div class="faseTop">
+                        <div class="faseDicionario">00</div>
+                        <div class="faseNumero">000</div>
+                    </div>
+                    <div class="faseTempo">00:00:00</div>
+                </div> -->
+
+
+                <!-- <div class="fase faseBloqueada">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                    </svg>
+                </div>  -->
+                
+            </div>
+
+             
+            
+        </div> 
+
+    </div>
+     
+
+
+
+
+
+    <!-- TELA: GAME -->
+    <div class="screen" id="game_screen">
+
+
+        <div id="game_header">
+
+            <div id="game_headerTop">
+                <div class="botaoVoltar" onclick="fecharTelaJogo()">&leftarrow;</div>
+                <div id="faseAtual">NÍVEL </div>
+                <div id="moedas">
+                    
+                    <div id="moedaIcone">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z"/>
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12"/>
+                        </svg>
+                    </div>
+
+                    <div id="moedasValor">+9999</div>
+                </div>
+            </div>
+
+            <div id="game_headerBottom">
+
+                <div id="dicionarioPalavra">
+                    <div></div>
+                </div>
+
+                <div id="dicionarioIcone" onclick="abrirDicionario()">
+                    <div>
+                        <div></div>
+
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                            </svg>
+                        </div>
+
+                        <div></div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div id="game_content">
+
+            <div id="gameArea">
+
+                <div id="gameGrid">
+
+                    <!-- <div class="letraSlot" style="grid-column-start: 1;grid-row-start: 1;"></div>
+
+                    <div class="letraSlot" style="grid-column-start: 2;grid-row-start: 2;">
+                        <div class="letra">E</div>
+                    </div>
+                    
+                    <div class="letraSlot letraSlotDica" style="grid-column-start: 3;grid-row-start: 3;">
+                        <div class="letra">E</div>
+                    </div> -->
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div id="game_footer">
+
+
+            <div id="entrada">
+                <div id="entradaLeft">
+                    <div id="entradaReset" class="entradaResetBloqueada" onclick="resetarEntradaPalavra()">&#x21ba;</div>
+                    <div id="entradaTeclas">
+                        <!-- <div class="entradaTecla" index="0">E</div> -->
+                    </div>
+                </div>
+                <div id="entradaEnviar" class="entradaEnviarBloqueada" onclick="enviarPalavra()">ENVIAR</div>
+            </div>
+
+
+            <div id="game_footerControles">
+
+                <div class="game_footerControle">
+                    <div class="game_footerControleBotao" onclick="usarDica()">
+                        <div class="game_footerControleBotaoBadge" id="badgeDicas">0</div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13h-5a.5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m3 8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1-.5-.5"></path>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div id="listaTeclas">
+                    <!-- <div class="tecla teclaSelecionada" index="0">E</div>
+                    <div class="tecla">A</div>
+                    <div class="tecla">I</div>
+                    <div class="tecla">N</div>
+                    <div class="tecla">T</div> -->
+                </div>
+
+                <div class="game_footerControle">
+                    <div class="game_footerControleBotao" onclick="embaralharTeclado()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5"/>
+                            <path d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192"/>
+                        </svg>
+                    </div> 
+                </div>
+
+            </div>
+
+            
+
+
+        </div>
+
+        
+
+    </div>
+
+
+
+
+
+
+    <!-- TELA: DICIONARIO ATUAL -->
+    <div id="dicionario_screen">
+
+        <div id="dicionarioContainer">
+
+            <div id="dicionarioWrapper">
+
+                <div id="dicionarioContent">
+
+                    <div id="dicionarioHeader">
+                        <div id="dicionarioHeaderTitle">BANCO DE PALAVRAS</div>
+                        <div id="dicionarioHeaderSubtitle">NÍVEL 1</div>
+                        <div id="dicionarioHeaderDashed"></div>
+                    </div>
+
+                    <div id="dicionarioLista">
+
+                        <div class="dicionarioListaGrupo">
+                            <!-- <div class="dicionarioItem">• TESTE</div>
+                            <div class="dicionarioItem">• TESTE</div>
+                            <div class="dicionarioItem">• TESTE</div>
+                            <div class="dicionarioItem">• TESTE</div>
+                            <div class="dicionarioItem">• TESTE</div>
+                            <div class="dicionarioItem">• TESTE</div> -->
+                        </div>
+
+                        <div class="dicionarioListaGrupo">
+                            <!-- <div class="dicionarioItem">• TESTE</div>
+                            <div class="dicionarioItem">• TESTE</div>
+                            <div class="dicionarioItem">• TESTE</div>
+                            <div class="dicionarioItem">• TESTE</div>
+                            <div class="dicionarioItem">• TESTE</div>
+                            <div class="dicionarioItem">• TESTE</div> -->
+                        </div>
+
+                    </div>
+
+                    <div id="dicionarioPagina">
+
+                        <div class="dicionarioPaginaBotao" onclick="voltarPagina()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+                            </svg>
+                        </div>
+
+                        <div id="dicionarioPaginaValor">Página 99/99</div>
+
+                        <div class="dicionarioPaginaBotao" onclick="proximaPagina()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+                            </svg>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div id="fecharDicionario" onclick="fecharDicionario()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+            </svg>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+    <!-- POPUP: COMPLETOU A FASE -->
+    <div id="popupFase_screen">
+
+        <div id="popupFase_container">
+
+            <div id="popupFase_header">PARABÉNS</div>
+
+            <div id="popupFase_content">
+                <div id="popupFase_nivel">Nível 1 finalizado!</div>
+
+                <div id="popupFase_controles">
+                    <div class="popupFase_botao" onclick="voltarMenu()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5"/>
+                        </svg>
+                    </div>
+                    <div class="popupFase_botao" onclick="proximaFase()">Próximo Nível</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+    <script>
+        
+
+        Math.clamp = (value, min, max) => {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        };
+        
+
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min);
+        }
+        
+
+
+        function shuffleArray( arr = [] ){
+            for (let i = arr.length - 1; i >= 1; i--){
+                let j = getRandomInt(0, i + 1);
+                let temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+            return arr;
+        }
+		
+		
+		
+        
+        
+
+        
+        var JOGO = {
+            indexFase: 0,
+            moedas: 100,
+            dicas: 10,
+            dicasPosicoes: [],
+            dicionarioIndexPagina: 0,
+            dicionarioFase:[],
+            dicionario: [],
+            palavrasFase: [],
+            tempoInicial: null,
+            
+            estatisticas: {
+                acertos: 0,
+                dicasUsadas: 0,
+            },
+
+
+            conquistas: [
+
+                {nome: "acertos #1", desc: "Acerte 2 palavras", type: "increment", cond: 2, completada: false, categoria: "acertos"},
+                {nome: "acertos #2", desc: "Acerte 3 palavras", type: "increment", cond: 3, completada: false, categoria: "acertos"},
+
+                {nome: "dicas #1", desc: "Use 2 dicas", type: "increment", cond: 2, completada: false, categoria: "dicas"},
+                {nome: "dicas #2", desc: "Use 3 Dicas", type: "increment", cond: 3, completada: false, categoria: "dicas"},
+
+                {nome: "fases #1", desc: "Complete 1 Fase", type: "increment", cond: 1, completada: false, categoria: "fases"},
+                {nome: "fases #2", desc: "Complete 2 Fases", type: "increment", cond: 2, completada: false, categoria: "fases"},
+                
+                {nome: "fases #3", desc: "Complete todas as fases", type: "oneTime", completada: false, categoria: "fases"},
+
+            ],
+
+
+            fasesCompletas: [
+                // {fase: 0, tempo: 75, lista: [
+                //     {texto: "ALA", dicionario: false},
+                //     {texto: "BANANA", dicionario: true},
+                //     {texto: "ABACATE", dicionario: true},
+                // ]},
+            ],
+
+        };
+
+
+
+
+
+
+
+        function criarJogo(){
+            const tempJogo = localStorage.getItem("JOGO");
+
+            if ( tempJogo == null ){
+                localStorage.setItem("JOGO", JSON.stringify(JOGO));
+            }
+            
+        }
+        
+
+        function salvarJogo(){
+            localStorage.setItem("JOGO", JSON.stringify(JOGO));
+        }
+
+
+        function carregarJogo(){
+            const tempJogo = localStorage.getItem("JOGO");
+
+            if ( tempJogo == null ){
+                criarJogo();
+                return;
+            }
+ 
+            JOGO = JSON.parse(tempJogo);
+        }
+
+
+
+
+
+
+        
+
+
+        
+
+
+
+
+
+
+        const FASES = [
+
+
+            // {
+            //     dicionario: [],
+            //     teclas: [],
+            //     palavras: [
+            //         {texto: "ALGO", vertical: false, pos: [0, 0]},
+            //     ]
+            // },
+
+
+            {
+                dicionario: ["AVE", "AVES", "LAVE"],
+                teclas: ["L", "A", "E", "S", "V"],
+                palavras: [
+                    {texto: "ELA", vertical: false, pos: [4, 1]},
+                    {texto: "LEVA", vertical: false, pos: [1, 3]},
+                    {texto: "SALVE", vertical: false, pos: [0, 5]},
+                    {texto: "SELVA", vertical: true, pos: [1, 1]},
+                    {texto: "VELA", vertical: true, pos: [4, 0]},
+                    {texto: "SAL", vertical: true, pos: [6, 0]}
+                ]
+            },
+
+
+            {
+                dicionario: [],
+                teclas: ["S", "P", "A", "S", "O"],
+                palavras: [
+                    {texto: "SAO", vertical: false, pos: [0, 0]},
+                    {texto: "SOPA", vertical: false, pos: [1, 3]},
+                    {texto: "PASSO", vertical: false, pos: [0, 5]},
+                    {texto: "APOS", vertical: true, pos: [1, 0]},
+                    {texto: "SAPO", vertical: true, pos: [4, 2]}
+                ]
+            },
+            
+
+            {
+                dicionario: ["NETA", "RETA", "TRENA", "RENTE", "TER", "ATER", "TERNA", "RENA"],
+                teclas: ["N", "E", "E", "R", "T", "A"],
+                palavras: [
+                    {texto: "ENTRE", vertical: false, pos: [0, 2]},
+                    {texto: "ANTE", vertical: false, pos: [2, 4]},
+                    {texto: "ERA", vertical: false, pos: [3, 7]},
+                    {texto: "ATE", vertical: false, pos: [3, 9]},
+                    {texto: "ETERNA", vertical: true, pos: [0, 2]},
+                    {texto: "ENTRA", vertical: true, pos: [2, 0]},
+                    {texto: "TERA", vertical: true, pos: [4, 4]},
+                    {texto: "ARE", vertical: true, pos: [5, 7]}
+                ]
+            },
+
+            
+            {
+                dicionario: ["NOTE"],
+                teclas: ["N", "D", "E", "E", "T", "O"],
+                palavras: [
+                    {texto: "ONDE", vertical: false, pos: [0, 1]},
+                    {texto: "NETO", vertical: false, pos: [2, 3]},
+                    {texto: "DOENTE", vertical: false, pos: [0, 5]},
+                    {texto: "DOTE", vertical: true, pos: [0, 0]},
+                    {texto: "DENTE", vertical: true, pos: [2, 1]}
+                ]
+            },
+
+            
+            {
+                dicionario: ["SOU"],
+                teclas: ["S", "C", "R", "O", "U"],
+                palavras: [
+                    {texto: "SUCO", vertical: false, pos: [4, 0]},
+                    {texto: "CURSO", vertical: false, pos: [0, 2]},
+                    {texto: "USO", vertical: false, pos: [6, 2]},
+                    {texto: "SUOR", vertical: true, pos: [4, 0]},
+                    {texto: "CRU", vertical: true, pos: [6, 0]},
+                    {texto: "COR", vertical: true, pos: [8, 1]}
+                ]
+            },
+            
+            
+            {
+                dicionario: ["SACO", "COA", "SOA", "CALO", "ALO"],
+                teclas: ["S", "C", "A", "L", "O"],
+                palavras: [
+                    {texto: "CALOS", vertical: false, pos: [0, 1]},
+                    {texto: "SAL", vertical: false, pos: [5, 2]},
+                    {texto: "CASO", vertical: false, pos: [2, 3]},
+                    {texto: "COLA", vertical: false, pos: [2, 5]},
+                    {texto: "OLA", vertical: false, pos: [1, 7]},
+                    {texto: "CAL", vertical: true, pos: [2, 5]},
+                    {texto: "SOCA", vertical: true, pos: [3, 0]},
+                    {texto: "SOLA", vertical: true, pos: [5, 2]}
+                ]
+            },
+
+
+            {
+                dicionario: [],
+                teclas: ["N", "A", "E", "T", "M"],
+                palavras: [
+                    {texto: "MENTA", vertical: false, pos: [3, 0]},
+                    {texto: "TEMA", vertical: false, pos: [0, 1]},
+                    {texto: "EMA", vertical: false, pos: [3, 3]},
+                    {texto: "ATE", vertical: false, pos: [2, 5]},
+                    {texto: "META", vertical: true, pos: [1, 0]},
+                    {texto: "MATE", vertical: true, pos: [3, 0]},
+                    {texto: "MAE", vertical: true, pos: [4, 3]},
+                    {texto: "NETA", vertical: true, pos: [5, 0]}
+                ]
+            },
+
+
+            {
+                dicionario: [],
+                teclas: ["B", "A", "O", "N", "E", "Ç"],
+                palavras: [
+                    {texto: "BENÇAO", vertical: false, pos: [1, 0]},
+                    {texto: "ANO", vertical: false, pos: [1, 2]},
+                    {texto: "AÇO", vertical: false, pos: [0, 4]},
+                    {texto: "BOA", vertical: true, pos: [1, 0]},
+                    {texto: "NAO", vertical: true, pos: [2, 2]},
+                    {texto: "ONÇA", vertical: true, pos: [6, 0]}
+                ]
+            },
+            
+            
+            {
+                dicionario: ["AMO", "EMA", "EMO", "GOMA", "GAMO", "GAME"],
+                teclas: ["O", "E", "G", "M", "A"],
+                palavras: [
+                    {texto: "OMEGA", vertical: false, pos: [0, 1]},
+                    {texto: "AGEM", vertical: false, pos: [2, 3]},
+                    {texto: "AME", vertical: false, pos: [3, 6]},
+                    {texto: "MOA", vertical: true, pos: [0, 0]},
+                    {texto: "MEGA", vertical: true, pos: [2, 0]},
+                    {texto: "GEMA", vertical: true, pos: [3, 3]},
+                    {texto: "EGO", vertical: true, pos: [5, 6]}
+                ]
+            },
+            
+            
+            {
+                dicionario: ["OVO"],
+                teclas: ["L", "O", "U", "V", "R", "O"],
+                palavras: [
+                    {texto: "OURO", vertical: false, pos: [1, 1]},
+                    {texto: "LOURO", vertical: false, pos: [0, 3]},
+                    {texto: "VOO", vertical: false, pos: [0, 6]},
+                    {texto: "LOUVOR", vertical: true, pos: [0, 3]},
+                    {texto: "LORO", vertical: true, pos: [1, 0]},
+                    {texto: "ROLO", vertical: true, pos: [4, 0]}
+                ]
+            },
+
+
+            {
+                dicionario: ["GIRO", "TIO", "TRIO", "GRIO"],
+                teclas: ["T", "R", "G", "O", "I"],
+                palavras: [
+                    {texto: "RITO", vertical: false, pos: [0, 2]},
+                    {texto: "TRIGO", vertical: false, pos: [1, 4]},
+                    {texto: "TRI", vertical: true, pos: [0, 1]},
+                    {texto: "TRIO", vertical: true, pos: [2, 2]},
+                    {texto: "RIO", vertical: true, pos: [3, 0]},
+                    {texto: "GRITO", vertical: true, pos: [5, 0]}
+                ]
+            },
+
+            
+            {
+                dicionario: ["AMO", "OCA", "CAI", "IÇA", "COMIA"],
+                teclas: ["C", "A", "M", "Ç", "O", "I"],
+                palavras: [
+                    {texto: "MACIO", vertical: false, pos: [0, 6]},
+                    {texto: "COMA", vertical: false, pos: [0, 4]},
+                    {texto: "MAÇO", vertical: false, pos: [3, 3]},
+                    {texto: "AÇO", vertical: true, pos: [0, 2]},
+                    {texto: "CIMA", vertical: true, pos: [4, 0]},
+                    {texto: "MACIÇO", vertical: true, pos: [3, 3]},
+                    {texto: "MIO", vertical: true, pos: [0, 6]},
+                    {texto: "MOÇA", vertical: true, pos: [6, 2]}
+                ]
+            },
+
+
+            {
+                dicionario: ["DOM"],
+                teclas: ["M", "D", "A", "G", "O"],
+                palavras: [
+                    {texto: "MODA", vertical: false, pos: [0, 3]},
+                    {texto: "GOMA", vertical: false, pos: [3, 2]},
+                    {texto: "DOGMA", vertical: false, pos: [3, 4]},
+                    {texto: "AMO", vertical: false, pos: [3, 0]},
+                    {texto: "MAO", vertical: true, pos: [4, 0]},
+                    {texto: "GADO", vertical: true, pos: [3, 2]},
+                    {texto: "MAGO", vertical: true, pos: [5, 2]}
+                ]
+            },
+            
+
+            {
+                dicionario: ["EITA", "ITA"],
+                teclas: ["E", "A", "I", "N", "T"],
+                palavras: [
+                    {texto: "ATE", vertical: true, pos: [0, 1]},
+                    {texto: "TIA", vertical: false, pos: [0, 2]},
+                    {texto: "IATE", vertical: true, pos: [2, 1]},
+                    {texto: "TEIA", vertical: false, pos: [2, 3]},
+                    {texto: "NETA", vertical: false, pos: [3, 0]},
+                    {texto: "ETNIA", vertical: true, pos: [4, 0]}
+                ]
+            },
+
+
+            {
+                dicionario: [],
+                teclas: ["M", "L", "O", "O", "B"],
+                palavras: [
+                    {texto: "BOM", vertical: true, pos: [0, 0]},
+                    {texto: "BOLO", vertical: false, pos: [0, 0]},
+                    {texto: "LOBO", vertical: true, pos: [2, 0]},
+                    {texto: "LOMBO", vertical: false, pos: [1, 3]}
+                ]
+            }
+
+
+        ];
+
+
+
+
+
+        function getGridSizeByIndexFase( indexFase = 0 ){
+            const FASE_OBJ = FASES[indexFase];
+
+            if ( FASE_OBJ == null ){
+                return false;
+            }
+
+            let gridWidth  = 0;
+            let gridHeight = 0;
+
+            FASE_OBJ.palavras.forEach((e, i) => {
+                if ( e.vertical ){
+                    gridHeight = Math.max(gridHeight, e.pos[1] + e.texto.length);
+                }else{
+                    gridWidth = Math.max(gridWidth, e.pos[0] + e.texto.length);
+                }
+            });
+
+            return [gridWidth, gridHeight];
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        function onGanharConquista( conquista = {} ){
+            console.warn("CONQUISTA REALIZADA: " + conquista.nome + " - " + conquista.desc );
+            salvarJogo();
+        }
+        
+
+
+        function verificarConquistaIncremento( valorAtual = 0, categoria = 'acertos' ){
+            const listaConquistas = JOGO.conquistas.filter(e => e.categoria == categoria && e.type == "increment" && !e.completada);
+
+            for (let i = 0; i < listaConquistas.length; i++){
+                if ( valorAtual >= listaConquistas[i].cond ){
+                    listaConquistas[i].completada = true;
+                    onGanharConquista(listaConquistas[i]);
+                }
+            }
+
+        }
+
+
+
+
+        function verificarConquistaOneTime( categoria = 'fases' ){
+
+            if ( categoria == 'fases' ){
+                
+                const conquista = JOGO.conquistas.find(e => e.type == 'oneTime' && e.categoria == categoria && !e.completada);
+
+                if ( conquista == null ){
+                    return;
+                }
+
+                if ( JOGO.fasesCompletas.length >= FASES.length ){
+                    conquista.completada = true;
+                    onGanharConquista(conquista);
+                }
+
+                return;
+            }
+
+        }
+
+         
+
+
+
+
+        
+
+        
+        function enviarPalavra( texto = null ){
+
+            if ( texto == null && entradaEnviar.classList.contains("entradaEnviarBloqueada") ){
+                return;
+            }
+
+            const PALAVRA_ATUAL = (texto != null)? texto : Array.from(entradaTeclas.children).map(e => e.innerHTML).join('');
+            const PALAVRA = FASES[JOGO.indexFase].palavras.find(e => e.texto == PALAVRA_ATUAL);
+
+            if ( PALAVRA != null ){
+
+                if ( JOGO.palavrasFase.indexOf(PALAVRA_ATUAL) >= 0 ){
+                    console.log("palavra, mas ja existe", PALAVRA);
+                    adicionarPalavra(PALAVRA.texto, PALAVRA.pos, PALAVRA.vertical);
+                    vibrar(200);
+                }else{
+                    console.log('palavra nova', PALAVRA);
+                    JOGO.palavrasFase.push(PALAVRA_ATUAL);
+                    JOGO.estatisticas.acertos++;
+                    verificarConquistaIncremento(JOGO.estatisticas.acertos, 'acertos');
+                    adicionarPalavra(PALAVRA.texto, PALAVRA.pos, PALAVRA.vertical);
+                }
+            }else if ( FASES[JOGO.indexFase].dicionario.indexOf(PALAVRA_ATUAL) >= 0 ){
+
+                if ( JOGO.dicionarioFase.indexOf(PALAVRA_ATUAL) >= 0 ){
+                    console.log('dicionario, mas ja existe');
+                    mostrarPalavraDicionario(PALAVRA_ATUAL);
+                    vibrar(200);
+                }else{
+                    console.log('dicionario novo');
+                    JOGO.dicionarioFase.push(PALAVRA_ATUAL);
+                }
+            }else{
+                console.log("errou");
+                vibrar(200);
+            }
+
+
+            resetarEntradaPalavra();
+            
+            if ( JOGO.palavrasFase.length == FASES[JOGO.indexFase].palavras.length ){
+                onGameWin();
+            }
+
+            salvarJogo();
+
+        }
+
+
+
+        function atualizarMoedas(){
+            moedasValor.innerHTML = (JOGO.moedas > 9999)? "+9999" : JOGO.moedas;
+            lojaMoedasQuantidade.innerHTML = (JOGO.moedas > 9999)? "+9999" : JOGO.moedas;
+        }
+
+
+        function adicionarMoeda( quantidade = 0 ){
+            if ( quantidade < 0 ){
+                return;
+            }
+
+            JOGO.moedas += quantidade;
+            salvarJogo();
+            atualizarMoedas();
+        }
+
+
+
+        function resetarEntradaPalavra(){
+            entradaTeclas.innerHTML = "";
+            document.querySelectorAll(".teclaSelecionada").forEach(e => e.classList.remove("teclaSelecionada"));
+            entradaEnviar.classList.add("entradaEnviarBloqueada");
+            entradaReset.classList.add("entradaResetBloqueada");
+        }
+        
+
+
+
+        function isItemInArray(array, item) {
+            for (var i = 0; i < array.length; i++) {
+                if (array[i][0] == item[0] && array[i][1] == item[1]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+
+
+
+        function criarSlot(x, y, letra){
+            letraSlot = document.createElement('div');
+            letraSlot.classList.add("letraSlot");
+            letraSlot.setAttribute("pos", `${x-1},${y-1}`);
+            letraSlot.setAttribute("letra", letra);
+            letraSlot.style.gridColumnStart = x;
+            letraSlot.style.gridRowStart = y;
+            gameGrid.appendChild(letraSlot);
+        }
+
+
+
+        function colocarLetra(x, y, isDica = false){
+            const letraSlot = gameGrid.querySelector(`.letraSlot[pos="${x+','+y}"]`);
+
+            if ( letraSlot == null ){
+                return;
+            }
+
+            if ( letraSlot.firstElementChild == null ){
+                letraSlot.classList.toggle("letraSlotDica", isDica);
+                letraSlot.innerHTML = `<div class="letra">${letraSlot.getAttribute("letra")}</div>`;
+            }
+        }
+
+
+
+
+        function adicionarPalavra( texto, pos = [0,0], vertical = false ){
+            for (let i = 0; i < texto.length; i++){
+                if ( vertical ){
+                    colocarLetra(pos[0], pos[1]+i, false);
+                }else{
+                    colocarLetra(pos[0]+i, pos[1], false);
+                }
+            }
+        }
+
+
+
+
+
+
+
+        function usarDica(){
+            const letraSlotVazios = gameGrid.querySelectorAll('.letraSlot:empty');
+
+            if ( letraSlotVazios.length == 0 ){
+                return;
+            }
+
+            if ( JOGO.dicas == 0 ){
+                toggleScreen('loja_screen', true);
+                return;
+            }
+
+            JOGO.dicas--;
+            JOGO.estatisticas.dicasUsadas++;
+            badgeDicas.innerHTML = JOGO.dicas;
+            
+            verificarConquistaIncremento(JOGO.estatisticas.dicasUsadas, 'dicas');
+
+            const index = getRandomInt(0, letraSlotVazios.length);
+            const pos = letraSlotVazios[index].getAttribute('pos').split(',').map(e => parseInt(e));
+            colocarLetra(pos[0], pos[1], true);
+            JOGO.dicasPosicoes.push(pos);
+            salvarJogo();
+
+
+            for (let indexPalavra = 0; indexPalavra < FASES[JOGO.indexFase].palavras.length; indexPalavra++){
+
+                const PALAVRA = FASES[JOGO.indexFase].palavras[indexPalavra];
+
+                if ( JOGO.palavrasFase.includes(PALAVRA.texto) ){
+                    continue;
+                }
+ 
+                let qtdLetras = 0;
+
+                for (let indexLetra = 0; indexLetra < PALAVRA.texto.length; indexLetra++){
+
+                    if ( PALAVRA.vertical ){
+                        if ( gameGrid.querySelector(`.letraSlot[pos="${PALAVRA.pos[0] + ',' + (PALAVRA.pos[1] + indexLetra)}"] .letra`) == null ){
+                            break;
+                        }
+                        qtdLetras++;
+                    }else{
+                        if ( gameGrid.querySelector(`.letraSlot[pos="${(PALAVRA.pos[0] + indexLetra) + ',' + PALAVRA.pos[1]}"] .letra`) == null ){
+                            break;
+                        }
+                        qtdLetras++;
+                    }          
+
+                }
+
+                if ( qtdLetras == PALAVRA.texto.length ){
+                    JOGO.palavrasFase.push(PALAVRA.texto);
+                }
+
+            }
+
+
+
+            if ( gameGrid.children.length == gameGrid.querySelectorAll(".letra").length ){
+                onGameWin();
+            }
+
+
+        }
+
+
+
+
+        
+
+
+
+
+
+
+
+        function onGameWin(){
+            const tempo = (new Date() - JOGO.tempoInicial) / 1000;
+            let faseCompleta = JOGO.fasesCompletas.find(el => el.fase == JOGO.indexFase);
+
+            if ( faseCompleta == null ){
+                faseCompleta = {
+                    fase: JOGO.indexFase,
+                    tempo: 0,
+                    lista: []
+                }
+                JOGO.fasesCompletas.push(faseCompleta);
+                adicionarMoeda(5);
+            }else{
+                adicionarMoeda(1);
+            }
+
+
+            if ( faseCompleta.tempo == 0 ){
+                faseCompleta.tempo = tempo;
+            }else{
+                faseCompleta.tempo = Math.min(faseCompleta.tempo, tempo);
+            }
+
+            const dicionarioAnterior = faseCompleta.lista.filter(el => el.dicionario).map(el => el.texto);
+            const novoDicionario = [...new Set(dicionarioAnterior.concat(JOGO.dicionarioFase))];
+            const diff = novoDicionario.length - dicionarioAnterior.length;
+            
+            if ( diff > 0 ){
+                adicionarMoeda(5 * diff);
+            }
+
+            faseCompleta.lista = JOGO.palavrasFase.map(el => {
+                return {texto: el, dicionario: false};
+            });
+            
+            faseCompleta.lista = faseCompleta.lista.concat(novoDicionario.map(el => {
+                return {texto: el, dicionario: true};
+            }));
+
+            console.warn("fim", tempo, time_track(tempo), "diff:"+diff, JOGO.dicionarioFase, JOGO.palavrasFase);
+
+            verificarConquistaIncremento(JOGO.fasesCompletas.length, 'fases');
+            verificarConquistaOneTime('fases');
+            salvarJogo();
+            togglePopupFase(true);
+        }
+
+
+
+        function proximaFase(){
+            if ( JOGO.indexFase < FASES.length-1 ){
+                console.warn('proxima fase');
+                gerarFase(JOGO.indexFase+1);
+            }else{
+                console.warn('zerou');
+            }
+
+            togglePopupFase(false);
+        }
+
+        
+
+        function voltarMenu(){
+            togglePopupFase(false);
+            gerarListaFases();
+            toggleScreen("game_screen", false);
+        }
+
+
+
+
+
+
+        function togglePopupFase( isOpen = true ){
+
+            if ( isOpen ){
+                const ultimaFase = (JOGO.indexFase == FASES.length-1);
+                popupFase_nivel.innerHTML = `Nível ${JOGO.indexFase+1} finalizado!`;
+                popupFase_controles.style.justifyContent = ultimaFase? 'center' : '';
+                popupFase_controles.children[1].style.display = ultimaFase? 'none' : '';
+                popupFase_screen.style.display = 'flex';
+
+                setTimeout(() => {
+                    popupFase_container.style.transform = 'scale(1)';
+                }, 1);
+
+                return;
+            }
+
+            
+            popupFase_container.style.transform = 'scale(0)';
+            setTimeout(() => {
+                popupFase_screen.style.display = 'none';
+            }, 200);
+
+        }
+
+
+
+
+
+
+
+        function toggleScreen( screenID, isOpen = true ){
+            toggleConfig(false);
+            document.getElementById(screenID).classList.toggle("screenOpen", isOpen);
+        }
+
+
+
+
+
+        function fecharTelaJogo(){
+            gerarListaFases();
+            toggleScreen('game_screen', false);
+        }
+
+
+
+
+        function toggleConfig( isOpen ){
+            configBotaoContainer.classList.toggle("configBotaoContainerOpen", isOpen);
+        }
+
+
+
+
+
+        function mostrarPalavraDicionario( texto = "BATATA" ){
+            dicionarioPalavra.firstElementChild.innerHTML = texto.toUpperCase();
+            dicionarioPalavra.classList.add("dicionarioPalavraVisivel");
+
+            setTimeout(()=>{
+                dicionarioPalavra.classList.remove("dicionarioPalavraVisivel");
+            }, 1000);
+
+        }
+
+
+        function abrirDicionario(){
+            gerarDicionario(JOGO.dicionarioIndexPagina, JOGO.dicionario);
+            dicionario_screen.classList.add("dicionario_screenOpen");
+        }
+
+
+
+        function fecharDicionario(){
+            dicionario_screen.classList.remove("dicionario_screenOpen");
+        }
+
+
+
+
+
+        function proximaPagina(){
+            const MAX_INDEX_PAGINA = Math.trunc(JOGO.dicionarioFase.length / 12);
+
+            if ( JOGO.dicionarioIndexPagina < MAX_INDEX_PAGINA ){
+                JOGO.dicionarioIndexPagina++;
+                gerarDicionario(JOGO.dicionarioIndexPagina, JOGO.dicionario);
+            }
+        }
+
+
+
+        function voltarPagina(){
+            if ( JOGO.dicionarioIndexPagina > 0 ){
+                JOGO.dicionarioIndexPagina--;
+                gerarDicionario(JOGO.dicionarioIndexPagina, JOGO.dicionario);
+            }
+        }
+
+
+
+
+        function gerarDicionario( dicionarioIndexPagina = 0, palavrasDicionario = [] ){
+            const MAX_PAGINAS = Math.ceil(palavrasDicionario.length / 12);
+
+            dicionarioLista.querySelectorAll(".dicionarioListaGrupo").forEach(e => e.innerHTML = "");
+            dicionarioHeaderSubtitle.innerHTML = "NÍVEL " + (JOGO.indexFase+1);
+            dicionarioPagina.querySelectorAll(".dicionarioPaginaBotao")[0].style.opacity = Math.trunc(JOGO.dicionarioIndexPagina > 0);
+            dicionarioPagina.querySelectorAll(".dicionarioPaginaBotao")[1].style.opacity = Math.trunc(JOGO.dicionarioIndexPagina < MAX_PAGINAS-1);
+
+            if ( dicionarioIndexPagina >= MAX_PAGINAS ){
+                dicionarioPaginaValor.innerHTML = 'Página 1/1';
+            }else{
+                dicionarioPaginaValor.innerHTML = `Página ${JOGO.dicionarioIndexPagina+1}/${MAX_PAGINAS}`;
+            }
+
+            const LISTA = palavrasDicionario.slice(dicionarioIndexPagina*12, 12*(dicionarioIndexPagina+1));
+
+            LISTA.forEach((e, i) => {
+                const dicionarioItem = document.createElement("div");
+                dicionarioItem.classList.add("dicionarioItem");
+                dicionarioItem.innerHTML = "• " + e;
+
+                if ( i < 6 ){
+                    dicionarioLista.querySelectorAll(".dicionarioListaGrupo")[0].appendChild(dicionarioItem);
+                }else{
+                    dicionarioLista.querySelectorAll(".dicionarioListaGrupo")[1].appendChild(dicionarioItem);
+                }
+            });
+
+        }
+
+
+
+
+
+
+        function vibrar( duration = 0 ){
+            if ( configLista.children[0].classList.contains('configBotaoAtivo') ){
+                navigator.vibrate(duration);
+            }
+        }
+
+
+
+
+
+
+
+
+        function embaralharTeclado(){
+            const teclas = Array.from(listaTeclas.getElementsByClassName("tecla"));
+            shuffleArray(teclas);
+            
+            teclas.forEach(tecla => {
+                listaTeclas.insertBefore(tecla, listaTeclas.firstChild);
+            });
+        }
+
+
+
+
+
+        function comprarDica(quantidade = 0, valor = 0){
+            if ( JOGO.moedas >= valor ){
+                JOGO.moedas -= valor;
+                JOGO.dicas += quantidade;
+                salvarJogo();
+                atualizarMoedas();
+            }
+        }
+        
+
+
+
+
+
+        function time_track(segundos = 0){
+            var texto = "";
+            var horas = Math.trunc(segundos / 3600);
+            var min   = Math.trunc(segundos / 60 % 60);
+            var seg   = Math.trunc(segundos % 60);
+            
+            // HORAS
+            if (segundos >= 3600){
+                texto += horas + ":";
+            }
+
+            // MINUTOS
+            if ( segundos >= 600 ){
+                texto += min.toString().padStart(2, 0);
+            }else{
+                texto += min;
+            }
+
+            // SEGUNDOS
+            texto += ':' + seg.toString().padStart(2, 0);
+             
+            return texto;
+			
+        }
+
+
+
+
+        function gerarListaFases(){
+
+            faseLista.innerHTML = "";
+            
+            FASES.forEach((e, i) => {
+
+
+                const fase = document.createElement('div');
+                fase.classList.add("fase");
+                fase.classList.toggle("faseBloqueada", i > JOGO.fasesCompletas.length);
+                fase.setAttribute("fase", i+1);
+
+                if ( i <= JOGO.fasesCompletas.length ){
+                    const faseCompleta = JOGO.fasesCompletas.find(el => el.fase == i);
+                    let faseDicionario = null;
+
+                    fase.innerHTML = `
+                    <div class="faseTop">
+                        <div class="faseDicionario" style="display: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5 0h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2 2 2 0 0 1-2 2H3a2 2 0 0 1-2-2h1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1H1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1H3a2 2 0 0 1 2-2"></path>
+                                <path d="M1 6v-.5a.5.5 0 0 1 1 0V6h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 2.5v.5H.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2v-.5a.5.5 0 0 0-1 0"></path>
+                            </svg>    
+                        </div>
+                        <div class="faseNumero">${i+1}</div>
+                    </div>
+                    <div class="faseTempo">${time_track(0)}</div>`;
+
+                    if ( faseCompleta != null ){
+                        faseDicionario = faseCompleta.lista.filter(el => el.dicionario);
+                        fase.querySelector(".faseTempo").innerHTML = time_track(faseCompleta.tempo);
+
+                        if ( faseCompleta.lista.filter(el => el.dicionario).length > 0 ){
+                            fase.querySelector(".faseDicionario").style.display = "flex";
+                        }
+                    }
+
+
+                    // CLICK FASE
+                    fase.onclick = () => { 
+                        gerarFase(i);
+                        toggleScreen("game_screen", true);
+                        JOGO.tempoInicial = new Date();
+                        console.warn(JOGO.tempoInicial);
+                    };
+
+                    // CLICK DICIONARIO FASE
+                    fase.querySelector(".faseDicionario").onclick = (event) => {
+                        event.stopImmediatePropagation();
+
+                        if ( faseDicionario == null ){
+                            return;
+                        }
+
+                        JOGO.indexFase = i;
+                        JOGO.dicionarioIndexPagina = 0;
+                        JOGO.dicionario = faseDicionario.map(el => el.texto);
+                        abrirDicionario();
+                    };
+                    
+                }else{
+                    fase.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-lock-fill" viewBox="0 0 16 16">
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                    </svg>`;
+                }
+                 
+                faseLista.appendChild(fase); 
+
+
+            });
+
+        }
+
+
+
+        
+        
+
+
+
+        function gerarTelaPalavrasDescobertas(filtroPalavra = true, filtroDicionario = true){
+
+            lista_palavras_descobertas.innerHTML = "";
+
+            if ( !filtroPalavra && !filtroDicionario ){
+                return;
+            }
+
+            const PALAVRAS_DESCOBERTAS = JOGO.fasesCompletas.flatMap(el => el.lista).sort((a, b) => a.texto.localeCompare(b.texto));
+
+            if ( PALAVRAS_DESCOBERTAS.length == 0 ){
+                return;
+            }
+
+            
+
+            const letrasOrdenadoras = [...new Set(PALAVRAS_DESCOBERTAS.map(el => el.texto[0]))];
+
+            letrasOrdenadoras.forEach(letra => {
+                const subLista = PALAVRAS_DESCOBERTAS.filter(el => el.texto[0] == letra).filter(el => el.dicionario != filtroPalavra || el.dicionario == filtroDicionario);
+
+                if ( subLista.length == 0 ){
+                    return true;
+                }
+
+                const sublistaPalavras = document.createElement("div");
+                sublistaPalavras.classList.add("sublistaPalavras");
+
+                sublistaPalavras.innerHTML = `
+                <div class="letraPalavra">${letra}</div>
+                <div class="listaPalavras">${subLista.map(el => {
+
+                    if ( !el.dicionario ){
+                        return `<div class="palavra">${el.texto}</div>`;
+                    }
+
+                    return `<div class="palavra">
+                        ${el.texto}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M5 0h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2 2 2 0 0 1-2 2H3a2 2 0 0 1-2-2h1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1H1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1H3a2 2 0 0 1 2-2"/>
+                            <path d="M1 6v-.5a.5.5 0 0 1 1 0V6h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 2.5v.5H.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2v-.5a.5.5 0 0 0-1 0"/>
+                        </svg>
+                    </div>`;
+
+                }).join('')}</div>`;
+
+
+                lista_palavras_descobertas.appendChild(sublistaPalavras);
+                
+
+            });
+
+
+        }
+        
+
+        
+
+
+
+
+
+
+        function toggleTelaPalavrasDescobertas( isOpen = true ){
+            
+            if ( isOpen ){
+                const filtroPalavra = document.querySelectorAll(".chipFiltro")[0].classList.contains("chipSelecionado");
+                const filtroDicionario = document.querySelectorAll(".chipFiltro")[1].classList.contains("chipSelecionado");
+                gerarTelaPalavrasDescobertas(filtroPalavra, filtroDicionario);
+
+                toggleScreen('palavras_screen', isOpen);
+                return;
+            }
+            
+            toggleScreen('palavras_screen', isOpen);
+            lista_palavras_descobertas.innerHTML = "";
+        }
+
+
+
+
+
+
+
+
+        function toggleTelaConquistas( isOpen = true ){
+            lista_conquistas.innerHTML = "";
+            
+            if ( !isOpen ){
+                toggleScreen('conquistas_screen', isOpen);
+                return;
+            }
+
+            JOGO.conquistas.forEach(e => {
+                const conquista = document.createElement("div");
+                conquista.classList.add("conquista");
+                conquista.classList.toggle("conquistaBloqueada", !e.completada);
+                conquista.classList.toggle("conquistaOneTime", e.type == 'oneTime');
+
+                conquista.innerHTML = `
+                <div class="conquistaTitle">${e.nome}</div>
+                <div class="conquistaSubtitle">${e.desc}</div>
+                
+                <div class="conquistaProgress">
+                    <div class="conquistaProgressFillContainer">
+                        <div class="conquistaProgressFill"></div>
+                    </div>
+                    <div class="conquistaProgressLabel"></div>
+                </div>`;
+
+                if ( e.type == 'increment' ){
+                    let atual = 0;
+
+                    switch (e.categoria) {
+                        case 'acertos':
+                            atual = JOGO.estatisticas.acertos;
+                            break;
+                        case 'dicas':
+                            atual = JOGO.estatisticas.dicasUsadas;
+                            break;
+                        case 'fases':
+                            atual = JOGO.fasesCompletas.length;
+                            break;
+                    }
+
+                    atual = Math.clamp(atual, 0, e.cond);
+                    const percent = 100 - atual / e.cond * 100;
+                    conquista.querySelector(".conquistaProgressLabel").innerHTML = `${atual}/${e.cond}`;
+                    conquista.querySelector(".conquistaProgressFill").style.transform = `translateX(${-percent}%)`;
+                }else{
+                    conquista.querySelector(".conquistaProgress").remove();
+                }
+
+                lista_conquistas.appendChild(conquista);
+
+
+            });
+
+            toggleScreen('conquistas_screen', isOpen);
+
+        }
+
+
+
+
+        
+
+
+
+
+
+        function gerarFase( indexFase = 0 ){
+            const FASE_OBJ = FASES[indexFase];
+
+            if ( FASE_OBJ == null ){
+                return false;
+            }
+
+            JOGO.dicionario = JOGO.dicionarioFase;
+
+            if ( JOGO.indexFase != indexFase ){
+                JOGO.palavrasFase   = [];
+                JOGO.dicionarioFase = [];
+                JOGO.dicionario     = [];
+                JOGO.dicasPosicoes  = []; 
+            }else if ( JOGO.fasesCompletas.findIndex(e => e.fase == indexFase) >= 0 ){
+                if ( JOGO.palavrasFase.length == FASE_OBJ.palavras.length ){
+                    JOGO.palavrasFase = [];
+                }
+            }
+
+            JOGO.indexFase = indexFase;
+
+
+            atualizarMoedas();
+            faseAtual.innerHTML = "NÍVEL " + (indexFase+1);
+            badgeDicas.innerHTML = JOGO.dicas;
+            JOGO.dicionarioIndexPagina = 0;
+
+            const faseCompleta = JOGO.fasesCompletas.find(el => el.fase == JOGO.indexFase);
+
+            if ( faseCompleta != null ){
+                const dicionarioAnterior = JOGO.dicionarioFase;
+                JOGO.dicionarioFase = faseCompleta.lista.filter(el => el.dicionario).map(el => el.texto);
+                JOGO.dicionarioFase = [... new Set(JOGO.dicionarioFase.concat(dicionarioAnterior))];
+                JOGO.dicionario = JOGO.dicionarioFase;
+            }
+
+
+
+            // GERAR GRID
+            const GRID_SIZE = getGridSizeByIndexFase(indexFase);
+            let listaPositions = [];
+
+            gameGrid.style.gridTemplateColumns  = `repeat(${GRID_SIZE[0]}, 1fr)`;
+            gameGrid.style.gridTemplateRows     = `repeat(${GRID_SIZE[1]}, 1fr)`;
+            gameGrid.innerHTML = "";
+
+            FASE_OBJ.palavras.forEach((e, i) => {
+                for (let idx = 0; idx < e.texto.length; idx++){
+                    let nextPostion = [0, 0];
+
+                    if ( e.vertical ){
+                        nextPostion = [e.pos[0], e.pos[1]+idx];
+                    }else{
+                        nextPostion = [e.pos[0]+idx, e.pos[1]];
+                    }
+
+                    if ( !isItemInArray(listaPositions, nextPostion) ){
+                        listaPositions.push(nextPostion);
+                        criarSlot(nextPostion[0]+1, nextPostion[1]+1, e.texto[idx]);
+                    }
+
+                }
+            });
+
+            // MOSTRAR ULTIMO JOGO SALVO
+            JOGO.dicasPosicoes.forEach(pos => colocarLetra(pos[0], pos[1], true));
+            JOGO.palavrasFase.forEach(e => enviarPalavra(e));
+
+
+
+            // GERAR TECLAS
+            entradaTeclas.innerHTML = "";
+            listaTeclas.innerHTML = "";
+
+            if ( FASE_OBJ.teclas.length <= 5 ){
+                listaTeclas.style.width = (32 * 4) + 'px';
+            }else{
+                listaTeclas.style.width = (32 * 5) + 'px';
+            }
+
+            
+            FASE_OBJ.teclas.forEach((tecla, teclaIndex) => {
+                const teclaElemento = document.createElement("div");
+                teclaElemento.classList.add("tecla");
+                teclaElemento.setAttribute("index", teclaIndex);
+                teclaElemento.innerHTML = tecla.toUpperCase();
+
+                teclaElemento.onclick = () => {
+                    const selecionado = teclaElemento.classList.toggle("teclaSelecionada");
+
+                    if ( selecionado ){
+                        const entradaTecla = document.createElement("div");
+                        entradaTecla.classList.add("entradaTecla");
+                        entradaTecla.setAttribute("index", teclaIndex);
+                        entradaTecla.innerHTML = tecla.toUpperCase();
+                        entradaTeclas.appendChild(entradaTecla);
+
+
+                        entradaTecla.onclick = () => {
+                            entradaTecla.remove();
+                            teclaElemento.classList.remove("teclaSelecionada");
+                        };
+
+                    }else{
+                        const entradaTecla = entradaTeclas.querySelector(`.entradaTecla[index="${teclaIndex}"]`);
+                        
+                        if ( entradaTecla != null ){
+                            entradaTecla.remove();
+                        }
+                    }
+
+
+                    entradaEnviar.classList.toggle("entradaEnviarBloqueada", entradaTeclas.children.length <= 2);
+                    entradaReset.classList.toggle("entradaResetBloqueada", entradaTeclas.children.length <= 0);
+
+                };
+
+                listaTeclas.appendChild(teclaElemento);
+            });
+
+            salvarJogo();
+            return true;
+
+        }
+
+
+
+
+
+        document.querySelectorAll(".chipFiltro").forEach(e => {
+            e.onclick = () => {
+                e.classList.toggle("chipSelecionado");
+                const filtroPalavra = document.querySelectorAll(".chipFiltro")[0].classList.contains("chipSelecionado");
+                const filtroDicionario = document.querySelectorAll(".chipFiltro")[1].classList.contains("chipSelecionado");
+                gerarTelaPalavrasDescobertas(filtroPalavra, filtroDicionario);
+            }
+        });
+
+
+
+
+        document.querySelectorAll(".configBotao").forEach((e, i) => {
+            e.onclick = () => {
+                e.classList.toggle("configBotaoAtivo");
+
+                if ( i == 0 ){
+                    navigator.vibrate(300);
+                    return;
+                }
+
+                if ( i == 1 ){
+                    return;
+                }
+
+                if ( i == 2 ){
+
+                }
+
+            };
+        });
+
+
+
+
+        onload = () => {
+            carregarJogo();
+            atualizarMoedas();
+            gerarListaFases();
+        };
+
+
+    </script>
+</body>
+</html>
